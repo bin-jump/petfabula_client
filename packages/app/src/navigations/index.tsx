@@ -6,7 +6,9 @@ import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { Platform, View, Text } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { ThemeContext, Icon } from "react-native-elements";
+import { useTranslation } from "react-i18next";
 
+import AuthScreen from "../modules/auth";
 import Community from "../modules/community";
 import Ask from "../modules/ask";
 import User from "../modules/user";
@@ -38,6 +40,13 @@ const AppScreen = () => {
           name="TabScreen"
           component={TabScreen}
         />
+        <TopStack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="AuthScreen"
+          component={AuthScreen}
+        />
       </TopStack.Navigator>
     </NavigationContainer>
   );
@@ -45,6 +54,9 @@ const AppScreen = () => {
 
 const TabScreen = () => {
   const { theme } = React.useContext(ThemeContext);
+  const { t } = useTranslation();
+  const focusedColor = theme.colors?.primary;
+  const unFocusedColor = theme.colors?.grey1;
 
   return (
     <Tabs.Navigator
@@ -76,21 +88,18 @@ const TabScreen = () => {
               return (
                 <View style={{ alignContent: "center" }}>
                   <Icon
-                    type="ionicons"
-                    name="home"
-                    size={32}
-                    color={
-                      focused ? theme.colors?.primary : theme.colors?.grey3
-                    }
+                    type="ionicon"
+                    name={focused ? "home" : "home-outline"}
+                    size={24}
+                    color={focused ? focusedColor : unFocusedColor}
                   />
                   <Text
                     style={{
-                      color: focused
-                        ? theme.colors?.primary
-                        : theme.colors?.grey3,
+                      textAlign: "center",
+                      color: focused ? focusedColor : unFocusedColor,
                     }}
                   >
-                    {"Home"}
+                    {t("mainTab.home")}
                   </Text>
                 </View>
               );
@@ -113,20 +122,18 @@ const TabScreen = () => {
                 <View style={{ alignContent: "center" }}>
                   <Icon
                     type="font-awesome"
-                    name="file-text"
-                    size={24}
-                    color={
-                      focused ? theme.colors?.primary : theme.colors?.grey3
-                    }
+                    name={focused ? "file-text" : "file-text-o"}
+                    size={20}
+                    color={focused ? focusedColor : unFocusedColor}
                   />
                   <Text
                     style={{
-                      color: focused
-                        ? theme.colors?.primary
-                        : theme.colors?.grey3,
+                      marginTop: 6,
+                      textAlign: "center",
+                      color: focused ? focusedColor : unFocusedColor,
                     }}
                   >
-                    {"Question"}
+                    {t("mainTab.question")}
                   </Text>
                 </View>
               );
@@ -148,21 +155,19 @@ const TabScreen = () => {
               return (
                 <View style={{ alignContent: "center" }}>
                   <Icon
-                    type="font-awesome"
-                    name="bell"
-                    size={26}
-                    color={
-                      focused ? theme.colors?.primary : theme.colors?.grey3
-                    }
+                    type="ionicon"
+                    name={focused ? "notifications" : "notifications-outline"}
+                    size={28}
+                    color={focused ? focusedColor : unFocusedColor}
                   />
                   <Text
                     style={{
-                      color: focused
-                        ? theme.colors?.primary
-                        : theme.colors?.grey3,
+                      marginTop: 6,
+                      textAlign: "center",
+                      color: focused ? focusedColor : unFocusedColor,
                     }}
                   >
-                    {"Notification"}
+                    {t("mainTab.notification")}
                   </Text>
                 </View>
               );
@@ -184,20 +189,18 @@ const TabScreen = () => {
                 <View style={{ alignContent: "center" }}>
                   <Icon
                     type="font-awesome"
-                    name="user"
-                    size={30}
-                    color={
-                      focused ? theme.colors?.primary : theme.colors?.grey3
-                    }
+                    name={focused ? "user" : "user-o"}
+                    size={26}
+                    color={focused ? focusedColor : unFocusedColor}
                   />
                   <Text
                     style={{
-                      color: focused
-                        ? theme.colors?.primary
-                        : theme.colors?.grey3,
+                      marginTop: 3,
+                      textAlign: "center",
+                      color: focused ? focusedColor : unFocusedColor,
                     }}
                   >
-                    {"User"}
+                    {t("mainTab.user")}
                   </Text>
                 </View>
               );
