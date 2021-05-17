@@ -20,7 +20,11 @@
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
-    "expo-yarn-workspaces": "^1.5.1"
+    "@types/react": "^17.0.5",
+    "@types/react-dom": "^17.0.5",
+    "@types/react-native": "^0.64.5",
+    "expo-yarn-workspaces": "^1.5.1",
+    "typescript": "^4.2.4"
   },
   "private": true
 }
