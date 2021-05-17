@@ -15,7 +15,7 @@
     "build": "yarn run clean-dist && yarn run webpack --config=configs/webpack/webpack.prod.js",
     "clean-dist": "rimraf dist/*",
     "start": "yarn run webpack serve --config=configs/webpack/webpack.dev.js --open",
-    "postinstall": "cp -r -n node_modules/webpack-cli ../../node_modules/webpack-cli"
+    "postinstall": "cp -r node_modules/webpack-cli ../../node_modules/webpack-cli"
   },
   "devDependencies": {
     "@babel/core": "^7.14.2",
