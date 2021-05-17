@@ -1,0 +1,25 @@
+.vscode/
+.expo/
+.netlify
+**/node_modules/
+.expo/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+
+# macOS
+.DS_Store
+
+build/
+temp/
+dist/
+__generated__
+
+.env
+.env.*
+!.env.example
