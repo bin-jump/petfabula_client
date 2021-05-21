@@ -1,8 +1,9 @@
 import * as React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { ThemeContext, Icon } from "react-native-elements";
-import { headerBaseOption } from "../shared";
-import LoginScreen from "./screens/Login";
+import { headerBaseOption, plainGoBackHeaderOption } from "../shared";
+import Login from "./screens/Login";
+import Signup from "./screens/Signup";
 
 const AuthStack = createStackNavigator();
 
@@ -31,8 +32,13 @@ const AuthScreen = () => {
             },
           };
         }}
-        name="LoginScreen"
-        component={LoginScreen}
+        name="Login"
+        component={Login}
+      />
+      <AuthStack.Screen
+        options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
+        name="Signup"
+        component={Signup}
       />
     </AuthStack.Navigator>
   );

@@ -7,8 +7,7 @@ import { Platform, View, Text } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { ThemeContext, Icon } from "react-native-elements";
 import { useTranslation } from "react-i18next";
-
-import AuthScreen from "../modules/auth";
+import AuthenticaionScreen from "../modules/authentication";
 import Community from "../modules/community";
 import Ask from "../modules/ask";
 import User from "../modules/user";
@@ -44,8 +43,8 @@ const AppScreen = () => {
           options={{
             headerShown: false,
           }}
-          name="AuthScreen"
-          component={AuthScreen}
+          name="AuthenticaionScreen"
+          component={AuthenticaionScreen}
         />
       </TopStack.Navigator>
     </NavigationContainer>

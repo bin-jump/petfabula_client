@@ -4,5 +4,20 @@
     "question": "質問",
     "notification": "通知",
     "user": "私"
+  },
+  "authentication": {
+    "input": {
+      "namePlaceHolder": "名前",
+      "emailPlaceHolder": "メールアドレス"
+    },
+    "login": {
+      "title": "ログイン",
+      "loginAction": "ログイン",
+      "gotoSignup": "アカウント登録",
+      "thirdPartyLogin": "その他によるログイン"
+    },
+    "signup": {
+      "title": "アカウント登録"
+    }
   }
 }

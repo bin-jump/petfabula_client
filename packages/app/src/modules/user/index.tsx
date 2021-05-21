@@ -14,7 +14,7 @@ const User = () => {
       <Button
         title="login"
         onPress={() => {
-          navigation.navigate("AuthScreen");
+          navigation.navigate("AuthenticaionScreen");
         }}
       />
     </View>

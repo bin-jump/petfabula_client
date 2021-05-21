@@ -5,17 +5,23 @@ export const createTheme = (color: Partial<Colors>): Partial<FullTheme> => {
     colors: color,
     Button: {
       containerStyle: {
-        height: 52,
+        borderRadius: 6,
+        height: 56,
       },
       buttonStyle: {
-        height: 52,
+        borderRadius: 6,
+        height: 56,
+      },
+      titleStyle: {
+        fontSize: 22,
       },
     },
     Input: {
+      containerStyle: { paddingHorizontal: 0 },
       inputContainerStyle: {
         borderBottomColor: color.greyOutline,
       },
-      placeholderTextColor: color.grey2,
+      placeholderTextColor: color.grey1,
     },
     Text: {
       h1Style: {

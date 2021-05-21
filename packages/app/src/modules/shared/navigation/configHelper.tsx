@@ -30,16 +30,14 @@ export const plainGoBackHeaderOption = ({
   return {
     ...headerBaseOption({ theme }),
     title: title ? title : "",
-    headerStyle: {
-      ...{ backgroundColor: theme ? theme.colors?.white : "" },
-    },
+
     headerLeft: () => {
       return (
         <Icon
           style={{ marginLeft: 15 }}
-          type="antdesign"
+          type="entypo"
           onPress={() => navigation.navigation.goBack()}
-          name="arrowleft"
+          name="chevron-thin-left"
           size={24}
           color={theme.colors?.black}
         />

@@ -79,6 +79,7 @@ export function createSagaWatcher({
       let successAction: ActionBase = {
         type: asyncAction.SUCCESS,
         payload: response.data,
+        error: null,
       };
       if (successorPayload) {
         successAction.extra = successorPayload(beginAction.payload);
