@@ -8,10 +8,11 @@ export const commonMessageKey = {
 const authenticationPrefix = `${messagePrefix}.authentication`;
 export const authenticationMessageKey = {
   namePattern: `${authenticationPrefix}.namePattern`,
+  nameLength: `${authenticationPrefix}.nameLength`,
   emailNotValid: `${authenticationPrefix}.emailNotValid`,
-  passwordPattern: `${authenticationPrefix}.passwordPattern`,
+  agreementNotAgreed: `${authenticationPrefix}.agreementNotAgreed`,
+  // passwordPattern: `${authenticationPrefix}.passwordPattern`,
   // passwordLength: `${authenticationPrefix}.passwordLength`,
   // passwordComplexity: `${authenticationPrefix}.passwordComplexity`,
-  passwordNotMatch: `${authenticationPrefix}.passwordNotMatch`,
-  confirmTokenEmpty: `${authenticationPrefix}.confirmTokenEmpty`,
+  // passwordNotMatch: `${authenticationPrefix}.passwordNotMatch`,
 };

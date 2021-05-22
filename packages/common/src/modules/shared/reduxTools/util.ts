@@ -29,14 +29,15 @@ export function createReducer<T, A extends ActionBase>(
 
 const translateApiError = (response: ApiResponse): AsyncActionError => {
   let res: AsyncActionError = { type: 'OTEHRS' };
-  if (response.error?.type == 'INVALID_FIELD') {
+  console.log('translateApiError', response);
+  if (response.errors?.type == 'INVALID_FIELD') {
     res.type = 'INVALID_FORM_DATA';
-    res.content = response.error.fieldErrors;
+    res.content = response.errors.fieldErrors;
   } else if (
-    response.error?.type == 'NO_RESPONSE' ||
-    response.error?.type == 'SERVER_BUSY'
+    response.errors?.type == 'NO_RESPONSE' ||
+    response.errors?.type == 'SERVER_BUSY'
   ) {
-    res.type = 'FAILED_ON_RESULT';
+    res.type = 'FAILED_ON_RESPONSE';
   }
   return res;
 };
@@ -103,13 +104,13 @@ export function createSagaWatcher({
   };
 }
 
-export const resolveFormError = (err: AsyncActionError | null) => {
+export const resolveResponseFormError = (err: AsyncActionError | null) => {
   if (!err || err.type != 'INVALID_FORM_DATA') {
-    return undefined;
+    return {};
   }
   return err.content;
 };
 
-export const failedOnData = (err: AsyncActionError | null) => {
-  return err?.type == 'FAILED_ON_RESULT';
+export const checkFailedResponse = (err: AsyncActionError | null) => {
+  return err?.type == 'FAILED_ON_RESPONSE';
 };

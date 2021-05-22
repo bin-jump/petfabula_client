@@ -27,5 +27,5 @@ export interface ApiResponse {
   code: number;
   data: any;
   message: string | null;
-  error?: ResponseError;
+  errors?: ResponseError;
 }

@@ -3,6 +3,7 @@ import { AuthenticationState } from './types';
 import { loginReducer } from './loginHooks';
 import { registerReducer } from './registerHooks';
 import { checkLoginReducer } from './checkLoginHooks';
+import { userAgreementReducer } from './userAgreementHooks';
 
 const initialStat: AuthenticationState = {
   // emailPassordLoginResult: { data: null, pending: false, error: null },
@@ -13,9 +14,16 @@ const initialStat: AuthenticationState = {
   logoutResult: { data: null, pending: false, error: null },
   currentUser: { data: null, pending: false, error: null },
   oauthRegisterLoginResult: { data: null, pending: false, error: null },
+
+  userAgreement: { data: null, pending: false, error: null },
 };
 
 export const authenticationRootReducer = createReducer<
   AuthenticationState,
   ActionBase
->(initialStat, { ...loginReducer, ...registerReducer, ...checkLoginReducer });
+>(initialStat, {
+  ...loginReducer,
+  ...registerReducer,
+  ...checkLoginReducer,
+  ...userAgreementReducer,
+});

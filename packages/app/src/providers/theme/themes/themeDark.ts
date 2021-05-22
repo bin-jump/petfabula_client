@@ -15,6 +15,8 @@ const COLORS: Partial<Colors> = {
   grey3: "#dfdfdf",
   grey4: "#e6e6e6",
   grey5: "#0c0e11",
+  danger: "red",
+  error: "red",
 };
 
 export const themeDark = createTheme(COLORS);

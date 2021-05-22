@@ -2,6 +2,9 @@ import axios from 'axios';
 import { connectionConfig } from './config';
 import { ApiResponse, ResponseError } from './types';
 
+axios.defaults.baseURL = connectionConfig.baseUrl;
+axios.defaults.withCredentials = true;
+
 const axiosRequest = (
   url: string,
   method: 'GET' | 'POST' | 'PUT' | 'DELETE',
@@ -52,9 +55,13 @@ const SERVER_ERROR_CODE = {
 
 const translateServerError = (response: ApiResponse): ResponseError => {
   let res = { type: 'UNKNOWN' } as ResponseError;
+  if (!response.code) {
+    console.log('Unexpect incorrect response format');
+    return res;
+  }
   if (response.code == SERVER_ERROR_CODE.INVALID_FIELD) {
     res.type = 'INVALID_FIELD';
-    res.fieldErrors = response.error as any;
+    res.fieldErrors = response.errors as any;
   } else if (response.code == SERVER_ERROR_CODE.LOGIN_REQUIRED) {
     res.type = 'LOGIN_REQUIRED';
   }
@@ -78,11 +85,13 @@ export const apiRequest = async ({
     // console.log('responseData', JSON.stringify(responseData));
     return { ...responseData, success: true };
   } catch (error) {
+    console.log('[axios error]', JSON.stringify(error));
     if (error.response) {
       // Request made and server responded
       const responseData = error.response.data as ApiResponse;
       let res: ApiResponse = { ...responseData, success: false };
-      res.error = translateServerError(res);
+      res.errors = translateServerError(res);
+      return res;
     } else if (error.request) {
       // The request was made but no response was received
       let res: ApiResponse = {
@@ -90,18 +99,19 @@ export const apiRequest = async ({
         code: -1,
         data: null,
         message: null,
-        error: { type: 'NO_RESPONSE' },
+        errors: { type: 'NO_RESPONSE' },
       };
       return res;
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.log('[WARNING] unexpected axios error', error.message);
+      return {
+        success: false,
+        code: -2,
+        data: null,
+        message: null,
+        errors: { type: 'UNKNOWN' },
+      };
     }
-    // Something happened in setting up the request that triggered an Error
-    console.log('[FATAL] unexpected axios error', error.message);
-    return {
-      success: false,
-      code: -2,
-      data: null,
-      message: null,
-      error: { type: 'UNKNOWN' },
-    };
   }
 };

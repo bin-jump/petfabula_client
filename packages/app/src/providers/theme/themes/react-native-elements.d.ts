@@ -14,6 +14,7 @@ declare module "react-native-elements" {
     text: string;
     altText: string;
     danger: string;
+    error: string;
   }
 
   export interface FullTheme {

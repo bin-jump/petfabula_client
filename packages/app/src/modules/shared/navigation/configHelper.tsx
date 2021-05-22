@@ -1,5 +1,6 @@
 import React from "react";
-import { ThemeContext, Icon, Text, FullTheme } from "react-native-elements";
+import { Platform, View } from "react-native";
+import { Icon, FullTheme } from "react-native-elements";
 
 const noBorderStyle = {
   borderBottomWidth: 0,
@@ -30,11 +31,10 @@ export const plainGoBackHeaderOption = ({
   return {
     ...headerBaseOption({ theme }),
     title: title ? title : "",
-
     headerLeft: () => {
       return (
         <Icon
-          style={{ marginLeft: 15 }}
+          containerStyle={{ marginLeft: 16 }}
           type="entypo"
           onPress={() => navigation.navigation.goBack()}
           name="chevron-thin-left"

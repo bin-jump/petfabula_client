@@ -100,6 +100,47 @@ export const useOauthRegisterAndLogin = () => {
 };
 
 export const registerReducer = {
+  // send email code register code
+  [EmailCodeSendRegisterCodeActionType.BEGIN]: (
+    state: AuthenticationState,
+    action: ActionBase,
+  ): AuthenticationState => {
+    return {
+      ...state,
+      emailCodeSendRegisterCodeResult: {
+        ...state.emailCodeSendRegisterCodeResult,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [EmailCodeSendRegisterCodeActionType.SUCCESS]: (
+    state: AuthenticationState,
+    action: ActionBase,
+  ): AuthenticationState => {
+    return {
+      ...state,
+      emailCodeSendRegisterCodeResult: {
+        ...state.emailCodeSendRegisterCodeResult,
+        pending: false,
+        data: { done: true },
+      },
+    };
+  },
+  [EmailCodeSendRegisterCodeActionType.FAILURE]: (
+    state: AuthenticationState,
+    action: ActionBase,
+  ): AuthenticationState => {
+    return {
+      ...state,
+      emailCodeSendRegisterCodeResult: {
+        ...state.emailCodeSendRegisterCodeResult,
+        pending: false,
+        error: action.error,
+      },
+    };
+  },
+
   // email code register
   [EmailCodeRegisterAndLoginActionType.BEGIN]: (
     state: AuthenticationState,

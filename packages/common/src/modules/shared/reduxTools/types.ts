@@ -1,5 +1,5 @@
 export type ActionErrorType =
-  | 'FAILED_ON_RESULT'
+  | 'FAILED_ON_RESPONSE'
   | 'INVALID_FORM_DATA'
   | 'OTEHRS';
 

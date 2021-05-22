@@ -4,10 +4,11 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import { fork, all, spawn } from 'redux-saga/effects';
 import rootReducer from './rootReducer';
 import { authenticationRootSaga } from '../modules/authentication';
+import { logHandleMiddleware } from './middlewares/logHandleMiddleware';
 
 const sagaMiddleware = createSagaMiddleware();
 
-const middlewares = [sagaMiddleware];
+const middlewares = [logHandleMiddleware, sagaMiddleware];
 
 const store = createStore(
   rootReducer,

@@ -9,12 +9,14 @@ export interface User {
 export interface EmailCodeSendRegisterCodeForm {
   email: string;
   name: string;
+  userAgreement: boolean;
 }
 
 export interface EmailCodeRegisterForm {
   name: string;
   email: string;
   code: string;
+  userAgreement: boolean;
 }
 
 export interface EmailCodeSendLoginCodeForm {
@@ -52,6 +54,11 @@ export interface RegisterConfirmTokenRequest {
 //   email: string;
 // }
 
+export interface UserAgreement {
+  title: string;
+  content: string;
+}
+
 export interface AuthenticationState {
   currentUser: AsyncDataBase<User>;
 
@@ -64,6 +71,7 @@ export interface AuthenticationState {
   oauthRegisterLoginResult: AsyncDataBase<User>;
   logoutResult: AsyncDataBase<{ done: boolean }>;
 
+  userAgreement: AsyncDataBase<UserAgreement>;
   // registerResult: AsyncDataBase<User>;
   // registerTokenResult: AsyncDataBase<string>;
   // checkedToken: AsyncDataBase<{ email: string }>;

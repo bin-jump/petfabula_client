@@ -10,4 +10,7 @@ export {
   useEmailCodeSendRegisterCode,
   useLogout,
   useOauthRegisterAndLogin,
+  useUserAgreement,
 } from './authentication';
+
+export { resolveResponseFormError, checkFailedResponse } from './shared';

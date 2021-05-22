@@ -4,10 +4,13 @@ import { ThemeContext, Icon } from "react-native-elements";
 import { headerBaseOption, plainGoBackHeaderOption } from "../shared";
 import Login from "./screens/Login";
 import Signup from "./screens/Signup";
+import SignupVerification from "./screens/SignupVerification";
+import LoginVerification from "./screens/LoginVerification";
+import UserAgreement from "./screens/UserAgreement";
 
 const AuthStack = createStackNavigator();
 
-const AuthScreen = () => {
+const AuthenticationScreen = () => {
   const { theme } = React.useContext(ThemeContext);
   return (
     <AuthStack.Navigator
@@ -21,7 +24,7 @@ const AuthScreen = () => {
             headerLeft: () => {
               return (
                 <Icon
-                  style={{ marginLeft: 15 }}
+                  containerStyle={{ marginLeft: 16 }}
                   type="antdesign"
                   onPress={() => navigation.navigation.goBack()}
                   name="close"
@@ -37,11 +40,26 @@ const AuthScreen = () => {
       />
       <AuthStack.Screen
         options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
+        name="LoginVerification"
+        component={LoginVerification}
+      />
+      <AuthStack.Screen
+        options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
         name="Signup"
         component={Signup}
+      />
+      <AuthStack.Screen
+        options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
+        name="SignupVerification"
+        component={SignupVerification}
+      />
+      <AuthStack.Screen
+        options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
+        name="UserAgreement"
+        component={UserAgreement}
       />
     </AuthStack.Navigator>
   );
 };
 
-export default AuthScreen;
+export default AuthenticationScreen;

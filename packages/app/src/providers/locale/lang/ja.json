@@ -1,4 +1,7 @@
 {
+  "common": {
+    "next": "次へ"
+  },
   "mainTab": {
     "home": "ホーム",
     "question": "質問",
@@ -7,17 +10,39 @@
   },
   "authentication": {
     "input": {
-      "namePlaceHolder": "名前",
-      "emailPlaceHolder": "メールアドレス"
+      "namePlaceholder": "名前(3-20文字)",
+      "emailPlaceholder": "メールアドレス"
     },
     "login": {
       "title": "ログイン",
-      "loginAction": "ログイン",
       "gotoSignup": "アカウント登録",
-      "thirdPartyLogin": "その他によるログイン"
+      "thirdPartyLogin": "その他によるログイン",
+      "sendVerificationCodeAction": "ログイン",
+      "loginVerificationCodeTitle": "認証コード",
+      "sendMailMessage": "下記のメールアドレスに認証コードを送ったので、ご確認ください",
+      "loginAction": "認証してログイン",
+      "oauthAutoUserAgreementFront": "その他によるログインすることで、",
+      "oauthAutoUserAgreement": "利用規約とプライバシーポリシー",
+      "oauthAutoUserAgreementBack": "に同意したものとみなされます"
     },
     "signup": {
-      "title": "アカウント登録"
+      "title": "アカウント登録",
+      "verificationTitle": "認証コード",
+      "sendMailMessage": "下記のメールアドレスに認証コードを送ったので、ご確認ください",
+      "signupAction": "アカウント登録",
+      "verificationAction": "認証してアカウントを登録",
+      "userAgreement": "利用規約とプライバシーポリシー"
+    }
+  },
+  "validation": {
+    "common": {
+      "emptyValue": "入力してください"
+    },
+    "authentication": {
+      "emailNotValid": "正しいメールアドレスを入力してください",
+      "namePattern": "漢字、かな、英文字、数字-_だけにしてください",
+      "nameLength": "ユーザー名を3-20文字にしてください",
+      "agreementNotAgreed": "利用規約とプライバシーポリシーを確認し、同意してからご利用ください"
     }
   }
 }
