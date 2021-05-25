@@ -8,6 +8,10 @@
     "notification": "通知",
     "user": "私"
   },
+  "createNew": {
+    "createPost": "投稿",
+    "createQuestion": "質問"
+  },
   "authentication": {
     "input": {
       "namePlaceholder": "名前(3-20文字)",

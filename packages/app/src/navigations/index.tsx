@@ -3,15 +3,15 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
-import { Platform, View, Text } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
-import { ThemeContext, Icon } from "react-native-elements";
+import { Platform, View, TouchableOpacity } from "react-native";
+import { ThemeContext, Icon, Text } from "react-native-elements";
 import { useTranslation } from "react-i18next";
 import AuthenticaionScreen from "../modules/authentication";
 import Community from "../modules/community";
 import Ask from "../modules/ask";
 import User from "../modules/user";
 import NotificationScreen from "../modules/notification";
+import CreateNew from "../modules/createNew";
 
 const Tabs = createBottomTabNavigator();
 const TopStack = createStackNavigator();
@@ -31,13 +31,37 @@ const AppScreen = () => {
         },
       }}
     >
-      <TopStack.Navigator>
+      <TopStack.Navigator mode="modal">
         <TopStack.Screen
           options={{
             headerShown: false,
           }}
           name="TabScreen"
           component={TabScreen}
+        />
+        <TopStack.Screen
+          options={{
+            headerShown: false,
+            cardStyle: { backgroundColor: "transparent" },
+            cardOverlayEnabled: true,
+            cardStyleInterpolator: ({ current: { progress } }) => ({
+              cardStyle: {
+                opacity: progress.interpolate({
+                  inputRange: [0, 0.5, 0.9, 1],
+                  outputRange: [0, 0.1, 0.3, 1],
+                }),
+              },
+              overlayStyle: {
+                opacity: progress.interpolate({
+                  inputRange: [0, 0.5, 1],
+                  outputRange: [0, 0.3, 0.5],
+                  extrapolate: "clamp",
+                }),
+              },
+            }),
+          }}
+          name="CreateNew"
+          component={CreateNew}
         />
         <TopStack.Screen
           options={{
@@ -50,7 +74,7 @@ const AppScreen = () => {
     </NavigationContainer>
   );
 };
-
+const createNewPlaceholder = () => <View />;
 const TabScreen = () => {
   const { theme } = React.useContext(ThemeContext);
   const { t } = useTranslation();
@@ -67,11 +91,19 @@ const TabScreen = () => {
           left: 0,
           bottom: 0,
           right: 0,
-          borderTopWidth: 1,
-          elevation: 0,
+          borderTopWidth: 0,
+          //elevation: 0,
           height: Platform.OS == "ios" ? 86 : 70,
           backgroundColor: theme.colors?.white,
           justifyContent: "center",
+          elevation: 1,
+          shadowOffset: {
+            width: 2,
+            height: 1,
+          },
+          shadowOpacity: 0.7,
+          shadowRadius: 3,
+          shadowColor: theme.colors?.grey2,
         },
       }}
     >
@@ -139,6 +171,53 @@ const TabScreen = () => {
             },
           };
         }}
+      />
+
+      <Tabs.Screen
+        name="Create"
+        component={createNewPlaceholder}
+        options={(navigation) => {
+          return {
+            tabBarIcon: ({}) => {
+              return (
+                <View
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    height: 72,
+                    width: 72,
+                    borderRadius: 36,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    alignContent: "center",
+                    // shadowOffset: {
+                    //   width: 2,
+                    //   height: 1,
+                    // },
+                    // shadowOpacity: 0.7,
+                    // shadowRadius: 3,
+                    // shadowColor: theme.colors?.grey2,
+                    backgroundColor: theme.colors?.white,
+                  }}
+                >
+                  <Icon
+                    containerStyle={{}}
+                    type="material"
+                    name="add-circle"
+                    size={70}
+                    color={focusedColor}
+                  />
+                </View>
+              );
+            },
+          };
+        }}
+        listeners={({ navigation }) => ({
+          tabPress: (event) => {
+            event.preventDefault();
+            navigation.navigate("CreateNew");
+          },
+        })}
       />
 
       <Tabs.Screen
