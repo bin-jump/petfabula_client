@@ -182,11 +182,11 @@ const TabScreen = () => {
               return (
                 <View
                   style={{
-                    position: "absolute",
-                    bottom: 0,
-                    height: 72,
-                    width: 72,
-                    borderRadius: 36,
+                    // position: "absolute",
+                    // bottom: 0,
+                    // height: 72,
+                    // width: 72,
+                    // borderRadius: 36,
                     justifyContent: "center",
                     alignItems: "center",
                     alignContent: "center",
@@ -197,14 +197,14 @@ const TabScreen = () => {
                     // shadowOpacity: 0.7,
                     // shadowRadius: 3,
                     // shadowColor: theme.colors?.grey2,
-                    backgroundColor: theme.colors?.white,
+                    // backgroundColor: theme.colors?.white,
                   }}
                 >
                   <Icon
                     containerStyle={{}}
                     type="material"
                     name="add-circle"
-                    size={70}
+                    size={60}
                     color={focusedColor}
                   />
                 </View>

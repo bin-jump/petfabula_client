@@ -1,15 +1,36 @@
 import * as React from "react";
-import { Platform, View } from "react-native";
-import { Text } from "react-native-elements";
+import { createStackNavigator } from "@react-navigation/stack";
+import { ThemeContext, Icon } from "react-native-elements";
+import { headerBaseOption, plainGoBackHeaderOption } from "../shared";
+import Community from "./screens/Community";
 
-const Community = () => {
+const CommunityStack = createStackNavigator();
+
+const CommunityScreens = () => {
+  const { theme } = React.useContext(ThemeContext);
   return (
-    <View
-      style={{ height: "100%", alignItems: "center", justifyContent: "center" }}
+    <CommunityStack.Navigator
+      screenOptions={{ headerStyle: { elevation: 0, borderWidth: 0 } }}
+      mode="modal"
     >
-      <Text h1>Community</Text>
-    </View>
+      <CommunityStack.Screen
+        options={(navigation) => {
+          return {
+            ...headerBaseOption({ theme }),
+            headerShown: false,
+            cardStyle: { backgroundColor: "transparent" },
+          };
+        }}
+        name="Community"
+        component={Community}
+      />
+      {/* <CommunityStack.Screen
+        options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
+        name="CreatePost"
+        component={CreatePost}
+      /> */}
+    </CommunityStack.Navigator>
   );
 };
 
-export default Community;
+export default CommunityScreens;

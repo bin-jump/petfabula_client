@@ -2,7 +2,7 @@ import { Colors } from "react-native-elements";
 import { createTheme } from "./helper";
 
 const COLORS: Partial<Colors> = {
-  primary: "#fd726c",
+  primary: "#fe716b",
   secondary: "#ffeed6",
   greyOutline: "rgba(240,240,240, 1)",
   white: "#ffffff",
