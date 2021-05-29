@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^5.11.11",
+    "@react-navigation/material-top-tabs": "^5.3.15",
     "@react-navigation/native": "^5.9.4",
     "@react-navigation/stack": "^5.14.5",
     "expo": "~41.0.1",
@@ -27,7 +28,10 @@
     "react-native-confirmation-code-field": "6",
     "react-native-elements": "^3.4.1",
     "react-native-gesture-handler": "^1.10.3",
+    "react-native-pager-view": "^5.1.9",
+    "react-native-reanimated": "^2.0.0",
     "react-native-screens": "^3.2.0",
+    "react-native-tab-view": "^2.16.0",
     "react-native-web": "~0.13.12",
     "react-navigation": "^4.4.4"
   },

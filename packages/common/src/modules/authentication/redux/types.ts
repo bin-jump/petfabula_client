@@ -3,7 +3,7 @@ import { AsyncDataBase } from '../../shared';
 export interface User {
   id: number;
   name: string;
-  avatarUrl: string;
+  photo: string;
 }
 
 export interface EmailCodeSendRegisterCodeForm {

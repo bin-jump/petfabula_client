@@ -1,6 +1,7 @@
 {
   "common": {
-    "next": "次へ"
+    "next": "次へ",
+    "search": "検索"
   },
   "mainTab": {
     "home": "ホーム",
@@ -36,6 +37,14 @@
       "signupAction": "アカウント登録",
       "verificationAction": "認証してアカウントを登録",
       "userAgreement": "利用規約とプライバシーポリシー"
+    }
+  },
+  "posts": {
+    "recommends": {
+      "tabLabel": "おすすめ"
+    },
+    "followed": {
+      "tabLabel": "フォロー"
     }
   },
   "validation": {

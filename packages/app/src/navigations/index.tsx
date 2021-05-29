@@ -7,7 +7,7 @@ import { Platform, View, TouchableOpacity } from "react-native";
 import { ThemeContext, Icon, Text } from "react-native-elements";
 import { useTranslation } from "react-i18next";
 import AuthenticaionScreen from "../modules/authentication";
-import Community from "../modules/community";
+import Posts from "../modules/post";
 import Ask from "../modules/ask";
 import User from "../modules/user";
 import NotificationScreen from "../modules/notification";
@@ -108,13 +108,13 @@ const TabScreen = () => {
       }}
     >
       <Tabs.Screen
-        name="Community"
-        component={Community}
+        name="Posts"
+        component={Posts}
         options={(navigation) => {
           return {
             tabBarVisible:
               !getFocusedRouteNameFromRoute(navigation.route) ||
-              getFocusedRouteNameFromRoute(navigation.route) == "Community",
+              getFocusedRouteNameFromRoute(navigation.route) == "Posts",
             tabBarIcon: ({ focused }) => {
               return (
                 <View style={{ alignContent: "center" }}>

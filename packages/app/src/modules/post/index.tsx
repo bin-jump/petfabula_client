@@ -2,18 +2,19 @@ import * as React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { ThemeContext, Icon } from "react-native-elements";
 import { headerBaseOption, plainGoBackHeaderOption } from "../shared";
-import Community from "./screens/Community";
+import Posts from "./screens/Posts";
+import Search from "./screens/Search";
 
-const CommunityStack = createStackNavigator();
+const PostsStack = createStackNavigator();
 
-const CommunityScreens = () => {
+const PostScreens = () => {
   const { theme } = React.useContext(ThemeContext);
   return (
-    <CommunityStack.Navigator
+    <PostsStack.Navigator
       screenOptions={{ headerStyle: { elevation: 0, borderWidth: 0 } }}
       mode="modal"
     >
-      <CommunityStack.Screen
+      <PostsStack.Screen
         options={(navigation) => {
           return {
             ...headerBaseOption({ theme }),
@@ -21,16 +22,16 @@ const CommunityScreens = () => {
             cardStyle: { backgroundColor: "transparent" },
           };
         }}
-        name="Community"
-        component={Community}
+        name="Posts"
+        component={Posts}
       />
-      {/* <CommunityStack.Screen
+      <PostsStack.Screen
         options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
-        name="CreatePost"
-        component={CreatePost}
-      /> */}
-    </CommunityStack.Navigator>
+        name="Search"
+        component={Search}
+      />
+    </PostsStack.Navigator>
   );
 };
 
-export default CommunityScreens;
+export default PostScreens;
