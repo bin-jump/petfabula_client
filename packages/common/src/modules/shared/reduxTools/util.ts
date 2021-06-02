@@ -1,6 +1,11 @@
 import { put, call, takeEvery, takeLatest } from 'redux-saga/effects';
 import { apiRequest, ApiResponse } from '../connection';
-import { ReduxAsyncAction, AsyncActionError, ActionBase } from './types';
+import {
+  ReduxAsyncAction,
+  AsyncActionError,
+  ActionBase,
+  AsyncCursorPageListBase,
+} from './types';
 
 export function createAsyncActionType(prefix: string): ReduxAsyncAction {
   return {
@@ -81,6 +86,7 @@ export function createSagaWatcher({
         type: asyncAction.SUCCESS,
         payload: response.data,
         error: null,
+        extra: beginAction.payload,
       };
       if (successorPayload) {
         successAction.extra = successorPayload(beginAction.payload);
@@ -113,4 +119,20 @@ export const resolveResponseFormError = (err: AsyncActionError | null) => {
 
 export const checkFailedResponse = (err: AsyncActionError | null) => {
   return err?.type == 'FAILED_ON_RESPONSE';
+};
+
+export const fillCursorResponseData = (
+  state: AsyncCursorPageListBase<any>,
+  successAction: ActionBase,
+): AsyncCursorPageListBase<any> => {
+  return {
+    ...state,
+    data: successAction.payload.cursor
+      ? [...state.data, ...successAction.payload.result]
+      : successAction.payload.result,
+    hasMore: successAction.payload.hasMore,
+    nextCursor: successAction.payload.nextCursor,
+    initializing: false,
+    pending: false,
+  };
 };

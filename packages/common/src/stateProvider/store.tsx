@@ -4,6 +4,8 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import { fork, all, spawn } from 'redux-saga/effects';
 import rootReducer from './rootReducer';
 import { authenticationRootSaga } from '../modules/authentication';
+import { communityRootSaga } from '../modules/community';
+
 import { logHandleMiddleware } from './middlewares/logHandleMiddleware';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -16,7 +18,7 @@ const store = createStore(
 );
 
 function* rootSaga() {
-  yield all([fork(authenticationRootSaga)]);
+  yield all([fork(authenticationRootSaga), fork(communityRootSaga)]);
 }
 
 sagaMiddleware.run(rootSaga);

@@ -1,5 +1,4 @@
 import { all, fork } from 'redux-saga/effects';
-
 import { createSagaWatcher } from '../../shared';
 import {
   EmailCodeSendLoginCodeActionType,

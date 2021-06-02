@@ -16,3 +16,13 @@ export const authenticationMessageKey = {
   // passwordComplexity: `${authenticationPrefix}.passwordComplexity`,
   // passwordNotMatch: `${authenticationPrefix}.passwordNotMatch`,
 };
+
+const postPrefix = `${messagePrefix}.post`;
+export const postMessageKey = {
+  postContentTooLong: `${postPrefix}.postContentTooLong`,
+  postContentTooShort: `${postPrefix}.postContentTooShort`,
+  commentContentTooLong: `${postPrefix}.commentContentTooLong`,
+  commentContentTooShort: `${postPrefix}.commentContentTooShort`,
+  replyContentTooLong: `${postPrefix}.replyContentTooLong`,
+  replyContentTooShort: `${postPrefix}.replyContentTooShort`,
+};
