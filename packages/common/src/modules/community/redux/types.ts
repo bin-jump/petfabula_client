@@ -1,4 +1,8 @@
-import { AsyncDataBase, AsyncCursorPageListBase } from '../../shared';
+import {
+  AsyncDataBase,
+  AsyncCursorPageListBase,
+  AsyncListBase,
+} from '../../shared';
 
 export interface Participtor {
   id: number;
@@ -19,6 +23,12 @@ export interface ParticiptorPet {
   photo: string;
 }
 
+export interface PostTopic {
+  id: number;
+  title: string;
+  intro: string;
+}
+
 export interface Post {
   id: number;
   relatePetId: number;
@@ -34,6 +44,7 @@ export interface PostDetail extends Post {
   relatedPet: ParticiptorPet;
   liked: boolean;
   likePending: boolean;
+  topic: PostTopic;
 }
 
 export interface PostComment {
@@ -60,6 +71,7 @@ export interface PostCommentReply {
 export interface PostForm {
   content: string;
   relatedPetId: number | null;
+  topicId: number | null;
 }
 
 export interface PostCommentForm {
@@ -91,4 +103,7 @@ export interface CommunityState {
   removeComment: AsyncDataBase<number>;
   createReply: AsyncDataBase<PostCommentReply>;
   removeReply: AsyncDataBase<number>;
+
+  postTopics: AsyncListBase<PostTopic>;
+  mypets: AsyncListBase<ParticiptorPet>;
 }

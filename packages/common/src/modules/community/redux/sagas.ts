@@ -8,8 +8,27 @@ import {
   LoadFollowedPostsActionType,
   PostCreatePostActionType,
   PostRemovePostActionType,
+  PostLoadTopicActionType,
+  CommunityLoadMyPetsActionType,
 } from './actionTypes';
 
+// user
+
+const watchLoadMyPosts = createSagaWatcher({
+  url: `/api/post/posts`,
+  method: 'GET',
+  asyncAction: LoadMyPostsActionType,
+  watchType: 'LATEST',
+});
+
+const watchLoadMyPets = createSagaWatcher({
+  url: `/api/participator/pets`,
+  method: 'GET',
+  asyncAction: CommunityLoadMyPetsActionType,
+  watchType: 'LATEST',
+});
+
+// posts
 const watchGetPostDetail = createSagaWatcher({
   method: 'GET',
   asyncAction: PostLoadDetailActionType,
@@ -17,13 +36,6 @@ const watchGetPostDetail = createSagaWatcher({
   createUrl: (payload) => {
     return `/api/post/posts/${payload.postId}`;
   },
-});
-
-const watchLoadMyPosts = createSagaWatcher({
-  url: `/api/post/posts`,
-  method: 'GET',
-  asyncAction: LoadMyPostsActionType,
-  watchType: 'LATEST',
 });
 
 const watchLoadOthersPosts = createSagaWatcher({
@@ -65,8 +77,16 @@ const watchRemovePost = createSagaWatcher({
   },
 });
 
+const watchLoadTopics = createSagaWatcher({
+  url: `/api/post/topics`,
+  method: 'GET',
+  asyncAction: PostLoadTopicActionType,
+  watchType: 'LATEST',
+});
+
 export function* communityRootSaga() {
   yield all([
+    fork(watchLoadMyPets),
     fork(watchGetPostDetail),
     fork(watchLoadMyPosts),
     fork(watchLoadOthersPosts),
@@ -74,5 +94,6 @@ export function* communityRootSaga() {
     fork(watchLoadFollowedPosts),
     fork(watchCreatePost),
     fork(watchRemovePost),
+    fork(watchLoadTopics),
   ]);
 }

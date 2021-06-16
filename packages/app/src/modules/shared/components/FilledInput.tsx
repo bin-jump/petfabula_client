@@ -1,7 +1,6 @@
 import * as React from "react";
 import { FieldProps } from "formik";
 import { Input, ThemeContext } from "react-native-elements";
-import { Ionicons } from "@expo/vector-icons";
 import { Icon } from "react-native-elements";
 import { useTranslation } from "react-i18next";
 
@@ -33,12 +32,14 @@ const InputField: React.FC<
     prefix: React.ReactNode;
     placeholder?: string;
     inputType: "email" | "name";
+    autoFocus?: boolean;
   }
 > = ({
   field: { onChange, ...field },
   form: { touched, errors, values, setFieldValue, handleBlur },
   placeholder,
   inputType,
+  autoFocus,
 }) => {
   const { t } = useTranslation();
   const { theme } = React.useContext(ThemeContext);
@@ -55,6 +56,7 @@ const InputField: React.FC<
   return (
     <Input
       //   textAlignVertical="top"
+      autoFocus={autoFocus}
       autoCapitalize="none"
       value={values[field.name]?.toString()}
       placeholder={placeholder}

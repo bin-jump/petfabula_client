@@ -1,39 +1,264 @@
 import * as React from "react";
-import { View, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import { View, TouchableOpacity, TextInput } from "react-native";
 import {
   Text,
   ThemeContext,
-  Button,
   Icon,
-  Divider,
+  Image,
   useTheme,
 } from "react-native-elements";
-import { useNavigation } from "@react-navigation/native";
+import { Field, Formik } from "formik";
+import {
+  useNavigation,
+  useRoute,
+  RouteProp,
+  useFocusEffect,
+} from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
+import {
+  BlankInput,
+  useDidUpdateEffect,
+  DismissKeyboardView,
+} from "../../shared";
+import {
+  PostForm,
+  validPostSchema,
+  useCreatePost,
+  PostTopic,
+} from "@petfabula/common";
+import ParamTypes from "./paramTypes";
 
 const CreatePost = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
+  const { params } = useRoute<RouteProp<ParamTypes, "CreatePost">>();
   const { t } = useTranslation();
+  const { createPost } = useCreatePost();
+  const images = params?.images ? params.images : [];
+  const topic = params?.topic;
+  const initial: PostForm = {
+    content: "",
+    relatedPetId: null,
+    topicId: topic ? topic.id : null,
+  };
+
+  const handleSubmit = (data: PostForm) => {
+    // console.log("handleSubmit", data);
+    createPost(data, []);
+  };
 
   return (
-    <View
-      style={{
-        height: "100%",
-        width: "100%",
-        backgroundColor: "transparent",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <Text>CreatePost</Text>
-        <Button
-          title="go to main"
+    <DismissKeyboardView>
+      <View
+        style={{
+          height: "100%",
+          width: "100%",
+          backgroundColor: theme.colors?.white,
+          paddingHorizontal: 16,
+        }}
+      >
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <Formik
+            initialValues={initial}
+            onSubmit={handleSubmit}
+            validationSchema={validPostSchema}
+          >
+            {({ values, setErrors, handleSubmit, handleBlur, setValues }) => (
+              <PostFormContent
+                {...{
+                  values,
+                  setErrors,
+                  handleSubmit,
+                  handleBlur,
+                  setValues,
+                  topic,
+                }}
+              />
+            )}
+          </Formik>
+
+          <TouchableOpacity
+            style={{
+              marginTop: 18,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              backgroundColor: theme.colors?.grey5,
+              height: 42,
+              borderRadius: 10,
+              width: "100%",
+              paddingHorizontal: 8,
+              marginBottom: 16,
+            }}
+          >
+            <Text style={{ fontSize: 18, color: theme.colors?.grey0 }}>
+              {t("createNew.petSelect")}
+            </Text>
+            <Icon type="antdesign" name="right" color={theme.colors?.grey0} />
+          </TouchableOpacity>
+
+          <View
+            style={{
+              width: "100%",
+              flexDirection: "row",
+              flexWrap: "wrap",
+              alignItems: "flex-start",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("ImageSelect", { fromScreen: "CreatePost" })
+              }
+              style={{
+                width: 92,
+                height: 92,
+                borderStyle: "dashed",
+                justifyContent: "center",
+                borderWidth: 3,
+                borderRadius: 3,
+                borderColor: theme.colors?.grey3,
+                margin: 3,
+              }}
+            >
+              <Icon
+                size={40}
+                color={theme.colors?.grey3}
+                type="Ionicons"
+                name="add"
+              />
+            </TouchableOpacity>
+            {images.map((item) => (
+              <Image
+                key={item.name}
+                source={{ uri: item.uri }}
+                style={{ width: 92, height: 92, margin: 3 }}
+              />
+            ))}
+          </View>
+        </View>
+      </View>
+    </DismissKeyboardView>
+  );
+};
+
+const PostFormContent = ({
+  values,
+  handleSubmit,
+  setErrors,
+  handleBlur,
+  setValues,
+  topic,
+}: {
+  values: PostForm;
+  handleSubmit: any;
+  setErrors: (errors: any) => void;
+  handleBlur: (e: any) => void;
+  setValues: (val: PostForm) => void;
+  topic?: PostTopic;
+}) => {
+  const { theme } = React.useContext(ThemeContext);
+  const navigation = useNavigation();
+  const { t } = useTranslation();
+  const { pending, error, result } = useCreatePost();
+
+  React.useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <View style={{ flexDirection: "row", marginRight: 24 }}>
+          <TouchableOpacity
+            onPress={() => {
+              handleSubmit();
+            }}
+          >
+            <Text h4>{t("common.send")}</Text>
+          </TouchableOpacity>
+        </View>
+      ),
+    });
+  }, [navigation]);
+
+  useDidUpdateEffect(() => {
+    if (result) {
+      navigation.navigate("TabScreen");
+    }
+  }, [result]);
+
+  return (
+    <View style={{ width: "100%", alignItems: "center" }}>
+      <Field
+        name="content"
+        placeholder={t("createNew.input.postcontent")}
+        component={BlankInput}
+        autoFocus
+      />
+
+      <View
+        style={{
+          width: "100%",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <TouchableOpacity
           onPress={() => {
-            navigation.navigate("TabScreen");
+            navigation.navigate("PostTopics");
           }}
-        />
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Icon
+            type="fontisto"
+            name="hashtag"
+            color={topic ? theme.colors?.secondary : theme.colors?.grey1}
+            size={18}
+          />
+          {topic ? (
+            <Text
+              numberOfLines={1}
+              style={{
+                // backgroundColor: theme.colors?.grey4,
+                paddingHorizontal: 6,
+                color: theme.colors?.black,
+                textAlign: "center",
+                marginLeft: 2,
+                paddingBottom: 3,
+                fontSize: 20,
+                maxWidth: 300,
+              }}
+            >
+              {topic.title}
+            </Text>
+          ) : (
+            <Text
+              numberOfLines={1}
+              style={{
+                // fontWeight: "bold",
+                color: theme.colors?.grey1,
+                textAlign: "center",
+                marginLeft: 2,
+                paddingBottom: 3,
+                fontSize: 20,
+                maxWidth: 300,
+              }}
+            >
+              {t("createNew.topicSelect")}
+            </Text>
+          )}
+        </TouchableOpacity>
+        <View>
+          <Text
+            style={{
+              fontSize: 16,
+              color:
+                values.content?.length <= 3000
+                  ? theme.colors?.grey1
+                  : theme.colors?.error,
+            }}
+          >{`${values.content?.length}/3000`}</Text>
+        </View>
       </View>
     </View>
   );

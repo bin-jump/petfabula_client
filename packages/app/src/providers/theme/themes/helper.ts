@@ -52,5 +52,15 @@ export const createTheme = (color: Partial<Colors>): Partial<FullTheme> => {
       color: color.white,
       reverseColor: color.disabled,
     },
+    ListItemTitle: {
+      style: {
+        color: color.black,
+      },
+    },
+    ListItemSubtitle: {
+      style: {
+        color: color.grey1,
+      },
+    },
   };
 };

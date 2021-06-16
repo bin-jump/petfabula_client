@@ -5,6 +5,8 @@ import { headerBaseOption, plainGoBackHeaderOption } from "../shared";
 import CreateNew from "./screens/CreateNew";
 import CreatePost from "./screens/CreatePost";
 import CreateQuestion from "./screens/CreateQuestion";
+import ImageSelect from "./screens/ImageSelect";
+import PostTopics from "./screens/PostTopics";
 
 const CreateNewStack = createStackNavigator();
 
@@ -35,6 +37,16 @@ const CreateNewScreens = () => {
         options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
         name="CreateQuestion"
         component={CreateQuestion}
+      />
+      <CreateNewStack.Screen
+        options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
+        name="ImageSelect"
+        component={ImageSelect}
+      />
+      <CreateNewStack.Screen
+        options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
+        name="PostTopics"
+        component={PostTopics}
       />
     </CreateNewStack.Navigator>
   );

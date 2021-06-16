@@ -7,6 +7,10 @@ export const CommunityUnfollowUserActionType = createAsyncActionType(
   'COMMUNITY_UNFOLLOW_USER',
 );
 
+export const CommunityLoadMyPetsActionType = createAsyncActionType(
+  'COMMUNITY_LOAD_MY_PETS',
+);
+
 export const LoadMyPostsActionType =
   createAsyncActionType('POST_LOAD_MY_POSTS');
 export const PostLoadOthersPostsActionType = createAsyncActionType(
@@ -53,3 +57,7 @@ export const PostRemoveCommentReplyActionType = createAsyncActionType(
 export const PostLikeActionType = createAsyncActionType('POST_LIKE_POST');
 
 export const PostUnlikeActionType = createAsyncActionType('POST_UNLIKE_POST');
+
+export const PostLoadTopicActionType = createAsyncActionType(
+  'POST_LOAD_POST_TOPIC',
+);

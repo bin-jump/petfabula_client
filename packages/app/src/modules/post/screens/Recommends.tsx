@@ -1,16 +1,31 @@
-import React, { forwardRef, useCallback } from "react";
-import { View, FlatList, FlatListProps, ListRenderItem } from "react-native";
+import React, { forwardRef, useCallback, useEffect } from "react";
+import {
+  View,
+  FlatList,
+  FlatListProps,
+  ListRenderItem,
+  RefreshControl,
+} from "react-native";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import Animated from "react-native-reanimated";
+import { useLoadRecommendPosts, Post } from "@petfabula/common";
 
-export const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+export const AnimatedFlatList = Animated.createAnimatedComponent(
+  FlatList
+) as typeof FlatList;
 
-type Props = Omit<FlatListProps<any>, "renderItem">;
+type Props = Omit<FlatListProps<Post>, "renderItem" | "data">;
 
 const Recommends = forwardRef<FlatList, Props>((props, ref) => {
-  const keyExtractor = useCallback((_, index) => index.toString(), []);
+  const keyExtractor = (item: Post) => item.id.toString();
+  const { posts, loadRecommendPosts, nextCursor, initializing, pending } =
+    useLoadRecommendPosts();
 
-  const renderItem = useCallback<ListRenderItem<any>>(
+  useEffect(() => {
+    loadRecommendPosts(null);
+  }, []);
+
+  const renderItem = useCallback<ListRenderItem<Post>>(
     ({ item }) => (
       <View
         style={{
@@ -27,10 +42,19 @@ const Recommends = forwardRef<FlatList, Props>((props, ref) => {
 
   return (
     <AnimatedFlatList
+      // refreshControl={
+      //   <RefreshControl
+      //     //refreshing={initializing}
+      //     onRefresh={() => {
+      //       loadRecommendPosts(null);
+      //     }}
+      //   />
+      // }
       ref={ref}
       style={{
         flex: 1,
       }}
+      data={posts}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
       {...props}

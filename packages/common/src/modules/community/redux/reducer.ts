@@ -1,11 +1,14 @@
 import { createReducer, ActionBase } from '../../shared';
 import { CommunityState } from './types';
 import { postReducer } from './postHooks';
+import { petReducer } from './petHooks';
+import { postTopicReducer } from './topicHooks';
 
 const initialStat: CommunityState = {
   // user
   myDetail: { data: null, pending: false, error: null },
   othersDetail: { data: null, pending: false, error: null },
+  mypets: { data: [], pending: false, error: null },
   myPosts: {
     data: [],
     pending: false,
@@ -58,9 +61,10 @@ const initialStat: CommunityState = {
   removeComment: { data: null, pending: false, error: null },
   createReply: { data: null, pending: false, error: null },
   removeReply: { data: null, pending: false, error: null },
+  postTopics: { data: [], pending: false, error: null },
 };
 
 export const communityRootReducer = createReducer<CommunityState, ActionBase>(
   initialStat,
-  { ...postReducer },
+  { ...postReducer, ...petReducer, ...postTopicReducer },
 );

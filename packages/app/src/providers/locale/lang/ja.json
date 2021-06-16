@@ -1,5 +1,6 @@
 {
   "common": {
+    "send": "送信",
     "next": "次へ",
     "search": "検索"
   },
@@ -11,7 +12,12 @@
   },
   "createNew": {
     "createPost": "投稿",
-    "createQuestion": "質問"
+    "createQuestion": "質問",
+    "input": {
+      "postcontent": "内容を入力してください"
+    },
+    "topicSelect": "トピックを選択します",
+    "petSelect": "関連ペットを選択します"
   },
   "authentication": {
     "input": {
@@ -56,6 +62,9 @@
       "namePattern": "漢字、かな、英文字、数字-_だけにしてください",
       "nameLength": "ユーザー名を3-20文字にしてください",
       "agreementNotAgreed": "利用規約とプライバシーポリシーを確認し、同意してからご利用ください"
+    },
+    "post": {
+      "postContentTooShort": "何かの内容を入力してください"
     }
   }
 }

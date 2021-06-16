@@ -61,6 +61,9 @@ const useCollpaseHeaderListTab = ({
   const scrollHandler = useAnimatedScrollHandler(
     {
       onScroll: (event) => {
+        if (event.contentOffset.y < 0) {
+          return;
+        }
         if (tabIndex == currentIndex) {
           const diff = event.contentOffset.y - scrollValue.value;
           const v = translateVal.value + diff * 0.3;
@@ -68,7 +71,10 @@ const useCollpaseHeaderListTab = ({
             translateVal.value = v;
           }
           // fix fast scroll glitch bug
-          if (translateVal.value - event.contentOffset.y > 0) {
+          if (
+            translateVal.value - event.contentOffset.y > 0 &&
+            event.contentOffset.y == 0
+          ) {
             translateVal.value = event.contentOffset.y;
           }
           headerDist.value = translateVal.value - event.contentOffset.y;
@@ -101,7 +107,7 @@ const Posts = () => {
   const headerTranslateMax = HEADER_HEIGHT;
   const translateVal = useSharedValue(0);
 
-  console.log("posts tabIndex", tabIndex, Math.random());
+  // console.log("posts tabIndex", tabIndex, Math.random());
   const {
     listRef: recommendListRef,
     scrollHandler: recommendScrollHandler,
@@ -190,7 +196,7 @@ const Posts = () => {
         bounces={false}
         ref={recommendListRef}
         onScroll={recommendScrollHandler}
-        data={[{}, {}, {}, {}, {}]}
+        // data={[{}, {}, {}, {}, {}]}
         {...sharedProps}
       />
     ),

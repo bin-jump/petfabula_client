@@ -6,7 +6,8 @@ export const validPostSchema = yup.object().shape({
     .string()
     .trim()
     .min(1, postMessageKey.postContentTooShort)
-    .max(10000, postMessageKey.postContentTooLong),
+    .max(3000, postMessageKey.postContentTooLong)
+    .required(postMessageKey.postContentTooShort),
 });
 
 export const validPostCommentSchema = yup.object().shape({
