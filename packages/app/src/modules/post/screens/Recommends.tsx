@@ -42,18 +42,16 @@ const Recommends = forwardRef<FlatList, Props>((props, ref) => {
 
   return (
     <AnimatedFlatList
-      // refreshControl={
-      //   <RefreshControl
-      //     //refreshing={initializing}
-      //     onRefresh={() => {
-      //       loadRecommendPosts(null);
-      //     }}
-      //   />
-      // }
+      refreshControl={
+        <RefreshControl
+          progressViewOffset={70}
+          refreshing={initializing}
+          onRefresh={() => {
+            loadRecommendPosts(null);
+          }}
+        />
+      }
       ref={ref}
-      style={{
-        flex: 1,
-      }}
       data={posts}
       renderItem={renderItem}
       keyExtractor={keyExtractor}

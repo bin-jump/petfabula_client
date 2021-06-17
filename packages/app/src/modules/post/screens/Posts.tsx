@@ -27,7 +27,7 @@ import Animated, {
   useAnimatedStyle,
   useDerivedValue,
   withTiming,
-  Easing,
+  withSpring,
 } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
 import Recommends from "./Recommends";
@@ -42,6 +42,7 @@ type ScrollMeta = {
   position: Animated.SharedValue<number>;
   headerDist: number;
 };
+const TRANSLATE_SPEED_RATIO = 0.3;
 
 const useCollpaseHeaderListTab = ({
   currentIndex,
@@ -56,7 +57,16 @@ const useCollpaseHeaderListTab = ({
 }) => {
   const listRef = useRef<FlatList>(null);
   const scrollValue = useSharedValue(0);
-  const headerDist = useSharedValue(0);
+
+  const listSlideStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: -translateVal.value,
+        },
+      ],
+    };
+  });
 
   const scrollHandler = useAnimatedScrollHandler(
     {
@@ -66,7 +76,7 @@ const useCollpaseHeaderListTab = ({
         }
         if (tabIndex == currentIndex) {
           const diff = event.contentOffset.y - scrollValue.value;
-          const v = translateVal.value + diff * 0.3;
+          const v = translateVal.value + diff * TRANSLATE_SPEED_RATIO;
           if (v >= 0 && v <= headerHeight) {
             translateVal.value = v;
           }
@@ -75,9 +85,8 @@ const useCollpaseHeaderListTab = ({
             translateVal.value - event.contentOffset.y > 0 &&
             event.contentOffset.y == 0
           ) {
-            translateVal.value = event.contentOffset.y;
+            translateVal.value = withTiming(0);
           }
-          headerDist.value = translateVal.value - event.contentOffset.y;
         }
         scrollValue.value = event.contentOffset.y;
       },
@@ -86,9 +95,9 @@ const useCollpaseHeaderListTab = ({
   );
 
   return {
+    listSlideStyle,
     listRef,
     scrollValue,
-    headerDist,
     scrollHandler,
   };
 };
@@ -102,16 +111,14 @@ const Posts = () => {
 
   const HEADER_HEIGHT = 46;
   const TAB_BAR_HEIGHT = 42;
-  const TRANSLATE_SPEED_RATIO = 0.3;
   const HeaderHeightWithMargin = top + HEADER_HEIGHT;
-  const headerTranslateMax = HEADER_HEIGHT;
   const translateVal = useSharedValue(0);
 
   // console.log("posts tabIndex", tabIndex, Math.random());
   const {
+    listSlideStyle: recommendSlideStyle,
     listRef: recommendListRef,
     scrollHandler: recommendScrollHandler,
-    headerDist: recommendHeaderDist,
   } = useCollpaseHeaderListTab({
     currentIndex: tabIndex,
     translateVal: translateVal,
@@ -120,9 +127,9 @@ const Posts = () => {
   });
 
   const {
+    listSlideStyle: followSlideStyle,
     listRef: followListRef,
     scrollHandler: followScrollHandler,
-    headerDist: followHeaderDist,
   } = useCollpaseHeaderListTab({
     currentIndex: tabIndex,
     translateVal: translateVal,
@@ -150,70 +157,51 @@ const Posts = () => {
     };
   });
 
-  const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(() => {
-    return {
-      paddingTop:
-        Platform.OS == "android"
-          ? HeaderHeightWithMargin + 8 + top
-          : HeaderHeightWithMargin + 8,
-      paddingBottom: bottom,
-      minHeight: screenHeight,
-    };
-  }, [HeaderHeightWithMargin, bottom, screenHeight, tabIndex]);
-
-  const adjust: NonNullable<FlatListProps<any>["onMomentumScrollEnd"]> = (
-    event
-  ) => {
-    if (tabIndex != 0) {
-      recommendListRef.current?.scrollToOffset({
-        offset: translateVal.value - recommendHeaderDist.value,
-        animated: false,
-      });
-    }
-    if (tabIndex != 1) {
-      followListRef.current?.scrollToOffset({
-        offset: translateVal.value - followHeaderDist.value,
-        animated: false,
-      });
-    }
+  const listViewStyle = {
+    marginTop:
+      Platform.OS == "android"
+        ? HeaderHeightWithMargin + top
+        : HeaderHeightWithMargin,
   };
 
   const sharedProps = useMemo<Partial<FlatListProps<any>>>(
     () => ({
       // decelerationRate: 0.96,
-      contentContainerStyle,
-      onMomentumScrollEnd: adjust,
-      onScrollEndDrag: adjust,
-      scrollEventThrottle: 1,
-      scrollIndicatorInsets: { top: HeaderHeightWithMargin },
+      contentContainerStyle: {
+        paddingTop: 3,
+        paddingBottom: bottom,
+        minHeight: screenHeight,
+      },
+      scrollEventThrottle: 5,
+      // showsVerticalScrollIndicator: false,
+      // scrollIndicatorInsets: { top: -20 },
     }),
-    [contentContainerStyle, HeaderHeightWithMargin, tabIndex, adjust]
+    [HeaderHeightWithMargin, tabIndex]
   );
 
   const renderRecommends = useCallback(
     () => (
       <Recommends
-        bounces={false}
+        style={[listViewStyle, recommendSlideStyle]}
         ref={recommendListRef}
         onScroll={recommendScrollHandler}
-        // data={[{}, {}, {}, {}, {}]}
         {...sharedProps}
       />
     ),
-    [recommendListRef, recommendScrollHandler, sharedProps]
+    [recommendListRef, recommendScrollHandler, sharedProps, recommendSlideStyle]
   );
 
   const renderFollowed = useCallback(
     () => (
       <Followed
-        bounces={false}
+        style={[listViewStyle, followSlideStyle]}
         ref={followListRef}
         onScroll={followScrollHandler}
         data={[{}, {}, {}, {}, {}]}
         {...sharedProps}
       />
     ),
-    [followListRef, followScrollHandler, sharedProps]
+    [followListRef, followScrollHandler, sharedProps, followSlideStyle]
   );
 
   const headerContainerStyle = useMemo<StyleProp<ViewStyle>>(
