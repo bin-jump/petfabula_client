@@ -46,6 +46,7 @@ const InputField = ({
       inputStyle={{ height: 140, marginHorizontal: 0, padding: 0 }}
       inputContainerStyle={{
         marginHorizontal: 0,
+        paddingVertical: 5,
         borderBottomColor: errorMsg ? theme.colors?.error : theme.colors?.grey3,
       }}
     />

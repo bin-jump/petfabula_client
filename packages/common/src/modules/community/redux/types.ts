@@ -33,6 +33,7 @@ export interface Post {
   id: number;
   relatePetId: number;
   content: string;
+  viewCount: number;
   likeCount: number;
   commentCount: number;
   createdDate: number;

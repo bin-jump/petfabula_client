@@ -1,6 +1,5 @@
 import React, { forwardRef, useCallback, useEffect } from "react";
 import {
-  View,
   FlatList,
   FlatListProps,
   ListRenderItem,
@@ -9,6 +8,7 @@ import {
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import Animated from "react-native-reanimated";
 import { useLoadRecommendPosts, Post } from "@petfabula/common";
+import PostItem from "../components/PostItemNarrow";
 
 export const AnimatedFlatList = Animated.createAnimatedComponent(
   FlatList
@@ -26,17 +26,7 @@ const Recommends = forwardRef<FlatList, Props>((props, ref) => {
   }, []);
 
   const renderItem = useCallback<ListRenderItem<Post>>(
-    ({ item }) => (
-      <View
-        style={{
-          height: 300,
-          width: "100%",
-          backgroundColor: "#aaaaaa",
-          marginBottom: 12,
-          marginHorizontal: 12,
-        }}
-      ></View>
-    ),
+    ({ item }) => <PostItem post={item} />,
     []
   );
 
@@ -44,13 +34,14 @@ const Recommends = forwardRef<FlatList, Props>((props, ref) => {
     <AnimatedFlatList
       refreshControl={
         <RefreshControl
-          progressViewOffset={70}
+          // progressViewOffset={70}
           refreshing={initializing}
           onRefresh={() => {
             loadRecommendPosts(null);
           }}
         />
       }
+      numColumns={2}
       ref={ref}
       data={posts}
       renderItem={renderItem}

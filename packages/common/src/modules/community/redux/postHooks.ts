@@ -325,6 +325,7 @@ export const postReducer = {
       myPosts: {
         ...state.myPosts,
         pending: false,
+        initializing: false,
         error: action.error,
       },
     };
@@ -366,6 +367,7 @@ export const postReducer = {
       othersPosts: {
         ...state.othersPosts,
         pending: false,
+        initializing: false,
         error: action.error,
       },
     };
@@ -404,6 +406,7 @@ export const postReducer = {
       recommendPosts: {
         ...state.recommendPosts,
         pending: false,
+        initializing: false,
         error: action.error,
       },
     };
@@ -442,6 +445,7 @@ export const postReducer = {
       followedPosts: {
         ...state.followedPosts,
         pending: false,
+        initializing: false,
         error: action.error,
       },
     };

@@ -2,7 +2,8 @@
   "common": {
     "send": "送信",
     "next": "次へ",
-    "search": "検索"
+    "search": "検索",
+    "pending": "処理中"
   },
   "mainTab": {
     "home": "ホーム",

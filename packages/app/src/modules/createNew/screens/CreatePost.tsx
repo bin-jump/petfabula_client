@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, TouchableOpacity, TextInput } from "react-native";
+import { View, TouchableOpacity, Keyboard } from "react-native";
 import {
   Text,
   ThemeContext,
@@ -8,17 +8,13 @@ import {
   useTheme,
 } from "react-native-elements";
 import { Field, Formik } from "formik";
-import {
-  useNavigation,
-  useRoute,
-  RouteProp,
-  useFocusEffect,
-} from "@react-navigation/native";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import {
   BlankInput,
   useDidUpdateEffect,
   DismissKeyboardView,
+  PendingOverlay,
 } from "../../shared";
 import {
   PostForm,
@@ -43,8 +39,9 @@ const CreatePost = () => {
   };
 
   const handleSubmit = (data: PostForm) => {
+    Keyboard.dismiss();
     // console.log("handleSubmit", data);
-    createPost(data, []);
+    createPost(data, images);
   };
 
   return (
@@ -185,6 +182,7 @@ const PostFormContent = ({
 
   return (
     <View style={{ width: "100%", alignItems: "center" }}>
+      <PendingOverlay pending={pending} />
       <Field
         name="content"
         placeholder={t("createNew.input.postcontent")}

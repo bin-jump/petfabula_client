@@ -37,11 +37,11 @@ import TabBar from "../components/TabBar";
 
 const Tab = createMaterialTopTabNavigator();
 
-type ScrollMeta = {
-  list: RefObject<FlatList>;
-  position: Animated.SharedValue<number>;
-  headerDist: number;
-};
+// type ScrollMeta = {
+//   list: RefObject<FlatList>;
+//   position: Animated.SharedValue<number>;
+//   headerDist: number;
+// };
 const TRANSLATE_SPEED_RATIO = 0.3;
 
 const useCollpaseHeaderListTab = ({
@@ -160,16 +160,17 @@ const Posts = () => {
   const listViewStyle = {
     marginTop:
       Platform.OS == "android"
-        ? HeaderHeightWithMargin + top
-        : HeaderHeightWithMargin,
+        ? HeaderHeightWithMargin + top - 6
+        : HeaderHeightWithMargin - 6,
+    marginBottom: bottom + 10,
   };
 
   const sharedProps = useMemo<Partial<FlatListProps<any>>>(
     () => ({
       // decelerationRate: 0.96,
       contentContainerStyle: {
-        paddingTop: 3,
-        paddingBottom: bottom,
+        paddingTop: 6,
+        // paddingBottom: bottom,
         minHeight: screenHeight,
       },
       scrollEventThrottle: 5,

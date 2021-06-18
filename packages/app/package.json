@@ -23,6 +23,7 @@
     "expo-status-bar": "~1.0.4",
     "formik": "^2.2.8",
     "i18next": "^20.2.4",
+    "moment": "^2.29.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-i18next": "^11.8.15",

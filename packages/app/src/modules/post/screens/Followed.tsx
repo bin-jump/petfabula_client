@@ -15,7 +15,7 @@ const Followed = forwardRef<FlatList, Props>((props, ref) => {
       <View
         style={{
           height: 300,
-          width: "100%",
+          // width: "100%",
           backgroundColor: "#777777",
           marginBottom: 12,
           marginHorizontal: 12,
