@@ -34,7 +34,7 @@ export function createReducer<T, A extends ActionBase>(
 
 const translateApiError = (response: ApiResponse): AsyncActionError => {
   let res: AsyncActionError = { type: 'OTEHRS' };
-  console.log('translateApiError', response);
+  // console.log('translateApiError', response);
   if (response.errors?.type == 'INVALID_FIELD') {
     res.type = 'INVALID_FORM_DATA';
     res.content = response.errors.fieldErrors;

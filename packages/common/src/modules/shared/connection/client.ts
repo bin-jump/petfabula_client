@@ -86,6 +86,7 @@ export const apiRequest = async ({
     return { ...responseData, success: true };
   } catch (error) {
     console.log('[axios error]', JSON.stringify(error));
+
     if (error.response) {
       // Request made and server responded
       const responseData = error.response.data as ApiResponse;

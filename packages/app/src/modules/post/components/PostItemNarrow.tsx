@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import {
   View,
   TouchableWithoutFeedback,
@@ -11,7 +11,15 @@ import { useTranslation } from "react-i18next";
 import { Post } from "@petfabula/common";
 import { Image, IconCount, AvatarField, milisecToAgo } from "../../shared";
 
-const PostItemNarrow = ({ post }: { post: Post }) => {
+const PostItemNarrow = ({
+  post,
+  height,
+  marginTop,
+}: {
+  post: Post;
+  height: number;
+  marginTop: number;
+}) => {
   const { width: screenWidth } = useWindowDimensions();
   const itemMargin = 3;
   const w = (screenWidth - itemMargin * 4) / 2;
@@ -23,11 +31,14 @@ const PostItemNarrow = ({ post }: { post: Post }) => {
     <View
       style={{
         // flex: 1, // last will expand when odd
+
+        marginTop: marginTop,
+        height: height - 8,
+        marginVertical: 4,
         width: w,
         borderRadius: 6,
         minHeight: 100,
         backgroundColor: theme.colors?.white,
-        marginTop: 6,
         marginHorizontal: 3,
         padding: 18,
         shadowColor: theme.colors?.grey2,
@@ -48,7 +59,7 @@ const PostItemNarrow = ({ post }: { post: Post }) => {
 
       <Text
         ellipsizeMode="tail"
-        numberOfLines={post.images.length > 0 ? 3 : 9}
+        numberOfLines={post.images.length > 0 ? 3 : 3}
         style={{
           // width: 165,
           fontSize: 18,
@@ -56,7 +67,7 @@ const PostItemNarrow = ({ post }: { post: Post }) => {
           //   minWidth: 20,
         }}
       >
-        {post.content}
+        {`${height} ` + post.content}
       </Text>
       <View
         style={{
@@ -87,4 +98,4 @@ const PostItemNarrow = ({ post }: { post: Post }) => {
   );
 };
 
-export default PostItemNarrow;
+export default memo(PostItemNarrow);
