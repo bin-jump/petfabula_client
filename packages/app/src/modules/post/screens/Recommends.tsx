@@ -6,11 +6,15 @@ import {
   RefreshControl,
   View,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import Animated from "react-native-reanimated";
 import { useLoadRecommendPosts, Post } from "@petfabula/common";
-import PostItem from "../components/PostItemNarrow";
+import PostItem, {
+  usePostWidth,
+  resovePostItemHeight,
+} from "../components/PostItemNarrow";
 
 type ItemWrapper = Post & { postHeight: number; marginTop: number };
 type RowWrapper = {
@@ -20,25 +24,12 @@ type RowWrapper = {
   itemRight: ItemWrapper;
 };
 
-const fakeData = (posts: Post[]) => {
-  const res: Post[] = [];
-  if (posts.length == 0) {
-    return res;
-  }
-  const post = posts[0];
-  for (let i = 0; i < 200; i++) {
-    const p = { ...post, id: i };
-    res.push(p);
-  }
-
-  return res;
-};
-
-const makeData = (data: Post[]) => {
+const makeData = (data: Post[], contentWidth: number) => {
   const res: ItemWrapper[] = [];
-  const LEN = [180, 220, 260];
+
   data.forEach((item) => {
-    var l = LEN[Math.floor(Math.random() * LEN.length)];
+    var l = resovePostItemHeight(contentWidth, item);
+    // console.log("l", l, contentWidth);
     const o: ItemWrapper = { ...item, postHeight: l, marginTop: 0 };
     res.push(o);
   });
@@ -126,18 +117,19 @@ export const AnimatedFlatList = Animated.createAnimatedComponent(
 type Props = Omit<FlatListProps<RowWrapper>, "renderItem" | "data">;
 
 const Recommends = forwardRef<FlatList, Props>((props, ref) => {
-  const { posts, loadRecommendPosts, nextCursor, initializing, pending } =
-    useLoadRecommendPosts();
+  const { width: postWidth } = usePostWidth();
+  const {
+    posts,
+    loadRecommendPosts,
+    nextCursor,
+    initializing,
+    pending,
+    hasMore,
+  } = useLoadRecommendPosts();
 
   useEffect(() => {
     loadRecommendPosts(null);
   }, []);
-
-  // const keyExtractor = (item: Post) => item.id.toString();
-  // const renderItem = useCallback<ListRenderItem<Post>>(
-  //   ({ item }) => <PostItem post={item} />,
-  //   []
-  // );
 
   const keyExtractor = (item: RowWrapper) => item.id.toString();
   const renderItem = useCallback<ListRenderItem<RowWrapper>>(
@@ -169,7 +161,7 @@ const Recommends = forwardRef<FlatList, Props>((props, ref) => {
     []
   );
 
-  const memoizedRenderItem = useMemo(() => renderItem, [posts]);
+  const d = useMemo(() => makeRow(makeData(posts, postWidth)), [posts]);
 
   return (
     <AnimatedFlatList
@@ -184,7 +176,7 @@ const Recommends = forwardRef<FlatList, Props>((props, ref) => {
       }
       // numColumns={2}
       ref={ref}
-      data={makeRow(makeData(fakeData(posts)))}
+      data={d}
       CellRendererComponent={({ children, item, ...props }) => {
         return (
           <View {...props} style={{ marginTop: item.marginTop }}>
@@ -193,9 +185,17 @@ const Recommends = forwardRef<FlatList, Props>((props, ref) => {
         );
       }}
       // data={posts}
-      renderItem={memoizedRenderItem}
+      renderItem={renderItem}
       keyExtractor={keyExtractor}
       {...props}
+      ListFooterComponent={hasMore ? <ActivityIndicator /> : null}
+      onEndReached={() => {
+        if (hasMore && !pending) {
+          loadRecommendPosts(nextCursor);
+          console.log("onEndReached");
+        }
+      }}
+      onEndReachedThreshold={0.2}
     />
   );
 });

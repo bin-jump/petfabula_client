@@ -52,6 +52,7 @@ export function createSagaWatcher({
   method,
   asyncAction,
   watchType,
+  disableAutoCusor,
   createUrl,
   createRequestPayload,
   successorPayload,
@@ -60,6 +61,7 @@ export function createSagaWatcher({
   method: 'GET' | 'POST' | 'PUT' | 'DELETE';
   asyncAction: ReduxAsyncAction;
   watchType: 'LATEST' | 'EVERY';
+  disableAutoCusor?: boolean;
   createUrl?: (payload: any) => string;
   createRequestPayload?: (payload: any) => any;
   successorPayload?: (payload: any) => any;
@@ -68,9 +70,14 @@ export function createSagaWatcher({
     if (!url && !createUrl) {
       throw `url and urlFormater can not both be undefined`;
     }
-    const requestUrl = createUrl
+    let requestUrl = createUrl
       ? createUrl(beginAction.payload)
       : (url as string);
+
+    // add cursor
+    if (beginAction.payload?.cursor && !disableAutoCusor) {
+      requestUrl = `${requestUrl}?cursor=${beginAction.payload.cursor}`;
+    }
     const requestData = createRequestPayload
       ? createRequestPayload(beginAction.payload)
       : beginAction.payload;
@@ -127,7 +134,7 @@ export const fillCursorResponseData = (
 ): AsyncCursorPageListBase<any> => {
   return {
     ...state,
-    data: successAction.payload.cursor
+    data: successAction.extra?.cursor
       ? [...state.data, ...successAction.payload.result]
       : successAction.payload.result,
     hasMore: successAction.payload.hasMore,

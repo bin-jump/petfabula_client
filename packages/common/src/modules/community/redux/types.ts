@@ -2,6 +2,7 @@ import {
   AsyncDataBase,
   AsyncCursorPageListBase,
   AsyncListBase,
+  DisplayImage,
 } from '../../shared';
 
 export interface Participtor {
@@ -38,7 +39,7 @@ export interface Post {
   commentCount: number;
   createdDate: number;
   participator: Participtor;
-  images: string[];
+  images: DisplayImage[];
 }
 
 export interface PostDetail extends Post {

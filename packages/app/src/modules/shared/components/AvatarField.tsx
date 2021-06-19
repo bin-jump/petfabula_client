@@ -27,7 +27,7 @@ export default function AvatarField(props: Props & ViewProps) {
         source={{ uri: photo }}
         size={size ? size : 50}
       />
-      <View style={{ marginLeft: small ? 4 : 10 }}>
+      <View style={{ marginLeft: small ? 4 : 10, justifyContent: "center" }}>
         <Text
           style={{
             fontSize: small ? 16 : 22,

@@ -30,7 +30,7 @@ const Avatar = (
       rounded
       size={size}
       title={title}
-      source={{ uri: source?.uri ? source?.uri : "dummy" }}
+      source={{ uri: source?.uri }}
       containerStyle={[
         {
           borderWidth: 1,

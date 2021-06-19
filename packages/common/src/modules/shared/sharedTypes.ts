@@ -3,3 +3,9 @@ export type UploadImage = null | {
   type: string;
   name: string;
 };
+
+export type DisplayImage = null | {
+  url: string;
+  width: number;
+  height: number;
+};

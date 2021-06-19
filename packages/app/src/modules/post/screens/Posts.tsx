@@ -44,16 +44,13 @@ const Tab = createMaterialTopTabNavigator();
 // };
 const TRANSLATE_SPEED_RATIO = 0.3;
 
+// all return value should not change
 const useCollpaseHeaderListTab = ({
-  currentIndex,
   translateVal,
   headerHeight,
-  tabIndex,
 }: {
-  currentIndex: number;
   translateVal: Animated.SharedValue<number>;
   headerHeight: number;
-  tabIndex: number;
 }) => {
   const listRef = useRef<FlatList>(null);
   const scrollValue = useSharedValue(0);
@@ -66,7 +63,7 @@ const useCollpaseHeaderListTab = ({
         },
       ],
     };
-  });
+  }, []);
 
   const scrollHandler = useAnimatedScrollHandler(
     {
@@ -74,24 +71,22 @@ const useCollpaseHeaderListTab = ({
         if (event.contentOffset.y < 0) {
           return;
         }
-        if (tabIndex == currentIndex) {
-          const diff = event.contentOffset.y - scrollValue.value;
-          const v = translateVal.value + diff * TRANSLATE_SPEED_RATIO;
-          if (v >= 0 && v <= headerHeight) {
-            translateVal.value = v;
-          }
-          // fix fast scroll glitch bug
-          if (
-            translateVal.value - event.contentOffset.y > 0 &&
-            event.contentOffset.y == 0
-          ) {
-            translateVal.value = withTiming(0);
-          }
+        const diff = event.contentOffset.y - scrollValue.value;
+        const v = translateVal.value + diff * TRANSLATE_SPEED_RATIO;
+        if (v >= 0 && v <= headerHeight) {
+          translateVal.value = v;
+        }
+        // fix fast scroll glitch bug
+        if (
+          translateVal.value - event.contentOffset.y > 0 &&
+          event.contentOffset.y == 0
+        ) {
+          translateVal.value = withTiming(0);
         }
         scrollValue.value = event.contentOffset.y;
       },
     },
-    [currentIndex]
+    []
   );
 
   return {
@@ -107,23 +102,19 @@ const Posts = () => {
   const { t } = useTranslation();
   const { height: screenHeight } = useWindowDimensions();
   const { top, bottom } = useSafeAreaInsets();
-  const [tabIndex, setTabIndex] = useState(0);
 
   const HEADER_HEIGHT = 46;
   const TAB_BAR_HEIGHT = 42;
   const HeaderHeightWithMargin = top + HEADER_HEIGHT;
   const translateVal = useSharedValue(0);
 
-  // console.log("posts tabIndex", tabIndex, Math.random());
   const {
     listSlideStyle: recommendSlideStyle,
     listRef: recommendListRef,
     scrollHandler: recommendScrollHandler,
   } = useCollpaseHeaderListTab({
-    currentIndex: tabIndex,
     translateVal: translateVal,
     headerHeight: HEADER_HEIGHT,
-    tabIndex: 0,
   });
 
   const {
@@ -131,10 +122,8 @@ const Posts = () => {
     listRef: followListRef,
     scrollHandler: followScrollHandler,
   } = useCollpaseHeaderListTab({
-    currentIndex: tabIndex,
     translateVal: translateVal,
     headerHeight: HEADER_HEIGHT,
-    tabIndex: 1,
   });
 
   const headerSlideStyle = useAnimatedStyle(() => {
@@ -157,13 +146,16 @@ const Posts = () => {
     };
   });
 
-  const listViewStyle = {
-    marginTop:
-      Platform.OS == "android"
-        ? HeaderHeightWithMargin + top - 6
-        : HeaderHeightWithMargin - 6,
-    marginBottom: bottom + 10,
-  };
+  const listViewStyle = useMemo(
+    () => ({
+      marginTop:
+        Platform.OS == "android"
+          ? HeaderHeightWithMargin + top - 6
+          : HeaderHeightWithMargin - 6,
+      marginBottom: bottom + 10,
+    }),
+    []
+  );
 
   const sharedProps = useMemo<Partial<FlatListProps<any>>>(
     () => ({
@@ -177,7 +169,7 @@ const Posts = () => {
       // showsVerticalScrollIndicator: false,
       // scrollIndicatorInsets: { top: -20 },
     }),
-    [HeaderHeightWithMargin, tabIndex]
+    []
   );
 
   const renderRecommends = useCallback(
@@ -189,7 +181,7 @@ const Posts = () => {
         {...sharedProps}
       />
     ),
-    [recommendListRef, recommendScrollHandler, sharedProps, recommendSlideStyle]
+    [sharedProps, listViewStyle]
   );
 
   const renderFollowed = useCallback(
@@ -202,7 +194,7 @@ const Posts = () => {
         {...sharedProps}
       />
     ),
-    [followListRef, followScrollHandler, sharedProps, followSlideStyle]
+    [sharedProps, listViewStyle]
   );
 
   const headerContainerStyle = useMemo<StyleProp<ViewStyle>>(
@@ -232,8 +224,8 @@ const Posts = () => {
         ]}
       >
         <TabBar
-          onIndexChange={setTabIndex}
-          tabIndex={tabIndex}
+          onIndexChange={() => {}}
+          tabIndex={1}
           style={{ height: TAB_BAR_HEIGHT }}
           {...props}
         />

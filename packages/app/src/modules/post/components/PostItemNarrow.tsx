@@ -2,14 +2,56 @@ import React, { memo } from "react";
 import {
   View,
   TouchableWithoutFeedback,
-  Text,
   useWindowDimensions,
 } from "react-native";
-import { useTheme } from "react-native-elements";
+import { useTheme, Text } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import { Post } from "@petfabula/common";
-import { Image, IconCount, AvatarField, milisecToAgo } from "../../shared";
+import { IconCount, AvatarField, Image, imageSizeUrl } from "../../shared";
+
+const LINE_HEIGHT = 20;
+const INFO_HEIGHT = 70;
+
+export const usePostWidth = () => {
+  const { width: screenWidth } = useWindowDimensions();
+  const marginHorizontal = 3;
+  const marginVertical = 4;
+  const width = (screenWidth - marginHorizontal * 4) / 2;
+
+  return {
+    marginHorizontal,
+    marginVertical,
+    width,
+  };
+};
+
+export const resolvePostImageHeightRatio = (post: Post) => {
+  const imgs = post.images;
+  // if no image
+  if (imgs.length == 0) {
+    return 3 / 2;
+  }
+  const w = imgs[0]?.width || 0;
+  const h = imgs[0]?.height || 0;
+  const r = (w + 1) / (h + 1);
+  if (r >= 4 / 3) {
+    return 3 / 2;
+  }
+  if (r <= 3 / 4) {
+    return 10 / 9;
+  }
+
+  return 4 / 3;
+};
+
+export const resovePostItemHeight = (contentWidth: number, post: Post) => {
+  const r = resolvePostImageHeightRatio(post);
+
+  const extra =
+    post.images.length > 0 ? INFO_HEIGHT + LINE_HEIGHT * 2 : INFO_HEIGHT;
+  return contentWidth / r + extra;
+};
 
 const PostItemNarrow = ({
   post,
@@ -20,9 +62,11 @@ const PostItemNarrow = ({
   height: number;
   marginTop: number;
 }) => {
-  const { width: screenWidth } = useWindowDimensions();
-  const itemMargin = 3;
-  const w = (screenWidth - itemMargin * 4) / 2;
+  // const { width: screenWidth } = useWindowDimensions();
+  // const itemMargin = 3;
+  // const w = (screenWidth - itemMargin * 4) / 2;
+
+  const { marginHorizontal, marginVertical, width } = usePostWidth();
   const { theme } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation();
@@ -31,16 +75,14 @@ const PostItemNarrow = ({
     <View
       style={{
         // flex: 1, // last will expand when odd
-
         marginTop: marginTop,
         height: height - 8,
-        marginVertical: 4,
-        width: w,
+        marginVertical: marginVertical,
+        width: width,
         borderRadius: 6,
-        minHeight: 100,
+        // minHeight: 100,
         backgroundColor: theme.colors?.white,
-        marginHorizontal: 3,
-        padding: 18,
+        marginHorizontal: marginHorizontal,
         shadowColor: theme.colors?.grey2,
         shadowOffset: { width: 2, height: 4 },
         shadowOpacity: 0.3,
@@ -48,35 +90,53 @@ const PostItemNarrow = ({
         justifyContent: "space-between",
       }}
     >
-      {post.images.length > 0 ? (
-        <Image
-          containerStyle={{ borderRadius: 6 }}
-          resizeMode="contain"
-          // style={{ width: 160, height: 80 }}
-          source={{ uri: post.images[0] }}
-        />
-      ) : null}
+      <View>
+        {post.images.length > 0 ? (
+          <Image
+            containerStyle={{
+              paddingHorizontal: 2,
+              borderRadius: 6,
+            }}
+            resizeMode="cover"
+            style={{
+              borderRadius: 6,
+              width: width,
+              height: width / resolvePostImageHeightRatio(post) - 2,
+            }}
+            source={{ uri: imageSizeUrl(post.images[0]?.url, "MD") }}
+          />
+        ) : null}
 
-      <Text
-        ellipsizeMode="tail"
-        numberOfLines={post.images.length > 0 ? 3 : 3}
-        style={{
-          // width: 165,
-          fontSize: 18,
-          marginBottom: post.images.length > 0 ? 12 : 0,
-          //   minWidth: 20,
-        }}
-      >
-        {`${height} ` + post.content}
-      </Text>
+        <Text
+          ellipsizeMode="tail"
+          numberOfLines={
+            post.images.length > 0
+              ? 2
+              : Math.round(
+                  width / resolvePostImageHeightRatio(post) / LINE_HEIGHT
+                ) - 1
+          }
+          style={{
+            fontWeight: "bold",
+            fontSize: 16,
+            lineHeight: LINE_HEIGHT,
+            marginTop: post.images.length > 0 ? 8 : 12,
+            marginBottom: 8,
+            paddingHorizontal: 8,
+            width: width,
+          }}
+        >
+          {post.content}
+        </Text>
+      </View>
+
       <View
         style={{
           flexDirection: "row",
-          marginTop: 14,
           justifyContent: "space-between",
           alignItems: "center",
-          marginRight: 12,
-          marginBottom: 6,
+          marginHorizontal: 6,
+          marginBottom: 16,
         }}
       >
         <AvatarField
