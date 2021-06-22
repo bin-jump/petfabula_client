@@ -11,27 +11,12 @@ import {
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import Animated from "react-native-reanimated";
 import { useLoadRecommendPosts, Post } from "@petfabula/common";
-import PostItem, {
-  usePostWidth,
-  resovePostItemHeight,
-} from "../components/PostItemNarrow";
-import PostFlatList from "../components/PostFlatList";
+import PostItem, { usePostWidth } from "../components/PostItemNarrow";
+import PostFlatList, { Props } from "../components/PostFlatList";
 
-type ItemWrapper = Post & { postHeight: number; marginTop: number };
-type RowWrapper = {
-  id: number;
-  marginTop: number;
-  itemLeft: ItemWrapper;
-  itemRight: ItemWrapper;
-};
+type ListProps = Omit<Props, "posts">;
 
-export const AnimatedFlatList = Animated.createAnimatedComponent(
-  FlatList
-) as typeof FlatList;
-
-type Props = Omit<FlatListProps<RowWrapper>, "renderItem" | "data">;
-
-const Recommends = forwardRef<FlatList, Props>((props, ref) => {
+const Recommends = forwardRef<FlatList, ListProps>((props, ref) => {
   const { width: postWidth } = usePostWidth();
   const {
     posts,
@@ -58,8 +43,8 @@ const Recommends = forwardRef<FlatList, Props>((props, ref) => {
         />
       }
       ref={ref}
-      posts={posts}
       {...props}
+      posts={posts}
       ListFooterComponent={hasMore ? <ActivityIndicator /> : null}
       onEndReached={() => {
         if (hasMore && !pending) {

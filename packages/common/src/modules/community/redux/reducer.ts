@@ -3,6 +3,7 @@ import { CommunityState } from './types';
 import { postReducer } from './postHooks';
 import { petReducer } from './petHooks';
 import { postTopicReducer } from './topicHooks';
+import { searchReducer } from './searchHooks';
 
 const initialStat: CommunityState = {
   // user
@@ -54,6 +55,15 @@ const initialStat: CommunityState = {
     nextCursor: null,
     initializing: false,
   },
+  searchPosts: {
+    keyword: null,
+    data: [],
+    pending: false,
+    error: null,
+    hasMore: false,
+    nextCursor: null,
+    initializing: false,
+  },
 
   createPost: { data: null, pending: false, error: null },
   removePost: { data: null, pending: false, error: null },
@@ -66,5 +76,5 @@ const initialStat: CommunityState = {
 
 export const communityRootReducer = createReducer<CommunityState, ActionBase>(
   initialStat,
-  { ...postReducer, ...petReducer, ...postTopicReducer },
+  { ...postReducer, ...petReducer, ...postTopicReducer, ...searchReducer },
 );

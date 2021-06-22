@@ -54,6 +54,8 @@ export const PostRemoveCommentReplyActionType = createAsyncActionType(
   'POST_REMOVE_COMMENT_REPLY',
 );
 
+export const PostSearchActionType = createAsyncActionType('POST_SEARCH');
+
 export const PostLikeActionType = createAsyncActionType('POST_LIKE_POST');
 
 export const PostUnlikeActionType = createAsyncActionType('POST_UNLIKE_POST');

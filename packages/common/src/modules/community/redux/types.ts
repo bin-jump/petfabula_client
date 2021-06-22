@@ -98,6 +98,7 @@ export interface CommunityState {
   recommendPosts: AsyncCursorPageListBase<Post>;
   postDetail: AsyncDataBase<PostDetail>;
   comments: AsyncCursorPageListBase<PostComment> & { postId: number | null };
+  searchPosts: AsyncCursorPageListBase<Post> & { keyword: string | null };
 
   createPost: AsyncDataBase<Post>;
   removePost: AsyncDataBase<number>;

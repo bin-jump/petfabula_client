@@ -1,13 +1,6 @@
 import * as React from "react";
 import { View, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
-import {
-  Text,
-  ThemeContext,
-  Button,
-  Icon,
-  Divider,
-  useTheme,
-} from "react-native-elements";
+import { Text, Icon, useTheme } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 

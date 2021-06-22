@@ -107,11 +107,11 @@ const makeRow = (data: ItemWrapper[]) => {
   return res;
 };
 
-export const AnimatedFlatList = Animated.createAnimatedComponent(
+const AnimatedFlatList = Animated.createAnimatedComponent(
   FlatList
 ) as typeof FlatList;
 
-type Props = Omit<FlatListProps<RowWrapper>, "renderItem" | "data"> & {
+export type Props = Omit<FlatListProps<RowWrapper>, "renderItem" | "data"> & {
   posts: Post[];
 };
 

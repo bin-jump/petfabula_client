@@ -10,6 +10,7 @@ import {
   PostRemovePostActionType,
   PostLoadTopicActionType,
   CommunityLoadMyPetsActionType,
+  PostSearchActionType,
 } from './actionTypes';
 
 // user
@@ -77,6 +78,20 @@ const watchRemovePost = createSagaWatcher({
   },
 });
 
+const watchSearchPost = createSagaWatcher({
+  method: 'GET',
+  asyncAction: PostSearchActionType,
+  watchType: 'LATEST',
+  disableAutoCusor: true,
+  createUrl: (payload) => {
+    let url = `/api/post/search?q=${payload.keyword}`;
+    if (payload.cursor) {
+      url = `${payload}&cursor=${payload.cursor}`;
+    }
+    return url;
+  },
+});
+
 const watchLoadTopics = createSagaWatcher({
   url: `/api/post/topics`,
   method: 'GET',
@@ -87,6 +102,7 @@ const watchLoadTopics = createSagaWatcher({
 export function* communityRootSaga() {
   yield all([
     fork(watchLoadMyPets),
+
     fork(watchGetPostDetail),
     fork(watchLoadMyPosts),
     fork(watchLoadOthersPosts),
@@ -94,6 +110,8 @@ export function* communityRootSaga() {
     fork(watchLoadFollowedPosts),
     fork(watchCreatePost),
     fork(watchRemovePost),
+    fork(watchSearchPost),
+
     fork(watchLoadTopics),
   ]);
 }

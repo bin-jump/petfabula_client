@@ -7,11 +7,10 @@ import { View } from "react-native";
 import { useTheme } from "react-native-elements";
 
 type Props = MaterialTopTabBarProps & {
-  tabIndex: number;
   onIndexChange?: (index: number) => void;
 };
 
-const TabBar: FC<Props> = ({ onIndexChange, tabIndex, ...props }) => {
+const TabBar: FC<Props> = ({ onIndexChange, ...props }) => {
   const { index } = props.state;
   const { theme } = useTheme();
 

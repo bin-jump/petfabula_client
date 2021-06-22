@@ -4,6 +4,7 @@ import { ThemeContext, Icon } from "react-native-elements";
 import { headerBaseOption, plainGoBackHeaderOption } from "../shared";
 import Posts from "./screens/Posts";
 import Search from "./screens/Search";
+import SearchResult from "./screens/SearchResult";
 
 const PostsStack = createStackNavigator();
 
@@ -34,6 +35,33 @@ const PostScreens = () => {
         }}
         name="Search"
         component={Search}
+      />
+      <PostsStack.Screen
+        options={(navigation) => {
+          return {
+            cardOverlayEnabled: true,
+            cardStyleInterpolator: ({ current: { progress } }) => ({
+              // cardStyle: {
+              //   opacity: progress.interpolate({
+              //     inputRange: [0, 0.7, 1],
+              //     outputRange: [0, 0.4, 1],
+              //     extrapolate: "clamp",
+              //   }),
+              // },
+              // overlayStyle: {
+              //   opacity: progress.interpolate({
+              //     inputRange: [0, 0.3, 0.6, 1],
+              //     outputRange: [0, 0.3, 0.7, 1],
+              //     extrapolate: "clamp",
+              //   }),
+              // },
+            }),
+            ...headerBaseOption({ theme }),
+            headerShown: false,
+          };
+        }}
+        name="SearchResult"
+        component={SearchResult}
       />
     </PostsStack.Navigator>
   );

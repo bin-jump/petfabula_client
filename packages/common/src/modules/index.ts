@@ -31,6 +31,7 @@ export {
   useLoadRecommendPosts,
   useRemovePost,
   useLoadParticipatorPets,
+  useSearchPost,
   useLoadPostTopics,
 } from './community';
 

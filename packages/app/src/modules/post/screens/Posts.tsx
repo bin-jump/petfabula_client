@@ -225,7 +225,6 @@ const Posts = () => {
       >
         <TabBar
           onIndexChange={() => {}}
-          tabIndex={1}
           style={{ height: TAB_BAR_HEIGHT }}
           {...props}
         />

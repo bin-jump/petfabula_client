@@ -11,6 +11,7 @@
     "postinstall": "expo-yarn-workspaces postinstall"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.15.5",
     "@react-navigation/bottom-tabs": "^5.11.11",
     "@react-navigation/material-top-tabs": "^5.3.15",
     "@react-navigation/native": "^5.9.4",
