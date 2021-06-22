@@ -26,7 +26,12 @@ const PostScreens = () => {
         component={Posts}
       />
       <PostsStack.Screen
-        options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
+        options={(navigation) => {
+          return {
+            ...headerBaseOption({ theme }),
+            headerShown: false,
+          };
+        }}
         name="Search"
         component={Search}
       />

@@ -6,6 +6,7 @@ import {
   Icon,
   Image,
   useTheme,
+  Divider,
 } from "react-native-elements";
 import { Field, Formik } from "formik";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
@@ -73,6 +74,14 @@ const CreatePost = () => {
               />
             )}
           </Formik>
+          <Divider
+            style={{
+              width: "100%",
+              marginTop: 12,
+              borderWidth: 0.5,
+              borderColor: theme.colors?.grey4,
+            }}
+          />
 
           <TouchableOpacity
             style={{
@@ -211,19 +220,17 @@ const PostFormContent = ({
             type="fontisto"
             name="hashtag"
             color={topic ? theme.colors?.secondary : theme.colors?.grey1}
-            size={18}
+            size={16}
           />
           {topic ? (
             <Text
               numberOfLines={1}
               style={{
-                // backgroundColor: theme.colors?.grey4,
-                paddingHorizontal: 6,
+                paddingHorizontal: 3,
                 color: theme.colors?.black,
                 textAlign: "center",
                 marginLeft: 2,
-                paddingBottom: 3,
-                fontSize: 20,
+                fontSize: 16,
                 maxWidth: 300,
               }}
             >
@@ -238,7 +245,7 @@ const PostFormContent = ({
                 textAlign: "center",
                 marginLeft: 2,
                 paddingBottom: 3,
-                fontSize: 20,
+                fontSize: 16,
                 maxWidth: 300,
               }}
             >

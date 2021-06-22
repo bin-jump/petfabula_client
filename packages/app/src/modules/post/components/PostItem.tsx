@@ -44,7 +44,7 @@ const PostItemFull = ({ post }: { post: Post }) => {
           containerStyle={{ width: "100%", borderRadius: 6 }}
           resizeMode="cover"
           style={{ height: 200 }}
-          source={{ uri: post.images[0] }}
+          source={{ uri: post.images[0]?.url }}
         />
       ) : null}
 
