@@ -1,10 +1,10 @@
-export type UploadImage = null | {
+export type UploadImage = {
   uri: string;
   type: string;
   name: string;
 };
 
-export type DisplayImage = null | {
+export type DisplayImage = {
   url: string;
   width: number;
   height: number;

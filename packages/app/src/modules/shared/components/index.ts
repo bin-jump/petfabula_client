@@ -6,3 +6,4 @@ export { default as IconCount } from "./IconCount";
 export { default as PendingOverlay } from "./PendingOverlay";
 export { default as Avatar } from "./Avatar";
 export { default as AvatarField } from "./AvatarField";
+export { default as ImageGallery } from "./ImageGallery";

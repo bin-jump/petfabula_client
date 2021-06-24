@@ -90,45 +90,51 @@ const PostItemNarrow = ({
         justifyContent: "space-between",
       }}
     >
-      <View>
-        {post.images.length > 0 ? (
-          <Image
-            containerStyle={{
-              paddingHorizontal: 2,
-              borderRadius: 6,
-            }}
-            resizeMode="cover"
-            style={{
-              borderRadius: 6,
-              width: width,
-              height: width / resolvePostImageHeightRatio(post) - 2,
-            }}
-            source={{ uri: imageSizeUrl(post.images[0]?.url, "MD") }}
-          />
-        ) : null}
+      <TouchableWithoutFeedback
+        onPress={() => {
+          navigation.navigate("PostDetailView", { id: post.id });
+        }}
+      >
+        <View>
+          {post.images.length > 0 ? (
+            <Image
+              containerStyle={{
+                paddingHorizontal: 2,
+                borderRadius: 6,
+              }}
+              resizeMode="cover"
+              style={{
+                borderRadius: 6,
+                width: width,
+                height: width / resolvePostImageHeightRatio(post) - 2,
+              }}
+              source={{ uri: imageSizeUrl(post.images[0]?.url, "MD") }}
+            />
+          ) : null}
 
-        <Text
-          ellipsizeMode="tail"
-          numberOfLines={
-            post.images.length > 0
-              ? 2
-              : Math.round(
-                  width / resolvePostImageHeightRatio(post) / LINE_HEIGHT
-                ) - 1
-          }
-          style={{
-            fontWeight: "bold",
-            fontSize: 16,
-            lineHeight: LINE_HEIGHT,
-            marginTop: post.images.length > 0 ? 8 : 12,
-            marginBottom: 8,
-            paddingHorizontal: 8,
-            width: width,
-          }}
-        >
-          {post.content}
-        </Text>
-      </View>
+          <Text
+            ellipsizeMode="tail"
+            numberOfLines={
+              post.images.length > 0
+                ? 2
+                : Math.round(
+                    width / resolvePostImageHeightRatio(post) / LINE_HEIGHT
+                  ) - 1
+            }
+            style={{
+              fontWeight: "bold",
+              fontSize: 16,
+              lineHeight: LINE_HEIGHT,
+              marginTop: post.images.length > 0 ? 8 : 12,
+              marginBottom: 8,
+              paddingHorizontal: 8,
+              width: width,
+            }}
+          >
+            {post.content}
+          </Text>
+        </View>
+      </TouchableWithoutFeedback>
 
       <View
         style={{

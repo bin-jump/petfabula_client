@@ -1,17 +1,12 @@
 import React, { forwardRef, useCallback, useEffect, useMemo } from "react";
 import {
   FlatList,
-  FlatListProps,
-  ListRenderItem,
   RefreshControl,
-  View,
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
-import Animated from "react-native-reanimated";
-import { useLoadRecommendPosts, Post } from "@petfabula/common";
-import PostItem, { usePostWidth } from "../components/PostItemNarrow";
+import { useLoadRecommendPosts } from "@petfabula/common";
+import { usePostWidth } from "../components/PostItemNarrow";
 import PostFlatList, { Props } from "../components/PostFlatList";
 
 type ListProps = Omit<Props, "posts">;

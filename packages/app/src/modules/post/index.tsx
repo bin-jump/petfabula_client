@@ -5,6 +5,7 @@ import { headerBaseOption, plainGoBackHeaderOption } from "../shared";
 import Posts from "./screens/Posts";
 import Search from "./screens/Search";
 import SearchResult from "./screens/SearchResult";
+import PostDetailView from "./screens/PostDetailView";
 
 const PostsStack = createStackNavigator();
 
@@ -40,28 +41,24 @@ const PostScreens = () => {
         options={(navigation) => {
           return {
             cardOverlayEnabled: true,
-            cardStyleInterpolator: ({ current: { progress } }) => ({
-              // cardStyle: {
-              //   opacity: progress.interpolate({
-              //     inputRange: [0, 0.7, 1],
-              //     outputRange: [0, 0.4, 1],
-              //     extrapolate: "clamp",
-              //   }),
-              // },
-              // overlayStyle: {
-              //   opacity: progress.interpolate({
-              //     inputRange: [0, 0.3, 0.6, 1],
-              //     outputRange: [0, 0.3, 0.7, 1],
-              //     extrapolate: "clamp",
-              //   }),
-              // },
-            }),
             ...headerBaseOption({ theme }),
             headerShown: false,
           };
         }}
         name="SearchResult"
         component={SearchResult}
+      />
+      <PostsStack.Screen
+        // options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
+        options={(navigation) => {
+          return {
+            cardOverlayEnabled: true,
+            ...headerBaseOption({ theme }),
+            headerShown: false,
+          };
+        }}
+        name="PostDetailView"
+        component={PostDetailView}
       />
     </PostsStack.Navigator>
   );

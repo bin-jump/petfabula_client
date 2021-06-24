@@ -1,10 +1,5 @@
-import React, { useState, useRef, useCallback } from "react";
-import {
-  View,
-  TextInput,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from "react-native";
+import React, { useCallback } from "react";
+import { View, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Text, useTheme, Icon } from "react-native-elements";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
@@ -13,12 +8,6 @@ import {
   createMaterialTopTabNavigator,
   MaterialTopTabBarProps,
 } from "@react-navigation/material-top-tabs";
-import {
-  BlankInput,
-  useDidUpdateEffect,
-  DismissKeyboardView,
-  PendingOverlay,
-} from "../../shared";
 import PostSearch from "./PostSearch";
 import TabBar from "../components/TabBar";
 import ParamTypes from "./paramTypes";
@@ -126,29 +115,27 @@ const SearchResult = () => {
   const renderRecommends = () => <PostSearch keyword={keyword} />;
 
   return (
-    <DismissKeyboardView>
-      <View>
-        <View
-          style={{
-            height: top,
-            backgroundColor: theme.colors?.white,
-            zIndex: 2,
-          }}
-        ></View>
-        <Header keyword={keyword} />
+    <View>
+      <View
+        style={{
+          height: top,
+          backgroundColor: theme.colors?.white,
+          zIndex: 2,
+        }}
+      ></View>
+      <Header keyword={keyword} />
 
-        <View style={{ width: "100%", height: "100%" }}>
-          <Tab.Navigator tabBar={renderTabBar}>
-            <Tab.Screen
-              options={{ tabBarLabel: t("search.postSearch") }}
-              name="PostSearch"
-            >
-              {renderRecommends}
-            </Tab.Screen>
-          </Tab.Navigator>
-        </View>
+      <View style={{ width: "100%", height: "100%" }}>
+        <Tab.Navigator tabBar={renderTabBar}>
+          <Tab.Screen
+            options={{ tabBarLabel: t("search.postSearch") }}
+            name="PostSearch"
+          >
+            {renderRecommends}
+          </Tab.Screen>
+        </Tab.Navigator>
       </View>
-    </DismissKeyboardView>
+    </View>
   );
 };
 

@@ -250,13 +250,13 @@ const Posts = () => {
         tabBar={renderTabBar}
       >
         <Tab.Screen
-          options={{ tabBarLabel: t("posts.recommends.tabLabel") }}
+          options={{ tabBarLabel: t("post.recommends.tabLabel") }}
           name="Recommends"
         >
           {renderRecommends}
         </Tab.Screen>
         <Tab.Screen
-          options={{ tabBarLabel: t("posts.followed.tabLabel") }}
+          options={{ tabBarLabel: t("post.followed.tabLabel") }}
           name="Timeline"
         >
           {renderFollowed}

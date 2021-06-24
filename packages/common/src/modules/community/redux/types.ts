@@ -32,7 +32,7 @@ export interface PostTopic {
 
 export interface Post {
   id: number;
-  relatePetId: number;
+  relatePetId: number | null;
   content: string;
   viewCount: number;
   likeCount: number;
@@ -43,10 +43,12 @@ export interface Post {
 }
 
 export interface PostDetail extends Post {
-  relatedPet: ParticiptorPet;
+  relatedPet: ParticiptorPet | null;
   liked: boolean;
+  collected: boolean;
   likePending: boolean;
-  topic: PostTopic;
+  collectPending: boolean;
+  topic: PostTopic | null;
 }
 
 export interface PostComment {

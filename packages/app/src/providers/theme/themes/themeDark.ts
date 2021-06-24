@@ -4,7 +4,7 @@ import { createTheme } from "./helper";
 const DARK_WHITE = "#0c0e11";
 
 const COLORS: Partial<Colors> = {
-  primary: "#fe4d4c",
+  primary: "#fe716b",
   secondary: "#ffeed6",
   greyOutline: "rgba(240,240,240, 1)",
   white: DARK_WHITE,

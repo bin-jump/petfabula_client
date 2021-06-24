@@ -75,7 +75,13 @@ const Header = ({
             returnKeyType="search"
             onFocus={onFocus}
             onBlur={onBlur}
-            style={{ fontSize: 18, marginLeft: 8, marginRight: 8, flex: 1 }}
+            style={{
+              fontSize: 18,
+              marginLeft: 8,
+              marginRight: 8,
+              flex: 1,
+              color: theme.colors?.black,
+            }}
           />
           <Icon
             onPress={() => {

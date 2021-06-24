@@ -52,12 +52,16 @@
       "userAgreement": "利用規約とプライバシーポリシー"
     }
   },
-  "posts": {
+  "post": {
     "recommends": {
       "tabLabel": "おすすめ"
     },
     "followed": {
       "tabLabel": "フォロー"
+    },
+    "postDetail": {
+      "followAction": "フォロー",
+      "unfollowAction": "アンフォロー"
     }
   },
   "validation": {

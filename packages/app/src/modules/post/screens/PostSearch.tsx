@@ -1,23 +1,8 @@
-import React, { forwardRef, useRef, useEffect, memo } from "react";
-import {
-  FlatList,
-  FlatListProps,
-  ListRenderItem,
-  RefreshControl,
-  View,
-  StyleSheet,
-  ActivityIndicator,
-  Text,
-} from "react-native";
-import { Icon, useTheme } from "react-native-elements";
-import {
-  useNavigation,
-  useRoute,
-  RouteProp,
-  useFocusEffect,
-} from "@react-navigation/native";
-import Animated from "react-native-reanimated";
-import { Post, useSearchPost } from "@petfabula/common";
+import React, { forwardRef, memo } from "react";
+import { FlatList, ActivityIndicator } from "react-native";
+import { useTheme } from "react-native-elements";
+import { useFocusEffect } from "@react-navigation/native";
+import { useSearchPost } from "@petfabula/common";
 import PostFlatList, { Props } from "../components/PostFlatList";
 
 const PostSearch = forwardRef<
