@@ -32,6 +32,7 @@
     },
     "login": {
       "title": "ログイン",
+      "logining": "ログイン中",
       "gotoSignup": "アカウント登録",
       "thirdPartyLogin": "その他によるログイン",
       "sendVerificationCodeAction": "ログイン",

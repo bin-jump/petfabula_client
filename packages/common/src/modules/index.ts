@@ -11,6 +11,7 @@ export {
   useLogout,
   useOauthRegisterAndLogin,
   useUserAgreement,
+  OauthConfig,
 } from './authentication';
 
 export {

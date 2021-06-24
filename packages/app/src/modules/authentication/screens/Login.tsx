@@ -10,10 +10,12 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { Field, Formik } from "formik";
 import { useTranslation } from "react-i18next";
+import * as WebBrowser from "expo-web-browser";
 import {
   DismissKeyboardView,
   FilledInput,
   useDidUpdateEffect,
+  PendingOverlay,
 } from "../../shared";
 import {
   useEmailCodeLogin,
@@ -21,12 +23,32 @@ import {
   EmailCodeSendLoginCodeForm,
   validSendLoginCodeFormSchema,
   resolveResponseFormError,
+  useOauthRegisterAndLogin,
+  OauthConfig,
 } from "@petfabula/common";
+
+WebBrowser.maybeCompleteAuthSession();
+
+const parseUrlParams = (url: string): { [key: string]: string } => {
+  const queryParamIndex = url.indexOf("?");
+  if (queryParamIndex < 0) {
+    return {};
+  }
+  url = url.substring(queryParamIndex + 1);
+  const hashes = url.split("&");
+  return hashes.reduce((params, hash) => {
+    const split = hash.indexOf("=");
+    const key = hash.slice(0, split);
+    const val = hash.slice(split + 1);
+    return { ...params, [key]: decodeURIComponent(val) };
+  }, {});
+};
 
 const Login = () => {
   const { t } = useTranslation();
   const { theme } = React.useContext(ThemeContext);
   const { sendLoginCode } = useEmailCodeSendLoginCode();
+
   const initial = { email: "" };
 
   const handleSubmit = (data: EmailCodeSendLoginCodeForm) => {
@@ -89,12 +111,40 @@ const LoginFormContent = ({
   const { t } = useTranslation();
   const { pending, error, sendResult } = useEmailCodeSendLoginCode();
   const { error: loginError } = useEmailCodeLogin();
+  const {
+    registerAndLogin: oauthRegisterAndLogin,
+    registerAndLoginResult: oauthResult,
+    pending: oauthPending,
+  } = useOauthRegisterAndLogin();
+
+  const handleOauthLogin = async (
+    url: string,
+    redirectUri: string,
+    endpointName: string
+  ) => {
+    const result = await WebBrowser.openAuthSessionAsync(url, redirectUri);
+    if (result?.type === "success") {
+      const code = parseUrlParams(result.url)["code"];
+      if (!code) {
+        console.log("ERROR: No oauth code found");
+        return;
+      }
+      const nm = endpointName as "GOOGLE" | "FACEBOOK";
+      oauthRegisterAndLogin({ code: code, serverName: nm });
+    }
+  };
 
   useDidUpdateEffect(() => {
     if (sendResult?.done) {
       navigation.navigate("LoginVerification", { email: values.email });
     }
   }, [sendResult]);
+
+  useDidUpdateEffect(() => {
+    if (oauthResult) {
+      navigation.goBack();
+    }
+  }, [oauthResult]);
 
   useDidUpdateEffect(() => {
     setErrors(resolveResponseFormError(loginError));
@@ -106,6 +156,10 @@ const LoginFormContent = ({
 
   return (
     <View style={{ width: "100%", alignItems: "center" }}>
+      <PendingOverlay
+        pending={oauthPending}
+        actionName={t("authentication.login.logining")}
+      />
       <Field
         name="email"
         placeholder={t("authentication.input.emailPlaceholder")}
@@ -145,6 +199,13 @@ const LoginFormContent = ({
         <Divider style={{ width: 50, marginTop: 10 }} />
       </View>
       <Button
+        onPress={() => {
+          handleOauthLogin(
+            OauthConfig.getGoogleUrl(),
+            OauthConfig.getRedirectUrl(),
+            "GOOGLE"
+          );
+        }}
         title="Google"
         type="outline"
         containerStyle={{ marginTop: 20, width: "100%" }}

@@ -1,4 +1,5 @@
 import { AsyncDataBase } from '../../shared';
+import * as Constants from '../../../constants';
 
 export interface User {
   id: number;
@@ -30,7 +31,7 @@ export interface EmailCodeLoginForm {
 
 export interface OauthForm {
   code: string;
-  serverName: 'GITHUB' | 'GOOGLE' | 'FACEBOOK';
+  serverName: 'GOOGLE' | 'FACEBOOK';
 }
 
 // export interface EmailPasswordRegisterForm {
@@ -78,4 +79,14 @@ export interface AuthenticationState {
 
   // forgotPasswordResult: AsyncDataBase<string>;
   // tokenResult: AsyncDataBase<{ email: string }>;
+}
+
+export class OauthConfig {
+  static getGoogleUrl() {
+    return Constants.OAUTH_GOOGLE_AUTH_URL;
+  }
+
+  static getRedirectUrl() {
+    return Constants.OAUTH_REDIRECT_URL;
+  }
 }

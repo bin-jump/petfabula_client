@@ -12,10 +12,11 @@ import Animated, {
 import { useTranslation } from "react-i18next";
 
 interface Props {
+  actionName?: SVGStringList;
   pending: boolean;
 }
 
-const PendingOverlay = ({ pending }: Props) => {
+const PendingOverlay = ({ pending, actionName }: Props) => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const rotation = useSharedValue(0);
@@ -42,6 +43,8 @@ const PendingOverlay = ({ pending }: Props) => {
     };
   }, []);
 
+  const text = actionName ? actionName : t("common.pending");
+
   return (
     <Overlay
       isVisible={pending}
@@ -64,7 +67,7 @@ const PendingOverlay = ({ pending }: Props) => {
           <Icon type="antdesign" name="loading2" size={50} color="white" />
         </Animated.View>
         <Text style={{ marginTop: 12, color: "white", fontSize: 16 }}>
-          {`${t("common.pending")}...`}
+          {`${text}...`}
         </Text>
       </View>
     </Overlay>
