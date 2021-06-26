@@ -1,21 +1,23 @@
 import React from "react";
-import { View, ViewProps } from "react-native";
+import { View, ViewProps, StyleProp, TextStyle } from "react-native";
 import { useTheme, Text } from "react-native-elements";
 import Avatar from "./Avatar";
 
 type Props = {
-  photo?: string;
   name: string;
+  photo?: string;
+  nameStyle?: StyleProp<TextStyle>;
   subContent?: string;
   size?: number;
   small?: boolean;
   onAvatarClick?: () => void;
-  actionComp?: () => React.ReactNode;
+  fieldRight?: () => React.ReactNode;
 };
 
 export default function AvatarField(props: Props & ViewProps) {
   const { theme } = useTheme();
   const {
+    nameStyle,
     photo,
     name,
     subContent,
@@ -23,7 +25,7 @@ export default function AvatarField(props: Props & ViewProps) {
     onAvatarClick,
     small,
     style,
-    actionComp,
+    fieldRight,
   } = props;
 
   return (
@@ -49,14 +51,16 @@ export default function AvatarField(props: Props & ViewProps) {
           source={{ uri: photo }}
           size={size ? size : 42}
         />
-        <View style={{ marginLeft: small ? 4 : 10, justifyContent: "center" }}>
+        <View style={{ justifyContent: "center" }}>
           <Text
-            style={{
-              fontSize: small ? 16 : 20,
-              fontWeight: small ? "normal" : "bold",
-              textAlign: "center",
-              color: small ? theme.colors?.grey0 : theme.colors?.black,
-            }}
+            style={[
+              {
+                fontSize: small ? 16 : 20,
+                textAlign: "center",
+                color: small ? theme.colors?.grey0 : theme.colors?.black,
+              },
+              nameStyle,
+            ]}
           >
             {name}
           </Text>
@@ -65,7 +69,7 @@ export default function AvatarField(props: Props & ViewProps) {
           ) : null}
         </View>
       </View>
-      {actionComp ? actionComp() : null}
+      {fieldRight ? fieldRight() : null}
     </View>
   );
 }

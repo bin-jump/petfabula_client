@@ -153,7 +153,7 @@ const Indicator = ({ total, current }: { total: number; current: number }) => {
         <Icon
           containerStyle={{ marginHorizontal: 2 }}
           key={i}
-          color={current == i ? theme.colors?.primary : theme.colors?.secondary}
+          color={current == i ? theme.colors?.primary : theme.colors?.grey1}
           type="octicon"
           name="primitive-dot"
           size={current == i ? 16 : 12}
@@ -222,12 +222,7 @@ const SingleImage = ({
 
   return (
     <PinchGestureHandler onGestureEvent={gestureHandler}>
-      <Animated.View
-        style={{ width: "100%", overflow: "visible" }}
-        onLayout={(e) => {
-          console.log(e.nativeEvent.layout);
-        }}
-      >
+      <Animated.View style={{ width: "100%", overflow: "visible" }}>
         <Animated.Image
           style={[
             {
@@ -262,10 +257,6 @@ export default function ImageGallery({ images, containerStyle }: Props) {
   const { width } = useWindowDimensions();
   const [curIndex, setCurIndex] = React.useState(0);
   const { theme } = useTheme();
-
-  if (images.length == 0) {
-    return <View></View>;
-  }
 
   // const _renderItem = ({
   //   item,

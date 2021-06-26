@@ -60,6 +60,12 @@ export const PostLikeActionType = createAsyncActionType('POST_LIKE_POST');
 
 export const PostUnlikeActionType = createAsyncActionType('POST_UNLIKE_POST');
 
+export const PostCollectActionType = createAsyncActionType('POST_COLLECT_POST');
+
+export const PostRemoveCollectActionType = createAsyncActionType(
+  'POST_REMOVE_COLLECT_POST',
+);
+
 export const PostLoadTopicActionType = createAsyncActionType(
   'POST_LOAD_POST_TOPIC',
 );

@@ -6,6 +6,8 @@ import Posts from "./screens/Posts";
 import Search from "./screens/Search";
 import SearchResult from "./screens/SearchResult";
 import PostDetailView from "./screens/PostDetailView";
+import CreateComment from "./screens/CreateComment";
+import CreateCommentReply from "./screens/CreateCommentReply";
 
 const PostsStack = createStackNavigator();
 
@@ -59,6 +61,54 @@ const PostScreens = () => {
         }}
         name="PostDetailView"
         component={PostDetailView}
+      />
+      <PostsStack.Screen
+        options={{
+          headerShown: false,
+          cardStyle: { backgroundColor: "transparent" },
+          cardOverlayEnabled: true,
+          cardStyleInterpolator: ({ current: { progress } }) => ({
+            cardStyle: {
+              opacity: progress.interpolate({
+                inputRange: [0, 0.5, 0.9, 1],
+                outputRange: [0, 0.1, 0.3, 1],
+              }),
+            },
+            overlayStyle: {
+              opacity: progress.interpolate({
+                inputRange: [0, 0.5, 1],
+                outputRange: [0, 0.3, 0.5],
+                extrapolate: "clamp",
+              }),
+            },
+          }),
+        }}
+        name="CreateComment"
+        component={CreateComment}
+      />
+      <PostsStack.Screen
+        options={{
+          headerShown: false,
+          cardStyle: { backgroundColor: "transparent" },
+          cardOverlayEnabled: true,
+          cardStyleInterpolator: ({ current: { progress } }) => ({
+            cardStyle: {
+              opacity: progress.interpolate({
+                inputRange: [0, 0.5, 0.9, 1],
+                outputRange: [0, 0.1, 0.3, 1],
+              }),
+            },
+            overlayStyle: {
+              opacity: progress.interpolate({
+                inputRange: [0, 0.5, 1],
+                outputRange: [0, 0.3, 0.5],
+                extrapolate: "clamp",
+              }),
+            },
+          }),
+        }}
+        name="CreateCommentReply"
+        component={CreateCommentReply}
       />
     </PostsStack.Navigator>
   );

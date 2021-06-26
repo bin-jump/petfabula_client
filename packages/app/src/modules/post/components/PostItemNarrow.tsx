@@ -147,6 +147,7 @@ const PostItemNarrow = ({
       >
         <AvatarField
           //   containerStyle={{ width: 100 }}
+          nameStyle={{ marginLeft: 3 }}
           small
           name={post.participator.name}
           photo={post.participator.photo}
@@ -154,9 +155,9 @@ const PostItemNarrow = ({
         />
 
         <IconCount
-          type="font-awesome"
-          name="commenting"
-          count={post.commentCount}
+          type="antdesign"
+          name="hearto"
+          count={post.likeCount}
           size={22}
         />
       </View>

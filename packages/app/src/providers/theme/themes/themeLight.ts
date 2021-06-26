@@ -3,12 +3,12 @@ import { createTheme } from "./helper";
 
 const COLORS: Partial<Colors> = {
   primary: "#fe716b",
-  secondary: "#ffa98b",
+  secondary: "#669ef6",
   greyOutline: "rgba(240,240,240, 1)",
   white: "#ffffff",
   black: "#393939",
   grey0: "#908b8b",
-  grey1: "#bab3b3",
+  grey1: "#b1b1b1",
   grey2: "#cbcbcb",
   grey3: "#d9d9d9",
   grey4: "#ededed",

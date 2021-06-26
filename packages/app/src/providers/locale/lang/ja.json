@@ -3,7 +3,16 @@
     "send": "送信",
     "next": "次へ",
     "search": "検索",
-    "pending": "処理中"
+    "pending": "処理中",
+    "comment": "コメント",
+    "commentCount": "コメント数",
+    "emptyComment": "コメントがありません",
+    "clickToComment": "クリックしてコメント",
+    "loadMore": "もっと見る",
+    "end": "以上",
+    "reply": "返信",
+    "checkReplyByCount": "個の返信を表示",
+    "deleted": "削除済み"
   },
   "mainTab": {
     "home": "ホーム",
@@ -52,6 +61,10 @@
       "userAgreement": "利用規約とプライバシーポリシー"
     }
   },
+  "user": {
+    "followAction": "フォロー",
+    "unfollowAction": "フォロー済み"
+  },
   "post": {
     "recommends": {
       "tabLabel": "おすすめ"
@@ -59,10 +72,7 @@
     "followed": {
       "tabLabel": "フォロー"
     },
-    "postDetail": {
-      "followAction": "フォロー",
-      "unfollowAction": "アンフォロー"
-    }
+    "commentToPost": "投稿にコメントする"
   },
   "validation": {
     "common": {

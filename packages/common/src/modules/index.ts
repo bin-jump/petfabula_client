@@ -11,6 +11,7 @@ export {
   useLogout,
   useOauthRegisterAndLogin,
   useUserAgreement,
+  useCurrentUser,
   OauthConfig,
 } from './authentication';
 
@@ -24,6 +25,8 @@ export {
   PostComment,
   PostCommentReply,
   PostDetail,
+  useFollowUser,
+  useUnfollowUser,
   useCreatePost,
   useLoadFollowedPosts,
   useLoadMyPosts,
@@ -31,8 +34,16 @@ export {
   useLoadPostDetail,
   useLoadRecommendPosts,
   useRemovePost,
+  useLikePost,
+  useUnlikePost,
+  useCollectPost,
+  useRemoveCollectPost,
   useLoadParticipatorPets,
   useSearchPost,
+  useCreatePostComment,
+  useLoadPostComment,
+  useCreatePostCommentReply,
+  useLoadPostCommentReply,
   useLoadPostTopics,
 } from './community';
 

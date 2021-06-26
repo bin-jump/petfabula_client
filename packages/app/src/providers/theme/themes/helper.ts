@@ -62,5 +62,10 @@ export const createTheme = (color: Partial<Colors>): Partial<FullTheme> => {
         color: color.grey1,
       },
     },
+    Divider: {
+      style: {
+        backgroundColor: color.grey3,
+      },
+    },
   };
 };

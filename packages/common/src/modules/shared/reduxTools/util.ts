@@ -131,12 +131,15 @@ export const checkFailedResponse = (err: AsyncActionError | null) => {
 export const fillCursorResponseData = (
   state: AsyncCursorPageListBase<any>,
   successAction: ActionBase,
+  resultCallback?: (arr: any) => any,
 ): AsyncCursorPageListBase<any> => {
+  let arr = successAction.payload.result;
+  if (resultCallback) {
+    arr = resultCallback(arr);
+  }
   return {
     ...state,
-    data: successAction.extra?.cursor
-      ? [...state.data, ...successAction.payload.result]
-      : successAction.payload.result,
+    data: successAction.extra?.cursor ? [...state.data, ...arr] : arr,
     hasMore: successAction.payload.hasMore,
     nextCursor: successAction.payload.nextCursor,
     initializing: false,

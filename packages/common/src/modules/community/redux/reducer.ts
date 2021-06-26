@@ -4,6 +4,10 @@ import { postReducer } from './postHooks';
 import { petReducer } from './petHooks';
 import { postTopicReducer } from './topicHooks';
 import { searchReducer } from './searchHooks';
+import { postLikeReducer } from './likeHooks';
+import { postCollectReducer } from './collectHooks';
+import { userFollowReducer } from './followHooks';
+import { postCommentReducer } from './postCommentHooks';
 
 const initialStat: CommunityState = {
   // user
@@ -46,7 +50,7 @@ const initialStat: CommunityState = {
     initializing: false,
   },
   postDetail: { data: null, pending: false, error: null },
-  comments: {
+  postComments: {
     postId: null,
     data: [],
     pending: false,
@@ -67,14 +71,23 @@ const initialStat: CommunityState = {
 
   createPost: { data: null, pending: false, error: null },
   removePost: { data: null, pending: false, error: null },
-  createComment: { data: null, pending: false, error: null },
-  removeComment: { data: null, pending: false, error: null },
-  createReply: { data: null, pending: false, error: null },
-  removeReply: { data: null, pending: false, error: null },
+  createPostComment: { data: null, pending: false, error: null },
+  removePostComment: { data: null, pending: false, error: null },
+  createPostReply: { data: null, pending: false, error: null },
+  removePostReply: { data: null, pending: false, error: null },
   postTopics: { data: [], pending: false, error: null },
 };
 
 export const communityRootReducer = createReducer<CommunityState, ActionBase>(
   initialStat,
-  { ...postReducer, ...petReducer, ...postTopicReducer, ...searchReducer },
+  {
+    ...postReducer,
+    ...petReducer,
+    ...postTopicReducer,
+    ...searchReducer,
+    ...postLikeReducer,
+    ...postCollectReducer,
+    ...userFollowReducer,
+    ...postCommentReducer,
+  },
 );

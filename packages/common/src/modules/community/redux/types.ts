@@ -18,6 +18,11 @@ export interface Participtor {
   answerCount: number;
 }
 
+export interface ParticiptorDetail extends Participtor {
+  followed: boolean;
+  followPending: boolean;
+}
+
 export interface ParticiptorPet {
   id: number;
   name: string;
@@ -36,6 +41,7 @@ export interface Post {
   content: string;
   viewCount: number;
   likeCount: number;
+  collectCount: number;
   commentCount: number;
   createdDate: number;
   participator: Participtor;
@@ -49,12 +55,13 @@ export interface PostDetail extends Post {
   likePending: boolean;
   collectPending: boolean;
   topic: PostTopic | null;
+  participator: ParticiptorDetail;
 }
 
 export interface PostComment {
   id: number;
   postId: number;
-  content: number;
+  content: string;
   replyCount: number;
   createdDate: number;
   participator: Participtor;
@@ -67,7 +74,8 @@ export interface PostCommentReply {
   id: number;
   postId: number;
   postCommentId: number;
-  content: number;
+  replyToId: number | null;
+  content: string;
   createdDate: number;
   participator: Participtor;
 }
@@ -85,6 +93,7 @@ export interface PostCommentForm {
 
 export interface PostCommentReplyForm {
   postCommentId: number;
+  replyToId: number | null;
   content: string;
 }
 
@@ -99,15 +108,17 @@ export interface CommunityState {
   followedPosts: AsyncCursorPageListBase<Post>;
   recommendPosts: AsyncCursorPageListBase<Post>;
   postDetail: AsyncDataBase<PostDetail>;
-  comments: AsyncCursorPageListBase<PostComment> & { postId: number | null };
+  postComments: AsyncCursorPageListBase<PostComment> & {
+    postId: number | null;
+  };
   searchPosts: AsyncCursorPageListBase<Post> & { keyword: string | null };
 
   createPost: AsyncDataBase<Post>;
   removePost: AsyncDataBase<number>;
-  createComment: AsyncDataBase<PostComment>;
-  removeComment: AsyncDataBase<number>;
-  createReply: AsyncDataBase<PostCommentReply>;
-  removeReply: AsyncDataBase<number>;
+  createPostComment: AsyncDataBase<PostComment>;
+  removePostComment: AsyncDataBase<number>;
+  createPostReply: AsyncDataBase<PostCommentReply>;
+  removePostReply: AsyncDataBase<number>;
 
   postTopics: AsyncListBase<PostTopic>;
   mypets: AsyncListBase<ParticiptorPet>;

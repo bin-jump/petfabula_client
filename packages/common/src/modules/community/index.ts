@@ -5,3 +5,7 @@ export * from './redux/postHooks';
 export * from './redux/topicHooks';
 export * from './redux/petHooks';
 export * from './redux/searchHooks';
+export * from './redux/likeHooks';
+export * from './redux/collectHooks';
+export * from './redux/followHooks';
+export * from './redux/postCommentHooks';
