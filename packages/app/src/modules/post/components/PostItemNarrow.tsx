@@ -30,19 +30,19 @@ export const resolvePostImageHeightRatio = (post: Post) => {
   const imgs = post.images;
   // if no image
   if (imgs.length == 0) {
-    return 3 / 2;
+    return 1;
   }
   const w = imgs[0]?.width || 0;
   const h = imgs[0]?.height || 0;
   const r = (w + 1) / (h + 1);
-  if (r >= 4 / 3) {
-    return 3 / 2;
+  if (r >= 1.3) {
+    return 4 / 3;
   }
-  if (r <= 3 / 4) {
-    return 10 / 9;
+  if (r <= 0.77) {
+    return 3 / 4;
   }
 
-  return 4 / 3;
+  return 1;
 };
 
 export const resovePostItemHeight = (contentWidth: number, post: Post) => {

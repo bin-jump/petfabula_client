@@ -87,5 +87,8 @@
     "post": {
       "postContentTooShort": "何かの内容を入力してください"
     }
+  },
+  "error": {
+    "noNetwork": "ネットワークに繋がりません"
   }
 }

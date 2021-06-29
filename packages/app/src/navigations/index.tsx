@@ -12,7 +12,8 @@ import Ask from "../modules/ask";
 import User from "../modules/user";
 import NotificationScreen from "../modules/notification";
 import CreateNew from "../modules/createNew";
-import { useCurrentUser } from "@petfabula/common";
+import Toast from "react-native-root-toast";
+import { useCurrentUser, registerToastHandler } from "@petfabula/common";
 
 const Tabs = createBottomTabNavigator();
 const TopStack = createStackNavigator();
@@ -20,6 +21,28 @@ const TopStack = createStackNavigator();
 const AppScreen = () => {
   const { theme } = useTheme();
   const { getCurrentUser } = useCurrentUser();
+
+  const { t } = useTranslation();
+  // register toast related to redux action
+  registerToastHandler({
+    handleSuccess: (msg: string) =>
+      Toast.show(`✓ ${t(msg)}`, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP + 30,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+      }),
+
+    handleFailure: (msg: string) =>
+      Toast.show(`⚠ ${t(msg)}`, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.TOP + 30,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+      }),
+  });
 
   // check login on active
   // const appState = useRef(AppState.currentState);

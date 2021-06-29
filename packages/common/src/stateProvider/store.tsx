@@ -7,10 +7,15 @@ import { authenticationRootSaga } from '../modules/authentication';
 import { communityRootSaga } from '../modules/community';
 
 import { logHandleMiddleware } from './middlewares/logHandleMiddleware';
+import { toastHandleMiddleware } from './middlewares/toastHandleMiddleware';
 
 const sagaMiddleware = createSagaMiddleware();
 
-const middlewares = [logHandleMiddleware, sagaMiddleware];
+const middlewares = [
+  logHandleMiddleware,
+  toastHandleMiddleware,
+  sagaMiddleware,
+];
 
 const store = createStore(
   rootReducer,

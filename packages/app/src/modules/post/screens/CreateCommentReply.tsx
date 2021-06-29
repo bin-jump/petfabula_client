@@ -16,10 +16,7 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
-import {
-  useCreatePostCommentReply,
-  PostCommentReplyForm,
-} from "@petfabula/common";
+import { useCreatePostCommentReply } from "@petfabula/common";
 import { useDidUpdateEffect } from "../../shared";
 import ParamTypes from "./ParamTypes";
 
