@@ -1,66 +1,34 @@
 import React, { useEffect, useRef, useCallback } from "react";
 import { Platform, View, AppState } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  DefaultTheme,
+  useNavigation,
+} from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { useTheme, Icon, Text } from "react-native-elements";
 import { useTranslation } from "react-i18next";
+import Toast from "react-native-root-toast";
+import {
+  useCurrentUser,
+  registerToastHandler,
+  registerLoginReqiureHandler,
+} from "@petfabula/common";
+import { LoginRequire } from "../modules/aspect";
 import AuthenticaionScreen from "../modules/authentication";
 import Posts from "../modules/post";
 import Ask from "../modules/ask";
 import User from "../modules/user";
 import NotificationScreen from "../modules/notification";
 import CreateNew from "../modules/createNew";
-import Toast from "react-native-root-toast";
-import { useCurrentUser, registerToastHandler } from "@petfabula/common";
 
 const Tabs = createBottomTabNavigator();
 const TopStack = createStackNavigator();
 
 const AppScreen = () => {
   const { theme } = useTheme();
-  const { getCurrentUser } = useCurrentUser();
-
-  const { t } = useTranslation();
-  // register toast related to redux action
-  registerToastHandler({
-    handleSuccess: (msg: string) =>
-      Toast.show(`✓ ${t(msg)}`, {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.TOP + 30,
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-      }),
-
-    handleFailure: (msg: string) =>
-      Toast.show(`⚠ ${t(msg)}`, {
-        duration: Toast.durations.LONG,
-        position: Toast.positions.TOP + 30,
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-      }),
-  });
-
-  // check login on active
-  // const appState = useRef(AppState.currentState);
-  const _handleAppStateChange = useCallback(
-    (nextAppState: any) => {
-      if (nextAppState === "active") {
-        getCurrentUser();
-      }
-    },
-    [getCurrentUser]
-  );
-  useEffect(() => {
-    AppState.addEventListener("change", _handleAppStateChange);
-
-    return () => {
-      AppState.removeEventListener("change", _handleAppStateChange);
-    };
-  }, []);
 
   return (
     <NavigationContainer
@@ -98,6 +66,30 @@ const AppScreen = () => {
               overlayStyle: {
                 opacity: progress.interpolate({
                   inputRange: [0, 0.5, 1],
+                  outputRange: [0, 0.1, 0.3],
+                  extrapolate: "clamp",
+                }),
+              },
+            }),
+          }}
+          name="LoginRequire"
+          component={LoginRequire}
+        />
+        <TopStack.Screen
+          options={{
+            headerShown: false,
+            cardStyle: { backgroundColor: "transparent" },
+            cardOverlayEnabled: true,
+            cardStyleInterpolator: ({ current: { progress } }) => ({
+              cardStyle: {
+                opacity: progress.interpolate({
+                  inputRange: [0, 0.5, 0.9, 1],
+                  outputRange: [0, 0.1, 0.3, 1],
+                }),
+              },
+              overlayStyle: {
+                opacity: progress.interpolate({
+                  inputRange: [0, 0.5, 1],
                   outputRange: [0, 0.3, 0.5],
                   extrapolate: "clamp",
                 }),
@@ -118,12 +110,62 @@ const AppScreen = () => {
     </NavigationContainer>
   );
 };
+
 const createNewPlaceholder = () => <View />;
+
+// application main functionalities
 const TabScreen = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const focusedColor = theme.colors?.primary;
   const unFocusedColor = theme.colors?.grey1;
+
+  const { getCurrentUser } = useCurrentUser();
+  // check login on active
+  // const appState = useRef(AppState.currentState);
+  const _handleAppStateChange = useCallback(
+    (nextAppState: any) => {
+      if (nextAppState === "active") {
+        getCurrentUser();
+      }
+    },
+    [getCurrentUser]
+  );
+  useEffect(() => {
+    AppState.addEventListener("change", _handleAppStateChange);
+
+    return () => {
+      AppState.removeEventListener("change", _handleAppStateChange);
+    };
+  }, []);
+
+  const navigation = useNavigation();
+  registerLoginReqiureHandler({
+    handle: () => {
+      navigation.navigate("LoginRequire");
+      // navigation.navigate("AuthenticaionScreen");
+    },
+  });
+  // register toast related to redux action
+  registerToastHandler({
+    handleSuccess: (msg: string) =>
+      Toast.show(`✓ ${t(msg)}`, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP + 30,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+      }),
+
+    handleFailure: (msg: string) =>
+      Toast.show(`⚠ ${t(msg)}`, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.TOP + 30,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+      }),
+  });
 
   return (
     <Tabs.Navigator

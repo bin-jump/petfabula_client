@@ -7,3 +7,4 @@ export { default as PendingOverlay } from "./PendingOverlay";
 export { default as Avatar } from "./Avatar";
 export { default as AvatarField } from "./AvatarField";
 export { default as ImageGallery } from "./ImageGallery";
+export { default as Tooltip } from "./Tooltip";

@@ -8,11 +8,13 @@ import { communityRootSaga } from '../modules/community';
 
 import { logHandleMiddleware } from './middlewares/logHandleMiddleware';
 import { toastHandleMiddleware } from './middlewares/toastHandleMiddleware';
+import { loginAssertMiddleware } from './middlewares/loginAssertMiddleware';
 
 const sagaMiddleware = createSagaMiddleware();
 
 const middlewares = [
   logHandleMiddleware,
+  loginAssertMiddleware,
   toastHandleMiddleware,
   sagaMiddleware,
 ];

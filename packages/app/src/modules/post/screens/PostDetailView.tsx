@@ -6,6 +6,7 @@ import {
   ScrollView,
   useWindowDimensions,
   Platform,
+  Modal,
 } from "react-native";
 import { useTheme, Text, Divider, Button, Icon } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -245,50 +246,58 @@ const Header = ({
           name={post.participator.name}
           photo={post.participator.photo}
           style={{ marginRight: 16, marginLeft: 12 }}
-          fieldRight={() =>
-            currentUser && currentUser.id != post.participator.id ? (
-              <Button
-                loading={followPending || unfollowPending}
-                onPress={() => {
-                  if (!post.participator.followed) {
-                    followUser(post.participator.id);
-                  } else {
-                    unfollowUser(post.participator.id);
+          fieldRight={() => (
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              {currentUser && currentUser.id != post.participator.id ? (
+                <Button
+                  loading={followPending || unfollowPending}
+                  onPress={() => {
+                    if (!post.participator.followed) {
+                      followUser(post.participator.id);
+                    } else {
+                      unfollowUser(post.participator.id);
+                    }
+                  }}
+                  title={
+                    !post.participator.followed
+                      ? t("user.followAction")
+                      : t("user.unfollowAction")
                   }
-                }}
-                title={
-                  !post.participator.followed
-                    ? t("user.followAction")
-                    : t("user.unfollowAction")
-                }
-                titleStyle={{
-                  fontSize: 16,
-                  fontWeight: "bold",
-                  color: post.participator.followed
-                    ? theme.colors?.black
-                    : theme.colors?.white,
-                }}
-                buttonStyle={{
-                  height: 40,
-                  paddingHorizontal: 12,
-                  backgroundColor: post.participator.followed
-                    ? theme.colors?.grey4
-                    : theme.colors?.primary,
-                }}
-                containerStyle={{ height: 40, width: 126 }}
-                icon={
-                  post.participator.followed ? (
-                    <Icon
-                      type="antdesign"
-                      name="check"
-                      color={theme.colors?.black}
-                      size={16}
-                    />
-                  ) : undefined
-                }
+                  titleStyle={{
+                    fontSize: 16,
+                    fontWeight: "bold",
+                    color: post.participator.followed
+                      ? theme.colors?.black
+                      : theme.colors?.white,
+                  }}
+                  buttonStyle={{
+                    height: 40,
+                    paddingHorizontal: 12,
+                    backgroundColor: post.participator.followed
+                      ? theme.colors?.grey4
+                      : theme.colors?.primary,
+                  }}
+                  containerStyle={{ height: 40, width: 126 }}
+                  icon={
+                    post.participator.followed ? (
+                      <Icon
+                        type="antdesign"
+                        name="check"
+                        color={theme.colors?.black}
+                        size={16}
+                      />
+                    ) : undefined
+                  }
+                />
+              ) : null}
+
+              <Icon
+                type="feather"
+                name="more-vertical"
+                color={theme.colors?.black}
               />
-            ) : null
-          }
+            </View>
+          )}
         />
       ) : null}
     </View>
@@ -388,7 +397,7 @@ const ReplyItem = ({
       >
         <Text style={{ marginTop: -6, marginLeft: 30 }}>
           {replyTargetComponent()}
-          <Text style={{ fontSize: 16 }}>{reply.content}</Text>
+          <Text style={{ fontSize: 16, lineHeight: 20 }}>{reply.content}</Text>
 
           <Text
             style={{
@@ -474,7 +483,7 @@ const CommentItem = ({
             <Text
               style={{
                 color: theme.colors?.secondary,
-                fontSize: comment.replyCursor ? 16 : 16,
+                fontSize: comment.replyCursor ? 16 : 18,
                 fontWeight: "bold",
               }}
             >
@@ -545,6 +554,7 @@ const CommentItem = ({
                 }}
                 style={{
                   fontSize: 16,
+                  lineHeight: 20,
                 }}
               >
                 {comment.content}
@@ -766,17 +776,19 @@ const PostDetailView = () => {
             <View
               style={{
                 backgroundColor: theme.colors?.white,
-                paddingHorizontal: 12,
+                paddingHorizontal: 16,
                 paddingTop: post.images.length ? 6 : 16,
                 paddingBottom: 18,
               }}
             >
-              <Text style={{ fontSize: 18 }}>{post.content}</Text>
+              <Text style={{ fontSize: 17, lineHeight: 26 }}>
+                {post.content}
+              </Text>
 
               <Text
                 style={{
                   paddingTop: 16,
-                  fontSize: 18,
+                  fontSize: 16,
                   color: theme.colors?.grey1,
                 }}
               >

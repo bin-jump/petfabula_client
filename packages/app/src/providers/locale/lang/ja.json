@@ -88,6 +88,10 @@
       "postContentTooShort": "何かの内容を入力してください"
     }
   },
+  "aspect": {
+    "gotoLogin": "ログインへ",
+    "loginToContinue": "ログインしてください"
+  },
   "error": {
     "noNetwork": "ネットワークに繋がりません"
   }
