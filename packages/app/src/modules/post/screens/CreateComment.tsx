@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   View,
   TouchableWithoutFeedback,
@@ -35,11 +35,12 @@ const CreateComment = () => {
   const { params } = useRoute<RouteProp<ParamTypes, "CreateComment">>();
   const { postId } = params;
 
-  const keyboardDidShow = (e: KeyboardEvent) => {
-    // console.log(e);
-    kbHeight.value = e.endCoordinates.height + contentHeight;
-    // setKbHeight(e.endCoordinates.height + 60);
-  };
+  const keyboardDidShow = useCallback(
+    (e: KeyboardEvent) => {
+      kbHeight.value = e.endCoordinates.height + contentHeight;
+    },
+    [kbHeight]
+  );
 
   const style = useAnimatedStyle(() => {
     return {

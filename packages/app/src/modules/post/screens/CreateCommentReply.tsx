@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   View,
   TouchableWithoutFeedback,
@@ -36,9 +36,12 @@ const CreateCommentReply = () => {
   const { replyTarget, toComment, commentId } = params;
   const replyToId = toComment ? null : replyTarget.id;
 
-  const keyboardDidShow = (e: KeyboardEvent) => {
-    kbHeight.value = e.endCoordinates.height + contentHeight;
-  };
+  const keyboardDidShow = useCallback(
+    (e: KeyboardEvent) => {
+      kbHeight.value = e.endCoordinates.height + contentHeight;
+    },
+    [kbHeight]
+  );
 
   const style = useAnimatedStyle(() => {
     return {

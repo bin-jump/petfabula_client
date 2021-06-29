@@ -1,10 +1,10 @@
-import * as React from "react";
+import React, { useEffect, useRef, useCallback } from "react";
+import { Platform, View, AppState } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
-import { Platform, View, TouchableOpacity } from "react-native";
-import { ThemeContext, Icon, Text } from "react-native-elements";
+import { useTheme, Icon, Text } from "react-native-elements";
 import { useTranslation } from "react-i18next";
 import AuthenticaionScreen from "../modules/authentication";
 import Posts from "../modules/post";
@@ -12,12 +12,33 @@ import Ask from "../modules/ask";
 import User from "../modules/user";
 import NotificationScreen from "../modules/notification";
 import CreateNew from "../modules/createNew";
+import { useCurrentUser } from "@petfabula/common";
 
 const Tabs = createBottomTabNavigator();
 const TopStack = createStackNavigator();
 
 const AppScreen = () => {
-  const { theme } = React.useContext(ThemeContext);
+  const { theme } = useTheme();
+  const { getCurrentUser } = useCurrentUser();
+
+  // check login on active
+  // const appState = useRef(AppState.currentState);
+  const _handleAppStateChange = useCallback(
+    (nextAppState: any) => {
+      if (nextAppState === "active") {
+        getCurrentUser();
+      }
+    },
+    [getCurrentUser]
+  );
+  useEffect(() => {
+    AppState.addEventListener("change", _handleAppStateChange);
+
+    return () => {
+      AppState.removeEventListener("change", _handleAppStateChange);
+    };
+  }, []);
+
   return (
     <NavigationContainer
       theme={{
@@ -76,7 +97,7 @@ const AppScreen = () => {
 };
 const createNewPlaceholder = () => <View />;
 const TabScreen = () => {
-  const { theme } = React.useContext(ThemeContext);
+  const { theme } = useTheme();
   const { t } = useTranslation();
   const focusedColor = theme.colors?.primary;
   const unFocusedColor = theme.colors?.grey1;
