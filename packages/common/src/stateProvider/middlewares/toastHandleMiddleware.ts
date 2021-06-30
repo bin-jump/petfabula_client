@@ -29,7 +29,7 @@ export const toastHandleMiddleware: Middleware<Dispatch> =
 
     //   }
     if (actionBase.type.endsWith('SUCCESS') && handler.handleSuccess) {
-      const message = actionBase.payload.message;
+      const message = actionBase.payload?.message;
       if (message) {
         handler.handleSuccess(message);
       }

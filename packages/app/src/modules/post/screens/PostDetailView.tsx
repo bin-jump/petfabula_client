@@ -1,11 +1,16 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  useMemo,
+} from "react";
 import {
   View,
   TouchableWithoutFeedback,
   ActivityIndicator,
   ScrollView,
   useWindowDimensions,
-  Platform,
   Modal,
 } from "react-native";
 import { useTheme, Text, Divider, Button, Icon } from "react-native-elements";
@@ -19,6 +24,7 @@ import Animated, {
   withTiming,
   Easing,
 } from "react-native-reanimated";
+import { BottomSheetModal, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import {
   useLoadPostDetail,
   PostDetail,
@@ -221,6 +227,19 @@ const Header = ({
   const { followUser, pending: followPending } = useFollowUser();
   const { unfollowUser, pending: unfollowPending } = useUnfollowUser();
 
+  // ref
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const snapPoints = useMemo(() => ["25%"], []);
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+  const handleSheetChanges = useCallback((index: number) => {
+    // console.log("handleSheetChanges", index);
+    // if (index == 0) {
+    //   bottomSheetModalRef.current?.close();
+    // }
+  }, []);
+
   return (
     <View
       style={{
@@ -239,7 +258,17 @@ const Header = ({
           color={theme.colors?.black}
         />
       </TouchableWithoutFeedback>
-
+      <BottomSheetModal
+        backdropComponent={BottomSheetBackdrop}
+        ref={bottomSheetModalRef}
+        // index={1}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+      >
+        <View>
+          <Text>Awesome 🎉</Text>
+        </View>
+      </BottomSheetModal>
       {post && post.id == currentPostId ? (
         <AvatarField
           nameStyle={{ marginLeft: 8, marginBottom: 6, fontWeight: "bold" }}
@@ -292,6 +321,9 @@ const Header = ({
               ) : null}
 
               <Icon
+                onPress={() => {
+                  handlePresentModalPress();
+                }}
                 type="feather"
                 name="more-vertical"
                 color={theme.colors?.black}
@@ -453,6 +485,12 @@ const CommentItem = ({
   const { t } = useTranslation();
   const { loadCommentReply } = useLoadPostCommentReply();
 
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const snapPoints = useMemo(() => ["25%"], []);
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+
   const renderLoadMore = useCallback(() => {
     if (
       comment.replyCount == 0 ||
@@ -510,6 +548,16 @@ const CommentItem = ({
 
   return (
     <View>
+      <BottomSheetModal
+        backdropComponent={BottomSheetBackdrop}
+        ref={bottomSheetModalRef}
+        // index={1}
+        snapPoints={snapPoints}
+      >
+        <View>
+          <Text>Awesome 🎉</Text>
+        </View>
+      </BottomSheetModal>
       <View style={{ marginTop: 12, marginBottom: 16 }}>
         <AvatarField
           nameStyle={{
@@ -596,12 +644,14 @@ const CommentItem = ({
               width: 36,
             }}
           >
-            {/* <Icon
-              type="font-awesome"
-              name="comment-o"
-              color={theme.colors?.grey1}
-              size={24}
-            /> */}
+            <Icon
+              onPress={() => {
+                handlePresentModalPress();
+              }}
+              type="feather"
+              name="more-vertical"
+              color={theme.colors?.black}
+            />
           </View>
         </View>
       </View>
@@ -737,8 +787,7 @@ const PostDetailView = () => {
   const { height: screenHeight } = useWindowDimensions();
   const { top, bottom } = useSafeAreaInsets();
   const headerHeight = 66;
-  const footerHeight = 72;
-  const extraTopMargin = Platform.OS == "android" ? -20 : 0;
+  const footerHeight = 56 + (bottom * 1) / 2;
 
   useEffect(() => {
     loadPostDetail(id);
@@ -801,12 +850,7 @@ const PostDetailView = () => {
           <View
             style={{
               position: "absolute",
-              marginTop:
-                screenHeight -
-                headerHeight -
-                top -
-                footerHeight -
-                extraTopMargin,
+              marginTop: screenHeight - headerHeight - top - footerHeight,
               height: footerHeight,
               width: "100%",
               backgroundColor: theme.colors?.white,

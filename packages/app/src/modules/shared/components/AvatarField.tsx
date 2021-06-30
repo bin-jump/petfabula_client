@@ -48,7 +48,7 @@ export default function AvatarField(props: Props & ViewProps) {
               onAvatarClick();
             }
           }}
-          source={{ uri: photo }}
+          source={{ uri: photo ? photo : "dummy" }}
           size={size ? size : 42}
         />
         <View style={{ justifyContent: "center" }}>

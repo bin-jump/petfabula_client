@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useCallback } from "react";
-import { Platform, View, AppState } from "react-native";
+import { View, AppState } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   NavigationContainer,
@@ -9,6 +9,7 @@ import {
 import { createStackNavigator } from "@react-navigation/stack";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { useTheme, Icon, Text } from "react-native-elements";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-root-toast";
 import {
@@ -117,6 +118,7 @@ const createNewPlaceholder = () => <View />;
 const TabScreen = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
+  const { bottom } = useSafeAreaInsets();
   const focusedColor = theme.colors?.primary;
   const unFocusedColor = theme.colors?.grey1;
 
@@ -179,7 +181,7 @@ const TabScreen = () => {
           right: 0,
           borderTopWidth: 0,
           //elevation: 0,
-          height: Platform.OS == "ios" ? 86 : 70,
+          height: 70 + bottom / 2,
           backgroundColor: theme.colors?.white,
           justifyContent: "center",
           elevation: 1,
@@ -290,7 +292,7 @@ const TabScreen = () => {
                     containerStyle={{}}
                     type="material"
                     name="add-circle"
-                    size={60}
+                    size={50}
                     color={focusedColor}
                   />
                 </View>
