@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import { useLoadRecommendPosts } from "@petfabula/common";
 import { usePostWidth } from "../components/PostItemNarrow";
 import PostFlatList, { Props } from "../components/PostFlatList";
@@ -22,9 +23,15 @@ const Recommends = forwardRef<FlatList, ListProps>((props, ref) => {
     hasMore,
   } = useLoadRecommendPosts();
 
-  useEffect(() => {
-    loadRecommendPosts(null);
-  }, []);
+  // useEffect(() => {
+  //   loadRecommendPosts(null);
+  // }, []);
+
+  useFocusEffect(() => {
+    if (posts.length == 0) {
+      loadRecommendPosts(null);
+    }
+  });
 
   return (
     <PostFlatList

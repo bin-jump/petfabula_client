@@ -30,7 +30,7 @@ const CreateComment = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const contentHeight = 110;
-  const kbHeight = useSharedValue(contentHeight + 200);
+  const kbHeight = useSharedValue(contentHeight + 30);
   const { createComment, pending, result } = useCreatePostComment();
   const { params } = useRoute<RouteProp<ParamTypes, "CreateComment">>();
   const { postId } = params;
@@ -66,75 +66,81 @@ const CreateComment = () => {
   return (
     <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
       <View>
-        <Animated.View
-          style={[
-            {
-              width: "100%",
-              backgroundColor: theme.colors?.white,
-            },
-            style,
-          ]}
-        >
-          <View
-            style={{ padding: 12, height: contentHeight, flexDirection: "row" }}
+        <TouchableWithoutFeedback>
+          <Animated.View
+            style={[
+              {
+                width: "100%",
+                backgroundColor: theme.colors?.white,
+              },
+              style,
+            ]}
           >
-            <TextInput
-              multiline
-              autoFocus
-              placeholder={`${t("post.commentToPost")}...`}
-              placeholderTextColor={theme.colors?.grey1}
-              value={comment}
-              onChangeText={(e) => {
-                setComment(e);
-              }}
-              style={{
-                padding: 6,
-                fontSize: 18,
-                flex: 1,
-                color: theme.colors?.black,
-                backgroundColor: theme.colors?.grey5,
-                borderRadius: 6,
-              }}
-            />
             <View
               style={{
-                width: 60,
-                marginLeft: 12,
-                marginBottom: 8,
-                justifyContent: "space-between",
+                padding: 12,
+                height: contentHeight,
+                flexDirection: "row",
               }}
             >
-              <View>
-                {!pending ? (
-                  <TouchableWithoutFeedback
-                    onPress={() => {
-                      if (comment.trim()) {
-                        createComment({ postId, content: comment });
-                      }
-                    }}
-                  >
-                    <Text
-                      style={{ fontSize: 20, color: theme.colors?.primary }}
-                    >
-                      {t("common.send")}
-                    </Text>
-                  </TouchableWithoutFeedback>
-                ) : (
-                  <ActivityIndicator color={theme.colors?.grey1} />
-                )}
-              </View>
-              <Text
-                style={{
-                  fontSize: 14,
-                  color:
-                    comment.length > 240
-                      ? theme.colors?.error
-                      : theme.colors?.grey0,
+              <TextInput
+                multiline
+                autoFocus
+                placeholder={`${t("post.commentToPost")}...`}
+                placeholderTextColor={theme.colors?.grey1}
+                value={comment}
+                onChangeText={(e) => {
+                  setComment(e);
                 }}
-              >{`${comment.length}/240`}</Text>
+                style={{
+                  padding: 6,
+                  fontSize: 18,
+                  flex: 1,
+                  color: theme.colors?.black,
+                  backgroundColor: theme.colors?.grey5,
+                  borderRadius: 6,
+                }}
+              />
+              <View
+                style={{
+                  width: 60,
+                  marginLeft: 12,
+                  marginBottom: 8,
+                  justifyContent: "space-between",
+                }}
+              >
+                <View>
+                  {!pending ? (
+                    <TouchableWithoutFeedback
+                      onPress={() => {
+                        if (comment.trim()) {
+                          createComment({ postId, content: comment });
+                        }
+                      }}
+                    >
+                      <Text
+                        style={{ fontSize: 20, color: theme.colors?.primary }}
+                      >
+                        {t("common.send")}
+                      </Text>
+                    </TouchableWithoutFeedback>
+                  ) : (
+                    <ActivityIndicator color={theme.colors?.grey1} />
+                  )}
+                </View>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color:
+                      comment.length > 240
+                        ? theme.colors?.error
+                        : theme.colors?.grey0,
+                  }}
+                >{`${comment.length}/240`}</Text>
+              </View>
             </View>
-          </View>
-        </Animated.View>
+          </Animated.View>
+        </TouchableWithoutFeedback>
       </View>
     </TouchableWithoutFeedback>
   );

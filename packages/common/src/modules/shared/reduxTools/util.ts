@@ -91,6 +91,7 @@ export function createSagaWatcher({
     if (response.success) {
       let successAction: ActionBase = {
         type: asyncAction.SUCCESS,
+        message: response.message,
         payload: response.data,
         error: null,
         extra: beginAction.payload,
@@ -102,6 +103,8 @@ export function createSagaWatcher({
     } else {
       const failureAction: ActionBase = {
         type: asyncAction.FAILURE,
+        message: response.message,
+        payload: response?.data,
         error: translateApiError(response),
       };
       yield put(failureAction);

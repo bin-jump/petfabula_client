@@ -5,7 +5,7 @@ import {
   DisplayImage,
 } from '../../shared';
 
-export interface Participtor {
+export interface Participator {
   id: number;
   name: string;
   photo: string;
@@ -18,7 +18,7 @@ export interface Participtor {
   answerCount: number;
 }
 
-export interface ParticiptorDetail extends Participtor {
+export interface ParticiptorDetail extends Participator {
   followed: boolean;
   followPending: boolean;
 }
@@ -32,7 +32,12 @@ export interface ParticiptorPet {
 export interface PostTopic {
   id: number;
   title: string;
-  intro: string;
+}
+
+export interface PostTopicCategory {
+  id: number;
+  title: string;
+  topics: PostTopic[];
 }
 
 export interface Post {
@@ -44,7 +49,7 @@ export interface Post {
   collectCount: number;
   commentCount: number;
   createdDate: number;
-  participator: Participtor;
+  participator: Participator;
   images: DisplayImage[];
 }
 
@@ -54,7 +59,7 @@ export interface PostDetail extends Post {
   collected: boolean;
   likePending: boolean;
   collectPending: boolean;
-  topic: PostTopic | null;
+  postTopic: PostTopic | null;
   participator: ParticiptorDetail;
 }
 
@@ -64,7 +69,7 @@ export interface PostComment {
   content: string;
   replyCount: number;
   createdDate: number;
-  participator: Participtor;
+  participator: Participator;
   replies: PostCommentReply[];
   loadingReply: boolean;
   replyCursor: number | null;
@@ -77,7 +82,7 @@ export interface PostCommentReply {
   replyToId: number | null;
   content: string;
   createdDate: number;
-  participator: Participtor;
+  participator: Participator;
 }
 
 export interface PostForm {
@@ -99,8 +104,8 @@ export interface PostCommentReplyForm {
 
 export interface CommunityState {
   // user
-  myDetail: AsyncDataBase<Participtor>;
-  othersDetail: AsyncDataBase<Participtor>;
+  myDetail: AsyncDataBase<Participator>;
+  othersDetail: AsyncDataBase<Participator>;
   myPosts: AsyncCursorPageListBase<Post>;
   othersPosts: AsyncCursorPageListBase<Post> & { userId: number | null };
 
@@ -120,6 +125,6 @@ export interface CommunityState {
   createPostReply: AsyncDataBase<PostCommentReply>;
   removePostReply: AsyncDataBase<number>;
 
-  postTopics: AsyncListBase<PostTopic>;
+  postTopics: AsyncListBase<PostTopicCategory>;
   mypets: AsyncListBase<ParticiptorPet>;
 }

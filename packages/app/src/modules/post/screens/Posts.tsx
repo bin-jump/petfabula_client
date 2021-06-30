@@ -25,15 +25,14 @@ import Animated, {
   useSharedValue,
   useAnimatedScrollHandler,
   useAnimatedStyle,
-  useDerivedValue,
   withTiming,
-  withSpring,
 } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
 import Recommends from "./Recommends";
 import Followed from "./Followed";
 import SearchHeader from "../components/SearchHeader";
 import TabBar from "../components/TabBar";
+import { useCurrentUser } from "@petfabula/common";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -102,6 +101,7 @@ const Posts = () => {
   const { t } = useTranslation();
   const { height: screenHeight } = useWindowDimensions();
   const { top, bottom } = useSafeAreaInsets();
+  const { currentUser } = useCurrentUser();
 
   const HEADER_HEIGHT = 46;
   const TAB_BAR_HEIGHT = 42;
@@ -162,7 +162,7 @@ const Posts = () => {
       // decelerationRate: 0.96,
       contentContainerStyle: {
         paddingTop: 6,
-        // paddingBottom: bottom,
+        paddingBottom: bottom,
         minHeight: screenHeight,
       },
       scrollEventThrottle: 5,
@@ -190,7 +190,6 @@ const Posts = () => {
         style={[listViewStyle, followSlideStyle]}
         ref={followListRef}
         onScroll={followScrollHandler}
-        data={[{}, {}, {}, {}, {}]}
         {...sharedProps}
       />
     ),
@@ -246,20 +245,24 @@ const Posts = () => {
       </Animated.View>
 
       <Tab.Navigator
-        // tabBarOptions={{ scrollEnabled: true }}
+        // tabBarOptions={{}}
+        initialRouteName="Recommends"
         tabBar={renderTabBar}
       >
+        {currentUser ? (
+          <Tab.Screen
+            options={{ tabBarLabel: t("post.followed.tabLabel") }}
+            name="Followed"
+          >
+            {renderFollowed}
+          </Tab.Screen>
+        ) : null}
+
         <Tab.Screen
           options={{ tabBarLabel: t("post.recommends.tabLabel") }}
           name="Recommends"
         >
           {renderRecommends}
-        </Tab.Screen>
-        <Tab.Screen
-          options={{ tabBarLabel: t("post.followed.tabLabel") }}
-          name="Timeline"
-        >
-          {renderFollowed}
         </Tab.Screen>
       </Tab.Navigator>
     </View>

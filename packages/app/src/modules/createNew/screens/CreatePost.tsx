@@ -38,11 +38,11 @@ const CreatePost = () => {
     relatedPetId: null,
     topicId: topic ? topic.id : null,
   };
-
+  // console.log("initial", initial);
   const handleSubmit = (data: PostForm) => {
     Keyboard.dismiss();
-    // console.log("handleSubmit", data);
-    createPost(data, images);
+    const d = { ...data, topicId: topic ? topic.id : null };
+    createPost(d, images);
   };
 
   return (

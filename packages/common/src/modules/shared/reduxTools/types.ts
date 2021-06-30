@@ -37,6 +37,7 @@ export interface ReduxAsyncAction {
 
 export interface ActionBase {
   type: string;
+  message?: string | null;
   payload?: any;
   error: AsyncActionError | null;
   extra?: any;

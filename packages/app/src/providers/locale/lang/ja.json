@@ -12,7 +12,9 @@
     "end": "以上",
     "reply": "返信",
     "checkReplyByCount": "個の返信を表示",
-    "deleted": "削除済み"
+    "delete": "削除",
+    "deleted": "削除済み",
+    "cancel": "キャンセル"
   },
   "mainTab": {
     "home": "ホーム",

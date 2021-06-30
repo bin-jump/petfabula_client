@@ -2,6 +2,7 @@ import React, { forwardRef, memo } from "react";
 import { FlatList, ActivityIndicator } from "react-native";
 import { useTheme } from "react-native-elements";
 import { useFocusEffect } from "@react-navigation/native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSearchPost } from "@petfabula/common";
 import PostFlatList, { Props } from "../components/PostFlatList";
 
@@ -18,6 +19,7 @@ const PostSearch = forwardRef<
     keyword: searchedWord,
   } = useSearchPost();
   const { theme } = useTheme();
+  const { bottom } = useSafeAreaInsets();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -53,7 +55,7 @@ const PostSearch = forwardRef<
       //       >{`Empty`}</Text>
       //     </View>
       //   }
-      style={{ marginTop: 6, minHeight: 360 }}
+      contentContainerStyle={{ paddingTop: 6, paddingBottom: bottom }}
       //   ListFooterComponent={hasMore ? <ActivityIndicator /> : null}
       //   onEndReached={() => {
 

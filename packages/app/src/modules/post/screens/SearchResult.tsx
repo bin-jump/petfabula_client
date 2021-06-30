@@ -112,10 +112,10 @@ const SearchResult = () => {
     []
   );
 
-  const renderRecommends = () => <PostSearch keyword={keyword} />;
+  const renderPostSearchResult = () => <PostSearch keyword={keyword} />;
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <View
         style={{
           height: top,
@@ -125,16 +125,14 @@ const SearchResult = () => {
       ></View>
       <Header keyword={keyword} />
 
-      <View style={{ width: "100%", height: "100%" }}>
-        <Tab.Navigator tabBar={renderTabBar}>
-          <Tab.Screen
-            options={{ tabBarLabel: t("search.postSearch") }}
-            name="PostSearch"
-          >
-            {renderRecommends}
-          </Tab.Screen>
-        </Tab.Navigator>
-      </View>
+      <Tab.Navigator tabBar={renderTabBar}>
+        <Tab.Screen
+          options={{ tabBarLabel: t("search.postSearch") }}
+          name="PostSearch"
+        >
+          {renderPostSearchResult}
+        </Tab.Screen>
+      </Tab.Navigator>
     </View>
   );
 };

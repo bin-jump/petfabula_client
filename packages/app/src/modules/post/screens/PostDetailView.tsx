@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
   ScrollView,
   useWindowDimensions,
-  Modal,
+  TouchableOpacity,
 } from "react-native";
 import { useTheme, Text, Divider, Button, Icon } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -22,9 +22,15 @@ import Animated, {
   useAnimatedStyle,
   withSequence,
   withTiming,
+  interpolateColor,
+  interpolate,
   Easing,
 } from "react-native-reanimated";
-import { BottomSheetModal, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
+import {
+  BottomSheetModal,
+  BottomSheetBackdrop,
+  BottomSheetBackgroundProps,
+} from "@gorhom/bottom-sheet";
 import {
   useLoadPostDetail,
   PostDetail,
@@ -37,11 +43,12 @@ import {
   useUnfollowUser,
   useLoadPostComment,
   useLoadPostCommentReply,
-  PostComment,
+  PostTopic,
   PostCommentReply,
 } from "@petfabula/common";
 import { ImageGallery, milisecToAgo, AvatarField } from "../../shared";
 import ParamTypes from "./ParamTypes";
+import CommentList from "../components/CommentList";
 
 const Footer = ({ post }: { post: PostDetail }) => {
   const { theme } = useTheme();
@@ -211,6 +218,27 @@ const Footer = ({ post }: { post: PostDetail }) => {
   );
 };
 
+const CustomBackground: React.FC<BottomSheetBackgroundProps> = ({
+  style,
+  animatedIndex,
+}) => {
+  const containerAnimatedStyle = useAnimatedStyle(() => ({
+    borderRadius: 12,
+    opacity: interpolate(animatedIndex.value, [0, 1], [0.3, 0.8]),
+    backgroundColor: interpolateColor(
+      animatedIndex.value,
+      [0, 1],
+      ["#ffffff", "#eaeaea"]
+    ),
+  }));
+  const containerStyle = useMemo(
+    () => [style, containerAnimatedStyle],
+    [style, containerAnimatedStyle]
+  );
+
+  return <Animated.View pointerEvents="none" style={containerStyle} />;
+};
+
 const Header = ({
   height,
   post,
@@ -227,17 +255,10 @@ const Header = ({
   const { followUser, pending: followPending } = useFollowUser();
   const { unfollowUser, pending: unfollowPending } = useUnfollowUser();
 
-  // ref
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const snapPoints = useMemo(() => ["25%"], []);
+  const snapPoints = useMemo(() => [200], []);
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
-  }, []);
-  const handleSheetChanges = useCallback((index: number) => {
-    // console.log("handleSheetChanges", index);
-    // if (index == 0) {
-    //   bottomSheetModalRef.current?.close();
-    // }
   }, []);
 
   return (
@@ -261,14 +282,77 @@ const Header = ({
       <BottomSheetModal
         backdropComponent={BottomSheetBackdrop}
         ref={bottomSheetModalRef}
+        backgroundComponent={CustomBackground}
         // index={1}
         snapPoints={snapPoints}
-        onChange={handleSheetChanges}
+        style={{
+          shadowColor: theme.colors?.grey1,
+          shadowOffset: { width: 2, height: 1 },
+          shadowOpacity: 0.8,
+          elevation: 2,
+        }}
       >
-        <View>
-          <Text>Awesome 🎉</Text>
+        <View style={{ paddingHorizontal: 24 }}>
+          <Divider />
+          <View style={{ paddingTop: 16 }}>
+            <View style={{ width: 60 }}>
+              <TouchableOpacity
+                style={{
+                  borderRadius: 60,
+                  shadowColor: theme.colors?.grey2,
+                  shadowOffset: { width: 2, height: 1 },
+                  shadowOpacity: 0.8,
+                  elevation: 2,
+                  backgroundColor: theme.colors?.white,
+                  padding: 12,
+                  justifyContent: "center",
+                }}
+              >
+                <Icon
+                  type="antdesign"
+                  name="delete"
+                  size={32}
+                  color={theme.colors?.black}
+                />
+              </TouchableOpacity>
+              <Text
+                style={{
+                  textAlign: "center",
+                  marginTop: 6,
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  color: theme.colors?.black,
+                }}
+              >
+                {t("common.delete")}
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              onPress={() => {
+                bottomSheetModalRef.current?.close();
+              }}
+              style={{
+                marginTop: 12,
+                backgroundColor: theme.colors?.grey4,
+                borderRadius: 6,
+              }}
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontSize: 18,
+                  color: theme.colors?.black,
+                  paddingVertical: 14,
+                }}
+              >
+                {t("common.cancel")}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </BottomSheetModal>
+
       {post && post.id == currentPostId ? (
         <AvatarField
           nameStyle={{ marginLeft: 8, marginBottom: 6, fontWeight: "bold" }}
@@ -321,6 +405,7 @@ const Header = ({
               ) : null}
 
               <Icon
+                containerStyle={{ marginLeft: 8 }}
                 onPress={() => {
                   handlePresentModalPress();
                 }}
@@ -336,330 +421,6 @@ const Header = ({
   );
 };
 
-type WithReplyTo = PostCommentReply & { replyToName: string | null };
-
-const ReplyItem = ({
-  reply,
-  index,
-  totalCount,
-}: {
-  reply: WithReplyTo;
-  index: number;
-  totalCount: number;
-}) => {
-  const { theme } = useTheme();
-  const navigation = useNavigation();
-  const { t } = useTranslation();
-
-  const replyTargetComponent = () => {
-    if (reply.replyToId == null) {
-      return null;
-    }
-    if (reply.replyToName) {
-      return (
-        <Text>
-          <Text
-            style={{
-              fontSize: 16,
-            }}
-          >{`${t("common.reply")} `}</Text>
-          <Text
-            style={{
-              color: theme.colors?.grey0,
-              fontSize: 16,
-            }}
-          >{`@${reply.replyToName}: `}</Text>
-        </Text>
-      );
-    }
-
-    return (
-      <Text>
-        <Text
-          style={{
-            fontSize: 16,
-          }}
-        >{` ${t("common.reply")}`}</Text>
-        <Text
-          style={{
-            color: theme.colors?.grey0,
-            textDecorationLine: "line-through",
-            fontSize: 16,
-          }}
-        >{`@${t("common.deleted")}: `}</Text>
-      </Text>
-    );
-  };
-
-  return (
-    <View style={{ marginTop: 12 }}>
-      <AvatarField
-        nameStyle={{
-          fontSize: 16,
-          // fontWeight: "bold",
-          color: theme.colors?.grey1,
-          marginBottom: 12,
-          marginLeft: 6,
-        }}
-        // subContent={}
-        photo={reply.participator.photo}
-        name={reply.participator.name}
-        size={24}
-        // fieldRight={() => (
-        //   <Text
-        //     style={{
-        //       color: theme.colors?.grey1,
-        //       marginBottom: 12,
-        //       fontSize: 14,
-        //       marginRight: 12,
-        //     }}
-        //   >
-        //     {milisecToAgo(reply.createdDate)}
-        //   </Text>
-        // )}
-      />
-      <TouchableWithoutFeedback
-        onPress={() => {
-          navigation.navigate("CreateCommentReply", {
-            replyTarget: reply,
-            toComment: false,
-            commentId: reply.postCommentId,
-          });
-        }}
-      >
-        <Text style={{ marginTop: -6, marginLeft: 30 }}>
-          {replyTargetComponent()}
-          <Text style={{ fontSize: 16, lineHeight: 20 }}>{reply.content}</Text>
-
-          <Text
-            style={{
-              color: theme.colors?.grey1,
-              marginBottom: 12,
-              fontSize: 14,
-              marginRight: 12,
-            }}
-          >
-            {`  ` + milisecToAgo(reply.createdDate)}
-          </Text>
-        </Text>
-      </TouchableWithoutFeedback>
-      {/* <Text
-        style={{
-          color: theme.colors?.grey1,
-          marginTop: 6,
-          fontSize: 14,
-          marginLeft: 30,
-        }}
-      >
-        {milisecToAgo(reply.createdDate)}
-      </Text> */}
-    </View>
-  );
-};
-
-const formatReplies = (replies: PostCommentReply[]): WithReplyTo[] => {
-  const mp: { [key: number]: string } = {};
-  replies.forEach((item) => {
-    mp[item.id] = item.participator.name;
-  });
-
-  return replies.map((item) => {
-    if (item.replyToId && mp[item.replyToId]) {
-      return { ...item, replyToName: mp[item.replyToId] };
-    }
-    return { ...item, replyToName: null };
-  });
-};
-
-const CommentItem = ({
-  comment,
-  index,
-  totalCount,
-}: {
-  comment: PostComment;
-  index: number;
-  totalCount: number;
-}) => {
-  const { theme } = useTheme();
-  const navigation = useNavigation();
-  const { t } = useTranslation();
-  const { loadCommentReply } = useLoadPostCommentReply();
-
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const snapPoints = useMemo(() => ["25%"], []);
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
-  }, []);
-
-  const renderLoadMore = useCallback(() => {
-    if (
-      comment.replyCount == 0 ||
-      comment.replyCount == comment.replies.length
-    ) {
-      return null;
-    }
-    return (
-      <View
-        style={{
-          alignItems: "flex-start",
-          marginTop: 8,
-          marginLeft: comment.replyCursor ? 30 : 3,
-        }}
-      >
-        {comment.loadingReply ? (
-          <ActivityIndicator color={theme.colors?.grey1} />
-        ) : (
-          <TouchableWithoutFeedback
-            onPress={() => {
-              if (!comment.replyCursor) {
-                loadCommentReply(comment.id, null);
-              } else {
-                loadCommentReply(comment.id, comment.replyCursor);
-              }
-            }}
-          >
-            <Text
-              style={{
-                color: theme.colors?.secondary,
-                fontSize: comment.replyCursor ? 16 : 18,
-                fontWeight: "bold",
-              }}
-            >
-              {!comment.replyCursor
-                ? `${comment.replyCount}${t("common.checkReplyByCount")}`
-                : `${t("common.loadMore")}`}
-            </Text>
-          </TouchableWithoutFeedback>
-        )}
-      </View>
-    );
-
-    // return (
-    //   <Text
-    //     style={{
-    //       marginTop: 8,
-    //       color: theme.colors?.secondary,
-    //       fontSize: 16,
-    //       fontWeight: "bold",
-    //     }}
-    //   >{`${t("common.loadMore")}`}</Text>
-    // );
-  }, [comment, theme]);
-
-  return (
-    <View>
-      <BottomSheetModal
-        backdropComponent={BottomSheetBackdrop}
-        ref={bottomSheetModalRef}
-        // index={1}
-        snapPoints={snapPoints}
-      >
-        <View>
-          <Text>Awesome 🎉</Text>
-        </View>
-      </BottomSheetModal>
-      <View style={{ marginTop: 12, marginBottom: 16 }}>
-        <AvatarField
-          nameStyle={{
-            // fontWeight: "bold",
-            fontSize: 18,
-            color: theme.colors?.grey1,
-            marginBottom: 12,
-            marginLeft: 8,
-          }}
-          // subContent={}
-          photo={comment.participator.photo}
-          name={comment.participator.name}
-          size={36}
-          // fieldRight={() => (
-          //   <Text
-          //     style={{
-          //       color: theme.colors?.grey1,
-          //       marginBottom: 12,
-          //       fontSize: 16,
-          //     }}
-          //   >
-          //     {milisecToAgo(comment.createdDate)}
-          //   </Text>
-          // )}
-        />
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <View
-            style={{
-              flex: 1,
-              marginLeft: 40,
-              marginTop: -6,
-            }}
-          >
-            <Text>
-              <Text
-                onPress={() => {
-                  navigation.navigate("CreateCommentReply", {
-                    replyTarget: comment,
-                    toComment: true,
-                    commentId: comment.id,
-                  });
-                }}
-                style={{
-                  fontSize: 16,
-                  lineHeight: 20,
-                }}
-              >
-                {comment.content}
-              </Text>
-              <Text
-                style={{
-                  color: theme.colors?.grey1,
-                  marginBottom: 12,
-                  fontSize: 14,
-                }}
-              >
-                {`  ` + milisecToAgo(comment.createdDate)}
-              </Text>
-            </Text>
-            {/* <Text
-              style={{
-                marginTop: 6,
-                color: theme.colors?.grey1,
-                fontSize: 14,
-              }}
-            >
-              {milisecToAgo(comment.createdDate)}
-            </Text> */}
-            {formatReplies(comment.replies).map((item, index) => (
-              <ReplyItem
-                key={item.id}
-                reply={item}
-                index={index}
-                totalCount={comment.replyCount}
-              />
-            ))}
-            {renderLoadMore()}
-          </View>
-
-          <View
-            style={{
-              justifyContent: "flex-end",
-              alignItems: "center",
-              width: 36,
-            }}
-          >
-            <Icon
-              onPress={() => {
-                handlePresentModalPress();
-              }}
-              type="feather"
-              name="more-vertical"
-              color={theme.colors?.black}
-            />
-          </View>
-        </View>
-      </View>
-      {index < totalCount - 1 ? <Divider style={{ marginLeft: 42 }} /> : null}
-    </View>
-  );
-};
-
 const Comments = ({
   post,
   currentPostId,
@@ -667,10 +428,11 @@ const Comments = ({
   post: PostDetail;
   currentPostId: number;
 }) => {
-  const { theme } = useTheme();
+  // const { theme } = useTheme();
+  // const { t } = useTranslation();
+  // const { currentUser } = useCurrentUser();
   const navigation = useNavigation();
-  const { t } = useTranslation();
-  const { currentUser } = useCurrentUser();
+
   const {
     initializing,
     comments,
@@ -679,103 +441,44 @@ const Comments = ({
     pending,
     postId: commentPostId,
   } = useLoadPostComment();
+  const { loadCommentReply } = useLoadPostCommentReply();
 
   useEffect(() => {
     loadComment(currentPostId, null);
   }, [currentPostId]);
 
   return (
-    <View
-      style={{
-        width: "100%",
-        minHeight: 120,
-        backgroundColor: theme.colors?.white,
-        paddingHorizontal: 12,
-        paddingBottom: 16,
+    <CommentList
+      comments={commentPostId == currentPostId ? comments : []}
+      commentCount={post.commentCount}
+      initializing={initializing}
+      nextCursor={nextCursor}
+      pending={pending}
+      onReplyContentClick={(reply) => {
+        const postReply = reply as PostCommentReply;
+        navigation.navigate("CreateCommentReply", {
+          replyTarget: postReply,
+          toComment: false,
+          commentId: postReply.postCommentId,
+        });
       }}
-    >
-      <Divider />
-      <View style={{ marginTop: 16, marginBottom: 8 }}>
-        <Text style={{ fontSize: 16, color: theme.colors?.grey0 }}>{`${t(
-          "common.commentCount"
-        )} ${post.commentCount}`}</Text>
-      </View>
-      {initializing ? <ActivityIndicator color={theme.colors?.grey1} /> : null}
-      {commentPostId == currentPostId ? (
-        <View>
-          {comments.map((item, index) => (
-            <CommentItem
-              key={item.id}
-              comment={item}
-              index={index}
-              totalCount={comments.length}
-            />
-          ))}
-
-          <View
-            style={{
-              alignItems: "center",
-            }}
-          >
-            {nextCursor ? (
-              <View style={{ width: "100%" }}>
-                {/* <Divider /> */}
-                <Button
-                  onPress={() => {
-                    loadComment(currentPostId, nextCursor);
-                  }}
-                  loadingProps={{ color: theme.colors?.grey1 }}
-                  type="clear"
-                  titleStyle={{ fontSize: 18, fontWeight: "bold" }}
-                  title={t("common.loadMore")}
-                  loading={pending}
-                />
-              </View>
-            ) : post.commentCount > 0 ? (
-              <View style={{ width: "100%" }}>
-                {/* <Divider /> */}
-                <Text
-                  style={{
-                    fontSize: 16,
-                    color: theme.colors?.grey1,
-                    textAlign: "center",
-                    marginTop: 12,
-                  }}
-                >
-                  {`- ${t("common.end")} -`}
-                </Text>
-              </View>
-            ) : (
-              <TouchableWithoutFeedback
-                onPress={() => {
-                  navigation.navigate("CreateComment", { postId: post.id });
-                }}
-              >
-                <View style={{ marginBottom: 12 }}>
-                  <Icon
-                    type="font-awesome"
-                    name="comments-o"
-                    size={40}
-                    color={theme.colors?.grey2}
-                  />
-
-                  <Text
-                    style={{
-                      marginTop: 8,
-                      fontSize: 16,
-                      fontWeight: "bold",
-                      color: theme.colors?.grey1,
-                    }}
-                  >
-                    {`${t("common.clickToComment")}`}
-                  </Text>
-                </View>
-              </TouchableWithoutFeedback>
-            )}
-          </View>
-        </View>
-      ) : null}
-    </View>
+      onCommentContentClick={(comment) => {
+        navigation.navigate("CreateCommentReply", {
+          replyTarget: comment,
+          toComment: true,
+          commentId: comment.id,
+        });
+      }}
+      loadReply={(id, cursor) => {
+        loadCommentReply(id, cursor);
+      }}
+      createComment={() => {
+        navigation.navigate("CreateComment", { postId: post.id });
+      }}
+      loadMore={() => {
+        loadComment(currentPostId, nextCursor);
+      }}
+    />
   );
 };
 
@@ -792,6 +495,49 @@ const PostDetailView = () => {
   useEffect(() => {
     loadPostDetail(id);
   }, []);
+
+  const renderTopic = (topic: PostTopic | null) => {
+    if (!topic) {
+      return null;
+    }
+
+    return (
+      <View
+        style={{
+          marginVertical: 8,
+          backgroundColor: theme.colors?.grey4,
+          paddingVertical: 6,
+          paddingHorizontal: 8,
+          borderRadius: 20,
+          alignSelf: "flex-start",
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+      >
+        <Icon
+          containerStyle={{
+            backgroundColor: theme.colors?.secondary,
+            padding: 6,
+            borderRadius: 12,
+          }}
+          type="fontisto"
+          name="hashtag"
+          size={12}
+          color={theme.colors?.white}
+        />
+        <Text
+          style={{
+            marginLeft: 6,
+            fontSize: 16,
+            fontWeight: "bold",
+            color: theme.colors?.secondary,
+          }}
+        >
+          {topic.title}
+        </Text>
+      </View>
+    );
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -843,8 +589,8 @@ const PostDetailView = () => {
               >
                 {milisecToAgo(post.createdDate)}
               </Text>
+              {renderTopic(post.postTopic)}
             </View>
-
             <Comments post={post} currentPostId={id} />
           </ScrollView>
           <View

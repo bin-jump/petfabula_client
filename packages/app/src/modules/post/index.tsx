@@ -1,5 +1,8 @@
 import * as React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+  createStackNavigator,
+  CardStyleInterpolators,
+} from "@react-navigation/stack";
 import { ThemeContext, Icon } from "react-native-elements";
 import { headerBaseOption, plainGoBackHeaderOption } from "../shared";
 import Posts from "./screens/Posts";
@@ -55,6 +58,8 @@ const PostScreens = () => {
         options={(navigation) => {
           return {
             cardOverlayEnabled: true,
+            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            gestureDirection: "horizontal",
             ...headerBaseOption({ theme }),
             headerShown: false,
           };

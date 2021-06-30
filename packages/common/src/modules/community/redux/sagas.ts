@@ -173,7 +173,7 @@ const watchCreatePostComments = createSagaWatcher({
 const watchLoadPostCommentReplies = createSagaWatcher({
   method: 'GET',
   asyncAction: PostLoadCommentReplyActionType,
-  watchType: 'LATEST',
+  watchType: 'EVERY',
   createUrl: (payload) => {
     return `/api/post/comments/${payload.commentId}/replies`;
   },
