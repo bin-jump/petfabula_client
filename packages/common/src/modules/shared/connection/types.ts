@@ -12,6 +12,7 @@ export type ApiErrorType =
   | 'NO_CONNECTION'
   | 'INVALID_FIELD'
   | 'SERVER_BUSY'
+  | 'SERVICE_ERROR'
   | 'LOGIN_REQUIRED'
   | 'PREMISSION_REQUIRED'
   | 'NO_RESPONSE'

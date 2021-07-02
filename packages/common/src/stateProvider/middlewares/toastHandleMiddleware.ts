@@ -38,6 +38,8 @@ export const toastHandleMiddleware: Middleware<Dispatch> =
     if (actionBase.type.endsWith('FAILURE') && handler.handleFailure) {
       if (actionBase.error?.type == 'FAILED_ON_RESPONSE') {
         handler.handleFailure('error.noNetwork');
+      } else if (actionBase.error?.type == 'SERVICE_ERROR') {
+        handler.handleFailure('error.serviceError');
       } else if (message) {
         handler.handleFailure(message);
       }

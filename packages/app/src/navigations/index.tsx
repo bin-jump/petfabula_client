@@ -60,14 +60,14 @@ const AppScreen = () => {
             cardStyleInterpolator: ({ current: { progress } }) => ({
               cardStyle: {
                 opacity: progress.interpolate({
-                  inputRange: [0, 0.5, 0.9, 1],
-                  outputRange: [0, 0.1, 0.3, 1],
+                  inputRange: [0, 1],
+                  outputRange: [0, 1],
                 }),
               },
               overlayStyle: {
                 opacity: progress.interpolate({
-                  inputRange: [0, 0.5, 1],
-                  outputRange: [0, 0.1, 0.3],
+                  inputRange: [0, 1],
+                  outputRange: [0, 0.3],
                   extrapolate: "clamp",
                 }),
               },
@@ -84,14 +84,14 @@ const AppScreen = () => {
             cardStyleInterpolator: ({ current: { progress } }) => ({
               cardStyle: {
                 opacity: progress.interpolate({
-                  inputRange: [0, 0.5, 0.9, 1],
-                  outputRange: [0, 0.1, 0.3, 1],
+                  inputRange: [0, 1],
+                  outputRange: [0, 1],
                 }),
               },
               overlayStyle: {
                 opacity: progress.interpolate({
-                  inputRange: [0, 0.5, 1],
-                  outputRange: [0, 0.3, 0.5],
+                  inputRange: [0, 1],
+                  outputRange: [0, 0.5],
                   extrapolate: "clamp",
                 }),
               },
@@ -232,7 +232,7 @@ const TabScreen = () => {
         component={Ask}
         options={(navigation) => {
           return {
-            tabBarLabel: "aaa",
+            tabBarLabel: "ask",
             tabBarVisible:
               !getFocusedRouteNameFromRoute(navigation.route) ||
               getFocusedRouteNameFromRoute(navigation.route) == "Ask",
@@ -278,22 +278,25 @@ const TabScreen = () => {
                     justifyContent: "center",
                     alignItems: "center",
                     alignContent: "center",
-                    // shadowOffset: {
-                    //   width: 2,
-                    //   height: 1,
-                    // },
-                    // shadowOpacity: 0.7,
-                    // shadowRadius: 3,
-                    // shadowColor: theme.colors?.grey2,
-                    // backgroundColor: theme.colors?.white,
+                    shadowOffset: {
+                      width: 2,
+                      height: 1,
+                    },
+                    shadowOpacity: 0.8,
+                    shadowRadius: 3,
+                    shadowColor: theme.colors?.grey2,
+                    backgroundColor: focusedColor,
+                    borderRadius: 30,
+                    height: 46,
+                    width: 46,
                   }}
                 >
                   <Icon
                     containerStyle={{}}
                     type="material"
-                    name="add-circle"
-                    size={50}
-                    color={focusedColor}
+                    name="add"
+                    size={32}
+                    color="#fff"
                   />
                 </View>
               );

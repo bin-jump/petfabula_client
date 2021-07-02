@@ -89,6 +89,18 @@ export const apiRequest = async ({
 
     if (error.response) {
       // Request made and server responded
+
+      // if service not response correctly
+      if (error.response.status >= 500) {
+        return {
+          success: false,
+          code: 500,
+          data: null,
+          message: null,
+          errors: { type: 'SERVICE_ERROR' },
+        };
+      }
+      // for service response correctly
       const responseData = error.response.data as ApiResponse;
       let res: ApiResponse = { ...responseData, success: false };
       res.errors = translateServerError(res);

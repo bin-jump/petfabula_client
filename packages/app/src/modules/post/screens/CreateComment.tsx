@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import {
   View,
   TouchableWithoutFeedback,
-  ActivityIndicator,
   useWindowDimensions,
   TextInput,
   Keyboard,
@@ -17,7 +16,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useCreatePostComment } from "@petfabula/common";
-import { useDidUpdateEffect } from "../../shared";
+import { useDidUpdateEffect, ActivityIndicator } from "../../shared";
 
 import ParamTypes from "./ParamTypes";
 

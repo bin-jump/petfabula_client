@@ -95,6 +95,7 @@
     "loginToContinue": "ログインしてください"
   },
   "error": {
-    "noNetwork": "ネットワークに繋がりません"
+    "noNetwork": "ネットワークに繋がりません",
+    "serviceError": "サービスが混雑しています"
   }
 }

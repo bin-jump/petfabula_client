@@ -39,9 +39,11 @@ const translateApiError = (response: ApiResponse): AsyncActionError => {
     res.type = 'INVALID_FORM_DATA';
     res.content = response.errors.fieldErrors;
   } else if (
-    response.errors?.type == 'NO_RESPONSE' ||
+    response.errors?.type == 'SERVICE_ERROR' ||
     response.errors?.type == 'SERVER_BUSY'
   ) {
+    res.type = 'SERVICE_ERROR';
+  } else if (response.errors?.type == 'NO_RESPONSE') {
     res.type = 'FAILED_ON_RESPONSE';
   }
   return res;

@@ -6,6 +6,7 @@ import {
   PostCommentForm,
   PostComment,
   PostCommentReplyForm,
+  PostCommentReply,
 } from './types';
 import {
   PostLoadPostCommentsActionType,
@@ -155,6 +156,21 @@ const formatCommentList = (serverComments: Array<PostComment>) => {
   return serverComments.map((item) => formatComment(item));
 };
 
+const uniqueReply = (replies: PostCommentReply[]) => {
+  const hist = new Set();
+  const res: PostCommentReply[] = [];
+  replies
+    .slice()
+    .reverse()
+    .forEach((item) => {
+      if (!hist.has(item.id)) {
+        hist.add(item.id);
+        res.push(item);
+      }
+    });
+  return res.reverse();
+};
+
 export const postCommentReducer = {
   // load comments
   [PostLoadPostCommentsActionType.BEGIN]: (
@@ -296,7 +312,7 @@ export const postCommentReducer = {
             return {
               ...item,
               loadingReply: false,
-              replies: [...item.replies, ...action.payload.result],
+              replies: uniqueReply([...item.replies, ...action.payload.result]),
               replyCursor: action.payload.nextCursor,
             };
           }
@@ -345,7 +361,7 @@ export const postCommentReducer = {
     action: ActionBase,
   ): CommunityState => {
     const comments = state.postComments.data;
-    const actionCommentId = action.payload.postCommentId;
+    const actionCommentId = action.payload.commentId;
     return {
       ...state,
       createPostReply: {

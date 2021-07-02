@@ -115,7 +115,7 @@ const CreateCommentReply = () => {
                       onPress={() => {
                         if (reply.trim()) {
                           createCommentReply({
-                            postCommentId: commentId,
+                            commentId: commentId,
                             content: reply,
                             replyToId,
                           });

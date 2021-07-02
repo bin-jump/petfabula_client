@@ -4,7 +4,6 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  ActivityIndicator,
 } from "react-native";
 import { Divider, ListItem, useTheme, Text } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
@@ -18,6 +17,7 @@ import {
   PostTopic,
   PostTopicCategory,
 } from "@petfabula/common";
+import { ActivityIndicator } from "../../shared";
 
 const Tab = createMaterialTopTabNavigator();
 

@@ -1,14 +1,9 @@
 import React, { forwardRef, useCallback, useEffect, useMemo } from "react";
-import {
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  ActivityIndicator,
-} from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
+import { FlatList, RefreshControl, StyleSheet } from "react-native";
 import { useLoadRecommendPosts } from "@petfabula/common";
 import { usePostWidth } from "../components/PostItemNarrow";
 import PostFlatList, { Props } from "../components/PostFlatList";
+import { useFirstFocusEffect, ActivityIndicator } from "../../shared";
 
 type ListProps = Omit<Props, "posts">;
 
@@ -27,11 +22,23 @@ const Recommends = forwardRef<FlatList, ListProps>((props, ref) => {
   //   loadRecommendPosts(null);
   // }, []);
 
-  useFocusEffect(() => {
-    if (posts.length == 0) {
-      loadRecommendPosts(null);
-    }
-  });
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     if (posts.length == 0 && !pending) {
+  //       loadRecommendPosts(null);
+  //     }
+  //   }, [loadRecommendPosts, posts])
+  // );
+
+  useFirstFocusEffect(() => {
+    loadRecommendPosts(null);
+  }, []);
+
+  // useFocusEffect(() => {
+  //   if (posts.length == 0 && !pending) {
+  //     loadRecommendPosts(null);
+  //   }
+  // });
 
   return (
     <PostFlatList

@@ -8,7 +8,6 @@ import React, {
 import {
   View,
   TouchableWithoutFeedback,
-  ActivityIndicator,
   ScrollView,
   useWindowDimensions,
   TouchableOpacity,
@@ -46,7 +45,12 @@ import {
   PostTopic,
   PostCommentReply,
 } from "@petfabula/common";
-import { ImageGallery, milisecToAgo, AvatarField } from "../../shared";
+import {
+  ImageGallery,
+  milisecToAgo,
+  AvatarField,
+  ActivityIndicator,
+} from "../../shared";
 import ParamTypes from "./ParamTypes";
 import CommentList from "../components/CommentList";
 
@@ -459,7 +463,7 @@ const Comments = ({
         navigation.navigate("CreateCommentReply", {
           replyTarget: postReply,
           toComment: false,
-          commentId: postReply.postCommentId,
+          commentId: postReply.commentId,
         });
       }}
       onCommentContentClick={(comment) => {

@@ -1,11 +1,5 @@
 import React, { useCallback, useRef, useMemo } from "react";
-import {
-  View,
-  TouchableWithoutFeedback,
-  ActivityIndicator,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import { View, TouchableWithoutFeedback, TouchableOpacity } from "react-native";
 import { useTheme, Text, Divider, Button, Icon } from "react-native-elements";
 import { useTranslation } from "react-i18next";
 import Animated, {
@@ -19,7 +13,7 @@ import {
   BottomSheetBackgroundProps,
 } from "@gorhom/bottom-sheet";
 import { useCurrentUser, Participator } from "@petfabula/common";
-import { milisecToAgo, AvatarField } from "../../shared";
+import { milisecToAgo, AvatarField, ActivityIndicator } from "../../shared";
 
 const CustomBackground: React.FC<BottomSheetBackgroundProps> = ({
   style,

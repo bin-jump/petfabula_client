@@ -1,5 +1,6 @@
 export type ActionErrorType =
   | 'FAILED_ON_RESPONSE'
+  | 'SERVICE_ERROR'
   | 'INVALID_FORM_DATA'
   | 'OTEHRS';
 

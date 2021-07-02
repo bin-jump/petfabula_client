@@ -78,7 +78,7 @@ export interface PostComment {
 export interface PostCommentReply {
   id: number;
   postId: number;
-  postCommentId: number;
+  commentId: number;
   replyToId: number | null;
   content: string;
   createdDate: number;
@@ -97,7 +97,7 @@ export interface PostCommentForm {
 }
 
 export interface PostCommentReplyForm {
-  postCommentId: number;
+  commentId: number;
   replyToId: number | null;
   content: string;
 }

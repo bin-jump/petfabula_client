@@ -1,10 +1,11 @@
 import React, { forwardRef, memo } from "react";
-import { FlatList, ActivityIndicator } from "react-native";
+import { FlatList } from "react-native";
 import { useTheme } from "react-native-elements";
 import { useFocusEffect } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSearchPost } from "@petfabula/common";
 import PostFlatList, { Props } from "../components/PostFlatList";
+import { useFirstFocusEffect, ActivityIndicator } from "../../shared";
 
 const PostSearch = forwardRef<
   FlatList,
@@ -21,11 +22,15 @@ const PostSearch = forwardRef<
   const { theme } = useTheme();
   const { bottom } = useSafeAreaInsets();
 
-  useFocusEffect(
-    React.useCallback(() => {
-      search(keyword, null);
-    }, [])
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     search(keyword, null);
+  //   }, [])
+  // );
+
+  useFirstFocusEffect(() => {
+    search(keyword, null);
+  }, []);
 
   const d = searchedWord == keyword ? posts : [];
 

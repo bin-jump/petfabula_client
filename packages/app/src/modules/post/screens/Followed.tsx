@@ -1,14 +1,10 @@
 import React, { forwardRef, useCallback, useEffect, useMemo } from "react";
-import {
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  ActivityIndicator,
-} from "react-native";
+import { FlatList, RefreshControl, StyleSheet } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { useLoadFollowedPosts, useCurrentUser } from "@petfabula/common";
 import { usePostWidth } from "../components/PostItemNarrow";
 import PostFlatList, { Props } from "../components/PostFlatList";
+import { useFirstFocusEffect, ActivityIndicator } from "../../shared";
 
 type ListProps = Omit<Props, "posts">;
 
@@ -22,11 +18,9 @@ const Followed = forwardRef<FlatList, ListProps>((props, ref) => {
   //   loadTimeline(null);
   // }, []);
 
-  useFocusEffect(() => {
-    if (posts.length == 0 && currentUser) {
-      loadTimeline(null);
-    }
-  });
+  useFirstFocusEffect(() => {
+    loadTimeline(null);
+  }, []);
 
   return (
     <PostFlatList
