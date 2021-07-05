@@ -11,6 +11,8 @@ import SearchResult from "./screens/SearchResult";
 import PostDetailView from "./screens/PostDetailView";
 import CreateComment from "./screens/CreateComment";
 import CreateCommentReply from "./screens/CreateCommentReply";
+import QuestionDetailView from "./screens/QuestionDetailView";
+import CreateAnswerComment from "./screens/CreateAnswerComment";
 
 const PostsStack = createStackNavigator();
 
@@ -75,14 +77,14 @@ const PostScreens = () => {
           cardStyleInterpolator: ({ current: { progress } }) => ({
             cardStyle: {
               opacity: progress.interpolate({
-                inputRange: [0, 0.5, 0.9, 1],
-                outputRange: [0, 0.1, 0.3, 1],
+                inputRange: [0, 1],
+                outputRange: [0, 1],
               }),
             },
             overlayStyle: {
               opacity: progress.interpolate({
-                inputRange: [0, 0.5, 1],
-                outputRange: [0, 0.3, 0.5],
+                inputRange: [0, 1],
+                outputRange: [0, 0.5],
                 extrapolate: "clamp",
               }),
             },
@@ -114,6 +116,47 @@ const PostScreens = () => {
         }}
         name="CreateCommentReply"
         component={CreateCommentReply}
+      />
+
+      {/* question */}
+      <PostsStack.Screen
+        // options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
+        options={(navigation) => {
+          return {
+            cardOverlayEnabled: true,
+            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            gestureDirection: "horizontal",
+            ...headerBaseOption({ theme }),
+            headerShown: false,
+          };
+        }}
+        name="QuestionDetailView"
+        component={QuestionDetailView}
+      />
+
+      <PostsStack.Screen
+        options={{
+          headerShown: false,
+          cardStyle: { backgroundColor: "transparent" },
+          cardOverlayEnabled: true,
+          cardStyleInterpolator: ({ current: { progress } }) => ({
+            cardStyle: {
+              opacity: progress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 1],
+              }),
+            },
+            overlayStyle: {
+              opacity: progress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 0.5],
+                extrapolate: "clamp",
+              }),
+            },
+          }),
+        }}
+        name="CreateAnswerComment"
+        component={CreateAnswerComment}
       />
     </PostsStack.Navigator>
   );

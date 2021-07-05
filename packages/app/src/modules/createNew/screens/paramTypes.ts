@@ -12,6 +12,15 @@ type ParamTypes = {
     topic: PostTopic | undefined;
     pet: ParticiptorPet | undefined;
   };
+
+  CreateQuestion: {
+    images: ImageFile[] | undefined;
+  };
+  CreateAnswer: {
+    images: ImageFile[] | undefined;
+    questionId: number;
+    questionTitle: string;
+  };
 };
 
 export default ParamTypes;

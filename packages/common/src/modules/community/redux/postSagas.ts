@@ -194,7 +194,7 @@ const watchLoadTopics = createSagaWatcher({
   watchType: 'LATEST',
 });
 
-export function* communityRootSaga() {
+export function* postRootSaga() {
   yield all([
     fork(watchLoadMyPets),
     fork(watchFollowParticipator),

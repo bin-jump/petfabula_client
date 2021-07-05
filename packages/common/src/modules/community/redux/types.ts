@@ -102,14 +102,86 @@ export interface PostCommentReplyForm {
   content: string;
 }
 
+// question
+export interface Question {
+  id: number;
+  title: string;
+  content: string;
+  upvoteCount: number;
+  answerCount: number;
+  createdDate: number;
+  participator: Participator;
+  images: DisplayImage[];
+}
+
+export interface Answer {
+  id: number;
+  content: string;
+  upvoteCount: number;
+  commentCount: number;
+  createdDate: number;
+  participator: Participator;
+  images: DisplayImage[];
+
+  upvoted: boolean;
+  votePending: boolean;
+  comments: AnswerComment[];
+  loadCommentPending: boolean;
+  commentCursor: number | null;
+}
+
+export interface QuestionDetail extends Question {
+  upvoted: boolean;
+  upvotePending: boolean;
+  participator: ParticiptorDetail;
+}
+
+// export interface AnswerWitQuestion extends Answer {
+//   question: Question;
+// }
+
+export interface AnswerComment {
+  id: number;
+  content: string;
+  answerId: number;
+  replyTo: number | null;
+  createdDate: number;
+  participator: Participator;
+}
+
+export interface QuestionForm {
+  title: string;
+  content: string;
+}
+
+export interface AnswerForm {
+  questionId: number;
+  content: string;
+}
+
+export interface AnswerCommentForm {
+  answerId: number;
+  replyTo: number | null;
+  content: string;
+}
+
+// export interface AnswerCommentReplyForm {
+//   commentId: number;
+//   replyToId: number | null;
+//   content: string;
+// }
+
 export interface CommunityState {
   // user
   myDetail: AsyncDataBase<Participator>;
   othersDetail: AsyncDataBase<Participator>;
   myPosts: AsyncCursorPageListBase<Post>;
   othersPosts: AsyncCursorPageListBase<Post> & { userId: number | null };
+  mypets: AsyncListBase<ParticiptorPet>;
 
   // post
+  postTopics: AsyncListBase<PostTopicCategory>;
+
   followedPosts: AsyncCursorPageListBase<Post>;
   recommendPosts: AsyncCursorPageListBase<Post>;
   postDetail: AsyncDataBase<PostDetail>;
@@ -125,6 +197,18 @@ export interface CommunityState {
   createPostReply: AsyncDataBase<PostCommentReply>;
   removePostReply: AsyncDataBase<number>;
 
-  postTopics: AsyncListBase<PostTopicCategory>;
-  mypets: AsyncListBase<ParticiptorPet>;
+  // question
+  unansweredQuestions: AsyncCursorPageListBase<Question>;
+  recommendQuestions: AsyncCursorPageListBase<Question>;
+
+  questionDetail: AsyncDataBase<QuestionDetail>;
+  questionAnswers: AsyncCursorPageListBase<Answer> & {
+    questionId: number | null;
+  };
+  answerDetail: AsyncDataBase<Answer>;
+  answerComments: AsyncCursorPageListBase<Answer> & { answerId: number | null };
+
+  createQuestion: AsyncDataBase<Question>;
+  createAnswer: AsyncDataBase<Answer>;
+  createAnswerComment: AsyncDataBase<AnswerComment>;
 }

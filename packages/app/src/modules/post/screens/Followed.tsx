@@ -1,10 +1,9 @@
-import React, { forwardRef, useCallback, useEffect, useMemo } from "react";
+import React, { forwardRef } from "react";
 import { FlatList, RefreshControl, StyleSheet } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
 import { useLoadFollowedPosts, useCurrentUser } from "@petfabula/common";
 import { usePostWidth } from "../components/PostItemNarrow";
 import PostFlatList, { Props } from "../components/PostFlatList";
-import { useFirstFocusEffect, ActivityIndicator } from "../../shared";
+import { useFirstFocusEffect, LoadingMoreIndicator } from "../../shared";
 
 type ListProps = Omit<Props, "posts">;
 
@@ -36,7 +35,7 @@ const Followed = forwardRef<FlatList, ListProps>((props, ref) => {
       ref={ref}
       {...props}
       posts={posts}
-      ListFooterComponent={hasMore ? <ActivityIndicator /> : null}
+      ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
       onEndReached={() => {
         if (hasMore && !pending) {
           loadTimeline(nextCursor);

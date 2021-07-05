@@ -3,7 +3,7 @@ import { FlatList, RefreshControl, StyleSheet } from "react-native";
 import { useLoadRecommendPosts } from "@petfabula/common";
 import { usePostWidth } from "../components/PostItemNarrow";
 import PostFlatList, { Props } from "../components/PostFlatList";
-import { useFirstFocusEffect, ActivityIndicator } from "../../shared";
+import { useFirstFocusEffect, LoadingMoreIndicator } from "../../shared";
 
 type ListProps = Omit<Props, "posts">;
 
@@ -54,7 +54,7 @@ const Recommends = forwardRef<FlatList, ListProps>((props, ref) => {
       ref={ref}
       {...props}
       posts={posts}
-      ListFooterComponent={hasMore ? <ActivityIndicator /> : null}
+      ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
       onEndReached={() => {
         if (hasMore && !pending) {
           loadRecommendPosts(nextCursor);

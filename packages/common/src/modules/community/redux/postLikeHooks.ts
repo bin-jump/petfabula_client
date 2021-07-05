@@ -2,7 +2,11 @@ import { useCallback } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { AppState } from '../../../stateProvider';
 import { CommunityState } from './types';
-import { PostLikeActionType, PostUnlikeActionType } from './actionTypes';
+import {
+  PostLikeActionType,
+  PostUnlikeActionType,
+  QuestionUpvoteQuestionActionType,
+} from './actionTypes';
 import { ActionBase } from '../../shared';
 
 export const useLikePost = () => {

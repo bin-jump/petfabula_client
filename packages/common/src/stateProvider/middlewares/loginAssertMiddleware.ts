@@ -36,7 +36,7 @@ const LOGIN_REQUIRED_ACTIONS: ReduxAsyncAction[] = [
   CommunityUnfollowUserActionType,
   LoadMyPostsActionType,
   LoadFollowedPostsActionType,
-  PostCreatePostActionType,
+  // PostCreatePostActionType,
   PostRemovePostActionType,
   PostCreatePostCommentActionType,
   PostRemovePostCommentActionType,

@@ -113,10 +113,11 @@ const CreateCommentReply = () => {
                   {!pending ? (
                     <TouchableWithoutFeedback
                       onPress={() => {
-                        if (reply.trim()) {
+                        const cmt = reply.trim();
+                        if (cmt && cmt.length <= 240) {
                           createCommentReply({
                             commentId: commentId,
-                            content: reply,
+                            content: cmt,
                             replyToId,
                           });
                         }

@@ -2,6 +2,7 @@
   "common": {
     "send": "送信",
     "next": "次へ",
+    "done": "完了",
     "search": "検索",
     "pending": "処理中",
     "comment": "コメント",
@@ -26,7 +27,10 @@
     "createPost": "投稿",
     "createQuestion": "質問",
     "input": {
-      "postcontent": "内容を入力してください"
+      "postcontent": "内容を入力してください",
+      "questionTitlePlaceholder": "質問タイトル(必須)",
+      "questionContentPlaceholder": "質問の詳細",
+      "answerContentPlaceholder": "回答"
     },
     "topicSelect": "トピックを選択します",
     "petSelect": "関連ペットを選択します"
@@ -76,6 +80,14 @@
     },
     "commentToPost": "投稿にコメントする"
   },
+  "question": {
+    "tabLabel": "質問",
+    "unanswered": "回答待ち",
+    "recommends": "おすすめ",
+    "answerCount": "回答数",
+    "writeAnswer": "回答を書く",
+    "commentToAnswer": "回答にコメント"
+  },
   "validation": {
     "common": {
       "emptyValue": "入力してください"
@@ -88,6 +100,11 @@
     },
     "post": {
       "postContentTooShort": "何かの内容を入力してください"
+    },
+    "question": {
+      "questionTitleLength": "質問タイトルを3-50文字にしてください",
+      "questionContentLength": "質問詳細を5000文字以内にしてください",
+      "answerContentLength": "回答を5000文字以内にしてください"
     }
   },
   "aspect": {

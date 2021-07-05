@@ -26,3 +26,12 @@ export const postMessageKey = {
   replyContentTooLong: `${postPrefix}.replyContentTooLong`,
   replyContentTooShort: `${postPrefix}.replyContentTooShort`,
 };
+
+const questionPrefix = `${messagePrefix}.question`;
+export const questionMessageKey = {
+  questionTitleLength: `${questionPrefix}.questionTitleLength`,
+  questionContentLength: `${questionPrefix}.questionContentLength`,
+  answerContentLength: `${questionPrefix}.answerContentLength`,
+  answerCommentContentLength: `${questionPrefix}.commentContentLength`,
+  answerCommentReplyContentLength: `${questionPrefix}.replyContentLength`,
+};

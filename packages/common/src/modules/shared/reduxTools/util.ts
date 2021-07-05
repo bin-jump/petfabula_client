@@ -108,6 +108,7 @@ export function createSagaWatcher({
         message: response.message,
         payload: response?.data,
         error: translateApiError(response),
+        extra: beginAction.payload,
       };
       yield put(failureAction);
     }

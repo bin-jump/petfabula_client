@@ -30,6 +30,8 @@ import Animated, {
 import { useTranslation } from "react-i18next";
 import Recommends from "./Recommends";
 import Followed from "./Followed";
+import Questions from "./Questions";
+
 import SearchHeader from "../components/SearchHeader";
 import TabBar from "../components/TabBar";
 import { useCurrentUser } from "@petfabula/common";
@@ -126,6 +128,15 @@ const Posts = () => {
     headerHeight: HEADER_HEIGHT,
   });
 
+  const {
+    listSlideStyle: questionSlideStyle,
+    listRef: questionListRef,
+    scrollHandler: questionScrollHandler,
+  } = useCollpaseHeaderListTab({
+    translateVal: translateVal,
+    headerHeight: HEADER_HEIGHT,
+  });
+
   const headerSlideStyle = useAnimatedStyle(() => {
     return {
       transform: [
@@ -190,6 +201,18 @@ const Posts = () => {
         style={[listViewStyle, followSlideStyle]}
         ref={followListRef}
         onScroll={followScrollHandler}
+        {...sharedProps}
+      />
+    ),
+    [sharedProps, listViewStyle]
+  );
+
+  const renderQuestion = useCallback(
+    () => (
+      <Questions
+        style={[listViewStyle, questionSlideStyle]}
+        ref={questionListRef}
+        onScroll={questionScrollHandler}
         {...sharedProps}
       />
     ),
@@ -263,6 +286,13 @@ const Posts = () => {
           name="Recommends"
         >
           {renderRecommends}
+        </Tab.Screen>
+
+        <Tab.Screen
+          options={{ tabBarLabel: t("question.tabLabel") }}
+          name="Questions"
+        >
+          {renderQuestion}
         </Tab.Screen>
       </Tab.Navigator>
     </View>

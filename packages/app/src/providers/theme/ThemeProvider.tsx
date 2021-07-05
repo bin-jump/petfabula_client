@@ -6,7 +6,9 @@ import { themeDark } from "./themes/themeDark";
 
 const AppThemeProvider: React.FC<{}> = ({ children }) => {
   let colorScheme = useColorScheme();
-  const th = colorScheme == "dark" ? themeDark : themeLight;
+  // const th = colorScheme == "dark" ? themeDark : themeLight;
+
+  const th = themeLight;
 
   return (
     <AppearanceProvider>

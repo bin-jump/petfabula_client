@@ -364,7 +364,15 @@ const Header = ({
           photo={post.participator.photo}
           style={{ marginRight: 16, marginLeft: 12 }}
           fieldRight={() => (
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                flex: 1,
+                justifyContent: "flex-end",
+                paddingRight: 18,
+              }}
+            >
               {currentUser && currentUser.id != post.participator.id ? (
                 <Button
                   loading={followPending || unfollowPending}

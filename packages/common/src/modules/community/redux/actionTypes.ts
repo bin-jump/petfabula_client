@@ -69,3 +69,49 @@ export const PostRemoveCollectActionType = createAsyncActionType(
 export const PostLoadTopicActionType = createAsyncActionType(
   'POST_LOAD_POST_TOPIC',
 );
+
+// question
+export const LoadRecommendQuestionsActionType = createAsyncActionType(
+  'QUESTION_LOAD_RECOMMEND_QUESTIONS',
+);
+export const LoadUnansweredQuestionsActionType = createAsyncActionType(
+  'QUESTION_LOAD_UNANSWERED_QUESTIONS',
+);
+export const QuestionLoadQuestionDetailActionType = createAsyncActionType(
+  'QUESTION_LOAD_QUESTION_DETAIL',
+);
+export const QuestionCreateActionType = createAsyncActionType(
+  'QUESTION_CREATE_QUESTIONS',
+);
+
+export const QuestionLoadQuestionAnswersActionType = createAsyncActionType(
+  'QUESTION_LOAD_QUESTION_ANSWERS',
+);
+
+export const QuestionCreateAnswersActionType = createAsyncActionType(
+  'QUESTION_CREATE_ANSWERS',
+);
+
+export const QuestionCreateAnswerCommentActionType = createAsyncActionType(
+  'QUESTION_CREATE_ANSWER_COMMENT',
+);
+
+export const QuestionLoadAnswerCommentActionType = createAsyncActionType(
+  'QUESTION_LOAD_ANSWER_COMMENT',
+);
+
+export const QuestionUpvoteQuestionActionType = createAsyncActionType(
+  'QUESTION_UPVOTE_QUESTION',
+);
+
+export const QuestionUnvoteQuestionActionType = createAsyncActionType(
+  'QUESTION_UNVOTE_QUESTION',
+);
+
+export const QuestionUpvoteAnswerActionType = createAsyncActionType(
+  'QUESTION_UPVOTE_ANSWER',
+);
+
+export const QuestionUnvoteAnswerActionType = createAsyncActionType(
+  'QUESTION_UNVOTE_ANSWER',
+);

@@ -9,6 +9,7 @@ type Props = FieldProps<any> & {
   prefix: React.ReactNode;
   placeholder?: string;
   autoFocus?: boolean;
+  multiline?: boolean;
 };
 
 const InputField = ({
@@ -16,6 +17,7 @@ const InputField = ({
   form: { touched, errors, values, setFieldValue, handleBlur },
   placeholder,
   autoFocus,
+  multiline,
 }: Props) => {
   const { t } = useTranslation();
   const { theme } = useTheme();
@@ -32,7 +34,7 @@ const InputField = ({
   return (
     <Input
       autoFocus={autoFocus}
-      multiline
+      multiline={multiline}
       autoCapitalize="none"
       value={values[field.name]?.toString()}
       placeholder={placeholder}
@@ -43,10 +45,14 @@ const InputField = ({
       errorMessage={errorMsg ? `* ${t(errorMsg)}` : undefined}
       onChangeText={onChangeText}
       onBlur={() => handleBlur(field.name)}
-      inputStyle={{ height: 140, marginHorizontal: 0, padding: 0 }}
+      inputStyle={{
+        height: multiline ? 140 : 20,
+        marginHorizontal: 0,
+        padding: 0,
+      }}
       inputContainerStyle={{
         marginHorizontal: 0,
-        paddingVertical: 5,
+        paddingVertical: 3,
         borderBottomColor: errorMsg ? theme.colors?.error : theme.colors?.grey3,
       }}
     />

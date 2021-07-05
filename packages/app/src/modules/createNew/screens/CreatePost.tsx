@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import { View, TouchableOpacity, Keyboard } from "react-native";
 import {
   Text,
@@ -16,6 +16,7 @@ import {
   useDidUpdateEffect,
   DismissKeyboardView,
   PendingOverlay,
+  ImageFile,
 } from "../../shared";
 import {
   PostForm,
@@ -24,6 +25,7 @@ import {
   PostTopic,
 } from "@petfabula/common";
 import ParamTypes from "./paramTypes";
+import MultipleImageSelect from "../components/MultipleImageSelect";
 
 const CreatePost = () => {
   const { theme } = useTheme();
@@ -33,6 +35,19 @@ const CreatePost = () => {
   const { createPost } = useCreatePost();
   const images = params?.images ? params.images : [];
   const topic = params?.topic;
+  const [img, setImg] = useState<ImageFile[]>([]);
+
+  useEffect(() => {
+    if (!(JSON.stringify(images) == JSON.stringify(img))) {
+      setImg(images);
+    }
+  }, [images]);
+
+  const handleRemove = (index: number) => {
+    img.splice(index, 1);
+    setImg([...img]);
+  };
+
   const initial: PostForm = {
     content: "",
     relatedPetId: null,
@@ -42,7 +57,7 @@ const CreatePost = () => {
   const handleSubmit = (data: PostForm) => {
     Keyboard.dismiss();
     const d = { ...data, topicId: topic ? topic.id : null };
-    createPost(d, images);
+    createPost(d, img);
   };
 
   return (
@@ -103,7 +118,7 @@ const CreatePost = () => {
             <Icon type="antdesign" name="right" color={theme.colors?.grey0} />
           </TouchableOpacity>
 
-          <View
+          {/* <View
             style={{
               width: "100%",
               flexDirection: "row",
@@ -140,8 +155,13 @@ const CreatePost = () => {
                 style={{ width: 92, height: 92, margin: 3 }}
               />
             ))}
-          </View>
+          </View> */}
         </View>
+        <MultipleImageSelect
+          images={img}
+          fromScreen="CreatePost"
+          onRemove={handleRemove}
+        />
       </View>
     </DismissKeyboardView>
   );
@@ -176,7 +196,7 @@ const PostFormContent = ({
               handleSubmit();
             }}
           >
-            <Text h4>{t("common.send")}</Text>
+            <Text style={{ fontSize: 20 }}>{t("common.send")}</Text>
           </TouchableOpacity>
         </View>
       ),
@@ -197,6 +217,7 @@ const PostFormContent = ({
         placeholder={t("createNew.input.postcontent")}
         component={BlankInput}
         autoFocus
+        multiline
       />
 
       <View

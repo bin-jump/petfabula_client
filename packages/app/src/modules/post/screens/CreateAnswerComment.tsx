@@ -15,12 +15,12 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
-import { useCreatePostComment } from "@petfabula/common";
+import { useCreateAnswerComment } from "@petfabula/common";
 import { useDidUpdateEffect, ActivityIndicator } from "../../shared";
 
 import ParamTypes from "./ParamTypes";
 
-const CreateComment = () => {
+const CreateAnswerComment = () => {
   //   const [kbHeight, setKbHeight] = useState<number>(0);
   //   const { bottom } = useSafeAreaInsets();
   const [comment, setComment] = useState("");
@@ -30,9 +30,9 @@ const CreateComment = () => {
   const { t } = useTranslation();
   const contentHeight = 110;
   const kbHeight = useSharedValue(contentHeight + 30);
-  const { createComment, pending, result } = useCreatePostComment();
-  const { params } = useRoute<RouteProp<ParamTypes, "CreateComment">>();
-  const { postId } = params;
+  const { createAnswerComment, pending, result } = useCreateAnswerComment();
+  const { params } = useRoute<RouteProp<ParamTypes, "CreateAnswerComment">>();
+  const { answer, replyTarget } = params;
 
   const keyboardDidShow = useCallback(
     (e: KeyboardEvent) => {
@@ -85,7 +85,15 @@ const CreateComment = () => {
               <TextInput
                 multiline
                 autoFocus
-                placeholder={`${t("post.commentToPost")}...`}
+                placeholder={`${
+                  replyTarget
+                    ? t("common.reply")
+                    : t("question.commentToAnswer")
+                }@${
+                  replyTarget
+                    ? replyTarget.content.substr(0, 10)
+                    : answer.content.substr(0, 10)
+                }...`}
                 placeholderTextColor={theme.colors?.grey1}
                 value={comment}
                 onChangeText={(e) => {
@@ -114,7 +122,11 @@ const CreateComment = () => {
                       onPress={() => {
                         const cmt = comment.trim();
                         if (cmt && cmt.length <= 240) {
-                          createComment({ postId, content: cmt });
+                          createAnswerComment({
+                            answerId: answer.id,
+                            content: comment,
+                            replyTo: replyTarget ? replyTarget.id : null,
+                          });
                         }
                       }}
                     >
@@ -146,4 +158,4 @@ const CreateComment = () => {
   );
 };
 
-export default CreateComment;
+export default CreateAnswerComment;

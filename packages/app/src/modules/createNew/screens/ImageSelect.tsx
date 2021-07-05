@@ -1,8 +1,9 @@
 import React from "react";
 import { ImageBrowser } from "expo-image-picker-multiple";
 import * as ImageManipulator from "expo-image-manipulator";
-import { View, TouchableOpacity, Text } from "react-native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { View, TouchableOpacity } from "react-native";
+import { Text } from "react-native-elements";
+import { useTranslation } from "react-i18next";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { ImageFile } from "../../shared";
 import ParamTypes from "./paramTypes";
@@ -10,6 +11,7 @@ import ParamTypes from "./paramTypes";
 export default function ImageSelect() {
   const IMAGE_NUM_LIMIT = 6;
   const navigation = useNavigation();
+  const { t } = useTranslation();
   const { params } = useRoute<RouteProp<ParamTypes, "ImageSelect">>();
   const backScreenName = params.fromScreen;
 
@@ -31,14 +33,16 @@ export default function ImageSelect() {
     if (!count) return null;
     return (
       <TouchableOpacity style={{ marginRight: 10 }} onPress={onSubmit}>
-        <Text onPress={onSubmit}>Done</Text>
+        <Text onPress={onSubmit} style={{ fontSize: 18 }}>
+          {t("common.done")}
+        </Text>
       </TouchableOpacity>
     );
   };
 
   const updateHandler = (count: any, onSubmit: any) => {
     navigation.setOptions({
-      title: `Selected ${count}/${IMAGE_NUM_LIMIT} files`,
+      title: `${count}/${IMAGE_NUM_LIMIT}`,
       headerRight: () => _renderDoneButton(count, onSubmit),
     });
   };

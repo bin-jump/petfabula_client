@@ -9,24 +9,23 @@ import {
   useDidUpdateEffect,
   DismissKeyboardView,
   PendingOverlay,
-  ImageFile,
 } from "../../shared";
 import {
-  QuestionForm,
-  useCreateQuestion,
-  validQuestionSchema,
+  AnswerForm,
+  useCreateAnswer,
+  validAnswerSchema,
 } from "@petfabula/common";
 import ParamTypes from "./paramTypes";
 import MultipleImageSelect from "../components/MultipleImageSelect";
 
-const CreateQuestion = () => {
+const CreateAnswer = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
-  const { params } = useRoute<RouteProp<ParamTypes, "CreateQuestion">>();
-
-  const { createQuestion } = useCreateQuestion();
+  const { params } = useRoute<RouteProp<ParamTypes, "CreateAnswer">>();
+  const { questionId, questionTitle } = params;
+  const { createAnswer } = useCreateAnswer();
   const images = params?.images ? params.images : [];
-  const [img, setImg] = useState<ImageFile[]>([]);
+  const [img, setImg] = useState(images);
 
   useEffect(() => {
     if (!(JSON.stringify(images) == JSON.stringify(img))) {
@@ -39,14 +38,15 @@ const CreateQuestion = () => {
     setImg([...img]);
   };
 
-  const initial: QuestionForm = {
-    title: "",
+  const initial: AnswerForm = {
+    questionId: questionId,
     content: "",
   };
 
-  const handleSubmit = (data: QuestionForm) => {
+  const handleSubmit = (data: AnswerForm) => {
     Keyboard.dismiss();
-    createQuestion(data, img);
+    // console.log("data", data);
+    createAnswer(data, img);
   };
 
   return (
@@ -62,7 +62,7 @@ const CreateQuestion = () => {
         <Formik
           initialValues={initial}
           onSubmit={handleSubmit}
-          validationSchema={validQuestionSchema}
+          validationSchema={validAnswerSchema}
         >
           {({ values, setErrors, handleSubmit, handleBlur, setValues }) => (
             <QuestionFormContent
@@ -72,15 +72,17 @@ const CreateQuestion = () => {
                 handleSubmit,
                 handleBlur,
                 setValues,
+                questionTitle,
               }}
             />
           )}
         </Formik>
         <MultipleImageSelect
           images={img}
-          fromScreen="CreateQuestion"
+          fromScreen="CreateAnswer"
           onRemove={handleRemove}
         />
+        {/* <MultipleImageSelect images={img} fromScreen="CreateQuestion" /> */}
       </View>
     </DismissKeyboardView>
   );
@@ -92,17 +94,19 @@ const QuestionFormContent = ({
   setErrors,
   handleBlur,
   setValues,
+  questionTitle,
 }: {
-  values: QuestionForm;
+  values: AnswerForm;
   handleSubmit: any;
   setErrors: (errors: any) => void;
   handleBlur: (e: any) => void;
-  setValues: (val: QuestionForm) => void;
+  setValues: (val: AnswerForm) => void;
+  questionTitle: string;
 }) => {
   const { theme } = React.useContext(ThemeContext);
   const navigation = useNavigation();
   const { t } = useTranslation();
-  const { pending, error, result } = useCreateQuestion();
+  const { pending, error, result } = useCreateAnswer();
 
   React.useEffect(() => {
     navigation.setOptions({
@@ -129,16 +133,12 @@ const QuestionFormContent = ({
   return (
     <View style={{ width: "100%", alignItems: "center" }}>
       <PendingOverlay pending={pending} />
-      <Field
-        name="title"
-        placeholder={`${t("createNew.input.questionTitlePlaceholder")}...`}
-        component={BlankInput}
-        autoFocus
-      />
 
       <Field
         name="content"
-        placeholder={`${t("createNew.input.questionContentPlaceholder")}...`}
+        placeholder={`${t(
+          "createNew.input.answerContentPlaceholder"
+        )}@ ${questionTitle.substr(0, 10)}...`}
         component={BlankInput}
         autoFocus
         multiline
@@ -147,4 +147,4 @@ const QuestionFormContent = ({
   );
 };
 
-export default CreateQuestion;
+export default CreateAnswer;

@@ -64,19 +64,39 @@ export const userFollowReducer = {
     state: CommunityState,
     action: ActionBase,
   ): CommunityState => {
+    const actionParticipatorId = action.payload.participatorId;
+    const postDetailState = state.postDetail.data;
+    const questionDetailState = state.questionDetail.data;
+
     return {
       ...state,
       postDetail: {
         ...state.postDetail,
-        data: state.postDetail.data
-          ? {
-              ...state.postDetail.data,
-              participator: {
-                ...state.postDetail.data.participator,
-                followPending: true,
-              },
-            }
-          : state.postDetail.data,
+        data:
+          postDetailState &&
+          postDetailState.participator.id == actionParticipatorId
+            ? {
+                ...postDetailState,
+                participator: {
+                  ...postDetailState.participator,
+                  followPending: true,
+                },
+              }
+            : postDetailState,
+      },
+      questionDetail: {
+        ...state.questionDetail,
+        data:
+          questionDetailState &&
+          questionDetailState.participator.id == actionParticipatorId
+            ? {
+                ...questionDetailState,
+                participator: {
+                  ...questionDetailState.participator,
+                  followPending: true,
+                },
+              }
+            : questionDetailState,
       },
     };
   },
@@ -84,8 +104,10 @@ export const userFollowReducer = {
     state: CommunityState,
     action: ActionBase,
   ): CommunityState => {
-    const postState = state.postDetail.data;
     const actionParticipatorId = action.payload.participatorId;
+    const postState = state.postDetail.data;
+    const questionDetailState = state.questionDetail.data;
+
     return {
       ...state,
       postDetail: {
@@ -102,26 +124,60 @@ export const userFollowReducer = {
               }
             : postState,
       },
+      questionDetail: {
+        ...state.questionDetail,
+        data:
+          questionDetailState &&
+          questionDetailState.participator.id == actionParticipatorId
+            ? {
+                ...questionDetailState,
+                participator: {
+                  ...questionDetailState.participator,
+                  followPending: false,
+                  followed: true,
+                },
+              }
+            : questionDetailState,
+      },
     };
   },
   [CommunityFollowUserActionType.FAILURE]: (
     state: CommunityState,
     action: ActionBase,
   ): CommunityState => {
-    const postState = state.postDetail.data;
+    const actionParticipatorId = action.extra.participatorId;
+    const postDetailState = state.postDetail.data;
+    const questionDetailState = state.questionDetail.data;
+
     return {
       ...state,
       postDetail: {
         ...state.postDetail,
-        data: postState
-          ? {
-              ...postState,
-              participator: {
-                ...postState.participator,
-                followPending: false,
-              },
-            }
-          : postState,
+        data:
+          postDetailState &&
+          postDetailState.participator.id == actionParticipatorId
+            ? {
+                ...postDetailState,
+                participator: {
+                  ...postDetailState.participator,
+                  followPending: false,
+                },
+              }
+            : postDetailState,
+      },
+      questionDetail: {
+        ...state.questionDetail,
+        data:
+          questionDetailState &&
+          questionDetailState.participator.id == actionParticipatorId
+            ? {
+                ...questionDetailState,
+                participator: {
+                  ...questionDetailState.participator,
+                  followPending: false,
+                },
+              }
+            : questionDetailState,
       },
     };
   },
@@ -131,19 +187,39 @@ export const userFollowReducer = {
     state: CommunityState,
     action: ActionBase,
   ): CommunityState => {
+    const actionParticipatorId = action.payload.participatorId;
+    const postDetailState = state.postDetail.data;
+    const questionDetailState = state.questionDetail.data;
+
     return {
       ...state,
       postDetail: {
         ...state.postDetail,
-        data: state.postDetail.data
-          ? {
-              ...state.postDetail.data,
-              participator: {
-                ...state.postDetail.data.participator,
-                followPending: true,
-              },
-            }
-          : state.postDetail.data,
+        data:
+          postDetailState &&
+          postDetailState.participator.id == actionParticipatorId
+            ? {
+                ...postDetailState,
+                participator: {
+                  ...postDetailState.participator,
+                  followPending: true,
+                },
+              }
+            : postDetailState,
+      },
+      questionDetail: {
+        ...state.questionDetail,
+        data:
+          questionDetailState &&
+          questionDetailState.participator.id == actionParticipatorId
+            ? {
+                ...questionDetailState,
+                participator: {
+                  ...questionDetailState.participator,
+                  followPending: true,
+                },
+              }
+            : questionDetailState,
       },
     };
   },
@@ -151,23 +227,41 @@ export const userFollowReducer = {
     state: CommunityState,
     action: ActionBase,
   ): CommunityState => {
-    const postState = state.postDetail.data;
+    const postDetailState = state.postDetail.data;
     const actionParticipatorId = action.payload.participatorId;
+    const questionDetailState = state.questionDetail.data;
+
     return {
       ...state,
       postDetail: {
         ...state.postDetail,
         data:
-          postState && postState.participator.id == actionParticipatorId
+          postDetailState &&
+          postDetailState.participator.id == actionParticipatorId
             ? {
-                ...postState,
+                ...postDetailState,
                 participator: {
-                  ...postState.participator,
+                  ...postDetailState.participator,
                   followPending: false,
                   followed: false,
                 },
               }
-            : postState,
+            : postDetailState,
+      },
+      questionDetail: {
+        ...state.questionDetail,
+        data:
+          questionDetailState &&
+          questionDetailState.participator.id == actionParticipatorId
+            ? {
+                ...questionDetailState,
+                participator: {
+                  ...questionDetailState.participator,
+                  followPending: true,
+                  followed: false,
+                },
+              }
+            : questionDetailState,
       },
     };
   },
@@ -175,20 +269,39 @@ export const userFollowReducer = {
     state: CommunityState,
     action: ActionBase,
   ): CommunityState => {
-    const postState = state.postDetail.data;
+    const actionParticipatorId = action.extra.participatorId;
+    const postDetailState = state.postDetail.data;
+    const questionDetailState = state.questionDetail.data;
+
     return {
       ...state,
       postDetail: {
         ...state.postDetail,
-        data: postState
-          ? {
-              ...postState,
-              participator: {
-                ...postState.participator,
-                followPending: false,
-              },
-            }
-          : postState,
+        data:
+          postDetailState &&
+          postDetailState.participator.id == actionParticipatorId
+            ? {
+                ...postDetailState,
+                participator: {
+                  ...postDetailState.participator,
+                  followPending: false,
+                },
+              }
+            : postDetailState,
+      },
+      questionDetail: {
+        ...state.questionDetail,
+        data:
+          questionDetailState &&
+          questionDetailState.participator.id == actionParticipatorId
+            ? {
+                ...questionDetailState,
+                participator: {
+                  ...questionDetailState.participator,
+                  followPending: false,
+                },
+              }
+            : questionDetailState,
       },
     };
   },

@@ -7,6 +7,7 @@ import CreatePost from "./screens/CreatePost";
 import CreateQuestion from "./screens/CreateQuestion";
 import ImageSelect from "./screens/ImageSelect";
 import PostTopics from "./screens/PostTopics";
+import CreateAnswer from "./screens/CreateAnswer";
 
 const CreateNewStack = createStackNavigator();
 
@@ -47,6 +48,11 @@ const CreateNewScreens = () => {
         options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
         name="PostTopics"
         component={PostTopics}
+      />
+      <CreateNewStack.Screen
+        options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
+        name="CreateAnswer"
+        component={CreateAnswer}
       />
     </CreateNewStack.Navigator>
   );
