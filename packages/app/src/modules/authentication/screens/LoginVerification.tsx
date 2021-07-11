@@ -184,6 +184,7 @@ const VerificationCodeFormContent = ({
               style={{
                 fontWeight: "bold",
                 fontSize: 30,
+                lineHeight: 32,
                 textAlign: "center",
                 color: theme.colors?.black,
               }}

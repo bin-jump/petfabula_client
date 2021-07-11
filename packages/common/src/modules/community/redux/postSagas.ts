@@ -73,7 +73,7 @@ const watchSearchPost = createSagaWatcher({
 });
 
 const watchLoadRecommendPosts = createSagaWatcher({
-  url: `/api/post/recommends`,
+  url: `/api/recommend/posts`,
   method: 'GET',
   asyncAction: LoadRecommendPostsActionType,
   watchType: 'LATEST',

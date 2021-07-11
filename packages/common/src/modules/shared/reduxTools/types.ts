@@ -1,4 +1,5 @@
 export type ActionErrorType =
+  | 'AUTHENTICATION_REQUIRED'
   | 'FAILED_ON_RESPONSE'
   | 'SERVICE_ERROR'
   | 'INVALID_FORM_DATA'
@@ -26,7 +27,7 @@ export interface AsyncListBase<T> extends PendableEntityBase {
 export interface AsyncCursorPageListBase<T> extends PendableEntityBase {
   data: Array<T>;
   hasMore: boolean;
-  nextCursor: number | null;
+  nextCursor: object | null;
   initializing: boolean;
 }
 

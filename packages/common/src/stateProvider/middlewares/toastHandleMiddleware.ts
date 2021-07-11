@@ -1,5 +1,6 @@
 import { MiddlewareAPI, Dispatch, Middleware, AnyAction } from 'redux';
 import { ActionBase } from '../../modules/shared';
+import { LogoutActionType } from '../../modules/authentication/redux/actionTypes';
 
 interface ToastHandler {
   handleSuccess?: (msg: string) => void;
@@ -40,6 +41,10 @@ export const toastHandleMiddleware: Middleware<Dispatch> =
         handler.handleFailure('error.noNetwork');
       } else if (actionBase.error?.type == 'SERVICE_ERROR') {
         handler.handleFailure('error.serviceError');
+      } else if (actionBase.error?.type == 'AUTHENTICATION_REQUIRED') {
+        handler.handleFailure('error.authenticationRequired');
+        // force logout out of dated login state
+        dispatch({ type: LogoutActionType.SUCCESS });
       } else if (message) {
         handler.handleFailure(message);
       }

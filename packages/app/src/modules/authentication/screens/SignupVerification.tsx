@@ -170,7 +170,7 @@ const VerificationCodeFormContent = ({
                 shadowColor: theme.colors?.grey0,
                 flex: 1,
                 borderRadius: 6,
-                height: 62,
+                height: 60,
                 marginHorizontal: 6,
                 backgroundColor: theme.colors?.grey5,
                 justifyContent: "center",
@@ -187,7 +187,9 @@ const VerificationCodeFormContent = ({
               key={index}
               style={{
                 fontWeight: "bold",
+                paddingTop: 10,
                 fontSize: 30,
+                lineHeight: 32,
                 textAlign: "center",
                 color: theme.colors?.black,
               }}

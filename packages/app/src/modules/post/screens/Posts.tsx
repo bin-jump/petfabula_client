@@ -31,6 +31,7 @@ import { useTranslation } from "react-i18next";
 import Recommends from "./Recommends";
 import Followed from "./Followed";
 import Questions from "./Questions";
+import RecommendQuestions from "./RecommendQuestions";
 
 import SearchHeader from "../components/SearchHeader";
 import TabBar from "../components/TabBar";
@@ -209,7 +210,7 @@ const Posts = () => {
 
   const renderQuestion = useCallback(
     () => (
-      <Questions
+      <RecommendQuestions
         style={[listViewStyle, questionSlideStyle]}
         ref={questionListRef}
         onScroll={questionScrollHandler}

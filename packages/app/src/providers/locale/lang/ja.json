@@ -113,6 +113,7 @@
   },
   "error": {
     "noNetwork": "ネットワークに繋がりません",
-    "serviceError": "サービスが混雑しています"
+    "serviceError": "サービスが混雑しています",
+    "authenticationRequired": "有効期限が切れたので、ログインしてください"
   }
 }

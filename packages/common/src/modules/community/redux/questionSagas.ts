@@ -16,7 +16,7 @@ import {
 } from './actionTypes';
 
 const watchLoadRecommendQuestions = createSagaWatcher({
-  url: `/api/question/recommend/questions`,
+  url: `/api/recommend/questions`,
   method: 'GET',
   asyncAction: LoadRecommendQuestionsActionType,
   watchType: 'LATEST',

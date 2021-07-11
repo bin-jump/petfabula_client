@@ -32,7 +32,7 @@ export function createReducer<T, A extends ActionBase>(
   };
 }
 
-const translateApiError = (response: ApiResponse): AsyncActionError => {
+export const translateApiError = (response: ApiResponse): AsyncActionError => {
   let res: AsyncActionError = { type: 'OTEHRS' };
   // console.log('translateApiError', response);
   if (response.errors?.type == 'INVALID_FIELD') {
@@ -45,6 +45,8 @@ const translateApiError = (response: ApiResponse): AsyncActionError => {
     res.type = 'SERVICE_ERROR';
   } else if (response.errors?.type == 'NO_RESPONSE') {
     res.type = 'FAILED_ON_RESPONSE';
+  } else if (response.errors?.type == 'LOGIN_REQUIRED') {
+    res.type = 'AUTHENTICATION_REQUIRED';
   }
   return res;
 };
