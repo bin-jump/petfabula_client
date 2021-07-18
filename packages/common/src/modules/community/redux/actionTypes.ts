@@ -54,8 +54,6 @@ export const PostRemoveCommentReplyActionType = createAsyncActionType(
   'POST_REMOVE_COMMENT_REPLY',
 );
 
-export const PostSearchActionType = createAsyncActionType('POST_SEARCH');
-
 export const PostLikeActionType = createAsyncActionType('POST_LIKE_POST');
 
 export const PostUnlikeActionType = createAsyncActionType('POST_UNLIKE_POST');
@@ -69,6 +67,8 @@ export const PostRemoveCollectActionType = createAsyncActionType(
 export const PostLoadTopicActionType = createAsyncActionType(
   'POST_LOAD_POST_TOPIC',
 );
+
+export const PostSearchActionType = createAsyncActionType('POST_SEARCH');
 
 // question
 export const LoadRecommendQuestionsActionType = createAsyncActionType(
@@ -114,4 +114,8 @@ export const QuestionUpvoteAnswerActionType = createAsyncActionType(
 
 export const QuestionUnvoteAnswerActionType = createAsyncActionType(
   'QUESTION_UNVOTE_ANSWER',
+);
+
+export const QuestionAnswerSearchActionType = createAsyncActionType(
+  'QUESTION_ANSWER_SEARCH',
 );

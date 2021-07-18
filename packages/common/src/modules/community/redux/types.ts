@@ -72,7 +72,7 @@ export interface PostComment {
   participator: Participator;
   replies: PostCommentReply[];
   loadingReply: boolean;
-  replyCursor: number | null;
+  replyCursor: object | null;
 }
 
 export interface PostCommentReply {
@@ -127,7 +127,7 @@ export interface Answer {
   votePending: boolean;
   comments: AnswerComment[];
   loadCommentPending: boolean;
-  commentCursor: number | null;
+  commentCursor: object | null;
 }
 
 export interface QuestionDetail extends Question {
@@ -136,9 +136,21 @@ export interface QuestionDetail extends Question {
   participator: ParticiptorDetail;
 }
 
-// export interface AnswerWitQuestion extends Answer {
-//   question: Question;
-// }
+export interface QuestionAnswerSearch {
+  id: number;
+  questionId: number;
+  answerId: number;
+  title: string;
+  content: string;
+  answerContent: string;
+  images: DisplayImage[];
+  upvoteCount: number;
+  commentCount: number;
+  viewCount: number;
+  createdDate: number;
+  participator: Participator;
+  category: 'ANSWER' | 'QUESTION';
+}
 
 export interface AnswerComment {
   id: number;
@@ -211,4 +223,8 @@ export interface CommunityState {
   createQuestion: AsyncDataBase<Question>;
   createAnswer: AsyncDataBase<Answer>;
   createAnswerComment: AsyncDataBase<AnswerComment>;
+
+  searchQuestionAnswers: AsyncCursorPageListBase<QuestionAnswerSearch> & {
+    keyword: string | null;
+  };
 }

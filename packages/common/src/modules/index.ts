@@ -34,6 +34,7 @@ export {
   AnswerComment,
   AnswerCommentForm,
   AnswerForm,
+  QuestionAnswerSearch,
   useFollowUser,
   useUnfollowUser,
   useCreatePost,
@@ -66,6 +67,7 @@ export {
   useUpvoteQuestion,
   useUnvoteAnswer,
   useUpvoteAnswer,
+  useSearchQuestionAnswer,
 } from './community';
 
 export { resolveResponseFormError, checkFailedResponse } from './shared';

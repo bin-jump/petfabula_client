@@ -9,6 +9,7 @@ import {
   MaterialTopTabBarProps,
 } from "@react-navigation/material-top-tabs";
 import PostSearch from "./PostSearch";
+import QuestionAnswerSearch from "./QuestionAnswerSearch";
 import TabBar from "../components/TabBar";
 import ParamTypes from "./paramTypes";
 
@@ -114,6 +115,10 @@ const SearchResult = () => {
 
   const renderPostSearchResult = () => <PostSearch keyword={keyword} />;
 
+  const renderQuestionSearchResult = () => (
+    <QuestionAnswerSearch keyword={keyword} />
+  );
+
   return (
     <View style={{ flex: 1 }}>
       <View
@@ -131,6 +136,12 @@ const SearchResult = () => {
           name="PostSearch"
         >
           {renderPostSearchResult}
+        </Tab.Screen>
+        <Tab.Screen
+          options={{ tabBarLabel: t("search.questionSearch") }}
+          name="QuestionSearch"
+        >
+          {renderQuestionSearchResult}
         </Tab.Screen>
       </Tab.Navigator>
     </View>

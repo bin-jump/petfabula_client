@@ -50,7 +50,7 @@ type CommentItemBase = {
   createdDate: number;
   participator: Participator;
   replyCount: number;
-  replyCursor: number | null;
+  replyCursor: object | null;
   replies: ReplyItemBase[];
   loadingReply: boolean;
 };
@@ -202,7 +202,7 @@ const CommentItem = ({
   totalCount: number;
   onCommentContentClick: (comment: CommentItemBase) => void;
   onReplyContentClick: (reply: ReplyItemBase) => void;
-  loadReply: (id: number, cursor: number | null) => void;
+  loadReply: (id: number, cursor: object | null) => void;
 }) => {
   const { theme } = useTheme();
   const { t } = useTranslation();
@@ -432,11 +432,11 @@ const CommentList = ({
   commentCount: number;
   comments: CommentItemBase[];
   initializing: boolean;
-  nextCursor: number | null;
+  nextCursor: object | null;
   pending: boolean;
   onReplyContentClick: (reply: ReplyItemBase) => void;
   onCommentContentClick: (comment: CommentItemBase) => void;
-  loadReply: (id: number, cursor: number | null) => void;
+  loadReply: (id: number, cursor: object | null) => void;
   createComment: () => void;
   loadMore: () => void;
 }) => {

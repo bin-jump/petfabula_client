@@ -29,7 +29,7 @@ export const useLoadMyPosts = () => {
     );
 
   const boundAction = useCallback(
-    (cursor: number | null) => {
+    (cursor: object | null) => {
       dispatch({ type: LoadMyPostsActionType.BEGIN, payload: { cursor } });
     },
     [dispatch],
@@ -88,7 +88,7 @@ export const useLoadRecommendPosts = () => {
     );
 
   const boundAction = useCallback(
-    (cursor: number | null) => {
+    (cursor: object | null) => {
       dispatch({
         type: LoadRecommendPostsActionType.BEGIN,
         payload: { cursor },
@@ -124,7 +124,7 @@ export const useLoadFollowedPosts = () => {
     );
 
   const boundAction = useCallback(
-    (cursor: number | null) => {
+    (cursor: object | null) => {
       dispatch({
         type: LoadFollowedPostsActionType.BEGIN,
         payload: { cursor },

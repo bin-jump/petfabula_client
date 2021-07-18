@@ -138,6 +138,15 @@ const initialStat: CommunityState = {
     pending: false,
     error: null,
   },
+  searchQuestionAnswers: {
+    keyword: null,
+    data: [],
+    pending: false,
+    error: null,
+    hasMore: false,
+    nextCursor: null,
+    initializing: false,
+  },
 };
 
 export const communityRootReducer = createReducer<CommunityState, ActionBase>(

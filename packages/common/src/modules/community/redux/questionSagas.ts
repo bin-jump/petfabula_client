@@ -13,6 +13,7 @@ import {
   QuestionUnvoteQuestionActionType,
   QuestionUpvoteAnswerActionType,
   QuestionUnvoteAnswerActionType,
+  QuestionAnswerSearchActionType,
 } from './actionTypes';
 
 const watchLoadRecommendQuestions = createSagaWatcher({
@@ -113,6 +114,20 @@ const watchUnvoteAnswer = createSagaWatcher({
   },
 });
 
+const watchSearchQuestionAnswer = createSagaWatcher({
+  method: 'GET',
+  asyncAction: QuestionAnswerSearchActionType,
+  watchType: 'LATEST',
+  disableAutoCusor: true,
+  createUrl: (payload) => {
+    let url = `/api/search/question?q=${payload.keyword}`;
+    if (payload.cursor) {
+      url = `${payload}&cursor=${payload.cursor}`;
+    }
+    return url;
+  },
+});
+
 export function* questionRootSaga() {
   yield all([
     fork(watchLoadRecommendQuestions),
@@ -127,5 +142,6 @@ export function* questionRootSaga() {
     fork(watchUnvoteQuestion),
     fork(watchUpvoteAnswer),
     fork(watchUnvoteAnswer),
+    fork(watchSearchQuestionAnswer),
   ]);
 }

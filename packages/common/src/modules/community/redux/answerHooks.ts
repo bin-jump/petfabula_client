@@ -32,7 +32,7 @@ export const useLoadQuestionAnswers = () => {
     );
 
   const boundAction = useCallback(
-    (questionId: number, cursor: number | null) => {
+    (questionId: number, cursor: object | null) => {
       dispatch({
         type: QuestionLoadQuestionAnswersActionType.BEGIN,
         payload: { questionId, cursor },
@@ -126,7 +126,7 @@ export const useLoadAnswerComments = () => {
   const dispatch = useDispatch();
 
   const boundAction = useCallback(
-    (answerId: number, cursor: number | null) => {
+    (answerId: number, cursor: object | null) => {
       dispatch({
         type: QuestionLoadAnswerCommentActionType.BEGIN,
         payload: { answerId, cursor },

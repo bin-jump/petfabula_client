@@ -26,7 +26,7 @@ export const useLoadRecommendsQuestions = () => {
     );
 
   const boundAction = useCallback(
-    (cursor: number | null) => {
+    (cursor: object | null) => {
       dispatch({
         type: LoadRecommendQuestionsActionType.BEGIN,
         payload: { cursor },
@@ -62,7 +62,7 @@ export const useLoadUnansweredQuestions = () => {
     );
 
   const boundAction = useCallback(
-    (cursor: number | null) => {
+    (cursor: object | null) => {
       dispatch({
         type: LoadUnansweredQuestionsActionType.BEGIN,
         payload: { cursor },

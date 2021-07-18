@@ -40,7 +40,7 @@ export const useLoadPostComment = () => {
   );
 
   const boundAction = useCallback(
-    (postId: number, cursor: number | null) => {
+    (postId: number, cursor: object | null) => {
       dispatch({
         type: PostLoadPostCommentsActionType.BEGIN,
         payload: { postId, cursor },
@@ -71,7 +71,7 @@ export const useLoadPostCommentReply = () => {
   // );
 
   const boundAction = useCallback(
-    (commentId: number, cursor: number | null) => {
+    (commentId: number, cursor: object | null) => {
       dispatch({
         type: PostLoadCommentReplyActionType.BEGIN,
         payload: { commentId, cursor },

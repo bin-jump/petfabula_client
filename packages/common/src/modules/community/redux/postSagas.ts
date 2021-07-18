@@ -64,7 +64,7 @@ const watchSearchPost = createSagaWatcher({
   watchType: 'LATEST',
   disableAutoCusor: true,
   createUrl: (payload) => {
-    let url = `/api/post/search?q=${payload.keyword}`;
+    let url = `/api/search/post?q=${payload.keyword}`;
     if (payload.cursor) {
       url = `${payload}&cursor=${payload.cursor}`;
     }
