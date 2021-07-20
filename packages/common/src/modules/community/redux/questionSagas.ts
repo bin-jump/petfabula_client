@@ -118,12 +118,8 @@ const watchSearchQuestionAnswer = createSagaWatcher({
   method: 'GET',
   asyncAction: QuestionAnswerSearchActionType,
   watchType: 'LATEST',
-  disableAutoCusor: true,
   createUrl: (payload) => {
     let url = `/api/search/question?q=${payload.keyword}`;
-    if (payload.cursor) {
-      url = `${payload}&cursor=${payload.cursor}`;
-    }
     return url;
   },
 });

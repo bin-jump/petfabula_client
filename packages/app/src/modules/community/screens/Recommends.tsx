@@ -16,6 +16,7 @@ const Recommends = forwardRef<FlatList, ListProps>((props, ref) => {
     initializing,
     pending,
     hasMore,
+    error,
   } = useLoadRecommendPosts();
 
   // useEffect(() => {
@@ -56,7 +57,7 @@ const Recommends = forwardRef<FlatList, ListProps>((props, ref) => {
       posts={posts}
       ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
       onEndReached={() => {
-        if (hasMore && !pending) {
+        if (hasMore && !pending && !error) {
           loadRecommendPosts(nextCursor);
         }
       }}

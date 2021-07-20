@@ -15,6 +15,7 @@ import {
 import {
   useFirstFocusEffect,
   ActivityIndicator,
+  LoadingMoreIndicator,
   AvatarField,
   milisecToAgo,
 } from "../../shared";
@@ -107,16 +108,13 @@ const QuestionAnswerSearchView = ({ keyword }: { keyword: string }) => {
     questions,
     nextCursor,
     initializing,
+    pending,
+    hasMore,
+    error,
     keyword: searchedWord,
   } = useSearchQuestionAnswer();
   const { theme } = useTheme();
   const { bottom } = useSafeAreaInsets();
-
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     search(keyword, null);
-  //   }, [])
-  // );
 
   useFirstFocusEffect(() => {
     search(keyword, null);
@@ -133,11 +131,13 @@ const QuestionAnswerSearchView = ({ keyword }: { keyword: string }) => {
       data={d}
       ListHeaderComponent={initializing ? <ActivityIndicator /> : null}
       contentContainerStyle={{ paddingTop: 6, paddingBottom: bottom }}
-      //   ListFooterComponent={hasMore ? <ActivityIndicator /> : null}
-      //   onEndReached={() => {
-
-      //   }}
-      //   onEndReachedThreshold={0.2}
+      ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
+      onEndReached={() => {
+        if (hasMore && !pending && !error) {
+          search(keyword, nextCursor);
+        }
+      }}
+      onEndReachedThreshold={0.2}
     />
   );
 };

@@ -24,6 +24,7 @@ const RecommendQuestions = forwardRef<FlatList, Props>((props, ref) => {
     nextCursor,
     initializing,
     hasMore,
+    error,
   } = useLoadRecommendsQuestions();
 
   const keyExtractor = (item: Question) => item.id.toString();
@@ -54,7 +55,7 @@ const RecommendQuestions = forwardRef<FlatList, Props>((props, ref) => {
       renderItem={renderItem}
       ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
       onEndReached={() => {
-        if (hasMore && !pending) {
+        if (hasMore && !pending && !error) {
           loadRecommendQuestion(nextCursor);
         }
       }}

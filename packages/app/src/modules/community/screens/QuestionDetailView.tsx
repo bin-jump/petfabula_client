@@ -24,6 +24,8 @@ import Animated, {
   interpolateColor,
   interpolate,
   Easing,
+  useAnimatedScrollHandler,
+  useDerivedValue,
 } from "react-native-reanimated";
 import {
   Answer,
@@ -47,6 +49,7 @@ import {
   ActivityIndicator,
   IconCount,
   Image,
+  OverlayImage,
 } from "../../shared";
 import ParamTypes from "./ParamTypes";
 import { useEffect } from "react";
@@ -206,10 +209,12 @@ const Header = ({
   question,
   height,
   currentQuestionId,
+  slideSharedValue,
 }: {
   question: QuestionDetail | null;
   height: number;
   currentQuestionId: number;
+  slideSharedValue: Animated.SharedValue<number>;
 }) => {
   const { theme } = useTheme();
   const navigation = useNavigation();
@@ -223,6 +228,29 @@ const Header = ({
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
+
+  const slideDerived = useDerivedValue(() => {
+    return withTiming(slideSharedValue.value > 100 ? 70 : 0, {
+      duration: 300,
+      easing: Easing.quad,
+    });
+  });
+
+  const slideStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: -slideDerived.value,
+        },
+      ],
+    };
+  });
+
+  const titleStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(slideDerived.value, [0, 50, 70], [0, 0, 1]),
+    };
+  });
 
   return (
     <View
@@ -316,78 +344,97 @@ const Header = ({
         </View>
       </BottomSheetModal>
 
-      {question && question.id == currentQuestionId ? (
-        <AvatarField
-          nameStyle={{ marginLeft: 8, marginBottom: 6, fontWeight: "bold" }}
-          name={question.participator.name}
-          photo={question.participator.photo}
-          style={{ marginRight: 16, marginLeft: 12 }}
-          fieldRight={() => (
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                flex: 1,
-                justifyContent: "flex-end",
-                paddingRight: 18,
-              }}
-            >
-              {currentUser && currentUser.id != question.participator.id ? (
-                <Button
-                  loading={followPending || unfollowPending}
-                  onPress={() => {
-                    if (!question.participator.followed) {
-                      followUser(question.participator.id);
-                    } else {
-                      unfollowUser(question.participator.id);
-                    }
-                  }}
-                  title={
-                    !question.participator.followed
-                      ? t("user.followAction")
-                      : t("user.unfollowAction")
-                  }
-                  titleStyle={{
-                    fontSize: 16,
-                    fontWeight: "bold",
-                    color: question.participator.followed
-                      ? theme.colors?.black
-                      : theme.colors?.white,
-                  }}
-                  buttonStyle={{
-                    height: 40,
-                    paddingHorizontal: 12,
-                    backgroundColor: question.participator.followed
-                      ? theme.colors?.grey4
-                      : theme.colors?.primary,
-                  }}
-                  containerStyle={{ height: 40, width: 126 }}
-                  icon={
-                    question.participator.followed ? (
-                      <Icon
-                        type="antdesign"
-                        name="check"
-                        color={theme.colors?.black}
-                        size={16}
-                      />
-                    ) : undefined
-                  }
-                />
-              ) : null}
-
-              <Icon
-                containerStyle={{ marginLeft: 8 }}
-                onPress={() => {
-                  handlePresentModalPress();
+      <Animated.View style={[slideStyle, { flex: 1 }]}>
+        {question && question.id == currentQuestionId ? (
+          <AvatarField
+            nameStyle={{ marginLeft: 8, marginBottom: 6, fontWeight: "bold" }}
+            name={question.participator.name}
+            photo={question.participator.photo}
+            style={{
+              marginRight: 16,
+              marginLeft: 12,
+            }}
+            fieldRight={() => (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  flex: 1,
+                  justifyContent: "flex-end",
+                  paddingRight: 18,
                 }}
-                type="feather"
-                name="more-vertical"
-                color={theme.colors?.black}
-              />
-            </View>
-          )}
-        />
-      ) : null}
+              >
+                {currentUser && currentUser.id != question.participator.id ? (
+                  <Button
+                    loading={followPending || unfollowPending}
+                    onPress={() => {
+                      if (!question.participator.followed) {
+                        followUser(question.participator.id);
+                      } else {
+                        unfollowUser(question.participator.id);
+                      }
+                    }}
+                    title={
+                      !question.participator.followed
+                        ? t("user.followAction")
+                        : t("user.unfollowAction")
+                    }
+                    titleStyle={{
+                      fontSize: 16,
+                      fontWeight: "bold",
+                      color: question.participator.followed
+                        ? theme.colors?.black
+                        : theme.colors?.white,
+                    }}
+                    buttonStyle={{
+                      height: 40,
+                      paddingHorizontal: 12,
+                      backgroundColor: question.participator.followed
+                        ? theme.colors?.grey4
+                        : theme.colors?.primary,
+                    }}
+                    containerStyle={{ height: 40, width: 126 }}
+                    icon={
+                      question.participator.followed ? (
+                        <Icon
+                          type="antdesign"
+                          name="check"
+                          color={theme.colors?.black}
+                          size={16}
+                        />
+                      ) : undefined
+                    }
+                  />
+                ) : null}
+
+                <Icon
+                  containerStyle={{ marginLeft: 8 }}
+                  onPress={() => {
+                    handlePresentModalPress();
+                  }}
+                  type="feather"
+                  name="more-vertical"
+                  color={theme.colors?.black}
+                />
+              </View>
+            )}
+          />
+        ) : null}
+        <Animated.View
+          style={[
+            titleStyle,
+            {
+              marginHorizontal: 12,
+              marginTop: -20,
+              transform: [{ translateY: 60 }],
+            },
+          ]}
+        >
+          <Text numberOfLines={1} h3>
+            {question?.title}
+          </Text>
+        </Animated.View>
+      </Animated.View>
     </View>
   );
 };
@@ -585,10 +632,17 @@ const AnswerItem = ({ answer }: { answer: Answer }) => {
       <View style={{ flexDirection: "row", marginBottom: 8, flexWrap: "wrap" }}>
         {answer.images.map((item, index) => {
           return (
-            <Image
+            // <Image
+            //   key={index}
+            //   source={{ uri: item.url }}
+            //   style={{ width: 90, height: 90, marginRight: 6, marginTop: 6 }}
+            // />
+            <OverlayImage
               key={index}
-              source={{ uri: item.url }}
-              style={{ width: 90, height: 90, marginRight: 6, marginTop: 6 }}
+              image={item}
+              height={90}
+              width={90}
+              style={{ marginRight: 6, marginTop: 6 }}
             />
           );
         })}
@@ -774,6 +828,13 @@ const QuestionDetailView = () => {
   const { id } = params;
   const { theme } = useTheme();
   const { t } = useTranslation();
+  const slideSharedValue = useSharedValue(0);
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      const offset = event.contentOffset.y;
+      slideSharedValue.value = Math.max(0, offset);
+    },
+  });
 
   const {
     loadQuestionAnswers,
@@ -806,6 +867,7 @@ const QuestionDetailView = () => {
         currentQuestionId={id}
         question={question}
         height={headerHeight}
+        slideSharedValue={slideSharedValue}
       />
       <Divider />
       {question && question.id == id ? (
@@ -814,7 +876,9 @@ const QuestionDetailView = () => {
             paddingBottom: top + footerHeight + headerHeight,
           }}
         >
-          <ScrollView
+          <Animated.ScrollView
+            onScroll={scrollHandler}
+            scrollEventThrottle={5}
             contentContainerStyle={{
               flexGrow: 1,
               minHeight: screenHeight - top - headerHeight - footerHeight,
@@ -839,15 +903,22 @@ const QuestionDetailView = () => {
               >
                 {question.images.map((item, index) => {
                   return (
-                    <Image
+                    // <Image
+                    //   key={index}
+                    //   source={{ uri: item.url }}
+                    //   style={{
+                    //     width: 90,
+                    //     height: 90,
+                    //     marginRight: 6,
+                    //     marginTop: 6,
+                    //   }}
+                    // />
+                    <OverlayImage
                       key={index}
-                      source={{ uri: item.url }}
-                      style={{
-                        width: 90,
-                        height: 90,
-                        marginRight: 6,
-                        marginTop: 6,
-                      }}
+                      image={item}
+                      height={90}
+                      width={90}
+                      style={{ marginRight: 6, marginTop: 6 }}
                     />
                   );
                 })}
@@ -885,7 +956,8 @@ const QuestionDetailView = () => {
               <Divider />
               <AnswerList answers={answers} question={question} />
             </View>
-          </ScrollView>
+          </Animated.ScrollView>
+
           <View
             style={{
               position: "absolute",

@@ -25,7 +25,7 @@ export const useSearchPost = () => {
     );
 
   const boundAction = useCallback(
-    (keyword: string, cursor: number | null) => {
+    (keyword: string, cursor: object | null) => {
       dispatch({
         type: PostSearchActionType.BEGIN,
         payload: { keyword, cursor },

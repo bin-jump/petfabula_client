@@ -70,4 +70,8 @@ export {
   useSearchQuestionAnswer,
 } from './community';
 
-export { resolveResponseFormError, checkFailedResponse } from './shared';
+export {
+  resolveResponseFormError,
+  checkFailedResponse,
+  DisplayImage,
+} from './shared';

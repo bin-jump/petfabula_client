@@ -80,7 +80,8 @@ export function createSagaWatcher({
 
     // add cursor
     if (beginAction.payload?.cursor && !disableAutoCusor) {
-      requestUrl = `${requestUrl}?cursor=${beginAction.payload.cursor}`;
+      const delimiter = requestUrl.indexOf('?') >= 0 ? '&' : '?';
+      requestUrl = `${requestUrl}${delimiter}cursor=${beginAction.payload.cursor}`;
     }
     const requestData = createRequestPayload
       ? createRequestPayload(beginAction.payload)

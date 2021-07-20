@@ -9,8 +9,15 @@ type ListProps = Omit<Props, "posts">;
 
 const Followed = forwardRef<FlatList, ListProps>((props, ref) => {
   const { width: postWidth } = usePostWidth();
-  const { posts, loadTimeline, nextCursor, initializing, pending, hasMore } =
-    useLoadFollowedPosts();
+  const {
+    posts,
+    loadTimeline,
+    nextCursor,
+    initializing,
+    pending,
+    hasMore,
+    error,
+  } = useLoadFollowedPosts();
   const { currentUser } = useCurrentUser();
 
   // useEffect(() => {
@@ -37,7 +44,7 @@ const Followed = forwardRef<FlatList, ListProps>((props, ref) => {
       posts={posts}
       ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
       onEndReached={() => {
-        if (hasMore && !pending) {
+        if (hasMore && !pending && !error) {
           loadTimeline(nextCursor);
         }
       }}

@@ -5,7 +5,11 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSearchPost } from "@petfabula/common";
 import PostFlatList, { Props } from "../components/PostFlatList";
-import { useFirstFocusEffect, ActivityIndicator } from "../../shared";
+import {
+  useFirstFocusEffect,
+  ActivityIndicator,
+  LoadingMoreIndicator,
+} from "../../shared";
 
 const PostSearch = forwardRef<
   FlatList,
@@ -17,16 +21,13 @@ const PostSearch = forwardRef<
     posts,
     nextCursor,
     initializing,
+    pending,
+    hasMore,
+    error,
     keyword: searchedWord,
   } = useSearchPost();
   const { theme } = useTheme();
   const { bottom } = useSafeAreaInsets();
-
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     search(keyword, null);
-  //   }, [])
-  // );
 
   useFirstFocusEffect(() => {
     search(keyword, null);
@@ -61,11 +62,13 @@ const PostSearch = forwardRef<
       //     </View>
       //   }
       contentContainerStyle={{ paddingTop: 6, paddingBottom: bottom }}
-      //   ListFooterComponent={hasMore ? <ActivityIndicator /> : null}
-      //   onEndReached={() => {
-
-      //   }}
-      //   onEndReachedThreshold={0.2}
+      ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
+      onEndReached={() => {
+        if (hasMore && !pending && !error) {
+          search(keyword, nextCursor);
+        }
+      }}
+      onEndReachedThreshold={0.2}
     />
   );
 });

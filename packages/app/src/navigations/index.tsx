@@ -209,10 +209,6 @@ const TabScreen = () => {
         name="CommunityMain"
         component={CommunityMain}
         options={(navigation) => {
-          console.log(
-            "getFocusedRouteNameFromRoute",
-            getFocusedRouteNameFromRoute(navigation.route)
-          );
           return {
             tabBarVisible:
               !getFocusedRouteNameFromRoute(navigation.route) ||
