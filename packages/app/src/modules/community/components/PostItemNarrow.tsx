@@ -92,7 +92,14 @@ const PostItemNarrow = ({
     >
       <TouchableWithoutFeedback
         onPress={() => {
-          navigation.navigate("PostDetailView", { id: post.id });
+          // navigation.navigate("PostDetailView", { id: post.id });
+
+          navigation.navigate("SecondaryStack", {
+            screen: "PostDetailView",
+            params: {
+              id: post.id,
+            },
+          });
         }}
       >
         <View>

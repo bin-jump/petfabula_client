@@ -64,7 +64,13 @@ const QuestionItem = ({ question }: { question: Question }) => {
   return (
     <TouchableWithoutFeedback
       onPress={() => {
-        navigation.navigate("QuestionDetailView", { id: question.id });
+        // navigation.navigate("QuestionDetailView", { id: question.id });
+        navigation.navigate("SecondaryStack", {
+          screen: "QuestionDetailView",
+          params: {
+            id: question.id,
+          },
+        });
       }}
     >
       <View

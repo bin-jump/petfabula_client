@@ -99,7 +99,7 @@ const useCollpaseHeaderListTab = ({
   };
 };
 
-const Posts = () => {
+const CommunityMain = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const { height: screenHeight } = useWindowDimensions();
@@ -300,7 +300,7 @@ const Posts = () => {
   );
 };
 
-export default Posts;
+export default CommunityMain;
 
 const styles = StyleSheet.create({
   container: {

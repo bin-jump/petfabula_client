@@ -19,11 +19,12 @@ import {
 } from "@petfabula/common";
 import { LoginRequire } from "../modules/aspect";
 import AuthenticaionScreen from "../modules/authentication";
-import Posts from "../modules/post";
+import CommunityMain from "../modules/community";
 import Ask from "../modules/ask";
 import User from "../modules/user";
 import NotificationScreen from "../modules/notification";
 import CreateNew from "../modules/createNew";
+import SecondaryStack from "./SecondaryStack";
 
 const Tabs = createBottomTabNavigator();
 const TopStack = createStackNavigator();
@@ -52,6 +53,15 @@ const AppScreen = () => {
           name="TabScreen"
           component={TabScreen}
         />
+
+        <TopStack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="SecondaryStack"
+          component={SecondaryStack}
+        />
+
         <TopStack.Screen
           options={{
             headerShown: false,
@@ -196,13 +206,17 @@ const TabScreen = () => {
       }}
     >
       <Tabs.Screen
-        name="Posts"
-        component={Posts}
+        name="CommunityMain"
+        component={CommunityMain}
         options={(navigation) => {
+          console.log(
+            "getFocusedRouteNameFromRoute",
+            getFocusedRouteNameFromRoute(navigation.route)
+          );
           return {
             tabBarVisible:
               !getFocusedRouteNameFromRoute(navigation.route) ||
-              getFocusedRouteNameFromRoute(navigation.route) == "Posts",
+              getFocusedRouteNameFromRoute(navigation.route) == "CommunityMain",
             tabBarIcon: ({ focused }) => {
               return (
                 <View style={{ alignContent: "center" }}>

@@ -22,7 +22,10 @@ const SearchHeader = () => {
       >
         <TouchableWithoutFeedback
           onPress={() => {
-            navigation.navigate("Search");
+            // navigation.navigate("Search");
+            navigation.navigate("SecondaryStack", {
+              screen: "Search",
+            });
           }}
         >
           <View

@@ -8,10 +8,7 @@ import {
 } from "react-native";
 import Animated from "react-native-reanimated";
 import { Post } from "@petfabula/common";
-import PostItem, {
-  usePostWidth,
-  resovePostItemHeight,
-} from "../components/PostItemNarrow";
+import PostItem, { usePostWidth, resovePostItemHeight } from "./PostItemNarrow";
 
 type ItemWrapper = Post & { postHeight: number; marginTop: number };
 type RowWrapper = {

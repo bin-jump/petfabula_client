@@ -4,26 +4,28 @@ import {
   CardStyleInterpolators,
 } from "@react-navigation/stack";
 import { ThemeContext, Icon } from "react-native-elements";
-import { headerBaseOption, plainGoBackHeaderOption } from "../shared";
-import Posts from "./screens/Posts";
-import Search from "./screens/Search";
-import SearchResult from "./screens/SearchResult";
-import PostDetailView from "./screens/PostDetailView";
-import CreateComment from "./screens/CreateComment";
-import CreateCommentReply from "./screens/CreateCommentReply";
-import QuestionDetailView from "./screens/QuestionDetailView";
-import CreateAnswerComment from "./screens/CreateAnswerComment";
+import { headerBaseOption, plainGoBackHeaderOption } from "../modules/shared";
+import {
+  CommunityMain,
+  Search,
+  SearchResult,
+  PostDetailView,
+  CreateComment,
+  CreateCommentReply,
+  QuestionDetailView,
+  CreateAnswerComment,
+} from "../modules/community/screens";
 
-const PostsStack = createStackNavigator();
+const SecondaryStackStack = createStackNavigator();
 
-const PostScreens = () => {
+const SecondaryStack = () => {
   const { theme } = React.useContext(ThemeContext);
   return (
-    <PostsStack.Navigator
+    <SecondaryStackStack.Navigator
       screenOptions={{ headerStyle: { elevation: 0, borderWidth: 0 } }}
       mode="modal"
     >
-      <PostsStack.Screen
+      <SecondaryStackStack.Screen
         options={(navigation) => {
           return {
             ...headerBaseOption({ theme }),
@@ -31,10 +33,10 @@ const PostScreens = () => {
             cardStyle: { backgroundColor: "transparent" },
           };
         }}
-        name="Posts"
-        component={Posts}
+        name="CommunityMain"
+        component={CommunityMain}
       />
-      <PostsStack.Screen
+      <SecondaryStackStack.Screen
         options={(navigation) => {
           return {
             ...headerBaseOption({ theme }),
@@ -44,7 +46,7 @@ const PostScreens = () => {
         name="Search"
         component={Search}
       />
-      <PostsStack.Screen
+      <SecondaryStackStack.Screen
         options={(navigation) => {
           return {
             cardOverlayEnabled: true,
@@ -55,7 +57,7 @@ const PostScreens = () => {
         name="SearchResult"
         component={SearchResult}
       />
-      <PostsStack.Screen
+      <SecondaryStackStack.Screen
         // options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
         options={(navigation) => {
           return {
@@ -69,7 +71,7 @@ const PostScreens = () => {
         name="PostDetailView"
         component={PostDetailView}
       />
-      <PostsStack.Screen
+      <SecondaryStackStack.Screen
         options={{
           headerShown: false,
           cardStyle: { backgroundColor: "transparent" },
@@ -93,7 +95,7 @@ const PostScreens = () => {
         name="CreateComment"
         component={CreateComment}
       />
-      <PostsStack.Screen
+      <SecondaryStackStack.Screen
         options={{
           headerShown: false,
           cardStyle: { backgroundColor: "transparent" },
@@ -119,7 +121,7 @@ const PostScreens = () => {
       />
 
       {/* question */}
-      <PostsStack.Screen
+      <SecondaryStackStack.Screen
         // options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
         options={(navigation) => {
           return {
@@ -134,7 +136,7 @@ const PostScreens = () => {
         component={QuestionDetailView}
       />
 
-      <PostsStack.Screen
+      <SecondaryStackStack.Screen
         options={{
           headerShown: false,
           cardStyle: { backgroundColor: "transparent" },
@@ -158,8 +160,8 @@ const PostScreens = () => {
         name="CreateAnswerComment"
         component={CreateAnswerComment}
       />
-    </PostsStack.Navigator>
+    </SecondaryStackStack.Navigator>
   );
 };
 
-export default PostScreens;
+export default SecondaryStack;
