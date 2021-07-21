@@ -1,4 +1,10 @@
-import React, { useRef, useCallback, useState, useMemo } from "react";
+import React, {
+  useRef,
+  useCallback,
+  useState,
+  useMemo,
+  useEffect,
+} from "react";
 import {
   View,
   TouchableWithoutFeedback,
@@ -52,7 +58,6 @@ import {
   OverlayImage,
 } from "../../shared";
 import ParamTypes from "./ParamTypes";
-import { useEffect } from "react";
 
 const Footer = ({ question }: { question: QuestionDetail }) => {
   const { theme } = useTheme();
@@ -347,6 +352,11 @@ const Header = ({
       <Animated.View style={[slideStyle, { flex: 1 }]}>
         {question && question.id == currentQuestionId ? (
           <AvatarField
+            onAvatarClick={() => {
+              navigation.navigate("UserProfile", {
+                id: question.participator.id,
+              });
+            }}
             nameStyle={{ marginLeft: 8, marginBottom: 6, fontWeight: "bold" }}
             name={question.participator.name}
             photo={question.participator.photo}

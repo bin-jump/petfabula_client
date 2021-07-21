@@ -7,6 +7,7 @@ type Props = {
   name: string;
   photo?: string;
   nameStyle?: StyleProp<TextStyle>;
+  subContentStyle?: StyleProp<TextStyle>;
   subContent?: string;
   size?: number;
   small?: boolean;
@@ -18,6 +19,7 @@ export default function AvatarField(props: Props & ViewProps) {
   const { theme } = useTheme();
   const {
     nameStyle,
+    subContentStyle,
     photo,
     name,
     subContent,
@@ -66,7 +68,9 @@ export default function AvatarField(props: Props & ViewProps) {
             {name}
           </Text>
           {subContent ? (
-            <Text style={{ color: theme.colors?.grey1 }}>{subContent}</Text>
+            <Text style={[{ color: theme.colors?.grey1 }, subContentStyle]}>
+              {subContent}
+            </Text>
           ) : null}
         </View>
       </View>

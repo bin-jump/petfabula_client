@@ -7,14 +7,27 @@ export const CommunityUnfollowUserActionType = createAsyncActionType(
   'COMMUNITY_UNFOLLOW_USER',
 );
 
-export const CommunityLoadMyPetsActionType = createAsyncActionType(
-  'COMMUNITY_LOAD_MY_PETS',
+export const CommunityLoadUserPetsActionType = createAsyncActionType(
+  'COMMUNITY_LOAD_USER_PETS',
 );
 
-export const LoadMyPostsActionType =
-  createAsyncActionType('POST_LOAD_MY_POSTS');
-export const PostLoadOthersPostsActionType = createAsyncActionType(
-  'POST_LOAD_OTHER_POSTS',
+export const LoadMyProfileActionType = createAsyncActionType(
+  'COMMUNITY_LOAD_MY_PROFILE',
+);
+export const LoadUserProfileActionType = createAsyncActionType(
+  'COMMUNITY_LOAD_USER_PROFILE',
+);
+export const LoadUserPostsActionType = createAsyncActionType(
+  'POST_LOAD_USER_POSTS',
+);
+export const LoadUserQuestionsActionType = createAsyncActionType(
+  'POST_LOAD_USER_QUESTIONS',
+);
+export const LoadUserAnswersActionType = createAsyncActionType(
+  'QUESTION_LOAD_USER_ANSWERS',
+);
+export const LoadUserCollectedPostsActionType = createAsyncActionType(
+  'POST_LOAD_USER_COLLECTION_POSTS',
 );
 
 // post

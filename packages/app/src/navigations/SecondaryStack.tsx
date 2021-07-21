@@ -14,6 +14,7 @@ import {
   CreateCommentReply,
   QuestionDetailView,
   CreateAnswerComment,
+  UserProfile,
 } from "../modules/community/screens";
 
 const SecondaryStackStack = createStackNavigator();
@@ -159,6 +160,11 @@ const SecondaryStack = () => {
         }}
         name="CreateAnswerComment"
         component={CreateAnswerComment}
+      />
+      <SecondaryStackStack.Screen
+        options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
+        name="UserProfile"
+        component={UserProfile}
       />
     </SecondaryStackStack.Navigator>
   );

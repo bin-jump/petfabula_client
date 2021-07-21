@@ -359,6 +359,9 @@ const Header = ({
 
       {post && post.id == currentPostId ? (
         <AvatarField
+          onAvatarClick={() => {
+            navigation.navigate("UserProfile", { id: post.participator.id });
+          }}
           nameStyle={{ marginLeft: 8, marginBottom: 6, fontWeight: "bold" }}
           name={post.participator.name}
           photo={post.participator.photo}

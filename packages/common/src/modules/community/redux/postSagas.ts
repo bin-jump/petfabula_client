@@ -4,8 +4,13 @@ import {
   PostLoadDetailActionType,
   CommunityFollowUserActionType,
   CommunityUnfollowUserActionType,
-  LoadMyPostsActionType,
-  PostLoadOthersPostsActionType,
+  LoadMyProfileActionType,
+  LoadUserProfileActionType,
+  LoadUserPostsActionType,
+  LoadUserQuestionsActionType,
+  LoadUserAnswersActionType,
+  LoadUserCollectedPostsActionType,
+  // post
   LoadRecommendPostsActionType,
   LoadFollowedPostsActionType,
   PostCreatePostActionType,
@@ -19,24 +24,52 @@ import {
   PostLoadCommentReplyActionType,
   PostCreateCommentReplyActionType,
   PostLoadTopicActionType,
-  CommunityLoadMyPetsActionType,
   PostSearchActionType,
 } from './actionTypes';
 
 // user
 
-const watchLoadMyPosts = createSagaWatcher({
-  url: `/api/post/posts`,
+const watchLoadMyProfile = createSagaWatcher({
+  url: `/api/participator/profile`,
   method: 'GET',
-  asyncAction: LoadMyPostsActionType,
+  asyncAction: LoadMyProfileActionType,
   watchType: 'LATEST',
 });
 
-const watchLoadMyPets = createSagaWatcher({
-  url: `/api/participator/pets`,
+const watchLoadUserProfile = createSagaWatcher({
   method: 'GET',
-  asyncAction: CommunityLoadMyPetsActionType,
+  asyncAction: LoadUserProfileActionType,
   watchType: 'LATEST',
+  createUrl: (payload) => {
+    return `/api/participator/${payload.userId}/profile`;
+  },
+});
+
+const watchLoadUserPosts = createSagaWatcher({
+  method: 'GET',
+  asyncAction: LoadUserPostsActionType,
+  watchType: 'LATEST',
+  createUrl: (payload) => {
+    return `/api/participator/${payload.userId}/posts`;
+  },
+});
+
+const watchLoadUserQuestions = createSagaWatcher({
+  method: 'GET',
+  asyncAction: LoadUserQuestionsActionType,
+  watchType: 'LATEST',
+  createUrl: (payload) => {
+    return `/api/participator/${payload.userId}/questions`;
+  },
+});
+
+const watchLoadUserAnswers = createSagaWatcher({
+  method: 'GET',
+  asyncAction: LoadUserAnswersActionType,
+  watchType: 'LATEST',
+  createUrl: (payload) => {
+    return `/api/participator/${payload.userId}/answers`;
+  },
 });
 
 const watchFollowParticipator = createSagaWatcher({
@@ -81,15 +114,6 @@ const watchGetPostDetail = createSagaWatcher({
   watchType: 'LATEST',
   createUrl: (payload) => {
     return `/api/post/posts/${payload.postId}`;
-  },
-});
-
-const watchLoadOthersPosts = createSagaWatcher({
-  method: 'GET',
-  asyncAction: PostLoadOthersPostsActionType,
-  watchType: 'LATEST',
-  createUrl: (payload) => {
-    return `/api/post/user/${payload.userId}/posts`;
   },
 });
 
@@ -192,13 +216,15 @@ const watchLoadTopics = createSagaWatcher({
 
 export function* postRootSaga() {
   yield all([
-    fork(watchLoadMyPets),
     fork(watchFollowParticipator),
     fork(watchUnfollowParticipator),
+    fork(watchLoadMyProfile),
+    fork(watchLoadUserProfile),
+    fork(watchLoadUserPosts),
+    fork(watchLoadUserQuestions),
+    fork(watchLoadUserAnswers),
 
     fork(watchGetPostDetail),
-    fork(watchLoadMyPosts),
-    fork(watchLoadOthersPosts),
     fork(watchLoadRecommendPosts),
     fork(watchLoadFollowedPosts),
     fork(watchCreatePost),

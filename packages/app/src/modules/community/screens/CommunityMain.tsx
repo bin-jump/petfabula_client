@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useMemo,
-  RefObject,
-  useCallback,
-  useRef,
-} from "react";
+import React, { useMemo, useCallback, useRef } from "react";
 import {
   Platform,
   View,
@@ -26,13 +20,13 @@ import Animated, {
   useAnimatedScrollHandler,
   useAnimatedStyle,
   withTiming,
+  interpolate,
 } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
 import Recommends from "./Recommends";
 import Followed from "./Followed";
 import Questions from "./Questions";
 import RecommendQuestions from "./RecommendQuestions";
-
 import SearchHeader from "../components/SearchHeader";
 import TabBar from "../components/TabBar";
 import { useCurrentUser } from "@petfabula/common";
@@ -148,6 +142,16 @@ const CommunityMain = () => {
     };
   });
 
+  const headerOpacityStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        translateVal.value,
+        [0, TAB_BAR_HEIGHT - 10],
+        [1, 0]
+      ),
+    };
+  });
+
   const tabSlideStyle = useAnimatedStyle(() => {
     return {
       transform: [
@@ -221,7 +225,11 @@ const CommunityMain = () => {
   );
 
   const headerContainerStyle = useMemo<StyleProp<ViewStyle>>(
-    () => [styles.headerContainer, { paddingTop: top }, headerSlideStyle],
+    () => [
+      styles.headerContainer,
+      { paddingTop: top, backgroundColor: theme.colors?.white },
+      headerSlideStyle,
+    ],
 
     [headerSlideStyle, top]
   );
@@ -265,7 +273,9 @@ const CommunityMain = () => {
         style={{ height: top, backgroundColor: theme.colors?.white, zIndex: 2 }}
       />
       <Animated.View style={headerContainerStyle}>
-        <SearchHeader />
+        <Animated.View style={headerOpacityStyle}>
+          <SearchHeader />
+        </Animated.View>
       </Animated.View>
 
       <Tab.Navigator

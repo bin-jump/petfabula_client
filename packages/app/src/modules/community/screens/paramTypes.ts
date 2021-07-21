@@ -27,6 +27,9 @@ type ParamTypes = {
     answer: Answer;
     replyTarget: AnswerComment | undefined;
   };
+  UserProfile: {
+    id: number;
+  };
 };
 
 export default ParamTypes;

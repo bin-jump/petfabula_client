@@ -2,22 +2,22 @@ import { useCallback } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { AppState } from '../../../stateProvider';
 import { CommunityState } from './types';
-import { CommunityLoadMyPetsActionType } from './actionTypes';
+import { CommunityLoadUserPetsActionType } from './actionTypes';
 import { ActionBase } from '../../shared';
 
 export const useLoadParticipatorPets = () => {
   const dispatch = useDispatch();
   const { pets, pending, error } = useSelector(
     (state: AppState) => ({
-      pets: state.community.mypets.data,
-      pending: state.community.mypets.pending,
-      error: state.community.mypets.error,
+      pets: state.community.userPets.data,
+      pending: state.community.userPets.pending,
+      error: state.community.userPets.error,
     }),
     shallowEqual,
   );
 
   const boundAction = useCallback(() => {
-    dispatch({ type: CommunityLoadMyPetsActionType.BEGIN });
+    dispatch({ type: CommunityLoadUserPetsActionType.BEGIN });
   }, [dispatch]);
 
   return {
@@ -29,40 +29,41 @@ export const useLoadParticipatorPets = () => {
 };
 
 export const petReducer = {
-  [CommunityLoadMyPetsActionType.BEGIN]: (
+  [CommunityLoadUserPetsActionType.BEGIN]: (
     state: CommunityState,
     action: ActionBase,
   ): CommunityState => {
     return {
       ...state,
-      mypets: {
-        ...state.mypets,
+      userPets: {
+        ...state.userPets,
         pending: true,
         error: null,
       },
     };
   },
-  [CommunityLoadMyPetsActionType.SUCCESS]: (
+  [CommunityLoadUserPetsActionType.SUCCESS]: (
     state: CommunityState,
     action: ActionBase,
   ): CommunityState => {
     return {
       ...state,
-      mypets: {
-        ...state.mypets,
+      userPets: {
+        ...state.userPets,
         pending: false,
         data: action.payload,
+        userId: action.extra.userId,
       },
     };
   },
-  [CommunityLoadMyPetsActionType.FAILURE]: (
+  [CommunityLoadUserPetsActionType.FAILURE]: (
     state: CommunityState,
     action: ActionBase,
   ): CommunityState => {
     return {
       ...state,
-      mypets: {
-        ...state.mypets,
+      userPets: {
+        ...state.userPets,
         pending: false,
         error: action.error,
       },

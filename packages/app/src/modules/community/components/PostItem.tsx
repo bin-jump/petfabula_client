@@ -27,6 +27,8 @@ const PostItemFull = ({ post }: { post: Post }) => {
       }}
     >
       <AvatarField
+        nameStyle={{ marginLeft: 10, fontWeight: "bold" }}
+        subContentStyle={{ marginLeft: 10 }}
         style={{ marginBottom: 12 }}
         name={post.participator.name}
         photo={post.participator.photo}
@@ -58,13 +60,13 @@ const PostItemFull = ({ post }: { post: Post }) => {
           marginBottom: 6,
         }}
       >
-        <IconCount
+        {/* <IconCount
           type="antdesign"
           name="eye"
           count={post.likeCount}
           size={22}
           style={{ marginRight: 26 }}
-        />
+        /> */}
         <IconCount
           type="entypo"
           name="thumbs-up"

@@ -3,7 +3,6 @@ import { ReduxAsyncAction } from '../../modules/shared';
 import {
   CommunityFollowUserActionType,
   CommunityUnfollowUserActionType,
-  LoadMyPostsActionType,
   LoadFollowedPostsActionType,
   PostCreatePostActionType,
   PostRemovePostActionType,
@@ -34,9 +33,8 @@ export const registerLoginReqiureHandler = ({
 const LOGIN_REQUIRED_ACTIONS: ReduxAsyncAction[] = [
   CommunityFollowUserActionType,
   CommunityUnfollowUserActionType,
-  LoadMyPostsActionType,
   LoadFollowedPostsActionType,
-  // PostCreatePostActionType,
+  PostCreatePostActionType,
   PostRemovePostActionType,
   PostCreatePostCommentActionType,
   PostRemovePostCommentActionType,

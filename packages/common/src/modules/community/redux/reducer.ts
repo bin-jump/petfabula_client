@@ -11,21 +11,13 @@ import { postCommentReducer } from './postCommentHooks';
 import { questionReducer } from './questionHooks';
 import { answerReducer } from './answerHooks';
 import { questionVoteReducer } from './questionVoteHooks';
+import { participatorReducer } from './participatorHooks';
 
 const initialStat: CommunityState = {
   // user
-  myDetail: { data: null, pending: false, error: null },
-  othersDetail: { data: null, pending: false, error: null },
-  mypets: { data: [], pending: false, error: null },
-  myPosts: {
-    data: [],
-    pending: false,
-    error: null,
-    hasMore: false,
-    nextCursor: null,
-    initializing: false,
-  },
-  othersPosts: {
+  myProfile: { data: null, pending: false, error: null },
+  userProfile: { data: null, pending: false, error: null },
+  userPosts: {
     userId: null,
     data: [],
     pending: false,
@@ -33,6 +25,39 @@ const initialStat: CommunityState = {
     hasMore: false,
     nextCursor: null,
     initializing: false,
+  },
+  userQuestions: {
+    userId: null,
+    data: [],
+    pending: false,
+    error: null,
+    hasMore: false,
+    nextCursor: null,
+    initializing: false,
+  },
+  userAnswers: {
+    userId: null,
+    data: [],
+    pending: false,
+    error: null,
+    hasMore: false,
+    nextCursor: null,
+    initializing: false,
+  },
+  userCollectedPosts: {
+    userId: null,
+    data: [],
+    pending: false,
+    error: null,
+    hasMore: false,
+    nextCursor: null,
+    initializing: false,
+  },
+  userPets: {
+    userId: null,
+    data: [],
+    pending: false,
+    error: null,
   },
 
   // post
@@ -163,5 +188,6 @@ export const communityRootReducer = createReducer<CommunityState, ActionBase>(
     ...questionReducer,
     ...answerReducer,
     ...questionVoteReducer,
+    ...participatorReducer,
   },
 );

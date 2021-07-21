@@ -116,6 +116,7 @@ export interface Question {
 
 export interface Answer {
   id: number;
+  questionId: number;
   content: string;
   upvoteCount: number;
   commentCount: number;
@@ -128,6 +129,18 @@ export interface Answer {
   comments: AnswerComment[];
   loadCommentPending: boolean;
   commentCursor: object | null;
+}
+
+export interface AnswerWithQuestion {
+  id: number;
+  questionId: number;
+  questionTitle: string;
+  content: string;
+  upvoteCount: number;
+  commentCount: number;
+  createdDate: number;
+  participator: Participator;
+  images: DisplayImage[];
 }
 
 export interface QuestionDetail extends Question {
@@ -185,11 +198,19 @@ export interface AnswerCommentForm {
 
 export interface CommunityState {
   // user
-  myDetail: AsyncDataBase<Participator>;
-  othersDetail: AsyncDataBase<Participator>;
-  myPosts: AsyncCursorPageListBase<Post>;
-  othersPosts: AsyncCursorPageListBase<Post> & { userId: number | null };
-  mypets: AsyncListBase<ParticiptorPet>;
+  myProfile: AsyncDataBase<Participator>;
+  // othersDetail: AsyncDataBase<ParticiptorDetail>;
+  // myPosts: AsyncCursorPageListBase<Post>;
+  // othersPosts: AsyncCursorPageListBase<Post> & { userId: number | null };
+  // mypets: AsyncListBase<ParticiptorPet>;
+  userProfile: AsyncDataBase<ParticiptorDetail>;
+  userPosts: AsyncCursorPageListBase<Post> & { userId: number | null };
+  userQuestions: AsyncCursorPageListBase<Question> & { userId: number | null };
+  userAnswers: AsyncCursorPageListBase<AnswerWithQuestion> & {
+    userId: number | null;
+  };
+  userCollectedPosts: AsyncCursorPageListBase<Post> & { userId: number | null };
+  userPets: AsyncListBase<ParticiptorPet> & { userId: number | null };
 
   // post
   postTopics: AsyncListBase<PostTopicCategory>;

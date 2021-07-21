@@ -4,47 +4,12 @@ import { AppState } from '../../../stateProvider';
 import { PostForm, CommunityState } from './types';
 import {
   PostLoadDetailActionType,
-  LoadMyPostsActionType,
-  PostLoadOthersPostsActionType,
   LoadRecommendPostsActionType,
   LoadFollowedPostsActionType,
   PostCreatePostActionType,
   PostRemovePostActionType,
 } from './actionTypes';
 import { ActionBase, UploadImage, fillCursorResponseData } from '../../shared';
-
-export const useLoadMyPosts = () => {
-  const dispatch = useDispatch();
-  const { posts, hasMore, nextCursor, pending, initializing, error } =
-    useSelector(
-      (state: AppState) => ({
-        posts: state.community.myPosts.data,
-        hasMore: state.community.myPosts.hasMore,
-        nextCursor: state.community.myPosts.nextCursor,
-        pending: state.community.myPosts.pending,
-        initializing: state.community.myPosts.initializing,
-        error: state.community.myPosts.error,
-      }),
-      shallowEqual,
-    );
-
-  const boundAction = useCallback(
-    (cursor: object | null) => {
-      dispatch({ type: LoadMyPostsActionType.BEGIN, payload: { cursor } });
-    },
-    [dispatch],
-  );
-
-  return {
-    loadMyPosts: boundAction,
-    hasMore,
-    nextCursor,
-    posts,
-    pending,
-    initializing,
-    error,
-  };
-};
 
 export const useLoadPostDetail = () => {
   const dispatch = useDispatch();
@@ -135,42 +100,6 @@ export const useLoadFollowedPosts = () => {
 
   return {
     loadTimeline: boundAction,
-    posts,
-    hasMore,
-    nextCursor,
-    pending,
-    initializing,
-    error,
-  };
-};
-
-export const useLoadOthersPosts = () => {
-  const dispatch = useDispatch();
-  const { posts, hasMore, nextCursor, pending, initializing, error } =
-    useSelector(
-      (state: AppState) => ({
-        posts: state.community.othersPosts.data,
-        hasMore: state.community.othersPosts.hasMore,
-        nextCursor: state.community.othersPosts.nextCursor,
-        pending: state.community.othersPosts.pending,
-        initializing: state.community.othersPosts.initializing,
-        error: state.community.othersPosts.error,
-      }),
-      shallowEqual,
-    );
-
-  const boundAction = useCallback(
-    (userId: number, cursor: number | null) => {
-      dispatch({
-        type: PostLoadOthersPostsActionType.BEGIN,
-        payload: { userId, cursor },
-      });
-    },
-    [dispatch],
-  );
-
-  return {
-    loadOthersPosts: boundAction,
     posts,
     hasMore,
     nextCursor,
@@ -292,87 +221,6 @@ export const postReducer = {
     };
   },
 
-  // my posts
-  [LoadMyPostsActionType.BEGIN]: (
-    state: CommunityState,
-    action: ActionBase,
-  ): CommunityState => {
-    return {
-      ...state,
-      myPosts: {
-        ...state.myPosts,
-        initializing: action.payload.cursor == null,
-        pending: true,
-        error: null,
-      },
-    };
-  },
-  [LoadMyPostsActionType.SUCCESS]: (
-    state: CommunityState,
-    action: ActionBase,
-  ): CommunityState => {
-    return {
-      ...state,
-      myPosts: fillCursorResponseData(state.myPosts, action),
-    };
-  },
-  [LoadMyPostsActionType.FAILURE]: (
-    state: CommunityState,
-    action: ActionBase,
-  ): CommunityState => {
-    return {
-      ...state,
-      myPosts: {
-        ...state.myPosts,
-        pending: false,
-        initializing: false,
-        error: action.error,
-      },
-    };
-  },
-
-  // others posts
-  [PostLoadOthersPostsActionType.BEGIN]: (
-    state: CommunityState,
-    action: ActionBase,
-  ): CommunityState => {
-    return {
-      ...state,
-      othersPosts: {
-        ...state.othersPosts,
-        initializing: action.payload.cursor == null,
-        pending: true,
-        error: null,
-      },
-    };
-  },
-  [PostLoadOthersPostsActionType.SUCCESS]: (
-    state: CommunityState,
-    action: ActionBase,
-  ): CommunityState => {
-    return {
-      ...state,
-      othersPosts: {
-        ...fillCursorResponseData(state.othersPosts, action),
-        userId: action.extra.userId,
-      },
-    };
-  },
-  [PostLoadOthersPostsActionType.FAILURE]: (
-    state: CommunityState,
-    action: ActionBase,
-  ): CommunityState => {
-    return {
-      ...state,
-      othersPosts: {
-        ...state.othersPosts,
-        pending: false,
-        initializing: false,
-        error: action.error,
-      },
-    };
-  },
-
   // recommend posts
   [LoadRecommendPostsActionType.BEGIN]: (
     state: CommunityState,
@@ -469,8 +317,7 @@ export const postReducer = {
     state: CommunityState,
     action: ActionBase,
   ): CommunityState => {
-    const mDetail = state.myDetail.data;
-    const mPosts = state.myPosts.data;
+    const mDetail = state.myProfile.data;
     return {
       ...state,
       createPost: {
@@ -478,15 +325,11 @@ export const postReducer = {
         pending: false,
         data: action.payload,
       },
-      myDetail: {
-        ...state.myDetail,
+      myProfile: {
+        ...state.myProfile,
         data: mDetail
           ? { ...mDetail, postCount: mDetail.postCount + 1 }
           : mDetail,
-      },
-      myPosts: {
-        ...state.myPosts,
-        data: mPosts ? [action.payload, ...mPosts] : mPosts,
       },
     };
   },
@@ -522,8 +365,8 @@ export const postReducer = {
     state: CommunityState,
     action: ActionBase,
   ): CommunityState => {
-    const mDetail = state.myDetail.data;
-    const mPosts = state.myPosts.data;
+    const mDetail = state.myProfile.data;
+    const mPosts = state.myProfile.data;
     const removedId = action.extra.postId;
     return {
       ...state,
@@ -532,15 +375,11 @@ export const postReducer = {
         pending: false,
         data: action.payload,
       },
-      myDetail: {
-        ...state.myDetail,
+      myProfile: {
+        ...state.myProfile,
         data: mDetail
           ? { ...mDetail, postCount: mDetail.postCount - 1 }
           : mDetail,
-      },
-      myPosts: {
-        ...state.myPosts,
-        data: mPosts ? mPosts.filter((item) => item.id != removedId) : mPosts,
       },
     };
   },
