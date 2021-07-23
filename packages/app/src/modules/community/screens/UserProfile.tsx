@@ -1,4 +1,5 @@
 import React, {
+  useState,
   forwardRef,
   useCallback,
   useEffect,
@@ -25,6 +26,7 @@ import Animated, {
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useAnimatedGestureHandler,
+  useAnimatedRef,
 } from "react-native-reanimated";
 import { PanGestureHandler } from "react-native-gesture-handler";
 import {
@@ -58,12 +60,17 @@ export type ListProps = { userId: number };
 const useCollpaseHeaderListTab = ({
   translateVal,
   headerHeight,
+  curTabIndex,
+  myTabIndex,
 }: {
   translateVal: Animated.SharedValue<number>;
   headerHeight: number;
+  curTabIndex: number;
+  myTabIndex: number;
 }) => {
-  const listRef = useRef<FlatList>(null);
+  const listRef = useAnimatedRef<FlatList>();
   const scrollValue = useSharedValue(0);
+  const offsetDist = useSharedValue(0);
 
   const listSlideStyle = useAnimatedStyle(() => {
     return {
@@ -78,6 +85,9 @@ const useCollpaseHeaderListTab = ({
   const scrollHandler = useAnimatedScrollHandler(
     {
       onScroll: (event) => {
+        if (curTabIndex != myTabIndex) {
+          return;
+        }
         if (event.contentOffset.y < 0) {
           return;
         }
@@ -88,12 +98,12 @@ const useCollpaseHeaderListTab = ({
           return;
         }
         const v = translateVal.value + diff;
-        // translateVal.value = v;
         if (v >= 0 && v <= headerHeight) {
           translateVal.value = v;
         }
 
-        // fix fast scroll glitch bug
+        offsetDist.value = event.contentOffset.y - translateVal.value;
+
         if (
           translateVal.value - event.contentOffset.y > 0 &&
           event.contentOffset.y == 0
@@ -102,7 +112,7 @@ const useCollpaseHeaderListTab = ({
         }
       },
     },
-    []
+    [curTabIndex]
   );
 
   return {
@@ -110,6 +120,7 @@ const useCollpaseHeaderListTab = ({
     listRef,
     scrollValue,
     scrollHandler,
+    offsetDist,
   };
 };
 
@@ -161,6 +172,7 @@ const UserProfile = () => {
   const { height: screenHeight } = useWindowDimensions();
   const { top, bottom } = useSafeAreaInsets();
   const { currentUser } = useCurrentUser();
+  const [tabIndex, setTabIndex] = useState(0);
 
   const HEADER_HEIGHT = 280;
   const TAB_BAR_HEIGHT = 42;
@@ -177,19 +189,48 @@ const UserProfile = () => {
     listSlideStyle: userPostSlideStyle,
     listRef: userPostListRef,
     scrollHandler: userPostScrollHandler,
+    offsetDist: userPostScrollHeaderDist,
   } = useCollpaseHeaderListTab({
     translateVal: translateVal,
     headerHeight: HEADER_HEIGHT,
+    curTabIndex: tabIndex,
+    myTabIndex: 0,
   });
 
   const {
     listSlideStyle: userQuestionSlideStyle,
     listRef: userQuestionListRef,
     scrollHandler: userQuestionScrollHandler,
+    offsetDist: questionScrollHeaderDist,
   } = useCollpaseHeaderListTab({
     translateVal: translateVal,
     headerHeight: HEADER_HEIGHT,
+    curTabIndex: tabIndex,
+    myTabIndex: 1,
   });
+
+  const scrollPairs = [
+    { listRef: userPostListRef, dist: userPostScrollHeaderDist },
+    { listRef: userQuestionListRef, dist: questionScrollHeaderDist },
+  ];
+
+  const adjust: NonNullable<FlatListProps<any>["onMomentumScrollEnd"]> = (
+    event
+  ) => {
+    let i = -1;
+    for (const { listRef, dist } of scrollPairs) {
+      i += 1;
+      if (tabIndex == i) {
+        continue;
+      }
+      if (true) {
+        listRef.current?.scrollToOffset({
+          offset: translateVal.value + dist.value,
+          animated: false,
+        });
+      }
+    }
+  };
 
   const headerSlideStyle = useAnimatedStyle(() => {
     return {
@@ -241,7 +282,9 @@ const UserProfile = () => {
         ]}
       >
         <TabBar
-          onIndexChange={() => {}}
+          onIndexChange={(index) => {
+            setTabIndex(index);
+          }}
           style={{ height: TAB_BAR_HEIGHT }}
           {...props}
         />
@@ -260,10 +303,12 @@ const UserProfile = () => {
         minHeight: screenHeight,
       },
       scrollEventThrottle: 5,
+      onMomentumScrollEnd: adjust,
+      onScrollEndDrag: adjust,
       // showsVerticalScrollIndicator: false,
       // scrollIndicatorInsets: { top: -20 },
     }),
-    []
+    [adjust]
   );
 
   const renderUserPosts = useCallback(
@@ -275,7 +320,7 @@ const UserProfile = () => {
         userId={id}
       />
     ),
-    []
+    [sharedProps]
   );
 
   const renderUserQuestions = useCallback(
@@ -287,7 +332,7 @@ const UserProfile = () => {
         userId={id}
       />
     ),
-    []
+    [sharedProps]
   );
 
   return (
@@ -322,6 +367,7 @@ const UserProfile = () => {
           }}
         ></View>
       </Animated.View>
+
       <Tab.Navigator initialRouteName="UserPosts" tabBar={renderTabBar}>
         <Tab.Screen
           options={{ tabBarLabel: t("post.recommends.tabLabel") }}
@@ -330,12 +376,12 @@ const UserProfile = () => {
           {renderUserPosts}
         </Tab.Screen>
 
-        {/* <Tab.Screen
+        <Tab.Screen
           options={{ tabBarLabel: t("post.recommends.tabLabel") }}
           name="UserQuestions"
         >
           {renderUserQuestions}
-        </Tab.Screen> */}
+        </Tab.Screen>
       </Tab.Navigator>
     </Animated.View>
   );
