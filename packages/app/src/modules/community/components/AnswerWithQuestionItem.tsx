@@ -2,26 +2,26 @@ import React from "react";
 import { View, TouchableWithoutFeedback } from "react-native";
 import { useTheme, Text } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
-import { Question } from "@petfabula/common";
+import { AnswerWithQuestion } from "@petfabula/common";
 import { Image, IconCount, AvatarField } from "../../shared";
 
-const QuestionItem = ({
-  question,
+const AnswerWithQuestionItem = ({
+  answer,
   onPress,
 }: {
-  question: Question;
-  onPress?: (question: Question) => void;
+  answer: AnswerWithQuestion;
+  onPress?: (question: AnswerWithQuestion) => void;
 }) => {
   const { theme } = useTheme();
   const navigation = useNavigation();
 
   const renderContent = () => {
-    if (question.images.length == 0) {
+    if (answer.images.length == 0) {
       return (
-        <Text style={{ fontSize: 18, marginTop: 8 }}>{question.content}</Text>
+        <Text style={{ fontSize: 18, marginTop: 8 }}>{answer.content}</Text>
       );
     }
-    if (question.content.length == 0) {
+    if (answer.content.length == 0) {
       return (
         <View
           style={{
@@ -31,7 +31,7 @@ const QuestionItem = ({
             marginRight: 6,
           }}
         >
-          {question.images.map((item, index) => (
+          {answer.images.map((item, index) => (
             <Image
               resizeMode="cover"
               key={index}
@@ -55,12 +55,12 @@ const QuestionItem = ({
           <Text
             numberOfLines={3}
             style={{ fontSize: 18, marginTop: 8, lineHeight: 20 }}
-          >{`${question.content}`}</Text>
+          >{`${answer.content}`}</Text>
         </View>
 
         <Image
           resizeMode="cover"
-          source={{ uri: question.images[0].url }}
+          source={{ uri: answer.images[0].url }}
           style={{ width: 80, height: 80, marginRight: 8 }}
         />
       </View>
@@ -77,7 +77,7 @@ const QuestionItem = ({
         //   },
         // });
         if (onPress) {
-          onPress(question);
+          onPress(answer);
         }
       }}
     >
@@ -94,11 +94,11 @@ const QuestionItem = ({
           elevation: 2,
         }}
       >
-        <Text h3>{question.title}</Text>
+        <Text h3>{answer.questionTitle}</Text>
         <AvatarField
           style={{ marginBottom: 3, marginTop: 12 }}
-          name={question.participator.name}
-          photo={question.participator.photo}
+          name={answer.participator.name}
+          photo={answer.participator.photo}
           nameStyle={{
             marginLeft: 6,
             fontWeight: "bold",
@@ -115,10 +115,10 @@ const QuestionItem = ({
             marginTop: 6,
           }}
         >
-          <IconCount
+          {/* <IconCount
             type="material-community"
             name="comment-text-multiple"
-            count={question.answerCount}
+            count={answer.answerCount}
             size={22}
             style={{ marginRight: 18 }}
           />
@@ -128,11 +128,11 @@ const QuestionItem = ({
             count={question.upvoteCount}
             size={22}
             style={{ marginRight: 12 }}
-          />
+          /> */}
         </View>
       </View>
     </TouchableWithoutFeedback>
   );
 };
 
-export default QuestionItem;
+export default AnswerWithQuestionItem;

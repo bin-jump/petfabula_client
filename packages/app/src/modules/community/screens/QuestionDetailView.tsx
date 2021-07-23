@@ -14,8 +14,12 @@ import {
 } from "react-native";
 import { useTheme, Text, Divider, Button, Icon } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
-import { NavigationActions } from "react-navigation";
+import {
+  useNavigation,
+  useRoute,
+  RouteProp,
+  useFocusEffect,
+} from "@react-navigation/native";
 import {
   BottomSheetModal,
   BottomSheetBackdrop,
@@ -857,16 +861,24 @@ const QuestionDetailView = () => {
     loadQuestionDetail,
     question,
     pending: questionPending,
+    error,
   } = useLoadQuestionDetail();
   const { height: screenHeight } = useWindowDimensions();
   const { top, bottom } = useSafeAreaInsets();
   const headerHeight = 66;
   const footerHeight = 56 + (bottom * 1) / 2;
 
-  useEffect(() => {
-    loadQuestionDetail(id);
-    loadQuestionAnswers(id, null);
-  }, [id]);
+  // useEffect(() => {
+  //   loadQuestionDetail(id);
+  //   loadQuestionAnswers(id, null);
+  // }, [id]);
+
+  useFocusEffect(() => {
+    if (!error && !questionPending && id != question?.id) {
+      loadQuestionDetail(id);
+      loadQuestionAnswers(id, null);
+    }
+  });
 
   return (
     <View style={{ flex: 1 }}>

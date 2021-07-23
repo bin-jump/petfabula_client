@@ -72,6 +72,15 @@ const watchLoadUserAnswers = createSagaWatcher({
   },
 });
 
+const watchLoadUserCollectedPosts = createSagaWatcher({
+  method: 'GET',
+  asyncAction: LoadUserCollectedPostsActionType,
+  watchType: 'LATEST',
+  createUrl: (payload) => {
+    return `/api/participator/${payload.userId}/collected-posts`;
+  },
+});
+
 const watchFollowParticipator = createSagaWatcher({
   method: 'POST',
   asyncAction: CommunityFollowUserActionType,
@@ -223,6 +232,7 @@ export function* postRootSaga() {
     fork(watchLoadUserPosts),
     fork(watchLoadUserQuestions),
     fork(watchLoadUserAnswers),
+    fork(watchLoadUserCollectedPosts),
 
     fork(watchGetPostDetail),
     fork(watchLoadRecommendPosts),

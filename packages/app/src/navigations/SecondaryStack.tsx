@@ -15,6 +15,7 @@ import {
   QuestionDetailView,
   CreateAnswerComment,
   UserProfile,
+  UserInfomation,
 } from "../modules/community/screens";
 
 const SecondaryStackStack = createStackNavigator();
@@ -162,9 +163,24 @@ const SecondaryStack = () => {
         component={CreateAnswerComment}
       />
       <SecondaryStackStack.Screen
-        options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
+        // options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
+        options={(navigation) => {
+          return {
+            // cardOverlayEnabled: true,
+            // cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            // gestureDirection: "horizontal",
+            ...headerBaseOption({ theme }),
+            headerShown: false,
+          };
+        }}
         name="UserProfile"
         component={UserProfile}
+      />
+
+      <SecondaryStackStack.Screen
+        options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
+        name="UserInfomation"
+        component={UserInfomation}
       />
     </SecondaryStackStack.Navigator>
   );

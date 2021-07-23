@@ -3,6 +3,7 @@ import {
   PostCommentReply,
   Answer,
   AnswerComment,
+  Participator,
 } from "@petfabula/common";
 
 type ParamTypes = {
@@ -29,6 +30,9 @@ type ParamTypes = {
   };
   UserProfile: {
     id: number;
+  };
+  UserInfomation: {
+    user: Participator;
   };
 };
 

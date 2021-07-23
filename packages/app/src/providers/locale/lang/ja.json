@@ -70,7 +70,17 @@
   },
   "user": {
     "followAction": "フォロー",
-    "unfollowAction": "フォロー済み"
+    "unfollowAction": "フォロー済み",
+    "userPost": "投稿",
+    "userQuestion": "質問",
+    "userAnswer": "回答",
+    "userCollectedPost": "お気に入り",
+    "followedCount": "フォロワー",
+    "followCount": "フォロー",
+    "postCount": "投稿数",
+    "petCount": "ペット数",
+    "detail": "詳細",
+    "unsetBio": "まだ自己紹介がないみたい"
   },
   "post": {
     "recommends": {

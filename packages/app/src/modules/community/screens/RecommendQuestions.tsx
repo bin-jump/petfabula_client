@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import { Question, useLoadRecommendsQuestions } from "@petfabula/common";
 import Animated from "react-native-reanimated";
+import { useNavigation } from "@react-navigation/native";
 import { useFirstFocusEffect, LoadingMoreIndicator } from "../../shared";
 import QuestionItem from "../components/QuestionItem";
 
@@ -26,11 +27,24 @@ const RecommendQuestions = forwardRef<FlatList, Props>((props, ref) => {
     hasMore,
     error,
   } = useLoadRecommendsQuestions();
+  const navigation = useNavigation();
 
   const keyExtractor = (item: Question) => item.id.toString();
 
   const renderItem = useCallback<ListRenderItem<Question>>(({ item }) => {
-    return <QuestionItem question={item} />;
+    return (
+      <QuestionItem
+        onPress={() => {
+          navigation.navigate("SecondaryStack", {
+            screen: "QuestionDetailView",
+            params: {
+              id: item.id,
+            },
+          });
+        }}
+        question={item}
+      />
+    );
   }, []);
 
   useFirstFocusEffect(() => {

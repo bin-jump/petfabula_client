@@ -45,6 +45,7 @@ export {
   useLoadUserPosts,
   useLoadUserQuestions,
   useLoadUserAnswers,
+  useLoadUserCollectedPosts,
   useLoadPostDetail,
   useLoadRecommendPosts,
   useRemovePost,

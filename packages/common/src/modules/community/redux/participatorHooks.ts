@@ -166,7 +166,7 @@ export const useLoadUserQuestions = () => {
   );
 
   const boundAction = useCallback(
-    (userId: number, cursor: number | null) => {
+    (userId: number, cursor: object | null) => {
       dispatch({
         type: LoadUserQuestionsActionType.BEGIN,
         payload: { userId, cursor },
@@ -204,7 +204,7 @@ export const useLoadUserAnswers = () => {
     );
 
   const boundAction = useCallback(
-    (userId: number, cursor: number | null) => {
+    (userId: number, cursor: object | null) => {
       dispatch({
         type: LoadUserAnswersActionType.BEGIN,
         payload: { userId, cursor },

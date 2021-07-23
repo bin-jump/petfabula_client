@@ -14,7 +14,12 @@ import {
 } from "react-native";
 import { useTheme, Text, Divider, Button, Icon } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+import {
+  useNavigation,
+  useRoute,
+  RouteProp,
+  useFocusEffect,
+} from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import Animated, {
   useSharedValue,
@@ -50,6 +55,7 @@ import {
   milisecToAgo,
   AvatarField,
   ActivityIndicator,
+  useFirstFocusEffect,
 } from "../../shared";
 import ParamTypes from "./ParamTypes";
 import CommentList from "../components/CommentList";
@@ -443,9 +449,6 @@ const Comments = ({
   post: PostDetail;
   currentPostId: number;
 }) => {
-  // const { theme } = useTheme();
-  // const { t } = useTranslation();
-  // const { currentUser } = useCurrentUser();
   const navigation = useNavigation();
 
   const {
@@ -507,9 +510,16 @@ const PostDetailView = () => {
   const headerHeight = 66;
   const footerHeight = 56 + (bottom * 1) / 2;
 
-  useEffect(() => {
-    loadPostDetail(id);
-  }, []);
+  const postDetail = post;
+  // useEffect(() => {
+  //   loadPostDetail(id);
+  // }, []);
+
+  useFocusEffect(() => {
+    if (!error && !pending && id != post?.id) {
+      loadPostDetail(id);
+    }
+  });
 
   const renderTopic = (topic: PostTopic | null) => {
     if (!topic) {
@@ -559,9 +569,9 @@ const PostDetailView = () => {
       <View
         style={{ height: top, backgroundColor: theme.colors?.white }}
       ></View>
-      <Header currentPostId={id} height={headerHeight} post={post} />
+      <Header currentPostId={id} height={headerHeight} post={postDetail} />
       <Divider />
-      {post && post.id == id ? (
+      {postDetail && postDetail.id == id ? (
         <View
           style={{
             paddingBottom: top + footerHeight + headerHeight,
@@ -575,9 +585,9 @@ const PostDetailView = () => {
             }}
             showsVerticalScrollIndicator={false}
           >
-            {post.images.length ? (
+            {postDetail.images.length ? (
               <ImageGallery
-                images={post.images}
+                images={postDetail.images}
                 containerStyle={{
                   backgroundColor: theme.colors?.white,
                 }}
@@ -587,12 +597,12 @@ const PostDetailView = () => {
               style={{
                 backgroundColor: theme.colors?.white,
                 paddingHorizontal: 16,
-                paddingTop: post.images.length ? 6 : 16,
+                paddingTop: postDetail.images.length ? 6 : 16,
                 paddingBottom: 18,
               }}
             >
               <Text style={{ fontSize: 17, lineHeight: 26 }}>
-                {post.content}
+                {postDetail.content}
               </Text>
 
               <Text
@@ -602,11 +612,11 @@ const PostDetailView = () => {
                   color: theme.colors?.grey1,
                 }}
               >
-                {milisecToAgo(post.createdDate)}
+                {milisecToAgo(postDetail.createdDate)}
               </Text>
-              {renderTopic(post.postTopic)}
+              {renderTopic(postDetail.postTopic)}
             </View>
-            <Comments post={post} currentPostId={id} />
+            <Comments post={postDetail} currentPostId={id} />
           </ScrollView>
           <View
             style={{
@@ -618,7 +628,7 @@ const PostDetailView = () => {
             }}
           >
             <Divider style={{ backgroundColor: theme.colors?.grey3 }} />
-            <Footer post={post} />
+            <Footer post={postDetail} />
           </View>
         </View>
       ) : (
