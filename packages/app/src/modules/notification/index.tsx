@@ -1,15 +1,34 @@
 import * as React from "react";
-import { Platform, View } from "react-native";
-import { Text } from "react-native-elements";
+import {
+  createStackNavigator,
+  CardStyleInterpolators,
+} from "@react-navigation/stack";
+import { ThemeContext, Icon } from "react-native-elements";
+import { headerBaseOption, plainGoBackHeaderOption } from "../shared";
+import NotificationMain from "./screens/NotificationMain";
 
-const NotificationScreen = () => {
+const NotificationStack = createStackNavigator();
+
+const NotificationScreens = () => {
+  const { theme } = React.useContext(ThemeContext);
   return (
-    <View
-      style={{ height: "100%", alignItems: "center", justifyContent: "center" }}
+    <NotificationStack.Navigator
+      screenOptions={{ headerStyle: { elevation: 0, borderWidth: 0 } }}
+      mode="modal"
     >
-      <Text h1>NotificationScreen</Text>
-    </View>
+      <NotificationStack.Screen
+        options={(navigation) => {
+          return {
+            ...headerBaseOption({ theme }),
+            headerShown: false,
+            cardStyle: { backgroundColor: "transparent" },
+          };
+        }}
+        name="NotificationMain"
+        component={NotificationMain}
+      />
+    </NotificationStack.Navigator>
   );
 };
 
-export default NotificationScreen;
+export default NotificationScreens;

@@ -3,7 +3,8 @@ import {
   createStackNavigator,
   CardStyleInterpolators,
 } from "@react-navigation/stack";
-import { ThemeContext, Icon } from "react-native-elements";
+import { useTheme, Icon } from "react-native-elements";
+import { useTranslation } from "react-i18next";
 import { headerBaseOption, plainGoBackHeaderOption } from "../modules/shared";
 import {
   CommunityMain,
@@ -17,11 +18,18 @@ import {
   UserProfile,
   UserInfomation,
 } from "../modules/community/screens";
+import {
+  AnswerCommentNotifications,
+  UpvoteNotifications,
+  FollowNotifications,
+} from "../modules/notification/screens";
 
 const SecondaryStackStack = createStackNavigator();
 
 const SecondaryStack = () => {
-  const { theme } = React.useContext(ThemeContext);
+  const { theme } = useTheme();
+  const { t } = useTranslation();
+
   return (
     <SecondaryStackStack.Navigator
       screenOptions={{ headerStyle: { elevation: 0, borderWidth: 0 } }}
@@ -181,6 +189,32 @@ const SecondaryStack = () => {
         options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
         name="UserInfomation"
         component={UserInfomation}
+      />
+
+      {/* notification */}
+      <SecondaryStackStack.Screen
+        options={(navigation) => ({
+          ...plainGoBackHeaderOption({ navigation, theme }),
+          title: t("notification.receivedAnswerComment"),
+        })}
+        name="AnswerCommentNotifications"
+        component={AnswerCommentNotifications}
+      />
+      <SecondaryStackStack.Screen
+        options={(navigation) => ({
+          ...plainGoBackHeaderOption({ navigation, theme }),
+          title: t("notification.receivedUpvote"),
+        })}
+        name="UpvoteNotifications"
+        component={UpvoteNotifications}
+      />
+      <SecondaryStackStack.Screen
+        options={(navigation) => ({
+          ...plainGoBackHeaderOption({ navigation, theme }),
+          title: t("notification.receivedFollow"),
+        })}
+        name="FollowNotifications"
+        component={FollowNotifications}
       />
     </SecondaryStackStack.Navigator>
   );

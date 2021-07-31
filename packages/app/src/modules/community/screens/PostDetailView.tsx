@@ -363,81 +363,83 @@ const Header = ({
         </View>
       </BottomSheetModal>
 
-      {post && post.id == currentPostId ? (
-        <AvatarField
-          onAvatarClick={() => {
-            navigation.navigate("UserProfile", { id: post.participator.id });
-          }}
-          nameStyle={{ marginLeft: 8, marginBottom: 6, fontWeight: "bold" }}
-          name={post.participator.name}
-          photo={post.participator.photo}
-          style={{ marginRight: 16, marginLeft: 12 }}
-          fieldRight={() => (
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                flex: 1,
-                justifyContent: "flex-end",
-                paddingRight: 18,
-              }}
-            >
-              {currentUser && currentUser.id != post.participator.id ? (
-                <Button
-                  loading={followPending || unfollowPending}
-                  onPress={() => {
-                    if (!post.participator.followed) {
-                      followUser(post.participator.id);
-                    } else {
-                      unfollowUser(post.participator.id);
-                    }
-                  }}
-                  title={
-                    !post.participator.followed
-                      ? t("user.followAction")
-                      : t("user.unfollowAction")
-                  }
-                  titleStyle={{
-                    fontSize: 16,
-                    fontWeight: "bold",
-                    color: post.participator.followed
-                      ? theme.colors?.black
-                      : theme.colors?.white,
-                  }}
-                  buttonStyle={{
-                    height: 40,
-                    paddingHorizontal: 12,
-                    backgroundColor: post.participator.followed
-                      ? theme.colors?.grey4
-                      : theme.colors?.primary,
-                  }}
-                  containerStyle={{ height: 40, width: 126 }}
-                  icon={
-                    post.participator.followed ? (
-                      <Icon
-                        type="antdesign"
-                        name="check"
-                        color={theme.colors?.black}
-                        size={16}
-                      />
-                    ) : undefined
-                  }
-                />
-              ) : null}
-
-              <Icon
-                containerStyle={{ marginLeft: 8 }}
-                onPress={() => {
-                  handlePresentModalPress();
+      <View style={{ flex: 1 }}>
+        {post && post.id == currentPostId ? (
+          <AvatarField
+            onAvatarClick={() => {
+              navigation.navigate("UserProfile", { id: post.participator.id });
+            }}
+            nameStyle={{ marginLeft: 8, marginBottom: 6, fontWeight: "bold" }}
+            name={post.participator.name}
+            photo={post.participator.photo}
+            style={{ marginRight: 16, marginLeft: 12 }}
+            fieldRight={() => (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  flex: 1,
+                  justifyContent: "flex-end",
+                  paddingRight: 18,
                 }}
-                type="feather"
-                name="more-vertical"
-                color={theme.colors?.black}
-              />
-            </View>
-          )}
-        />
-      ) : null}
+              >
+                {currentUser && currentUser.id != post.participator.id ? (
+                  <Button
+                    loading={followPending || unfollowPending}
+                    onPress={() => {
+                      if (!post.participator.followed) {
+                        followUser(post.participator.id);
+                      } else {
+                        unfollowUser(post.participator.id);
+                      }
+                    }}
+                    title={
+                      !post.participator.followed
+                        ? t("user.followAction")
+                        : t("user.unfollowAction")
+                    }
+                    titleStyle={{
+                      fontSize: 16,
+                      fontWeight: "bold",
+                      color: post.participator.followed
+                        ? theme.colors?.black
+                        : theme.colors?.white,
+                    }}
+                    buttonStyle={{
+                      height: 40,
+                      paddingHorizontal: 12,
+                      backgroundColor: post.participator.followed
+                        ? theme.colors?.grey4
+                        : theme.colors?.primary,
+                    }}
+                    containerStyle={{ height: 40, width: 126 }}
+                    icon={
+                      post.participator.followed ? (
+                        <Icon
+                          type="antdesign"
+                          name="check"
+                          color={theme.colors?.black}
+                          size={16}
+                        />
+                      ) : undefined
+                    }
+                  />
+                ) : null}
+
+                <Icon
+                  containerStyle={{ marginLeft: 8 }}
+                  onPress={() => {
+                    handlePresentModalPress();
+                  }}
+                  type="feather"
+                  name="more-vertical"
+                  color={theme.colors?.black}
+                />
+              </View>
+            )}
+          />
+        ) : null}
+      </View>
     </View>
   );
 };

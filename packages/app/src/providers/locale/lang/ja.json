@@ -17,12 +17,14 @@
     "deleted": "削除済み",
     "cancel": "キャンセル"
   },
+
   "mainTab": {
     "home": "ホーム",
     "question": "質問",
     "notification": "通知",
     "user": "私"
   },
+
   "createNew": {
     "createPost": "投稿",
     "createQuestion": "質問",
@@ -35,12 +37,14 @@
     "topicSelect": "トピックを選択します",
     "petSelect": "関連ペットを選択します"
   },
+
   "search": {
     "history": "検索履歴",
     "clearHistory": "履歴をクリア",
     "postSearch": "投稿",
     "questionSearch": "質問"
   },
+
   "authentication": {
     "input": {
       "namePlaceholder": "名前(3-20文字)",
@@ -59,6 +63,7 @@
       "oauthAutoUserAgreement": "利用規約とプライバシーポリシー",
       "oauthAutoUserAgreementBack": "に同意したものとみなされます"
     },
+
     "signup": {
       "title": "アカウント登録",
       "verificationTitle": "認証コード",
@@ -68,6 +73,7 @@
       "userAgreement": "利用規約とプライバシーポリシー"
     }
   },
+
   "user": {
     "followAction": "フォロー",
     "unfollowAction": "フォロー済み",
@@ -82,6 +88,7 @@
     "detail": "詳細",
     "unsetBio": "まだ自己紹介がないみたい"
   },
+
   "post": {
     "recommends": {
       "tabLabel": "おすすめ"
@@ -99,6 +106,28 @@
     "writeAnswer": "回答を書く",
     "commentToAnswer": "回答にコメント"
   },
+
+  "notification": {
+    "title": "メッセージ",
+    "answerComment": "回答とコメント",
+    "upvote": "いいねと賛成",
+    "follow": "フォロー",
+    "systemNotification": "システムの通知",
+    "receivedAnswerComment": "あたなへの回答とコメント",
+    "receivedUpvote": "あたなへのいいねと賛成",
+    "receivedFollow": "あたなへのフォロー",
+    "action": {
+      "answerQuestion": "あなたの質問を答えました",
+      "commentPost": "あなたの投稿をコメントしました",
+      "commentAnswer": "あなたの回答をコメントしました",
+      "replyComment": "あなたのコメントを返事しました",
+      "upvotePost": "あなたの投稿をいいねしました",
+      "upvoteQuestion": "あなたの質問をいいねしました",
+      "upvoteAnswer": "あなたの回答を賛成しました",
+      "follow": "あなたをフォローしました"
+    }
+  },
+
   "validation": {
     "common": {
       "emptyValue": "入力してください"

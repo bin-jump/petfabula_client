@@ -16,13 +16,14 @@ import {
   useCurrentUser,
   registerToastHandler,
   registerLoginReqiureHandler,
+  useCheckNotifications,
 } from "@petfabula/common";
 import { LoginRequire } from "../modules/aspect";
 import AuthenticaionScreen from "../modules/authentication";
 import CommunityMain from "../modules/community";
 import Ask from "../modules/ask";
 import User from "../modules/user";
-import NotificationScreen from "../modules/notification";
+import NotificationMain from "../modules/notification";
 import CreateNew from "../modules/createNew";
 import SecondaryStack from "./SecondaryStack";
 
@@ -131,8 +132,17 @@ const TabScreen = () => {
   const { bottom } = useSafeAreaInsets();
   const focusedColor = theme.colors?.primary;
   const unFocusedColor = theme.colors?.grey1;
+  const fontSize = 14;
 
+  const { checkResult } = useCheckNotifications();
   const { getCurrentUser } = useCurrentUser();
+
+  const hasNotification =
+    checkResult &&
+    (checkResult.hasSystemNotificationUnread ||
+      checkResult.voteCount > 0 ||
+      checkResult.followCount > 0 ||
+      checkResult.answerCommentCount > 0);
   // check login on active
   // const appState = useRef(AppState.currentState);
   const _handleAppStateChange = useCallback(
@@ -226,6 +236,7 @@ const TabScreen = () => {
                     style={{
                       textAlign: "center",
                       color: focused ? focusedColor : unFocusedColor,
+                      fontSize: fontSize,
                     }}
                   >
                     {t("mainTab.home")}
@@ -257,9 +268,10 @@ const TabScreen = () => {
                   />
                   <Text
                     style={{
-                      marginTop: 6,
+                      marginTop: 2,
                       textAlign: "center",
                       color: focused ? focusedColor : unFocusedColor,
+                      fontSize: fontSize,
                     }}
                   >
                     {t("mainTab.question")}
@@ -322,28 +334,46 @@ const TabScreen = () => {
       />
 
       <Tabs.Screen
-        name="NotificationScreen"
-        component={NotificationScreen}
+        name="NotificationMain"
+        component={NotificationMain}
         options={(navigation) => {
           return {
             tabBarVisible:
               !getFocusedRouteNameFromRoute(navigation.route) ||
               getFocusedRouteNameFromRoute(navigation.route) ==
-                "NotificationScreen",
+                "NotificationMain",
             tabBarIcon: ({ focused }) => {
               return (
                 <View style={{ alignContent: "center" }}>
-                  <Icon
-                    type="ionicon"
-                    name={focused ? "notifications" : "notifications-outline"}
-                    size={28}
-                    color={focused ? focusedColor : unFocusedColor}
-                  />
+                  <View>
+                    <Icon
+                      type="ionicon"
+                      name={focused ? "notifications" : "notifications-outline"}
+                      size={28}
+                      color={focused ? focusedColor : unFocusedColor}
+                    />
+                    {hasNotification ? (
+                      <View
+                        style={{
+                          borderColor: "#ffffff",
+                          borderWidth: 1,
+                          width: 14,
+                          height: 14,
+                          backgroundColor: "red",
+                          paddingHorizontal: 4,
+                          position: "absolute",
+                          borderRadius: 16,
+                          right: -3,
+                        }}
+                      ></View>
+                    ) : null}
+                  </View>
+
                   <Text
                     style={{
-                      marginTop: 6,
                       textAlign: "center",
                       color: focused ? focusedColor : unFocusedColor,
+                      fontSize: fontSize,
                     }}
                   >
                     {t("mainTab.notification")}
@@ -374,9 +404,9 @@ const TabScreen = () => {
                   />
                   <Text
                     style={{
-                      marginTop: 3,
                       textAlign: "center",
                       color: focused ? focusedColor : unFocusedColor,
+                      fontSize: fontSize,
                     }}
                   >
                     {t("mainTab.user")}

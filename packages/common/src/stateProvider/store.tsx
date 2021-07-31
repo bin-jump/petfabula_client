@@ -5,6 +5,7 @@ import { fork, all, spawn } from 'redux-saga/effects';
 import rootReducer from './rootReducer';
 import { authenticationRootSaga } from '../modules/authentication';
 import { questionRootSaga, postRootSaga } from '../modules/community';
+import { notificationRootSaga } from '../modules/notification';
 
 import { logHandleMiddleware } from './middlewares/logHandleMiddleware';
 import { toastHandleMiddleware } from './middlewares/toastHandleMiddleware';
@@ -29,6 +30,7 @@ function* rootSaga() {
     fork(authenticationRootSaga),
     fork(postRootSaga),
     fork(questionRootSaga),
+    fork(notificationRootSaga),
   ]);
 }
 
