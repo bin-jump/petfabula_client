@@ -14,7 +14,12 @@ import {
   useLoadFollowNotifications,
   FollowNotification,
 } from "@petfabula/common";
-import { Avatar, Image, milisecToAgo } from "../../shared";
+import {
+  Avatar,
+  Image,
+  milisecToAgo,
+  LoadingMoreIndicator,
+} from "../../shared";
 
 const FollowNotificationItem = ({
   notification,
@@ -88,10 +93,13 @@ const FollowNotifications = () => {
     pending,
     nextCursor,
     initializing,
+    hasMore,
+    error,
   } = useLoadFollowNotifications();
 
   useEffect(() => {
     loadNotifications(null);
+    readNotifications();
   }, []);
 
   const keyExtractor = (item: FollowNotification) => item.id.toString();
@@ -110,6 +118,13 @@ const FollowNotifications = () => {
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         data={notifications}
+        ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
+        onEndReached={() => {
+          if (hasMore && !pending && !error) {
+            loadNotifications(nextCursor);
+          }
+        }}
+        onEndReachedThreshold={0.2}
       />
     </View>
   );

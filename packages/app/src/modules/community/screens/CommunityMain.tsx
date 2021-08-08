@@ -68,7 +68,11 @@ const useCollpaseHeaderListTab = ({
           return;
         }
         const diff = event.contentOffset.y - scrollValue.value;
-        const v = translateVal.value + diff * TRANSLATE_SPEED_RATIO;
+        const df =
+          diff > 0
+            ? diff * TRANSLATE_SPEED_RATIO
+            : diff * (TRANSLATE_SPEED_RATIO + 0.1);
+        const v = translateVal.value + df;
         if (v >= 0 && v <= headerHeight) {
           translateVal.value = v;
         }

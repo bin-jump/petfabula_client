@@ -14,7 +14,12 @@ import {
   useLoadUpvoteNotifications,
   VoteNotification,
 } from "@petfabula/common";
-import { Avatar, Image, milisecToAgo } from "../../shared";
+import {
+  Avatar,
+  Image,
+  milisecToAgo,
+  LoadingMoreIndicator,
+} from "../../shared";
 
 const resolveAction = (notification: VoteNotification) => {
   if (notification.targetEntityType == "POST") {
@@ -141,10 +146,13 @@ const UpvoteNotifications = () => {
     pending,
     nextCursor,
     initializing,
+    hasMore,
+    error,
   } = useLoadUpvoteNotifications();
 
   useEffect(() => {
     loadNotifications(null);
+    readNotifications();
   }, []);
 
   const keyExtractor = (item: VoteNotification) => item.id.toString();
@@ -163,6 +171,13 @@ const UpvoteNotifications = () => {
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         data={notifications}
+        ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
+        onEndReached={() => {
+          if (hasMore && !pending && !error) {
+            loadNotifications(nextCursor);
+          }
+        }}
+        onEndReachedThreshold={0.2}
       />
     </View>
   );

@@ -14,7 +14,12 @@ import {
   useLoadAnswerCommentNotifications,
   AnswerCommentNotification,
 } from "@petfabula/common";
-import { Avatar, Image, milisecToAgo } from "../../shared";
+import {
+  Avatar,
+  Image,
+  milisecToAgo,
+  LoadingMoreIndicator,
+} from "../../shared";
 
 const resolveAction = (notification: AnswerCommentNotification) => {
   if (notification.actionType == "ANSWER") {
@@ -143,10 +148,13 @@ const AnswerCommentNotifications = () => {
     pending,
     nextCursor,
     initializing,
+    hasMore,
+    error,
   } = useLoadAnswerCommentNotifications();
 
   useEffect(() => {
     loadNotifications(null);
+    readNotifications();
   }, []);
 
   const keyExtractor = (item: AnswerCommentNotification) => item.id.toString();
@@ -177,6 +185,13 @@ const AnswerCommentNotifications = () => {
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         data={notifications}
+        ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
+        onEndReached={() => {
+          if (hasMore && !pending && !error) {
+            loadNotifications(nextCursor);
+          }
+        }}
+        onEndReachedThreshold={0.2}
       />
     </View>
   );

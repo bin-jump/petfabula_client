@@ -11,6 +11,7 @@ import {
   ScrollView,
   useWindowDimensions,
   TouchableOpacity,
+  RefreshControl,
 } from "react-native";
 import { useTheme, Text, Divider, Button, Icon } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -873,12 +874,21 @@ const QuestionDetailView = () => {
   //   loadQuestionAnswers(id, null);
   // }, [id]);
 
-  useFocusEffect(() => {
-    if (!error && !questionPending && id != question?.id) {
-      loadQuestionDetail(id);
-      loadQuestionAnswers(id, null);
-    }
-  });
+  // useFocusEffect(() => {
+  //   if (!questionPending && id != question?.id) {
+  //     loadQuestionDetail(id);
+  //     loadQuestionAnswers(id, null);
+  //   }
+  // });
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!questionPending && id != question?.id) {
+        loadQuestionDetail(id);
+        loadQuestionAnswers(id, null);
+      }
+    }, [id, question])
+  );
 
   return (
     <View style={{ flex: 1 }}>
@@ -899,6 +909,16 @@ const QuestionDetailView = () => {
           }}
         >
           <Animated.ScrollView
+            refreshControl={
+              <RefreshControl
+                // progressViewOffset={70}
+                refreshing={initializing}
+                onRefresh={() => {
+                  loadQuestionDetail(id);
+                  loadQuestionAnswers(id, null);
+                }}
+              />
+            }
             onScroll={scrollHandler}
             scrollEventThrottle={5}
             contentContainerStyle={{
