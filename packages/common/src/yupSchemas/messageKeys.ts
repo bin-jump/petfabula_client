@@ -3,6 +3,7 @@ const messagePrefix = `validation`;
 const commonPrefix = `${messagePrefix}.common`;
 export const commonMessageKey = {
   emptyValue: `${commonPrefix}.emptyValue`,
+  birthday: `${commonPrefix}.birthday`,
 };
 
 const authenticationPrefix = `${messagePrefix}.authentication`;
@@ -34,4 +35,12 @@ export const questionMessageKey = {
   answerContentLength: `${questionPrefix}.answerContentLength`,
   answerCommentContentLength: `${questionPrefix}.commentContentLength`,
   answerCommentReplyContentLength: `${questionPrefix}.replyContentLength`,
+};
+
+const petPrefix = `${messagePrefix}.pet`;
+export const petMessageKey = {
+  petName: `${petPrefix}.petName`,
+  petBio: `${petPrefix}.petBio`,
+  arrivalDay: `${petPrefix}.arrivalDay`,
+  breedId: `${petPrefix}.breedId`,
 };

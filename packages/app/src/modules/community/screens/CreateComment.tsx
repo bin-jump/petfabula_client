@@ -17,7 +17,6 @@ import Animated, {
 } from "react-native-reanimated";
 import { useCreatePostComment } from "@petfabula/common";
 import { useDidUpdateEffect, ActivityIndicator } from "../../shared";
-
 import ParamTypes from "./ParamTypes";
 
 const CreateComment = () => {

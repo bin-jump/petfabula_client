@@ -1,6 +1,7 @@
 {
   "common": {
     "send": "送信",
+    "save": "保存",
     "next": "次へ",
     "done": "完了",
     "search": "検索",
@@ -20,7 +21,7 @@
 
   "mainTab": {
     "home": "ホーム",
-    "question": "質問",
+    "pet": "ペット",
     "notification": "通知",
     "user": "私"
   },
@@ -89,6 +90,50 @@
     "unsetBio": "まだ自己紹介がないみたい"
   },
 
+  "pet": {
+    "input": {
+      "nameCaption": "名前",
+      "birthdayCaption": "誕生日",
+      "arrivalDayCaption": "到着日",
+      "breedCaption": "品種",
+      "genderCaption": "性別",
+      "bioCaption": "紹介",
+      "bioEdit": "ペット紹介を編集",
+      "petNamePlaceholder": "名前",
+      "bioPlaceholder": "紹介",
+      "birthdayPlaceholder": "誕生日",
+      "arrivalDayPlaceholder": "家に来る日",
+      "breedPlaceholder": "品種を選択してください",
+      "genderPlaceholder": "性別を選択してください",
+      "birthday": "{{date}}に生まれた",
+      "arrivalDay": "{{date}}に家に来た"
+    },
+    "petCategory": {
+      "DOG": "犬",
+      "CAT": "猫",
+      "BIRD": "鳥",
+      "RABBIT": "ウサギ",
+      "HAMSTER": "ハムスター ",
+      "OTHER": "その他"
+    },
+    "gender": {
+      "MALE": "オス",
+      "FEMALE": "メス"
+    },
+    "action": {
+      "food": "食事",
+      "weight": "体重",
+      "disorder": "異常",
+      "event": "日常",
+      "medical": "医療"
+    },
+    "title": "ペットセンター",
+    "createPet": "ペット追加",
+    "age": "{{age}}歳",
+    "ageMonth": "{{month}}月",
+    "withYou": "出会ってから{{day}}日"
+  },
+
   "post": {
     "recommends": {
       "tabLabel": "おすすめ"
@@ -145,6 +190,12 @@
       "questionTitleLength": "質問タイトルを3-50文字にしてください",
       "questionContentLength": "質問詳細を5000文字以内にしてください",
       "answerContentLength": "回答を5000文字以内にしてください"
+    },
+    "pet": {
+      "petName": "名前を3-16文字にしてください",
+      "bio": "紹介を300文字以内にしてください",
+      "arrivalDay": "誕生日の後にしてください",
+      "breedId": "種類を選択してください"
     }
   },
   "aspect": {

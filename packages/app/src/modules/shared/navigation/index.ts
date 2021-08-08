@@ -1,1 +1,5 @@
-export { headerBaseOption, plainGoBackHeaderOption } from "./configHelper";
+export {
+  headerBaseOption,
+  plainGoBackHeaderOption,
+  goBackIcon,
+} from "./configHelper";

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useCallback } from "react";
-import { View, AppState } from "react-native";
+import { View, AppState, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   NavigationContainer,
@@ -21,7 +21,7 @@ import {
 import { LoginRequire } from "../modules/aspect";
 import AuthenticaionScreen from "../modules/authentication";
 import CommunityMain from "../modules/community";
-import Ask from "../modules/ask";
+import PetMain from "../modules/pet";
 import User from "../modules/user";
 import NotificationMain from "../modules/notification";
 import CreateNew from "../modules/createNew";
@@ -133,6 +133,7 @@ const TabScreen = () => {
   const focusedColor = theme.colors?.primary;
   const unFocusedColor = theme.colors?.grey1;
   const fontSize = 14;
+  const iconSize = 22;
 
   const { checkResult } = useCheckNotifications();
   const { getCurrentUser } = useCurrentUser();
@@ -225,19 +226,20 @@ const TabScreen = () => {
               getFocusedRouteNameFromRoute(navigation.route) == "CommunityMain",
             tabBarIcon: ({ focused }) => {
               return (
-                <View style={{ alignContent: "center" }}>
+                <View style={styles.tabIconContainer}>
                   <Icon
                     type="ionicon"
                     name={focused ? "home" : "home-outline"}
-                    size={24}
+                    size={iconSize}
                     color={focused ? focusedColor : unFocusedColor}
                   />
                   <Text
-                    style={{
-                      textAlign: "center",
-                      color: focused ? focusedColor : unFocusedColor,
-                      fontSize: fontSize,
-                    }}
+                    style={[
+                      styles.tabText,
+                      {
+                        color: focused ? focusedColor : unFocusedColor,
+                      },
+                    ]}
                   >
                     {t("mainTab.home")}
                   </Text>
@@ -249,32 +251,36 @@ const TabScreen = () => {
       />
 
       <Tabs.Screen
-        name="Ask"
-        component={Ask}
+        name="PetMain"
+        component={PetMain}
         options={(navigation) => {
           return {
-            tabBarLabel: "ask",
+            tabBarLabel: "PetMain",
             tabBarVisible:
               !getFocusedRouteNameFromRoute(navigation.route) ||
-              getFocusedRouteNameFromRoute(navigation.route) == "Ask",
+              getFocusedRouteNameFromRoute(navigation.route) == "PetMain",
             tabBarIcon: ({ focused }) => {
               return (
-                <View style={{ alignContent: "center" }}>
+                <View style={styles.tabIconContainer}>
                   <Icon
-                    type="font-awesome"
-                    name={focused ? "file-text" : "file-text-o"}
-                    size={20}
+                    type="material-community"
+                    name={
+                      focused
+                        ? "bookmark-multiple"
+                        : "bookmark-multiple-outline"
+                    }
+                    size={iconSize}
                     color={focused ? focusedColor : unFocusedColor}
                   />
                   <Text
-                    style={{
-                      marginTop: 2,
-                      textAlign: "center",
-                      color: focused ? focusedColor : unFocusedColor,
-                      fontSize: fontSize,
-                    }}
+                    style={[
+                      styles.tabText,
+                      {
+                        color: focused ? focusedColor : unFocusedColor,
+                      },
+                    ]}
                   >
-                    {t("mainTab.question")}
+                    {t("mainTab.pet")}
                   </Text>
                 </View>
               );
@@ -344,12 +350,12 @@ const TabScreen = () => {
                 "NotificationMain",
             tabBarIcon: ({ focused }) => {
               return (
-                <View style={{ alignContent: "center" }}>
+                <View style={styles.tabIconContainer}>
                   <View>
                     <Icon
                       type="ionicon"
                       name={focused ? "notifications" : "notifications-outline"}
-                      size={28}
+                      size={iconSize}
                       color={focused ? focusedColor : unFocusedColor}
                     />
                     {hasNotification ? (
@@ -357,24 +363,25 @@ const TabScreen = () => {
                         style={{
                           borderColor: "#ffffff",
                           borderWidth: 1,
-                          width: 14,
-                          height: 14,
+                          width: 12,
+                          height: 12,
                           backgroundColor: "red",
                           paddingHorizontal: 4,
                           position: "absolute",
                           borderRadius: 16,
-                          right: -3,
+                          right: 1,
                         }}
                       ></View>
                     ) : null}
                   </View>
 
                   <Text
-                    style={{
-                      textAlign: "center",
-                      color: focused ? focusedColor : unFocusedColor,
-                      fontSize: fontSize,
-                    }}
+                    style={[
+                      styles.tabText,
+                      {
+                        color: focused ? focusedColor : unFocusedColor,
+                      },
+                    ]}
                   >
                     {t("mainTab.notification")}
                   </Text>
@@ -395,19 +402,20 @@ const TabScreen = () => {
               getFocusedRouteNameFromRoute(navigation.route) == "User",
             tabBarIcon: ({ focused }) => {
               return (
-                <View style={{ alignContent: "center" }}>
+                <View style={styles.tabIconContainer}>
                   <Icon
                     type="font-awesome"
                     name={focused ? "user" : "user-o"}
-                    size={26}
+                    size={iconSize}
                     color={focused ? focusedColor : unFocusedColor}
                   />
                   <Text
-                    style={{
-                      textAlign: "center",
-                      color: focused ? focusedColor : unFocusedColor,
-                      fontSize: fontSize,
-                    }}
+                    style={[
+                      styles.tabText,
+                      {
+                        color: focused ? focusedColor : unFocusedColor,
+                      },
+                    ]}
                   >
                     {t("mainTab.user")}
                   </Text>
@@ -422,3 +430,16 @@ const TabScreen = () => {
 };
 
 export default AppScreen;
+
+const styles = StyleSheet.create({
+  tabIconContainer: {
+    alignContent: "center",
+    minWidth: 30,
+  },
+  tabText: {
+    textAlign: "center",
+    fontSize: 14,
+    fontWeight: "bold",
+    marginTop: 2,
+  },
+});

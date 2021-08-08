@@ -266,7 +266,7 @@ export const answerReducer = {
       ...state,
       createAnswer: {
         ...state.createAnswer,
-        data: action.payload,
+        error: action.error,
         pending: false,
       },
     };

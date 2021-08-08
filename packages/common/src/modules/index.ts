@@ -92,7 +92,24 @@ export {
 } from './notification';
 
 export {
+  Pet,
+  PetDetail,
+  FeedRecord,
+  WeightRecord,
+  MedicalRecord,
+  DisorderRecord,
+  PetEventRecord,
+  PetBreed,
+  PetForm,
+  useCreatePet,
+  useLoadPetBreeds,
+  useLoadMyPets,
+  useLoadUserPets,
+} from './pet';
+
+export {
   resolveResponseFormError,
   checkFailedResponse,
   DisplayImage,
+  UploadImage,
 } from './shared';

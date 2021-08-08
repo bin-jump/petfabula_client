@@ -6,6 +6,7 @@ import rootReducer from './rootReducer';
 import { authenticationRootSaga } from '../modules/authentication';
 import { questionRootSaga, postRootSaga } from '../modules/community';
 import { notificationRootSaga } from '../modules/notification';
+import { petRootSaga } from '../modules/pet';
 
 import { logHandleMiddleware } from './middlewares/logHandleMiddleware';
 import { toastHandleMiddleware } from './middlewares/toastHandleMiddleware';
@@ -31,6 +32,7 @@ function* rootSaga() {
     fork(postRootSaga),
     fork(questionRootSaga),
     fork(notificationRootSaga),
+    fork(petRootSaga),
   ]);
 }
 

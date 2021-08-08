@@ -13,6 +13,7 @@
   "dependencies": {
     "@gorhom/bottom-sheet": "^3",
     "@react-native-async-storage/async-storage": "^1.15.5",
+    "@react-native-community/datetimepicker": "3.2.0",
     "@react-navigation/bottom-tabs": "^5.11.11",
     "@react-navigation/material-top-tabs": "^5.3.15",
     "@react-navigation/native": "^5.9.4",
@@ -36,6 +37,7 @@
     "react-native-confirmation-code-field": "6",
     "react-native-elements": "^3.4.1",
     "react-native-gesture-handler": "^1.10.3",
+    "react-native-modal-datetime-picker": "^10.2.0",
     "react-native-reanimated": "~2.1.0",
     "react-native-root-toast": "^3.2.1",
     "react-native-screens": "~3.0.0",

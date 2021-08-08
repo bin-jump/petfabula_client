@@ -10,6 +10,25 @@ const noBorderStyle = {
   shadowColor: "transparent",
 };
 
+export const goBackIcon = ({
+  theme,
+  navigation,
+}: {
+  theme: Partial<FullTheme>;
+  navigation: any;
+}) => {
+  return (
+    <Icon
+      containerStyle={{ marginLeft: 16 }}
+      type="entypo"
+      onPress={() => navigation.goBack()}
+      name="chevron-thin-left"
+      size={24}
+      color={theme.colors?.black}
+    />
+  );
+};
+
 export const headerBaseOption = ({ theme }: { theme: Partial<FullTheme> }) => {
   return {
     headerStyle: {

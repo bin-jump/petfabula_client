@@ -1,10 +1,13 @@
 import React from "react";
+import { StyleProp, ViewStyle } from "react-native";
 import {
-  ThemeContext,
   Avatar as RneAvatar,
   AvatarProps,
+  useTheme,
 } from "react-native-elements";
-import { StyleProp, ViewStyle } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import * as ImageManipulator from "expo-image-manipulator";
+import { UploadImage } from "@petfabula/common";
 
 const Avatar = (
   props: {
@@ -13,16 +16,61 @@ const Avatar = (
     size: number;
     title?: string;
     onPress?: () => void;
+    editProps?: { onImageSelected: (image: UploadImage) => void };
   } & AvatarProps
 ) => {
-  const { iconType, source, size, title, onPress } = {
-    ...props,
-  };
-  const { theme } = React.useContext(ThemeContext);
+  const { iconType, source, size, title, onPress, editProps } = props;
+
+  const { theme } = useTheme();
   let avatarIcon =
     iconType == "PET"
       ? { name: "pets", type: "materialicons" }
       : { name: "user", type: "antdesign" };
+
+  const getFileName = (path: string) => {
+    return path.substring(path.lastIndexOf("/") + 1);
+  };
+
+  const changeExtName = (filename: string, ext: string) => {
+    const fileWithoutExt = filename.split(".").slice(0, -1).join(".");
+    return `${fileWithoutExt}.${ext}`;
+  };
+
+  const processImage = async (uri: string) => {
+    const file = await ImageManipulator.manipulateAsync(
+      uri,
+      [{ resize: { width: 1000 } }],
+      { compress: 0.9, format: ImageManipulator.SaveFormat.JPEG }
+    );
+    return file;
+  };
+
+  const openImagePickerAsync = async () => {
+    if (!editProps) {
+      return;
+    }
+    let permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+    const fileName = getFileName(pickerResult.uri);
+    const image: UploadImage = {
+      uri: pickerResult.uri,
+      name: changeExtName(fileName, "jpg"),
+      type: "image/jpg",
+    };
+
+    editProps.onImageSelected(image);
+  };
 
   return (
     <RneAvatar
@@ -40,7 +88,11 @@ const Avatar = (
         props.containerStyle,
       ]}
       onPress={onPress}
-    />
+    >
+      {editProps ? (
+        <RneAvatar.Accessory onPress={openImagePickerAsync} size={size / 3} />
+      ) : null}
+    </RneAvatar>
   );
 };
 
