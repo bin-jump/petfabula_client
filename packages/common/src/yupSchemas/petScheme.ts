@@ -1,5 +1,8 @@
 import * as yup from 'yup';
 import { petMessageKey, commonMessageKey } from './messageKeys';
+import { endOfToday, isPositive } from './helper';
+
+const validRecordNote = yup.string().max(200, petMessageKey.recordNote);
 
 export const validPetFormSchema = yup.object().shape({
   name: yup
@@ -13,7 +16,7 @@ export const validPetFormSchema = yup.object().shape({
   birthday: yup
     .number()
     .nullable()
-    .max(new Date().getTime(), commonMessageKey.birthday)
+    .max(endOfToday().getTime(), commonMessageKey.birthday)
     .required(commonMessageKey.emptyValue),
   gender: yup.string().required(commonMessageKey.emptyValue),
   arrivalDay: yup
@@ -30,4 +33,76 @@ export const validPetFormSchema = yup.object().shape({
     })
     .required(commonMessageKey.emptyValue),
   breedId: yup.number().nullable().required(petMessageKey.breedId),
+});
+
+export const validFeedRecordFormSchema = yup.object().shape({
+  petId: yup
+    .number()
+    .typeError(petMessageKey.petSelect)
+    .required(petMessageKey.petSelect),
+  amount: yup
+    .number()
+    .integer(commonMessageKey.validType)
+    .typeError(commonMessageKey.validType)
+    .max(100000, petMessageKey.feedAmount)
+    .required(commonMessageKey.emptyValue)
+    .test('IsPositive', commonMessageKey.emptyValue, isPositive),
+  foodContent: yup.string().max(200, petMessageKey.foodContent),
+  date: yup.number().max(endOfToday().getTime(), petMessageKey.recordDate),
+  note: validRecordNote,
+});
+
+export const validWeightRecordFormSchema = yup.object().shape({
+  petId: yup
+    .number()
+    .typeError(petMessageKey.petSelect)
+    .required(petMessageKey.petSelect),
+  weight: yup
+    .number()
+    .typeError(commonMessageKey.validType)
+    .max(1000, petMessageKey.weight)
+    .required(commonMessageKey.emptyValue)
+    .test('IsPositive', commonMessageKey.emptyValue, isPositive),
+  date: yup.number().max(endOfToday().getTime(), petMessageKey.recordDate),
+});
+
+export const validDisorderRecordFormSchema = yup.object().shape({
+  petId: yup
+    .number()
+    .typeError(petMessageKey.petSelect)
+    .required(petMessageKey.petSelect),
+  content: yup
+    .string()
+    .max(500, petMessageKey.disorderContent)
+    .required(commonMessageKey.emptyValue),
+  dateTime: yup.number().max(endOfToday().getTime(), petMessageKey.recordDate),
+});
+
+export const validPetEventRecordFormSchema = yup.object().shape({
+  petId: yup
+    .number()
+    .typeError(petMessageKey.petSelect)
+    .required(petMessageKey.petSelect),
+  eventType: yup.string().required(commonMessageKey.emptyValue),
+  content: yup
+    .string()
+    .max(240, petMessageKey.eventContent)
+    .required(commonMessageKey.emptyValue),
+  dateTime: yup.number().max(endOfToday().getTime(), petMessageKey.recordDate),
+});
+
+export const validMedicalRecordFormSchema = yup.object().shape({
+  petId: yup
+    .number()
+    .typeError(petMessageKey.petSelect)
+    .required(petMessageKey.petSelect),
+  dateTime: yup.number().max(endOfToday().getTime(), petMessageKey.recordDate),
+  hospitalName: yup.string().max(30, petMessageKey.hospitalName),
+  symptom: yup
+    .string()
+    .max(240, petMessageKey.symptom)
+    .required(commonMessageKey.emptyValue),
+  diagnosis: yup.string().max(240, petMessageKey.diagnosis),
+  treatment: yup.string().max(240, petMessageKey.treatment),
+  note: validRecordNote,
 });

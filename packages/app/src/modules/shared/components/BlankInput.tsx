@@ -61,17 +61,19 @@ const InputField = ({
       errorMessage={errorMsg ? `* ${t(errorMsg)}` : undefined}
       onChangeText={onChangeText}
       onBlur={() => handleBlur(field.name)}
-      inputStyle={{
-        marginHorizontal: 0,
-        padding: 0,
-      }}
+      inputStyle={[
+        {
+          marginHorizontal: 0,
+          padding: 0,
+        },
+        inputStyle(),
+      ]}
       inputContainerStyle={[
         {
           borderBottomColor: errorMsg
             ? theme.colors?.error
             : theme.colors?.grey3,
         },
-        inputStyle(),
       ]}
     />
   );
@@ -87,6 +89,8 @@ const styles = StyleSheet.create({
   multilineInput: {
     marginHorizontal: 0,
     paddingVertical: 3,
-    minHeight: 36,
+    // minHeight: 36,
+    // maxHeight: 140,
+    height: 140,
   },
 });

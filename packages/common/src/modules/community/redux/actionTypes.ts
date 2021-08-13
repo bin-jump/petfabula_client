@@ -17,6 +17,9 @@ export const LoadMyProfileActionType = createAsyncActionType(
 export const LoadUserProfileActionType = createAsyncActionType(
   'COMMUNITY_LOAD_USER_PROFILE',
 );
+export const LoadPetPostsActionType = createAsyncActionType(
+  'POST_LOAD_PET_POSTS',
+);
 export const LoadUserPostsActionType = createAsyncActionType(
   'POST_LOAD_USER_POSTS',
 );

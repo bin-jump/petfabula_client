@@ -49,6 +49,7 @@ import {
   Avatar,
   useFirstFocusEffect,
   LoadingMoreIndicator,
+  useRefocusEffect,
 } from "../../shared";
 import ParamTypes from "./ParamTypes";
 import PostItem from "../components/PostItem";
@@ -524,6 +525,12 @@ const UserProfile = () => {
   const translateVal = useSharedValue(0);
 
   const { profile, pending, loadUserProfile } = useLoadUserProfile();
+
+  useRefocusEffect(() => {
+    if (id != profile?.id) {
+      loadUserProfile(id);
+    }
+  }, [id, profile, loadUserProfile]);
 
   useEffect(() => {
     loadUserProfile(id);

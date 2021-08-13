@@ -1,5 +1,6 @@
 {
   "common": {
+    "confirm": "確定",
     "send": "送信",
     "save": "保存",
     "next": "次へ",
@@ -16,7 +17,9 @@
     "checkReplyByCount": "個の返信を表示",
     "delete": "削除",
     "deleted": "削除済み",
-    "cancel": "キャンセル"
+    "cancel": "キャンセル",
+    "date": "日付",
+    "time": "時間"
   },
 
   "mainTab": {
@@ -121,14 +124,47 @@
       "FEMALE": "メス"
     },
     "action": {
+      "quickRecord": "クィック記録",
       "food": "食事",
       "weight": "体重",
       "disorder": "異常",
       "event": "日常",
       "medical": "医療"
     },
+    "record": {
+      "editNote": "メモを編集",
+      "editFoodContent": "食事内容を編集",
+      "selectPet": "ペット選択",
+      "foodAmountPlaceholder": "食事量",
+      "foodContentPlaceholder": "食事内容(任意)",
+      "notePlaceholder": "メモ(任意)",
+      "weightPlaceholder": "体重",
+      "disorderContentPlaceholder": "症状",
+      "eventContentPlaceholder": "内容",
+      "editEventContent": "内容を編集",
+
+      "hospitalNamePlaceholder": "病院名",
+      "symptomPlaceholder": "症状",
+      "diagnosisPlaceholder": "診断結果(任意)",
+      "treatmentPlaceholder": "治療内容(任意)",
+      "editHospitalName": "病院名を編集",
+      "editSymptom": "症状を編集",
+      "editDiagnosis": "診断結果を編集",
+      "editTreatment": "治療内容を編集",
+
+      "selectPetEventType": "日常記録を追加",
+      "DEWORM": "駆虫",
+      "CARE": "お手入れ",
+      "TREATMENT": "治療",
+      "INSURANCE": "保険",
+      "TOILET": "トイレ",
+      "WALK": "散歩",
+      "BEAUTY": "美容院",
+      "OTHERS": "その他"
+    },
     "title": "ペットセンター",
     "createPet": "ペット追加",
+    "petSelect": "ペット選択",
     "age": "{{age}}歳",
     "ageMonth": "{{month}}月",
     "withYou": "出会ってから{{day}}日"
@@ -141,7 +177,8 @@
     "followed": {
       "tabLabel": "フォロー"
     },
-    "commentToPost": "投稿にコメントする"
+    "commentToPost": "投稿にコメントする",
+    "relatePet": "ペット"
   },
   "question": {
     "tabLabel": "質問",
@@ -175,7 +212,9 @@
 
   "validation": {
     "common": {
-      "emptyValue": "入力してください"
+      "emptyValue": "入力してください",
+      "birthday": "正しい誕生日を入力してください",
+      "validType": "正しい値を入力してください"
     },
     "authentication": {
       "emailNotValid": "正しいメールアドレスを入力してください",
@@ -195,7 +234,18 @@
       "petName": "名前を3-16文字にしてください",
       "bio": "紹介を300文字以内にしてください",
       "arrivalDay": "誕生日の後にしてください",
-      "breedId": "種類を選択してください"
+      "breedId": "種類を選択してください",
+
+      "petSelect": "ペットを選択してください",
+      "recordDate": "正しい日付を入力してください",
+      "recordNote": "200文字以内にしてください",
+      "feedAmount": "100kg以下の値を入力してください",
+      "foodContent": "240文字以内にしてください",
+
+      "weight": "1000kg以下の値を入力してください",
+
+      "disorderContent": "500文字以内にしてください",
+      "eventContent": "240文字以内にしてください"
     }
   },
   "aspect": {

@@ -7,6 +7,7 @@ import {
   LoadFeederPetsActionType,
   CreatePetsActionType,
   LoadPetBreedsActionType,
+  LoadPetActionType,
 } from './actionTypes';
 import { ActionBase, UploadImage } from '../../shared';
 
@@ -125,6 +126,35 @@ export const useLoadPetBreeds = () => {
   return {
     loadPetBreeds: boundAction,
     petBreeds,
+    pending,
+    error,
+  };
+};
+
+export const useLoadPet = () => {
+  const dispatch = useDispatch();
+  const { pet, pending, error } = useSelector(
+    (state: AppState) => ({
+      pet: state.pet.pet.data,
+      pending: state.pet.pet.pending,
+      error: state.pet.pet.error,
+    }),
+    shallowEqual,
+  );
+
+  const boundAction = useCallback(
+    (petId: number) => {
+      dispatch({
+        type: LoadPetActionType.BEGIN,
+        payload: { petId },
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    loadPet: boundAction,
+    pet,
     pending,
     error,
   };
@@ -290,6 +320,47 @@ export const petReducer = {
       ...state,
       petBreeds: {
         ...state.petBreeds,
+        pending: false,
+        error: action.error,
+      },
+    };
+  },
+
+  // pet
+  [LoadPetActionType.BEGIN]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      pet: {
+        ...state.pet,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [LoadPetActionType.SUCCESS]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      pet: {
+        ...state.pet,
+        data: action.payload,
+        pending: false,
+      },
+    };
+  },
+  [LoadPetActionType.FAILURE]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      pet: {
+        ...state.pet,
         pending: false,
         error: action.error,
       },

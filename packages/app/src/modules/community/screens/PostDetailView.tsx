@@ -55,10 +55,11 @@ import {
   milisecToAgo,
   AvatarField,
   ActivityIndicator,
-  useFirstFocusEffect,
+  useRefocusEffect,
 } from "../../shared";
 import ParamTypes from "./ParamTypes";
 import CommentList from "../components/CommentList";
+import RelatePetItem from "../components/RelatePetItem";
 
 const Footer = ({ post }: { post: PostDetail }) => {
   const { theme } = useTheme();
@@ -507,21 +508,24 @@ const PostDetailView = () => {
   const { theme } = useTheme();
   const { params } = useRoute<RouteProp<ParamTypes, "PostDetailView">>();
   const { id } = params;
+  const navigation = useNavigation();
+
   const { height: screenHeight } = useWindowDimensions();
   const { top, bottom } = useSafeAreaInsets();
   const headerHeight = 66;
   const footerHeight = 56 + (bottom * 1) / 2;
 
   const postDetail = post;
-  // useEffect(() => {
-  //   loadPostDetail(id);
-  // }, []);
 
-  useFocusEffect(() => {
-    if (!error && !pending && id != post?.id) {
+  useRefocusEffect(() => {
+    if (id != post?.id) {
       loadPostDetail(id);
     }
-  });
+  }, [id, post, loadPostDetail]);
+
+  useEffect(() => {
+    loadPostDetail(id);
+  }, [id, loadPostDetail]);
 
   const renderTopic = (topic: PostTopic | null) => {
     if (!topic) {
@@ -599,11 +603,22 @@ const PostDetailView = () => {
               style={{
                 backgroundColor: theme.colors?.white,
                 paddingHorizontal: 16,
-                paddingTop: postDetail.images.length ? 6 : 16,
+                // paddingTop: postDetail.images.length ? 6 : 6,
                 paddingBottom: 18,
               }}
             >
-              <Text style={{ fontSize: 17, lineHeight: 26 }}>
+              {postDetail.relatePet ? (
+                <RelatePetItem
+                  onPress={() => {
+                    navigation.navigate("PetDetailView", {
+                      petId: postDetail.relatePetId,
+                    });
+                  }}
+                  pet={postDetail.relatePet}
+                />
+              ) : null}
+
+              <Text style={{ fontSize: 17, lineHeight: 26, marginTop: 4 }}>
                 {postDetail.content}
               </Text>
 

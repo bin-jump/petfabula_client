@@ -1,6 +1,8 @@
 import { createAsyncActionType } from '../../shared';
 
 export const LoadMyPetsActionType = createAsyncActionType('PET_LOAD_MINE');
+export const LoadPetActionType = createAsyncActionType('PET_LOAD_PET');
+
 export const LoadFeederPetsActionType = createAsyncActionType(
   'PET_LOAD_FEEDER_PET',
 );

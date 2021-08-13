@@ -11,15 +11,16 @@ import { UploadImage } from "@petfabula/common";
 
 const Avatar = (
   props: {
-    iconType?: "USER" | "PET";
-    source?: { uri?: string };
     size: number;
+    iconType?: "USER" | "PET";
+    squred?: boolean;
+    source?: { uri?: string };
     title?: string;
     onPress?: () => void;
     editProps?: { onImageSelected: (image: UploadImage) => void };
   } & AvatarProps
 ) => {
-  const { iconType, source, size, title, onPress, editProps } = props;
+  const { iconType, source, size, title, onPress, editProps, squred } = props;
 
   const { theme } = useTheme();
   let avatarIcon =
@@ -69,13 +70,19 @@ const Avatar = (
       type: "image/jpg",
     };
 
-    editProps.onImageSelected(image);
+    const pPhoto = await processImage(image.uri);
+    const img = {
+      uri: pPhoto.uri,
+      name: changeExtName(fileName, "jpg"),
+      type: "image/jpg",
+    };
+    editProps.onImageSelected(img);
   };
 
   return (
     <RneAvatar
       icon={avatarIcon}
-      rounded
+      rounded={!squred}
       size={size}
       title={title}
       source={{ uri: source?.uri }}

@@ -1,6 +1,7 @@
 import React, { useCallback, useRef, useMemo } from "react";
 import { View, TouchableWithoutFeedback, TouchableOpacity } from "react-native";
 import { useTheme, Text, Divider, Button, Icon } from "react-native-elements";
+import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import Animated, {
   interpolate,
@@ -206,6 +207,7 @@ const CommentItem = ({
 }) => {
   const { theme } = useTheme();
   const { t } = useTranslation();
+  const navigation = useNavigation();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [200], []);
@@ -325,6 +327,9 @@ const CommentItem = ({
 
       <View style={{ marginTop: 12, marginBottom: 16 }}>
         <AvatarField
+          onAvatarClick={() => {
+            navigation.navigate("UserProfile", { id: comment.participator.id });
+          }}
           nameStyle={{
             // fontWeight: "bold",
             fontSize: 18,

@@ -5,6 +5,10 @@ type ParamTypes = {
     feederId: number;
     breed: PetBreed | undefined | null;
   };
+
+  PetDetailView: {
+    petId: number;
+  };
 };
 
 export default ParamTypes;

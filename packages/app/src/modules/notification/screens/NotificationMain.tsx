@@ -116,142 +116,141 @@ const NotificationMain = () => {
   }, []);
 
   return (
-    <ScrollView
-      style={{ minWidth: "100%", backgroundColor: theme.colors?.white }}
+    <View
+      style={{
+        height: "100%",
+        width: "100%",
+        alignItems: "center",
+        // justifyContent: "center",
+        backgroundColor: theme.colors?.white,
+        minHeight: 160,
+      }}
     >
       <View
         style={{
-          height: "100%",
           width: "100%",
+          height: top,
+          backgroundColor: theme.colors?.white,
+        }}
+      ></View>
+      <View
+        style={{
+          width: "100%",
+          height: 60,
+          justifyContent: "center",
           alignItems: "center",
-          // justifyContent: "center",
-          //   backgroundColor: theme.colors?.white,
-          minHeight: 160,
+          backgroundColor: theme.colors?.white,
+          shadowColor: theme.colors?.grey2,
+          shadowOffset: { width: 2, height: 4 },
+          shadowOpacity: 0.3,
+          elevation: 2,
+          zIndex: 2,
         }}
       >
+        <Text h2>{t("notification.title")}</Text>
+      </View>
+
+      {/* <ScrollView style={{}}> */}
+      <View style={{ width: "100%", backgroundColor: theme.colors?.white }}>
         <View
           style={{
-            width: "100%",
-            height: top,
-            backgroundColor: theme.colors?.white,
-          }}
-        ></View>
-        <View
-          style={{
-            width: "100%",
-            height: 60,
-            justifyContent: "center",
+            paddingTop: 26,
+            paddingBottom: 16,
+            paddingHorizontal: 8,
+            flexDirection: "row",
             alignItems: "center",
+            justifyContent: "space-around",
+            width: "100%",
             backgroundColor: theme.colors?.white,
-            shadowColor: theme.colors?.grey2,
-            shadowOffset: { width: 2, height: 4 },
-            shadowOpacity: 0.3,
-            elevation: 2,
-            zIndex: 2,
           }}
         >
-          <Text h2>{t("notification.title")}</Text>
+          <IconButton
+            type="font-awesome"
+            name="comment"
+            color="#6ebefb"
+            count={checkResult?.answerCommentCount || 0}
+            onPress={() => {
+              navigation.navigate("SecondaryStack", {
+                screen: "AnswerCommentNotifications",
+              });
+            }}
+            text={t("notification.answerComment")}
+          />
+          <IconButton
+            type="font-awesome"
+            name="heart"
+            color="#fdab90"
+            text={t("notification.upvote")}
+            count={checkResult?.voteCount || 0}
+            onPress={() => {
+              navigation.navigate("SecondaryStack", {
+                screen: "UpvoteNotifications",
+              });
+            }}
+          />
+          <IconButton
+            type="ionicons"
+            name="people"
+            color="#90b5fa"
+            text={t("notification.follow")}
+            count={checkResult?.followCount || 0}
+            onPress={() => {
+              navigation.navigate("SecondaryStack", {
+                screen: "FollowNotifications",
+              });
+            }}
+          />
         </View>
-        <View style={{ width: "100%" }}>
+        <View
+          style={{ height: 6, backgroundColor: theme.colors?.grey5 }}
+        ></View>
+        <View style={{}}>
           <View
             style={{
-              paddingTop: 26,
-              paddingBottom: 16,
-              paddingHorizontal: 8,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-around",
+              height: 90,
               width: "100%",
-              backgroundColor: theme.colors?.white,
+              flexDirection: "row",
+              paddingVertical: 16,
+              paddingHorizontal: 20,
             }}
           >
-            <IconButton
-              type="font-awesome"
-              name="comment"
-              color="#6ebefb"
-              count={checkResult?.answerCommentCount || 0}
-              onPress={() => {
-                navigation.navigate("SecondaryStack", {
-                  screen: "AnswerCommentNotifications",
-                });
-              }}
-              text={t("notification.answerComment")}
-            />
-            <IconButton
-              type="font-awesome"
-              name="heart"
-              color="#fdab90"
-              text={t("notification.upvote")}
-              count={checkResult?.voteCount || 0}
-              onPress={() => {
-                navigation.navigate("SecondaryStack", {
-                  screen: "UpvoteNotifications",
-                });
-              }}
-            />
-            <IconButton
-              type="ionicons"
-              name="people"
-              color="#90b5fa"
-              text={t("notification.follow")}
-              count={checkResult?.followCount || 0}
-              onPress={() => {
-                navigation.navigate("SecondaryStack", {
-                  screen: "FollowNotifications",
-                });
-              }}
-            />
-          </View>
-          <View
-            style={{ height: 6, backgroundColor: theme.colors?.grey5 }}
-          ></View>
-          <View style={{}}>
-            <View
-              style={{
-                height: 90,
-                width: "100%",
-                flexDirection: "row",
-                paddingVertical: 16,
-                paddingHorizontal: 20,
-              }}
-            >
-              <View>
-                <View
-                  style={{
-                    borderRadius: 60,
-                    width: 50,
-                    height: 50,
-                    backgroundColor: "#31d2c0",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Icon
-                    type="materialIcons"
-                    name="notifications"
-                    color="white"
-                    size={32}
-                  />
-                </View>
-                {checkResult?.hasSystemNotificationUnread ? (
-                  <Badge count={1} />
-                ) : null}
-              </View>
-
+            <View>
               <View
                 style={{
-                  marginLeft: 12,
+                  borderRadius: 60,
+                  width: 50,
+                  height: 50,
+                  backgroundColor: "#31d2c0",
                   justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
-                <Text h4>{t("notification.systemNotification")}</Text>
+                <Icon
+                  type="materialIcons"
+                  name="notifications"
+                  color="white"
+                  size={32}
+                />
               </View>
+              {checkResult?.hasSystemNotificationUnread ? (
+                <Badge count={1} />
+              ) : null}
             </View>
-            <Divider />
+
+            <View
+              style={{
+                marginLeft: 12,
+                justifyContent: "center",
+              }}
+            >
+              <Text h4>{t("notification.systemNotification")}</Text>
+            </View>
           </View>
+          <Divider />
         </View>
       </View>
-    </ScrollView>
+      {/* </ScrollView> */}
+    </View>
   );
 };
 

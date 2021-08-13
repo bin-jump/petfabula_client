@@ -2,3 +2,8 @@ export * from './redux/types';
 export * from './redux/reducer';
 export * from './redux/petSaga';
 export * from './redux/petHooks';
+export * from './redux/feedRecordHooks';
+export * from './redux/weightRecordHooks';
+export * from './redux/disorderRecordHooks';
+export * from './redux/petEventHookts';
+export * from './redux/medicalRecordHooks';

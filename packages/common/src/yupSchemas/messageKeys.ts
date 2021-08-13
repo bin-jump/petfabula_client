@@ -4,6 +4,7 @@ const commonPrefix = `${messagePrefix}.common`;
 export const commonMessageKey = {
   emptyValue: `${commonPrefix}.emptyValue`,
   birthday: `${commonPrefix}.birthday`,
+  validType: `${commonPrefix}.validType`,
 };
 
 const authenticationPrefix = `${messagePrefix}.authentication`;
@@ -43,4 +44,22 @@ export const petMessageKey = {
   petBio: `${petPrefix}.petBio`,
   arrivalDay: `${petPrefix}.arrivalDay`,
   breedId: `${petPrefix}.breedId`,
+  petSelect: `${petPrefix}.petSelect`,
+
+  recordDate: `${petPrefix}.recordDate`,
+  recordNote: `${petPrefix}.recordNote`,
+  feedAmount: `${petPrefix}.feedAmount`,
+  foodContent: `${petPrefix}.foodContent`,
+
+  weight: `${petPrefix}.weight`,
+
+  disorderContent: `${petPrefix}.disorderContent`,
+
+  eventType: `${petPrefix}.eventType`,
+  eventContent: `${petPrefix}.eventContent`,
+
+  hospitalName: `${petPrefix}.hospitalName`,
+  symptom: `${petPrefix}.symptom`,
+  diagnosis: `${petPrefix}.diagnosis`,
+  treatment: `${petPrefix}.treatment`,
 };

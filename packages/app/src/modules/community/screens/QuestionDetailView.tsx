@@ -61,8 +61,10 @@ import {
   IconCount,
   Image,
   OverlayImage,
+  useRefocusEffect,
 } from "../../shared";
 import ParamTypes from "./ParamTypes";
+import RelatePetItem from "../components/RelatePetItem";
 
 const Footer = ({ question }: { question: QuestionDetail }) => {
   const { theme } = useTheme();
@@ -869,26 +871,17 @@ const QuestionDetailView = () => {
   const headerHeight = 66;
   const footerHeight = 56 + (bottom * 1) / 2;
 
-  // useEffect(() => {
-  //   loadQuestionDetail(id);
-  //   loadQuestionAnswers(id, null);
-  // }, [id]);
+  useRefocusEffect(() => {
+    if (id != question?.id) {
+      loadQuestionDetail(id);
+      loadQuestionAnswers(id, null);
+    }
+  }, [id, question, loadQuestionDetail, loadQuestionAnswers]);
 
-  // useFocusEffect(() => {
-  //   if (!questionPending && id != question?.id) {
-  //     loadQuestionDetail(id);
-  //     loadQuestionAnswers(id, null);
-  //   }
-  // });
-
-  useFocusEffect(
-    useCallback(() => {
-      if (!questionPending && id != question?.id) {
-        loadQuestionDetail(id);
-        loadQuestionAnswers(id, null);
-      }
-    }, [id, question])
-  );
+  useEffect(() => {
+    loadQuestionDetail(id);
+    loadQuestionAnswers(id, null);
+  }, [id, loadQuestionDetail, loadQuestionAnswers]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -945,16 +938,6 @@ const QuestionDetailView = () => {
               >
                 {question.images.map((item, index) => {
                   return (
-                    // <Image
-                    //   key={index}
-                    //   source={{ uri: item.url }}
-                    //   style={{
-                    //     width: 90,
-                    //     height: 90,
-                    //     marginRight: 6,
-                    //     marginTop: 6,
-                    //   }}
-                    // />
                     <OverlayImage
                       key={index}
                       image={item}
@@ -966,9 +949,15 @@ const QuestionDetailView = () => {
                 })}
               </View>
 
-              <Text style={{ fontSize: 18, marginTop: 18 }}>
-                {question.content}
-              </Text>
+              {question.content ? (
+                <Text style={{ fontSize: 18, marginTop: 12 }}>
+                  {question.content}
+                </Text>
+              ) : null}
+
+              {question.relatePet ? (
+                <RelatePetItem pet={question.relatePet} />
+              ) : null}
 
               <Text
                 style={{

@@ -19,12 +19,13 @@ export interface Pet {
   id: number;
   feederId: number;
   name: string;
-  photo: string | null;
+  photo: string;
   birthday: number;
   gender: PetGender;
   category: string;
   breed: string;
   breedId: number;
+  bio: string;
 }
 
 export interface PetDetail extends Pet {
@@ -40,9 +41,9 @@ export interface PetDetail extends Pet {
 export interface DisorderRecord {
   id: number;
   petId: number;
-  date: number;
-  disorderType: string;
-  note: string;
+  dateTime: number;
+  disorderType: string | null;
+  content: string;
   images: DisplayImage[];
   //   createDate: number;
 }
@@ -50,7 +51,7 @@ export interface DisorderRecord {
 export interface FeedRecord {
   id: number;
   petId: number;
-  date: number;
+  dateTime: number;
   amount: number;
   foodContent: string;
   note: string;
@@ -60,8 +61,9 @@ export interface FeedRecord {
 export interface MedicalRecord {
   id: number;
   petId: number;
-  date: number;
+  dateTime: number;
   hospitalName: string;
+  diagnosis: string;
   symptom: string;
   treatment: string;
   note: string;
@@ -74,7 +76,7 @@ export interface PetEventRecord {
   petId: number;
   date: number;
   eventType: string;
-  note: string;
+  content: string;
   images: DisplayImage[];
   // createDate: number;
 }
@@ -88,12 +90,49 @@ export interface WeightRecord {
 
 export interface PetForm {
   name: string;
-  weight: number | null;
   birthday: number | null;
   arrivalDay: number | null;
   gender: PetGender | null;
   breedId: number | null;
   bio: string;
+}
+
+export interface FeedRecordForm {
+  petId: number;
+  amount: number;
+  foodContent: string;
+  dateTime: number;
+  note: string;
+}
+
+export interface WeightRecordForm {
+  petId: number;
+  weight: number;
+  date: number;
+}
+
+export interface DisorderRecordForm {
+  petId: number;
+  disorderType: string | null;
+  dateTime: number;
+  content: string;
+}
+
+export interface PetEventRecordForm {
+  petId: number;
+  eventType: string;
+  dateTime: number;
+  content: string;
+}
+
+export interface MedicalRecordForm {
+  petId: number;
+  dateTime: number;
+  hospitalName: string;
+  symptom: string;
+  diagnosis: string;
+  treatment: string;
+  note: string;
 }
 
 export interface PetState {
@@ -110,6 +149,8 @@ export interface PetState {
   createMedicalRecord: AsyncDataBase<MedicalRecord>;
   createPetEventRecord: AsyncDataBase<PetEventRecord>;
   createWeightRecord: AsyncDataBase<WeightRecord>;
+
+  pet: AsyncDataBase<Pet>;
 
   myPetDisorderRecords: AsyncCursorPageListBase<DisorderRecord> & {
     petId: number | null;

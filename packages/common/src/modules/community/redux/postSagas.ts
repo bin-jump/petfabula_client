@@ -4,6 +4,7 @@ import {
   PostLoadDetailActionType,
   CommunityFollowUserActionType,
   CommunityUnfollowUserActionType,
+  LoadPetPostsActionType,
   LoadMyProfileActionType,
   LoadUserProfileActionType,
   LoadUserPostsActionType,
@@ -117,6 +118,15 @@ const watchLoadRecommendPosts = createSagaWatcher({
   watchType: 'LATEST',
 });
 
+const watchLoadPetPosts = createSagaWatcher({
+  createUrl: (payload) => {
+    return `/api/post/pet/${payload.petId}/posts`;
+  },
+  method: 'GET',
+  asyncAction: LoadPetPostsActionType,
+  watchType: 'LATEST',
+});
+
 const watchGetPostDetail = createSagaWatcher({
   method: 'GET',
   asyncAction: PostLoadDetailActionType,
@@ -225,6 +235,7 @@ const watchLoadTopics = createSagaWatcher({
 
 export function* postRootSaga() {
   yield all([
+    fork(watchLoadPetPosts),
     fork(watchFollowParticipator),
     fork(watchUnfollowParticipator),
     fork(watchLoadMyProfile),

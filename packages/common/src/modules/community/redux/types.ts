@@ -27,6 +27,7 @@ export interface ParticiptorPet {
   id: number;
   name: string;
   photo: string;
+  petCategory: string;
 }
 
 export interface PostTopic {
@@ -54,7 +55,7 @@ export interface Post {
 }
 
 export interface PostDetail extends Post {
-  relatedPet: ParticiptorPet | null;
+  relatePet: ParticiptorPet | null;
   liked: boolean;
   collected: boolean;
   likePending: boolean;
@@ -87,7 +88,7 @@ export interface PostCommentReply {
 
 export interface PostForm {
   content: string;
-  relatedPetId: number | null;
+  relatePetId: number | null;
   topicId: number | null;
 }
 
@@ -105,6 +106,7 @@ export interface PostCommentReplyForm {
 // question
 export interface Question {
   id: number;
+  relatePetId: number | null;
   title: string;
   content: string;
   upvoteCount: number;
@@ -144,6 +146,7 @@ export interface AnswerWithQuestion {
 }
 
 export interface QuestionDetail extends Question {
+  relatePet: ParticiptorPet | null;
   upvoted: boolean;
   upvotePending: boolean;
   participator: ParticiptorDetail;
@@ -176,6 +179,7 @@ export interface AnswerComment {
 
 export interface QuestionForm {
   title: string;
+  relatePetId: number | null;
   content: string;
 }
 
@@ -205,6 +209,7 @@ export interface CommunityState {
   // mypets: AsyncListBase<ParticiptorPet>;
   userProfile: AsyncDataBase<ParticiptorDetail>;
   userPosts: AsyncCursorPageListBase<Post> & { userId: number | null };
+  petPosts: AsyncCursorPageListBase<Post> & { petId: number | null };
   userQuestions: AsyncCursorPageListBase<Question> & { userId: number | null };
   userAnswers: AsyncCursorPageListBase<AnswerWithQuestion> & {
     userId: number | null;

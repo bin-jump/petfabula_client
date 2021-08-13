@@ -18,12 +18,14 @@ import {
 } from "@petfabula/common";
 import ParamTypes from "./paramTypes";
 import MultipleImageSelect from "../components/MultipleImageSelect";
+import PostPetSelector from "../components/PostPetSelector";
 
 const CreateQuestion = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
+  const navigation = useNavigation();
   const { params } = useRoute<RouteProp<ParamTypes, "CreateQuestion">>();
-
+  const pet = params?.pet;
   const { createQuestion } = useCreateQuestion();
   const images = params?.images ? params.images : [];
   const [img, setImg] = useState<ImageFile[]>([]);
@@ -41,6 +43,7 @@ const CreateQuestion = () => {
 
   const initial: QuestionForm = {
     title: "",
+    relatePetId: null,
     content: "",
   };
 
@@ -76,6 +79,14 @@ const CreateQuestion = () => {
             />
           )}
         </Formik>
+        <PostPetSelector
+          pet={pet}
+          onPress={() => {
+            navigation.navigate("PetSelect", {
+              backScreen: "CreateQuestion",
+            });
+          }}
+        />
         <MultipleImageSelect
           images={img}
           fromScreen="CreateQuestion"
@@ -103,8 +114,10 @@ const QuestionFormContent = ({
   const navigation = useNavigation();
   const { t } = useTranslation();
   const { pending, error, result } = useCreateQuestion();
+  const { params } = useRoute<RouteProp<ParamTypes, "CreateQuestion">>();
+  const pet = params?.pet;
 
-  React.useEffect(() => {
+  useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <View style={{ flexDirection: "row", marginRight: 24 }}>
@@ -119,6 +132,12 @@ const QuestionFormContent = ({
       ),
     });
   }, [navigation]);
+
+  useEffect(() => {
+    if (pet) {
+      setValues({ ...values, relatePetId: pet.id });
+    }
+  }, [pet]);
 
   useDidUpdateEffect(() => {
     if (result) {

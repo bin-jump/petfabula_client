@@ -5,33 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import { useCurrentUser, useLoadMyPets, PetDetail } from "@petfabula/common";
-import { Avatar } from "../../shared";
-
-const toAge = (birth: number) => {
-  const today = new Date();
-  const birthDate = new Date(birth);
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const m = today.getMonth() - birthDate.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-    age--;
-  }
-  return age;
-};
-
-const toAgeMonth = (birth: number) => {
-  const today = new Date();
-  const birthDate = new Date(birth);
-  const m = (today.getMonth() + 12 - birthDate.getMonth()) % 12;
-
-  return m;
-};
-
-const daysTillNow = (mili: number) => {
-  const today = new Date().getTime();
-  const res = (today - mili) / (1000 * 60 * 60 * 24);
-
-  return Math.floor(res);
-};
+import { Avatar, toAge, toAgeMonth, daysTillNow } from "../../shared";
 
 const AgeItem = ({ mili }: { mili: number }) => {
   const { theme } = useTheme();
@@ -78,7 +52,7 @@ const GenderItem = ({ gender }: { gender: string | null }) => {
           padding: 2,
         }}
       >
-        <Icon type="foundation" name="male-symbol" size={24} color="#73abfc" />
+        <Icon type="ionicon" name="male" size={20} color="#73abfc" />
       </View>
     );
   }
@@ -93,12 +67,7 @@ const GenderItem = ({ gender }: { gender: string | null }) => {
           padding: 2,
         }}
       >
-        <Icon
-          type="foundation"
-          name="female-symbol"
-          size={24}
-          color="#e93235"
-        />
+        <Icon type="ionicon" name="female" size={20} color="#e93235" />
       </View>
     );
   }
@@ -113,6 +82,7 @@ const ActionIcon = ({
   text,
   backgroundColor,
   iconColor,
+  onPress,
 }: {
   type: string;
   name: string;
@@ -120,11 +90,15 @@ const ActionIcon = ({
   text: string;
   backgroundColor: string;
   iconColor: string;
+  onPress: () => void;
 }) => {
   const { theme } = useTheme();
 
   return (
-    <View style={{ justifyContent: "center", alignItems: "center" }}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={{ justifyContent: "center", alignItems: "center" }}
+    >
       <View
         style={{
           padding: 12,
@@ -139,7 +113,7 @@ const ActionIcon = ({
       <Text style={{ marginTop: 4, fontWeight: "bold", fontSize: 14 }}>
         {text}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -205,7 +179,9 @@ const PetItem = ({ item }: { item: PetDetail }) => {
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text
           style={{ marginTop: 8, color: theme.colors?.grey1, fontSize: 14 }}
-        >{`クィック記録`}</Text>
+        >
+          {t("pet.action.quickRecord")}
+        </Text>
         <Icon
           containerStyle={{ marginLeft: 2, paddingTop: 4 }}
           type="entypo"
@@ -229,6 +205,12 @@ const PetItem = ({ item }: { item: PetDetail }) => {
           text={t("pet.action.food")}
           backgroundColor="#fcead0"
           iconColor="#febe8a"
+          onPress={() => {
+            navigation.navigate("CreateNew", {
+              screen: "CreateFeedRecord",
+              params: { pet: item },
+            });
+          }}
         />
 
         <ActionIcon
@@ -238,6 +220,12 @@ const PetItem = ({ item }: { item: PetDetail }) => {
           text={t("pet.action.weight")}
           backgroundColor="#e6f3ff"
           iconColor="#94afef"
+          onPress={() => {
+            navigation.navigate("CreateNew", {
+              screen: "CreateWeightRecord",
+              params: { pet: item },
+            });
+          }}
         />
 
         <ActionIcon
@@ -247,6 +235,12 @@ const PetItem = ({ item }: { item: PetDetail }) => {
           text={t("pet.action.disorder")}
           backgroundColor="#f4e9e0"
           iconColor="#d56940"
+          onPress={() => {
+            navigation.navigate("CreateNew", {
+              screen: "CreateDisorderRecord",
+              params: { pet: item },
+            });
+          }}
         />
 
         <ActionIcon
@@ -256,6 +250,12 @@ const PetItem = ({ item }: { item: PetDetail }) => {
           text={t("pet.action.event")}
           backgroundColor="#d8f3ff"
           iconColor="#68bbff"
+          onPress={() => {
+            navigation.navigate("CreateNew", {
+              screen: "SelectPetEventType",
+              params: { pet: item },
+            });
+          }}
         />
       </View>
     </View>

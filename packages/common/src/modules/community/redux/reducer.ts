@@ -26,6 +26,15 @@ const initialStat: CommunityState = {
     nextCursor: null,
     initializing: false,
   },
+  petPosts: {
+    petId: null,
+    data: [],
+    pending: false,
+    error: null,
+    hasMore: false,
+    nextCursor: null,
+    initializing: false,
+  },
   userQuestions: {
     userId: null,
     data: [],

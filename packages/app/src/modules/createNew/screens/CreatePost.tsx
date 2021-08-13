@@ -26,6 +26,7 @@ import {
 } from "@petfabula/common";
 import ParamTypes from "./paramTypes";
 import MultipleImageSelect from "../components/MultipleImageSelect";
+import PostPetSelector from "../components/PostPetSelector";
 
 const CreatePost = () => {
   const { theme } = useTheme();
@@ -35,6 +36,7 @@ const CreatePost = () => {
   const { createPost } = useCreatePost();
   const images = params?.images ? params.images : [];
   const topic = params?.topic;
+  const pet = params?.pet;
   const [img, setImg] = useState<ImageFile[]>([]);
 
   useEffect(() => {
@@ -50,7 +52,7 @@ const CreatePost = () => {
 
   const initial: PostForm = {
     content: "",
-    relatedPetId: null,
+    relatePetId: null,
     topicId: topic ? topic.id : null,
   };
   // console.log("initial", initial);
@@ -97,8 +99,15 @@ const CreatePost = () => {
               borderColor: theme.colors?.grey4,
             }}
           />
-
-          <TouchableOpacity
+          <PostPetSelector
+            pet={pet}
+            onPress={() => {
+              navigation.navigate("PetSelect", {
+                backScreen: "CreatePost",
+              });
+            }}
+          />
+          {/* <TouchableOpacity
             style={{
               marginTop: 18,
               flexDirection: "row",
@@ -111,51 +120,17 @@ const CreatePost = () => {
               paddingHorizontal: 8,
               marginBottom: 16,
             }}
+            onPress={() => {
+              navigation.navigate("PetSelect", {
+                backScreen: "CreatePost",
+              });
+            }}
           >
             <Text style={{ fontSize: 18, color: theme.colors?.grey0 }}>
               {t("createNew.petSelect")}
             </Text>
             <Icon type="antdesign" name="right" color={theme.colors?.grey0} />
-          </TouchableOpacity>
-
-          {/* <View
-            style={{
-              width: "100%",
-              flexDirection: "row",
-              flexWrap: "wrap",
-              alignItems: "flex-start",
-            }}
-          >
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("ImageSelect", { fromScreen: "CreatePost" })
-              }
-              style={{
-                width: 92,
-                height: 92,
-                borderStyle: "dashed",
-                justifyContent: "center",
-                borderWidth: 3,
-                borderRadius: 3,
-                borderColor: theme.colors?.grey3,
-                margin: 3,
-              }}
-            >
-              <Icon
-                size={40}
-                color={theme.colors?.grey3}
-                type="Ionicons"
-                name="add"
-              />
-            </TouchableOpacity>
-            {images.map((item) => (
-              <Image
-                key={item.name}
-                source={{ uri: item.uri }}
-                style={{ width: 92, height: 92, margin: 3 }}
-              />
-            ))}
-          </View> */}
+          </TouchableOpacity> */}
         </View>
         <MultipleImageSelect
           images={img}
@@ -186,8 +161,10 @@ const PostFormContent = ({
   const navigation = useNavigation();
   const { t } = useTranslation();
   const { pending, error, result } = useCreatePost();
+  const { params } = useRoute<RouteProp<ParamTypes, "CreatePost">>();
+  const pet = params?.pet;
 
-  React.useEffect(() => {
+  useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <View style={{ flexDirection: "row", marginRight: 24 }}>
@@ -202,6 +179,12 @@ const PostFormContent = ({
       ),
     });
   }, [navigation]);
+
+  useEffect(() => {
+    if (pet) {
+      setValues({ ...values, relatePetId: pet.id });
+    }
+  }, [pet]);
 
   useDidUpdateEffect(() => {
     if (result) {

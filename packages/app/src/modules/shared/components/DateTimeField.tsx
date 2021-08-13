@@ -80,9 +80,12 @@ const DateTimeField: React.FC<
       }}
     >
       <DateTimePickerModal
+        locale="ja_JP"
+        confirmTextIOS={t("common.confirm")}
+        cancelTextIOS={t("common.cancel")}
         date={new Date(initialDate())}
         isVisible={show}
-        mode="date"
+        mode={mode.toLowerCase() as any}
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
       />
