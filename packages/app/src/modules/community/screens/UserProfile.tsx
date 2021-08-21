@@ -63,6 +63,7 @@ export type ListProps = { userId: number };
 const UserPosts = forwardRef<FlatList, ListProps>((props, ref) => {
   const { userId } = props;
   const {
+    userId: postUserId,
     loadUserPosts,
     posts,
     pending,
@@ -86,9 +87,19 @@ const UserPosts = forwardRef<FlatList, ListProps>((props, ref) => {
     );
   }, []);
 
-  useEffect(() => {
+  // useFirstFocusEffect(() => {
+  //   loadUserPosts(userId, null);
+  // }, [userId]);
+
+  useRefocusEffect(() => {
+    if (userId != postUserId) {
+      loadUserPosts(userId, null);
+    }
+  }, [userId, postUserId, loadUserPosts]);
+
+  useFirstFocusEffect(() => {
     loadUserPosts(userId, null);
-  }, [userId]);
+  }, []);
 
   return (
     <AnimatedFlatList
@@ -111,6 +122,7 @@ const UserPosts = forwardRef<FlatList, ListProps>((props, ref) => {
 const UserQuestions = forwardRef<FlatList, ListProps>((props, ref) => {
   const { userId } = props;
   const {
+    userId: questionUserId,
     loadUserQuestions,
     questions,
     pending,
@@ -136,9 +148,15 @@ const UserQuestions = forwardRef<FlatList, ListProps>((props, ref) => {
     );
   }, []);
 
-  useEffect(() => {
+  useRefocusEffect(() => {
+    if (userId != questionUserId) {
+      loadUserQuestions(userId, null);
+    }
+  }, [userId, questionUserId, loadUserQuestions]);
+
+  useFirstFocusEffect(() => {
     loadUserQuestions(userId, null);
-  }, [userId]);
+  }, []);
 
   return (
     <AnimatedFlatList
@@ -161,6 +179,7 @@ const UserQuestions = forwardRef<FlatList, ListProps>((props, ref) => {
 const UserAnswers = forwardRef<FlatList, ListProps>((props, ref) => {
   const { userId } = props;
   const {
+    userId: answerUserId,
     loadUserAnswers,
     answers,
     pending,
@@ -187,9 +206,15 @@ const UserAnswers = forwardRef<FlatList, ListProps>((props, ref) => {
     []
   );
 
-  useEffect(() => {
+  useRefocusEffect(() => {
+    if (userId != answerUserId) {
+      loadUserAnswers(userId, null);
+    }
+  }, [userId, answerUserId, loadUserAnswers]);
+
+  useFirstFocusEffect(() => {
     loadUserAnswers(userId, null);
-  }, [userId]);
+  }, []);
 
   return (
     <AnimatedFlatList
@@ -212,6 +237,7 @@ const UserAnswers = forwardRef<FlatList, ListProps>((props, ref) => {
 const UserCollectedPosts = forwardRef<FlatList, ListProps>((props, ref) => {
   const { userId } = props;
   const {
+    userId: postUserId,
     loadCollectedPosts,
     posts,
     pending,
@@ -235,9 +261,15 @@ const UserCollectedPosts = forwardRef<FlatList, ListProps>((props, ref) => {
     );
   }, []);
 
-  useEffect(() => {
+  useRefocusEffect(() => {
+    if (userId != postUserId) {
+      loadCollectedPosts(userId, null);
+    }
+  }, [userId, postUserId, loadCollectedPosts]);
+
+  useFirstFocusEffect(() => {
     loadCollectedPosts(userId, null);
-  }, [userId]);
+  }, []);
 
   return (
     <AnimatedFlatList
@@ -399,45 +431,54 @@ const UserPart = ({ profile }: { profile: Participator | null }) => {
 
 const PetItem = ({ pet }: { pet: Pet }) => {
   const { theme } = useTheme();
+  const navigation = useNavigation<StackNavigationProp<any>>();
 
   return (
-    <View
-      style={{
-        height: 50,
-        width: 150,
-        backgroundColor: theme.colors?.white,
-        padding: 8,
-        flexDirection: "row",
-        alignItems: "center",
-
-        borderRadius: 80,
-        shadowColor: theme.colors?.grey2,
-        shadowOffset: { width: 2, height: 1 },
-        shadowOpacity: 0.5,
-        elevation: 2,
-        shadowRadius: 3,
+    <TouchableWithoutFeedback
+      onPress={() => {
+        navigation.push("PetDetailView", {
+          petId: pet.id,
+        });
       }}
     >
-      <Avatar iconType="PET" source={{ uri: pet.photo }} size={32} />
       <View
         style={{
-          marginLeft: 10,
-          marginVertical: 6,
-          minHeight: 40,
-          justifyContent: "center",
+          height: 50,
+          width: 150,
+          backgroundColor: theme.colors?.white,
+          padding: 8,
+          flexDirection: "row",
+          alignItems: "center",
+
+          borderRadius: 80,
+          shadowColor: theme.colors?.grey2,
+          shadowOffset: { width: 2, height: 1 },
+          shadowOpacity: 0.5,
+          elevation: 2,
+          shadowRadius: 3,
         }}
       >
-        <Text
+        <Avatar iconType="PET" source={{ uri: pet.photo }} size={32} />
+        <View
           style={{
-            fontWeight: "bold",
-            fontSize: 20,
-            color: theme.colors?.black,
+            marginLeft: 10,
+            marginVertical: 6,
+            minHeight: 40,
+            justifyContent: "center",
           }}
         >
-          {pet.name}
-        </Text>
+          <Text
+            style={{
+              fontWeight: "bold",
+              fontSize: 20,
+              color: theme.colors?.black,
+            }}
+          >
+            {pet.name}
+          </Text>
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 

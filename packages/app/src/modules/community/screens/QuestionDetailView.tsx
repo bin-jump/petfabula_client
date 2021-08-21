@@ -21,6 +21,7 @@ import {
   RouteProp,
   useFocusEffect,
 } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import {
   BottomSheetModal,
   BottomSheetBackdrop,
@@ -229,7 +230,7 @@ const Header = ({
   slideSharedValue: Animated.SharedValue<number>;
 }) => {
   const { theme } = useTheme();
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
   const { t } = useTranslation();
   const { currentUser } = useCurrentUser();
   const { followUser, pending: followPending } = useFollowUser();
@@ -360,7 +361,7 @@ const Header = ({
         {question && question.id == currentQuestionId ? (
           <AvatarField
             onAvatarClick={() => {
-              navigation.navigate("UserProfile", {
+              navigation.push("UserProfile", {
                 id: question.participator.id,
               });
             }}

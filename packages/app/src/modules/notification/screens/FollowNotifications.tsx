@@ -33,7 +33,9 @@ const FollowNotificationItem = ({
   return (
     <TouchableWithoutFeedback
       onPress={() => {
-        navigation.navigate("UserProfile", { id: notification.follower.id });
+        navigation.navigate("UserProfile", {
+          id: notification.follower.id,
+        });
       }}
     >
       <View>

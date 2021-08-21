@@ -20,6 +20,7 @@ import {
   RouteProp,
   useFocusEffect,
 } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import { useTranslation } from "react-i18next";
 import Animated, {
   useSharedValue,
@@ -260,7 +261,7 @@ const Header = ({
   post: PostDetail | null;
 }) => {
   const { theme } = useTheme();
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
   const { t } = useTranslation();
   const { currentUser } = useCurrentUser();
   const { followUser, pending: followPending } = useFollowUser();
@@ -368,7 +369,7 @@ const Header = ({
         {post && post.id == currentPostId ? (
           <AvatarField
             onAvatarClick={() => {
-              navigation.navigate("UserProfile", { id: post.participator.id });
+              navigation.push("UserProfile", { id: post.participator.id });
             }}
             nameStyle={{ marginLeft: 8, marginBottom: 6, fontWeight: "bold" }}
             name={post.participator.name}
@@ -508,7 +509,7 @@ const PostDetailView = () => {
   const { theme } = useTheme();
   const { params } = useRoute<RouteProp<ParamTypes, "PostDetailView">>();
   const { id } = params;
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
 
   const { height: screenHeight } = useWindowDimensions();
   const { top, bottom } = useSafeAreaInsets();
@@ -610,7 +611,7 @@ const PostDetailView = () => {
               {postDetail.relatePet ? (
                 <RelatePetItem
                   onPress={() => {
-                    navigation.navigate("PetDetailView", {
+                    navigation.push("PetDetailView", {
                       petId: postDetail.relatePetId,
                     });
                   }}

@@ -19,14 +19,7 @@ import {
   createMaterialTopTabNavigator,
   MaterialTopTabBarProps,
 } from "@react-navigation/material-top-tabs";
-import Animated, {
-  useSharedValue,
-  withTiming,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useAnimatedRef,
-  interpolate,
-} from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 import { Pet, useLoadPet, useLoadPetPosts, Post } from "@petfabula/common";
 import {
   Image,
@@ -387,6 +380,12 @@ const PetPostList = forwardRef<FlatList, ListProps>((props, ref) => {
   useFirstFocusEffect(() => {
     loadPetPosts(petId, null);
   }, []);
+
+  useRefocusEffect(() => {
+    if (petId != postPetId) {
+      loadPetPosts(petId, null);
+    }
+  }, [petId, postPetId, loadPetPosts]);
 
   return (
     <AnimatedFlatList
