@@ -222,6 +222,7 @@ const SecondaryStack = () => {
       <SecondaryStackStack.Screen
         options={(navigation) => ({
           ...plainGoBackHeaderOption({ navigation, theme }),
+          headerShown: false,
         })}
         name="PetDetailView"
         component={PetDetailView}

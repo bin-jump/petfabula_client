@@ -4,12 +4,19 @@ import { useFocusEffect } from "@react-navigation/native";
 export default function useRefocusEffect(fn: any, inputs: Array<any>) {
   const mounted = useRef(false);
 
-  useEffect(() => {
-    if (!mounted.current) {
-      mounted.current = true;
-      fn();
-    }
-  }, [...inputs, mounted]);
+  useFocusEffect(
+    useCallback(() => {
+      if (mounted.current) {
+        fn();
+      } else {
+        mounted.current = true;
+      }
+    }, [...inputs])
+  );
 
-  useFocusEffect(useCallback(fn, [...inputs]));
+  // useEffect(() => {
+  //   if (!mounted.current) {
+  //     mounted.current = true;
+  //   }
+  // }, [...inputs, mounted]);
 }

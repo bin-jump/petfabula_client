@@ -11,7 +11,7 @@ import {
   ViewStyle,
   FlatList,
   useWindowDimensions,
-  ScrollView,
+  FlatListProps,
   ListRenderItem,
   TouchableWithoutFeedback,
   TouchableOpacity,
@@ -20,7 +20,14 @@ import { useTheme, Text, Divider, Icon } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import Animated from "react-native-reanimated";
+import Animated, {
+  useSharedValue,
+  withTiming,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useAnimatedRef,
+  interpolate,
+} from "react-native-reanimated";
 import {
   createMaterialTopTabNavigator,
   MaterialTopTabBarProps,
@@ -37,8 +44,6 @@ import {
   useLoadUserQuestions,
   useLoadUserAnswers,
   useLoadUserCollectedPosts,
-  useLoadUserPets,
-  Pet,
 } from "@petfabula/common";
 import {
   Avatar,
@@ -46,7 +51,7 @@ import {
   LoadingMoreIndicator,
   useRefocusEffect,
 } from "../../shared";
-import ParamTypes from "./ParamTypes";
+import ParamTypes from "../screens/ParamTypes";
 import PostItem from "../components/PostItem";
 import QuestionItem from "../components/QuestionItem";
 import AnswerWithQuestionItem from "../components/AnswerWithQuestionItem";
@@ -59,6 +64,116 @@ const AnimatedFlatList = Animated.createAnimatedComponent(
 ) as typeof FlatList;
 
 export type ListProps = { userId: number };
+
+const useCollpaseHeaderListTab = ({
+  translateVal,
+  headerHeight,
+  curTabIndex,
+  myTabIndex,
+}: {
+  translateVal: Animated.SharedValue<number>;
+  headerHeight: number;
+  curTabIndex: number;
+  myTabIndex: number;
+}) => {
+  const listRef = useAnimatedRef<FlatList>();
+  const scrollValue = useSharedValue(0);
+  const offsetDist = useSharedValue(0);
+
+  const listSlideStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: -translateVal.value,
+        },
+      ],
+    };
+  }, []);
+
+  const scrollHandler = useAnimatedScrollHandler(
+    {
+      onScroll: (event) => {
+        if (curTabIndex != myTabIndex) {
+          return;
+        }
+        if (event.contentOffset.y < 0) {
+          return;
+        }
+        const diff = event.contentOffset.y - scrollValue.value;
+        scrollValue.value = event.contentOffset.y;
+
+        if (diff < 0 && event.contentOffset.y > headerHeight) {
+          return;
+        }
+        const v = translateVal.value + diff;
+        if (v >= 0 && v <= headerHeight) {
+          translateVal.value = v;
+        }
+
+        offsetDist.value = event.contentOffset.y - translateVal.value;
+
+        if (
+          translateVal.value - event.contentOffset.y > 0 &&
+          event.contentOffset.y == 0
+        ) {
+          translateVal.value = withTiming(0);
+        }
+      },
+    },
+    [curTabIndex]
+  );
+
+  return {
+    listSlideStyle,
+    listRef,
+    scrollValue,
+    scrollHandler,
+    offsetDist,
+  };
+};
+
+const Header = ({
+  height,
+  profile,
+}: {
+  height: number;
+  profile: Participator | null;
+}) => {
+  const { theme } = useTheme();
+  const navigation = useNavigation();
+  const { top } = useSafeAreaInsets();
+
+  return (
+    <Animated.View
+      style={{
+        height: height,
+        backgroundColor: theme.colors?.white,
+        paddingLeft: 18,
+        flexDirection: "row",
+        alignItems: "center",
+        paddingTop: top,
+      }}
+    >
+      <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
+        <Icon
+          type="entypo"
+          name="chevron-thin-left"
+          size={24}
+          color={theme.colors?.black}
+        />
+      </TouchableWithoutFeedback>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {profile ? <Text h3>{profile.name}</Text> : null}
+      </View>
+    </Animated.View>
+  );
+};
 
 const UserPosts = forwardRef<FlatList, ListProps>((props, ref) => {
   const { userId } = props;
@@ -86,9 +201,9 @@ const UserPosts = forwardRef<FlatList, ListProps>((props, ref) => {
     );
   }, []);
 
-  useEffect(() => {
+  useFirstFocusEffect(() => {
     loadUserPosts(userId, null);
-  }, [userId]);
+  }, []);
 
   return (
     <AnimatedFlatList
@@ -136,9 +251,9 @@ const UserQuestions = forwardRef<FlatList, ListProps>((props, ref) => {
     );
   }, []);
 
-  useEffect(() => {
+  useFirstFocusEffect(() => {
     loadUserQuestions(userId, null);
-  }, [userId]);
+  }, []);
 
   return (
     <AnimatedFlatList
@@ -187,9 +302,9 @@ const UserAnswers = forwardRef<FlatList, ListProps>((props, ref) => {
     []
   );
 
-  useEffect(() => {
+  useFirstFocusEffect(() => {
     loadUserAnswers(userId, null);
-  }, [userId]);
+  }, []);
 
   return (
     <AnimatedFlatList
@@ -235,9 +350,9 @@ const UserCollectedPosts = forwardRef<FlatList, ListProps>((props, ref) => {
     );
   }, []);
 
-  useEffect(() => {
+  useFirstFocusEffect(() => {
     loadCollectedPosts(userId, null);
-  }, [userId]);
+  }, []);
 
   return (
     <AnimatedFlatList
@@ -275,19 +390,14 @@ const UserPart = ({ profile }: { profile: Participator | null }) => {
         >
           {count}
         </Text>
-        <Text style={{ fontSize: 14, color: theme.colors?.grey0 }}>{text}</Text>
+        <Text style={{ fontSize: 16, color: theme.colors?.grey0 }}>{text}</Text>
       </View>
     );
   };
 
   return (
     <View>
-      <View
-        style={{
-          alignItems: "flex-start",
-          flexDirection: "row",
-        }}
-      >
+      <View style={{ alignItems: "flex-start", flexDirection: "row" }}>
         <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
           <Icon
             type="entypo"
@@ -301,7 +411,7 @@ const UserPart = ({ profile }: { profile: Participator | null }) => {
         </View>
       </View>
       {profile ? (
-        <View style={{ paddingBottom: 12 }}>
+        <View style={{ marginTop: 3, paddingBottom: 12 }}>
           <View style={{ flexDirection: "row" }}>
             <Avatar
               containerStyle={{ marginTop: 8 }}
@@ -397,99 +507,23 @@ const UserPart = ({ profile }: { profile: Participator | null }) => {
   );
 };
 
-const PetItem = ({ pet }: { pet: Pet }) => {
-  const { theme } = useTheme();
-
-  return (
-    <View
-      style={{
-        height: 50,
-        width: 150,
-        backgroundColor: theme.colors?.white,
-        padding: 8,
-        flexDirection: "row",
-        alignItems: "center",
-
-        borderRadius: 80,
-        shadowColor: theme.colors?.grey2,
-        shadowOffset: { width: 2, height: 1 },
-        shadowOpacity: 0.5,
-        elevation: 2,
-        shadowRadius: 3,
-      }}
-    >
-      <Avatar iconType="PET" source={{ uri: pet.photo }} size={32} />
-      <View
-        style={{
-          marginLeft: 10,
-          marginVertical: 6,
-          minHeight: 40,
-          justifyContent: "center",
-        }}
-      >
-        <Text
-          style={{
-            fontWeight: "bold",
-            fontSize: 20,
-            color: theme.colors?.black,
-          }}
-        >
-          {pet.name}
-        </Text>
-      </View>
-    </View>
-  );
-};
-
-const UserPets = ({ userId }: { userId: number }) => {
-  const { theme } = useTheme();
-  const { feederId, pets, loadPets } = useLoadUserPets();
-  const { t } = useTranslation();
-
-  useEffect(() => {
-    loadPets(userId);
-  }, [userId]);
-
-  return (
-    <ScrollView
-      showsHorizontalScrollIndicator={false}
-      horizontal
-      contentContainerStyle={{
-        alignItems: "center",
-        height: 60,
-        width: "100%",
-        backgroundColor: theme.colors?.white,
-        // paddingVertical: 3,
-        paddingHorizontal: 16,
-        paddingBottom: 6,
-      }}
-    >
-      {/* <View style={{ marginBottom: 3, marginTop: 3 }}>
-    <Text
-      style={{ color: theme.colors?.grey1, fontWeight: "bold" }}
-    >{`${t("user.petCount")} ${profile.petCount}`}</Text>
-  </View> */}
-      {pets.length == 0 ? (
-        <View>
-          <Text style={{ fontSize: 18, color: theme.colors?.grey1 }}>
-            {`${t("user.noPet")}...`}
-          </Text>
-        </View>
-      ) : (
-        pets.map((item) => <PetItem key={item.id} pet={item} />)
-      )}
-    </ScrollView>
-  );
-};
-
 const UserProfile = () => {
   const { params } = useRoute<RouteProp<ParamTypes, "UserProfile">>();
   const { id } = params;
   const { t } = useTranslation();
   const { theme } = useTheme();
+  const { height: screenHeight } = useWindowDimensions();
   const { top, bottom } = useSafeAreaInsets();
   const { currentUser } = useCurrentUser();
+  const [tabIndex, setTabIndex] = useState(0);
   const navigation = useNavigation();
+
+  const HEADER_HEIGHT = 270;
+  const FOLD_HEADER_HEIGHT = 60;
+  const HEADER_FOLD_HEIGHT = HEADER_HEIGHT - FOLD_HEADER_HEIGHT;
+  const TAB_BAR_HEIGHT = 42;
+  const translateVal = useSharedValue(0);
+
   const { profile, pending, loadUserProfile } = useLoadUserProfile();
 
   useRefocusEffect(() => {
@@ -502,35 +536,218 @@ const UserProfile = () => {
     loadUserProfile(id);
   }, []);
 
-  // useRefocusEffect(() => {
-  //   if (id != feederId) {
-  //     loadPets(id);
-  //   }
-  // }, [feederId, id, loadPets]);
+  const {
+    listSlideStyle: userPostSlideStyle,
+    listRef: userPostListRef,
+    scrollHandler: userPostScrollHandler,
+    offsetDist: userPostScrollHeaderDist,
+  } = useCollpaseHeaderListTab({
+    translateVal: translateVal,
+    headerHeight: HEADER_FOLD_HEIGHT,
+    curTabIndex: tabIndex,
+    myTabIndex: 0,
+  });
 
-  // useEffect(() => {
-  //   loadPets(id);
-  // }, []);
+  const {
+    listSlideStyle: userQuestionSlideStyle,
+    listRef: userQuestionListRef,
+    scrollHandler: userQuestionScrollHandler,
+    offsetDist: questionScrollHeaderDist,
+  } = useCollpaseHeaderListTab({
+    translateVal: translateVal,
+    headerHeight: HEADER_FOLD_HEIGHT,
+    curTabIndex: tabIndex,
+    myTabIndex: 1,
+  });
+
+  const {
+    listSlideStyle: userAnswerSlideStyle,
+    listRef: userAnswerListRef,
+    scrollHandler: userAnswerScrollHandler,
+    offsetDist: answerScrollHeaderDist,
+  } = useCollpaseHeaderListTab({
+    translateVal: translateVal,
+    headerHeight: HEADER_FOLD_HEIGHT,
+    curTabIndex: tabIndex,
+    myTabIndex: 2,
+  });
+
+  const {
+    listSlideStyle: userCollectedPostSlideStyle,
+    listRef: userCollectedPostListRef,
+    scrollHandler: userCollectedPostScrollHandler,
+    offsetDist: collectedPostScrollHeaderDist,
+  } = useCollpaseHeaderListTab({
+    translateVal: translateVal,
+    headerHeight: HEADER_FOLD_HEIGHT,
+    curTabIndex: tabIndex,
+    myTabIndex: 3,
+  });
+
+  const scrollPairs = [
+    { listRef: userPostListRef, dist: userPostScrollHeaderDist },
+    { listRef: userQuestionListRef, dist: questionScrollHeaderDist },
+    { listRef: userAnswerListRef, dist: answerScrollHeaderDist },
+    { listRef: userCollectedPostListRef, dist: collectedPostScrollHeaderDist },
+  ];
+
+  const adjust: NonNullable<FlatListProps<any>["onMomentumScrollEnd"]> = (
+    event
+  ) => {
+    let i = -1;
+    for (const { listRef, dist } of scrollPairs) {
+      i += 1;
+      if (tabIndex == i) {
+        continue;
+      }
+      if (true) {
+        listRef.current?.scrollToOffset({
+          offset: translateVal.value + dist.value,
+          animated: false,
+        });
+      }
+    }
+  };
+
+  const foldHeaderSlideStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        translateVal.value,
+        [100, HEADER_HEIGHT - top - 20],
+        [0, 1]
+      ),
+      transform: [
+        {
+          translateY: Math.min(translateVal.value, 100 + top),
+        },
+      ],
+    };
+  });
+
+  const headerSlideStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: -translateVal.value,
+        },
+      ],
+    };
+  });
+
+  const tabSlideStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: -translateVal.value,
+        },
+      ],
+    };
+  });
+
+  const tabBarStyle = useMemo<StyleProp<ViewStyle>>(
+    () => [
+      {
+        top: HEADER_HEIGHT + top,
+        position: "absolute",
+        zIndex: 10,
+      },
+      tabSlideStyle,
+    ],
+    [tabSlideStyle]
+  );
 
   const renderTabBar = useCallback<
     (props: MaterialTopTabBarProps) => React.ReactElement
-  >((props) => <TabBar {...props} />, []);
+  >(
+    (props) => (
+      <Animated.View
+        style={[
+          tabBarStyle,
+          {
+            width: "100%",
+            shadowColor: theme.colors?.grey2,
+            shadowOffset: { width: 2, height: 4 },
+            shadowOpacity: 0.3,
+            elevation: 2,
+          },
+        ]}
+      >
+        <TabBar
+          onIndexChange={(index) => {
+            setTabIndex(index);
+          }}
+          style={{ height: TAB_BAR_HEIGHT }}
+          {...props}
+        />
+      </Animated.View>
+    ),
+    [tabBarStyle]
+  );
 
-  const renderUserPosts = useCallback(() => <UserPosts userId={id} />, [id]);
+  const sharedProps = useMemo<Partial<FlatListProps<any>>>(
+    () => ({
+      decelerationRate: 0.96,
+      contentContainerStyle: {
+        paddingTop: HEADER_HEIGHT + TAB_BAR_HEIGHT + top,
+        // paddingTop: 6,
+        paddingBottom: bottom,
+        minHeight: screenHeight + HEADER_HEIGHT,
+      },
+      scrollEventThrottle: 5,
+      onMomentumScrollEnd: adjust,
+      onScrollEndDrag: adjust,
+      // showsVerticalScrollIndicator: false,
+      // scrollIndicatorInsets: { top: -20 },
+    }),
+    [adjust]
+  );
+
+  const renderUserPosts = useCallback(
+    () => (
+      <UserPosts
+        ref={userPostListRef}
+        onScroll={userPostScrollHandler}
+        {...sharedProps}
+        userId={id}
+      />
+    ),
+    [sharedProps]
+  );
 
   const renderUserQuestions = useCallback(
-    () => <UserQuestions userId={id} />,
-    [id]
+    () => (
+      <UserQuestions
+        ref={userQuestionListRef}
+        onScroll={userQuestionScrollHandler}
+        {...sharedProps}
+        userId={id}
+      />
+    ),
+    [sharedProps]
   );
 
   const renderUserAnswers = useCallback(
-    () => <UserAnswers userId={id} />,
-    [id]
+    () => (
+      <UserAnswers
+        ref={userAnswerListRef}
+        onScroll={userAnswerScrollHandler}
+        {...sharedProps}
+        userId={id}
+      />
+    ),
+    [sharedProps]
   );
 
   const renderUserCollectedPosts = useCallback(
-    () => <UserCollectedPosts userId={id} />,
-    [id]
+    () => (
+      <UserCollectedPosts
+        ref={userCollectedPostListRef}
+        onScroll={userCollectedPostScrollHandler}
+        {...sharedProps}
+        userId={id}
+      />
+    ),
+    [sharedProps]
   );
 
   return (
@@ -538,25 +755,97 @@ const UserProfile = () => {
       <Animated.View
         style={[
           {
+            marginTop: -100 - top,
+            width: "100%",
+            position: "absolute",
+            zIndex: 9,
+          },
+          foldHeaderSlideStyle,
+        ]}
+      >
+        <Header height={FOLD_HEADER_HEIGHT + top} profile={profile} />
+        <Divider />
+      </Animated.View>
+
+      <Animated.View
+        style={[
+          {
+            height: HEADER_HEIGHT,
             paddingTop: top,
             width: "100%",
+            position: "absolute",
             zIndex: 1,
             backgroundColor: theme.colors?.white,
           },
+          headerSlideStyle,
         ]}
       >
         <View
           style={{
-            height: 160,
+            height: 165,
             width: "100%",
             padding: 16,
           }}
         >
           <UserPart profile={profile} />
         </View>
-        {/* <Divider /> */}
+        <Divider />
 
-        <UserPets userId={id} />
+        <View
+          style={{
+            height: 105,
+            width: "100%",
+            backgroundColor: theme.colors?.white,
+            // paddingVertical: 3,
+            paddingHorizontal: 16,
+          }}
+        >
+          {profile ? (
+            <View>
+              <View style={{ marginBottom: 3, marginTop: 3 }}>
+                <Text
+                  style={{ color: theme.colors?.grey1, fontWeight: "bold" }}
+                >{`${t("user.petCount")} ${profile.petCount}`}</Text>
+              </View>
+              <View
+                style={{
+                  height: 75,
+                  width: 180,
+                  backgroundColor: theme.colors?.grey5,
+                  borderRadius: 8,
+                  padding: 8,
+                  flexDirection: "row",
+                  alignItems: "center",
+
+                  borderColor: theme.colors?.grey4,
+                  // borderWidth: 1,
+
+                  // shadowColor: theme.colors?.grey2,
+                  // shadowOffset: { width: 2, height: 1 },
+                  // shadowOpacity: 0.5,
+                  // elevation: 2,
+                }}
+              >
+                <Avatar
+                  iconType="PET"
+                  source={{ uri: profile?.photo }}
+                  size={50}
+                />
+                <View
+                  style={{ marginLeft: 12, marginVertical: 6, minHeight: 40 }}
+                >
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: 18,
+                      color: theme.colors?.grey0,
+                    }}
+                  >{`name`}</Text>
+                </View>
+              </View>
+            </View>
+          ) : null}
+        </View>
       </Animated.View>
 
       {profile ? (

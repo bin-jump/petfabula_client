@@ -90,7 +90,8 @@
     "postCount": "投稿数",
     "petCount": "ペット数",
     "detail": "詳細",
-    "unsetBio": "まだ自己紹介がないみたい"
+    "unsetBio": "まだ自己紹介がありません",
+    "noPet": "またペットを登録していません"
   },
 
   "pet": {
@@ -161,6 +162,10 @@
       "WALK": "散歩",
       "BEAUTY": "美容院",
       "OTHERS": "その他"
+    },
+    "profile": {
+      "petPostTitle": "成長投稿",
+      "petAlbumTitle": "アルバム"
     },
     "title": "ペットセンター",
     "createPet": "ペット追加",

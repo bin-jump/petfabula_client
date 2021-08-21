@@ -1,13 +1,24 @@
-import React, { useCallback } from "react";
-import { View, TouchableOpacity, FlatList, ListRenderItem } from "react-native";
+import React, { useCallback, useEffect, forwardRef } from "react";
+import {
+  View,
+  TouchableWithoutFeedback,
+  FlatList,
+  ListRenderItem,
+} from "react-native";
 import { useTheme, Text, Divider, Icon } from "react-native-elements";
 import { useTranslation } from "react-i18next";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   useNavigation,
   useRoute,
   RouteProp,
   useFocusEffect,
 } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import {
+  createMaterialTopTabNavigator,
+  MaterialTopTabBarProps,
+} from "@react-navigation/material-top-tabs";
 import Animated, {
   useSharedValue,
   withTiming,
@@ -25,14 +36,18 @@ import {
   toAge,
   toAgeMonth,
   useRefocusEffect,
+  useFirstFocusEffect,
 } from "../../shared";
 import ParamTypes from "./ParamTypes";
+import TabBar from "../components/TabBar";
+
+const Tabs = createMaterialTopTabNavigator();
 
 const AnimatedFlatList = Animated.createAnimatedComponent(
   FlatList
 ) as typeof FlatList;
 
-type ListProps = { userId: number };
+type ListProps = { petId: number };
 
 type DateItem = { id: Date; date: Date; isDateItem: true };
 type PostOrDate = Post | DateItem;
@@ -47,6 +62,20 @@ const toDate = (mili: number) => {
   if (day.length < 2) day = "0" + day;
 
   return [year, month, day].join("/");
+};
+
+const getMonth = (mili: number) => {
+  var d = new Date(mili),
+    month = "" + (d.getMonth() + 1);
+  if (month.length < 2) month = "0" + month;
+  return month;
+};
+
+const getDay = (mili: number) => {
+  var d = new Date(mili),
+    day = "" + d.getDate();
+  if (day.length < 2) day = "0" + day;
+  return day;
 };
 
 const makeListData = (posts: Post[]) => {
@@ -139,30 +168,20 @@ const GenderItem = ({ gender }: { gender: string | null }) => {
   return null;
 };
 
-const PetContent = () => {
+const PetContent = ({ pet, petId }: { pet: Pet | null; petId: number }) => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const { params } = useRoute<RouteProp<ParamTypes, "PetDetailView">>();
-  const petId = params.petId;
-  const { pet, loadPet, pending } = useLoadPet();
-
-  useFocusEffect(
-    useCallback(() => {
-      if (!pending && petId != pet?.id) {
-        loadPet(petId);
-      }
-    }, [petId, loadPet, pet])
-  );
 
   return (
-    <View>
+    <View style={{ height: 150 }}>
       {pet && pet.id == petId ? (
         <View
           style={{
             paddingHorizontal: 26,
             // height: 150,
             backgroundColor: theme.colors?.white,
-            paddingBottom: 16,
+            paddingBottom: 12,
           }}
         >
           <View style={{ alignItems: "center", flexDirection: "row" }}>
@@ -230,7 +249,7 @@ const PetContent = () => {
             style={{
               textAlign: "center",
               color: theme.colors?.grey1,
-              marginTop: 12,
+              marginTop: 8,
               paddingHorizontal: 6,
             }}
           >
@@ -244,6 +263,7 @@ const PetContent = () => {
 
 const PostListItem = ({ item }: { item: PostOrDate }) => {
   const { theme } = useTheme();
+  const navigation = useNavigation<StackNavigationProp<any>>();
 
   let isDateItem = (item as any).isDateItem;
   if (isDateItem) {
@@ -252,7 +272,7 @@ const PostListItem = ({ item }: { item: PostOrDate }) => {
       <View
         style={{
           flexDirection: "row",
-          height: 30,
+          height: 32,
           alignItems: "center",
         }}
       >
@@ -270,8 +290,10 @@ const PostListItem = ({ item }: { item: PostOrDate }) => {
             }}
           ></View>
         </View>
-        <Text style={{ color: theme.colors?.grey1 }}>
-          {toDate(dateItem.date.getTime())}
+        <Text style={{ color: theme.colors?.grey1, fontWeight: "bold" }}>
+          {`${
+            dateItem.date.getMonth() + 1
+          }/${dateItem.date.getDate()}, ${dateItem.date.getFullYear()}`}
         </Text>
       </View>
     );
@@ -280,80 +302,81 @@ const PostListItem = ({ item }: { item: PostOrDate }) => {
   const postItem = item as Post;
 
   return (
-    <View
-      style={{
-        flex: 1,
-        flexDirection: "row",
-        height: 120,
-        paddingRight: 8,
-        alignItems: "center",
+    <TouchableWithoutFeedback
+      onPress={() => {
+        navigation.push("PostDetailView", { id: postItem.id });
       }}
     >
-      <View style={{ width: 30, alignItems: "center" }}>
-        <View
-          style={{
-            height: 130,
-            width: 2,
-            backgroundColor: theme.colors?.grey4,
-          }}
-        ></View>
-      </View>
       <View
         style={{
           flex: 1,
           flexDirection: "row",
-          // borderColor: theme.colors?.grey4,
-          // borderWidth: 1,
-          padding: 12,
-          borderRadius: 8,
-          height: 110,
-          backgroundColor: theme.colors?.white,
-          shadowColor: theme.colors?.grey2,
-          shadowOffset: { width: 2, height: 2 },
-          shadowOpacity: 0.5,
-          shadowRadius: 6,
-          elevation: 2,
+          height: 120,
+          paddingRight: 8,
+          alignItems: "center",
         }}
       >
-        <Text
-          numberOfLines={3}
+        <View style={{ width: 30, alignItems: "center" }}>
+          <View
+            style={{
+              height: 130,
+              width: 2,
+              backgroundColor: theme.colors?.grey4,
+            }}
+          ></View>
+        </View>
+        <View
           style={{
-            fontSize: 18,
             flex: 1,
-            marginRight: 8,
-            color: theme.colors?.black,
+            flexDirection: "row",
+            // borderColor: theme.colors?.grey4,
+            // borderWidth: 1,
+            padding: 12,
+            borderRadius: 8,
+            height: 110,
+            backgroundColor: theme.colors?.white,
+            shadowColor: theme.colors?.grey2,
+            shadowOffset: { width: 2, height: 2 },
+            shadowOpacity: 0.5,
+            shadowRadius: 6,
+            elevation: 2,
           }}
         >
-          {postItem.content}
-        </Text>
+          <Text
+            numberOfLines={3}
+            style={{
+              fontSize: 18,
+              flex: 1,
+              marginRight: 8,
+              color: theme.colors?.black,
+            }}
+          >
+            {postItem.content}
+          </Text>
 
-        {postItem.images.length > 0 ? (
-          <Image
-            containerStyle={{ borderRadius: 6 }}
-            style={{ width: 100, height: 100 }}
-            source={{ uri: postItem.images[0].url }}
-          />
-        ) : null}
+          {postItem.images.length > 0 ? (
+            <Image
+              containerStyle={{ borderRadius: 6 }}
+              style={{ width: 100, height: 100 }}
+              source={{ uri: postItem.images[0].url }}
+            />
+          ) : null}
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
-const PetDetailView = () => {
+const PetPostList = forwardRef<FlatList, ListProps>((props, ref) => {
   const { theme } = useTheme();
-  const { t } = useTranslation();
-  const { params } = useRoute<RouteProp<ParamTypes, "PetDetailView">>();
-  const petId = params.petId;
+  const { petId } = props;
   const {
     petId: postPetId,
     posts,
     loadPetPosts,
     pending: petPostPending,
   } = useLoadPetPosts();
-
-  useRefocusEffect(() => {
-    loadPetPosts(petId, null);
-  }, [petId, loadPetPosts]);
+  const navigation = useNavigation<StackNavigationProp<any>>();
 
   const keyExtractor = (item: PostOrDate) => item.id.toString();
 
@@ -361,12 +384,127 @@ const PetDetailView = () => {
     return <PostListItem item={item} />;
   }, []);
 
+  useFirstFocusEffect(() => {
+    loadPetPosts(petId, null);
+  }, []);
+
   return (
-    <View style={{}}>
-      <AnimatedFlatList
+    <AnimatedFlatList
+      contentContainerStyle={{
+        paddingBottom: 40,
+      }}
+      // ListHeaderComponent={() => {
+      //   return (
+      //     <View style={{ flexDirection: "row", alignItems: "center" }}>
+      //       <Text
+      //         style={{
+      //           marginLeft: 16,
+      //           fontWeight: "bold",
+      //           fontSize: 20,
+      //           color: theme.colors?.grey0,
+      //         }}
+      //       >{`成長`}</Text>
+      //       <Icon
+      //         type="material-community"
+      //         name="shoe-print"
+      //         color={theme.colors?.grey0}
+      //       />
+      //     </View>
+      //   );
+      // }}
+      keyExtractor={keyExtractor}
+      data={makeListData(posts)}
+      renderItem={renderItem}
+      // ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
+      onEndReached={() => {
+        // if (hasMore && !pending && !error) {
+        //   loadUserPosts(userId, nextCursor);
+        // }
+      }}
+      onEndReachedThreshold={0.2}
+    />
+  );
+});
+
+const PetDetailView = () => {
+  const { theme } = useTheme();
+  const { top } = useSafeAreaInsets();
+  const { t } = useTranslation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
+  const { params } = useRoute<RouteProp<ParamTypes, "PetDetailView">>();
+  const petId = params.petId;
+  const { pet, pending, loadPet } = useLoadPet();
+
+  const renderPetPostList = useCallback(
+    () => <PetPostList petId={petId} />,
+    [petId]
+  );
+
+  const renderTabBar = useCallback<
+    (props: MaterialTopTabBarProps) => React.ReactElement
+  >((props) => <TabBar {...props} />, []);
+
+  useRefocusEffect(() => {
+    if (petId != pet?.id) {
+      loadPet(petId);
+    }
+  }, [petId, loadPet, pet]);
+
+  useEffect(() => {
+    loadPet(petId);
+  }, []);
+
+  return (
+    <View style={{ flex: 1 }}>
+      <View style={{ backgroundColor: theme.colors?.white, height: top }} />
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "flex-start",
+          backgroundColor: theme.colors?.white,
+          paddingHorizontal: 16,
+        }}
+      >
+        <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
+          <Icon
+            type="entypo"
+            name="chevron-thin-left"
+            size={24}
+            color={theme.colors?.black}
+          />
+        </TouchableWithoutFeedback>
+      </View>
+      <PetContent pet={pet} petId={petId} />
+
+      <Tabs.Navigator tabBar={renderTabBar}>
+        <Tabs.Screen
+          options={{
+            tabBarLabel: t("pet.profile.petPostTitle"),
+            tabBarIcon: () => (
+              <Icon
+                type="material-community"
+                name="shoe-print"
+                color={theme.colors?.grey0}
+              />
+            ),
+          }}
+          name="PetPosts"
+        >
+          {renderPetPostList}
+        </Tabs.Screen>
+
+        <Tabs.Screen
+          options={{ tabBarLabel: t("pet.profile.petAlbumTitle") }}
+          name="PetAlbum"
+        >
+          {renderPetPostList}
+        </Tabs.Screen>
+      </Tabs.Navigator>
+
+      {/* <AnimatedFlatList
         contentContainerStyle={{
           minHeight: "100%",
-          // backgroundColor: theme.colors?.white,
+          paddingBottom: 40,
         }}
         ListHeaderComponent={<PetContent />}
         keyExtractor={keyExtractor}
@@ -379,7 +517,7 @@ const PetDetailView = () => {
           // }
         }}
         onEndReachedThreshold={0.2}
-      />
+      /> */}
     </View>
   );
 };
