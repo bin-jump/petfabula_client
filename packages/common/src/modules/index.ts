@@ -39,6 +39,7 @@ export {
   useFollowUser,
   useUnfollowUser,
   useCreatePost,
+  useUpdatePost,
   useLoadPetPosts,
   useLoadFollowedPosts,
   useLoadMyProfile,
@@ -117,6 +118,11 @@ export {
   useCreateDisroderRecord,
   useCreatePetEventRecord,
   useCreateMedicalRecord,
+  useLoadFeedRecords,
+  useLoadWeightRecords,
+  useLoadDisorderRecords,
+  useLoadMeidcalRecords,
+  useLoadPetEventRecords,
 } from './pet';
 
 export {

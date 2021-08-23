@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 import { petMessageKey, commonMessageKey } from './messageKeys';
-import { endOfToday, isPositive } from './helper';
+import { endOfToday, isPositive, recordDateTimeSpan } from './helper';
 
 const validRecordNote = yup.string().max(200, petMessageKey.recordNote);
 
@@ -48,7 +48,9 @@ export const validFeedRecordFormSchema = yup.object().shape({
     .required(commonMessageKey.emptyValue)
     .test('IsPositive', commonMessageKey.emptyValue, isPositive),
   foodContent: yup.string().max(200, petMessageKey.foodContent),
-  date: yup.number().max(endOfToday().getTime(), petMessageKey.recordDate),
+  dateTime: yup
+    .number()
+    .max(recordDateTimeSpan().getTime(), petMessageKey.recordDate),
   note: validRecordNote,
 });
 
@@ -63,7 +65,9 @@ export const validWeightRecordFormSchema = yup.object().shape({
     .max(1000, petMessageKey.weight)
     .required(commonMessageKey.emptyValue)
     .test('IsPositive', commonMessageKey.emptyValue, isPositive),
-  date: yup.number().max(endOfToday().getTime(), petMessageKey.recordDate),
+  dateTime: yup
+    .number()
+    .max(recordDateTimeSpan().getTime(), petMessageKey.recordDate),
 });
 
 export const validDisorderRecordFormSchema = yup.object().shape({
@@ -75,7 +79,9 @@ export const validDisorderRecordFormSchema = yup.object().shape({
     .string()
     .max(500, petMessageKey.disorderContent)
     .required(commonMessageKey.emptyValue),
-  dateTime: yup.number().max(endOfToday().getTime(), petMessageKey.recordDate),
+  dateTime: yup
+    .number()
+    .max(recordDateTimeSpan().getTime(), petMessageKey.recordDate),
 });
 
 export const validPetEventRecordFormSchema = yup.object().shape({
@@ -88,7 +94,9 @@ export const validPetEventRecordFormSchema = yup.object().shape({
     .string()
     .max(240, petMessageKey.eventContent)
     .required(commonMessageKey.emptyValue),
-  dateTime: yup.number().max(endOfToday().getTime(), petMessageKey.recordDate),
+  dateTime: yup
+    .number()
+    .max(recordDateTimeSpan().getTime(), petMessageKey.recordDate),
 });
 
 export const validMedicalRecordFormSchema = yup.object().shape({
@@ -96,7 +104,9 @@ export const validMedicalRecordFormSchema = yup.object().shape({
     .number()
     .typeError(petMessageKey.petSelect)
     .required(petMessageKey.petSelect),
-  dateTime: yup.number().max(endOfToday().getTime(), petMessageKey.recordDate),
+  dateTime: yup
+    .number()
+    .max(recordDateTimeSpan().getTime(), petMessageKey.recordDate),
   hospitalName: yup.string().max(30, petMessageKey.hospitalName),
   symptom: yup
     .string()

@@ -10,3 +10,9 @@ export const isPositive = (val: number | undefined) => {
   }
   return val > 0;
 };
+
+export const recordDateTimeSpan = () => {
+  const date = new Date();
+  date.setFullYear(date.getFullYear() + 1);
+  return date;
+};

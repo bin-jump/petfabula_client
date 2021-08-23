@@ -74,7 +74,7 @@ export interface MedicalRecord {
 export interface PetEventRecord {
   id: number;
   petId: number;
-  date: number;
+  dateTime: number;
   eventType: string;
   content: string;
   images: DisplayImage[];
@@ -84,7 +84,7 @@ export interface PetEventRecord {
 export interface WeightRecord {
   id: number;
   petId: number;
-  date: number;
+  dateTime: number;
   weight: number;
 }
 
@@ -108,7 +108,7 @@ export interface FeedRecordForm {
 export interface WeightRecordForm {
   petId: number;
   weight: number;
-  date: number;
+  dateTime: number;
 }
 
 export interface DisorderRecordForm {
@@ -152,19 +152,19 @@ export interface PetState {
 
   pet: AsyncDataBase<Pet>;
 
-  myPetDisorderRecords: AsyncCursorPageListBase<DisorderRecord> & {
+  petDisorderRecords: AsyncCursorPageListBase<DisorderRecord> & {
     petId: number | null;
   };
-  myPetFeedRecords: AsyncCursorPageListBase<FeedRecord> & {
+  petFeedRecords: AsyncCursorPageListBase<FeedRecord> & {
     petId: number | null;
   };
-  myPetMedicalRecords: AsyncCursorPageListBase<MedicalRecord> & {
+  petMedicalRecords: AsyncCursorPageListBase<MedicalRecord> & {
     petId: number | null;
   };
-  myPetPetEventRecords: AsyncCursorPageListBase<PetEventRecord> & {
+  petPetEventRecords: AsyncCursorPageListBase<PetEventRecord> & {
     petId: number | null;
   };
-  myPetWeightRecords: AsyncCursorPageListBase<WeightRecord> & {
+  petWeightRecords: AsyncCursorPageListBase<WeightRecord> & {
     petId: number | null;
   };
 }

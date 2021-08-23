@@ -230,6 +230,7 @@ export interface CommunityState {
 
   createPost: AsyncDataBase<Post>;
   removePost: AsyncDataBase<number>;
+  updatePost: AsyncDataBase<Post>;
   createPostComment: AsyncDataBase<PostComment>;
   removePostComment: AsyncDataBase<number>;
   createPostReply: AsyncDataBase<PostCommentReply>;

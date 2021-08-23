@@ -99,7 +99,7 @@ const UserPosts = forwardRef<FlatList, ListProps>((props, ref) => {
 
   useFirstFocusEffect(() => {
     loadUserPosts(userId, null);
-  }, []);
+  }, [loadUserPosts, userId]);
 
   return (
     <AnimatedFlatList
@@ -156,7 +156,7 @@ const UserQuestions = forwardRef<FlatList, ListProps>((props, ref) => {
 
   useFirstFocusEffect(() => {
     loadUserQuestions(userId, null);
-  }, []);
+  }, [loadUserQuestions, userId]);
 
   return (
     <AnimatedFlatList
@@ -214,7 +214,7 @@ const UserAnswers = forwardRef<FlatList, ListProps>((props, ref) => {
 
   useFirstFocusEffect(() => {
     loadUserAnswers(userId, null);
-  }, []);
+  }, [userId, loadUserAnswers]);
 
   return (
     <AnimatedFlatList
@@ -269,7 +269,7 @@ const UserCollectedPosts = forwardRef<FlatList, ListProps>((props, ref) => {
 
   useFirstFocusEffect(() => {
     loadCollectedPosts(userId, null);
-  }, []);
+  }, [userId, loadCollectedPosts]);
 
   return (
     <AnimatedFlatList
@@ -443,6 +443,7 @@ const PetItem = ({ pet }: { pet: Pet }) => {
     >
       <View
         style={{
+          marginRight: 12,
           height: 50,
           width: 150,
           backgroundColor: theme.colors?.white,

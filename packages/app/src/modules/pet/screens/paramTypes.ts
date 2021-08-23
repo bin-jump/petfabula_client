@@ -1,4 +1,4 @@
-import { PetBreed } from "@petfabula/common";
+import { PetBreed, Pet } from "@petfabula/common";
 
 type ParamTypes = {
   CreatePet: {
@@ -8,6 +8,10 @@ type ParamTypes = {
 
   PetDetailView: {
     petId: number;
+  };
+
+  PetRecords: {
+    pet: Pet;
   };
 };
 

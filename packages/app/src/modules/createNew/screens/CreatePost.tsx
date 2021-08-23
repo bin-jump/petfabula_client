@@ -23,6 +23,7 @@ import {
   validPostSchema,
   useCreatePost,
   PostTopic,
+  Post,
 } from "@petfabula/common";
 import ParamTypes from "./paramTypes";
 import MultipleImageSelect from "../components/MultipleImageSelect";
@@ -34,6 +35,7 @@ const CreatePost = () => {
   const { params } = useRoute<RouteProp<ParamTypes, "CreatePost">>();
   const { t } = useTranslation();
   const { createPost } = useCreatePost();
+  const post = params?.post;
   const images = params?.images ? params.images : [];
   const topic = params?.topic;
   const pet = params?.pet;

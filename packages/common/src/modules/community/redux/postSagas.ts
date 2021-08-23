@@ -15,6 +15,7 @@ import {
   LoadRecommendPostsActionType,
   LoadFollowedPostsActionType,
   PostCreatePostActionType,
+  PostUpdatePostActionType,
   PostRemovePostActionType,
   PostLikeActionType,
   PostUnlikeActionType,
@@ -147,6 +148,13 @@ const watchCreatePost = createSagaWatcher({
   url: `/api/post/posts`,
   method: 'POST',
   asyncAction: PostCreatePostActionType,
+  watchType: 'EVERY',
+});
+
+const watchUpdatePost = createSagaWatcher({
+  url: `/api/post/posts`,
+  method: 'PUT',
+  asyncAction: PostUpdatePostActionType,
   watchType: 'EVERY',
 });
 

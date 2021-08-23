@@ -21,7 +21,7 @@ const initialStat: PetState = {
   createPetEventRecord: { data: null, pending: false, error: null },
   createWeightRecord: { data: null, pending: false, error: null },
 
-  myPetDisorderRecords: {
+  petDisorderRecords: {
     petId: null,
     data: [],
     pending: false,
@@ -30,7 +30,7 @@ const initialStat: PetState = {
     nextCursor: null,
     initializing: false,
   },
-  myPetFeedRecords: {
+  petFeedRecords: {
     petId: null,
     data: [],
     pending: false,
@@ -39,7 +39,7 @@ const initialStat: PetState = {
     nextCursor: null,
     initializing: false,
   },
-  myPetMedicalRecords: {
+  petMedicalRecords: {
     petId: null,
     data: [],
     pending: false,
@@ -48,7 +48,7 @@ const initialStat: PetState = {
     nextCursor: null,
     initializing: false,
   },
-  myPetPetEventRecords: {
+  petPetEventRecords: {
     petId: null,
     data: [],
     pending: false,
@@ -57,7 +57,7 @@ const initialStat: PetState = {
     nextCursor: null,
     initializing: false,
   },
-  myPetWeightRecords: {
+  petWeightRecords: {
     petId: null,
     data: [],
     pending: false,

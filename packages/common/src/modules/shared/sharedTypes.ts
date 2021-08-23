@@ -5,6 +5,7 @@ export type UploadImage = {
 };
 
 export type DisplayImage = {
+  id: number;
   url: string;
   width: number;
   height: number;

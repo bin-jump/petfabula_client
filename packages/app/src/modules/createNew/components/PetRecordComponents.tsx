@@ -120,10 +120,12 @@ export const RecordDateField: React.FC<
         value={formatDate(values[field.name])}
         label={label}
         placeholder={placeholder}
-        containerStyle={{ paddingHorizontal: 0, height: 42, width: 180 }}
+        containerStyle={{
+          paddingHorizontal: 0,
+        }}
         inputContainerStyle={{
-          height: 40,
-
+          height: 24,
+          width: 180,
           borderBottomWidth: 0,
         }}
         autoCapitalize="none"
@@ -211,13 +213,11 @@ export const RecordTimeField: React.FC<
         placeholder={placeholder}
         containerStyle={{
           paddingHorizontal: 0,
-          padding: 0,
-          height: 42,
-          width: 150,
         }}
         inputContainerStyle={{
           borderBottomWidth: 0,
-          height: 40,
+          width: 180,
+          height: 30,
         }}
         autoCapitalize="none"
         onBlur={() => handleBlur(field.name)}

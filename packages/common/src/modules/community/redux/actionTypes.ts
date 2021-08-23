@@ -45,8 +45,12 @@ export const PostLoadDetailActionType = createAsyncActionType(
 );
 export const PostCreatePostActionType =
   createAsyncActionType('POST_CREATE_POST');
+
 export const PostRemovePostActionType =
   createAsyncActionType('POST_REMOVE_POST');
+
+export const PostUpdatePostActionType =
+  createAsyncActionType('POST_UPDATE_POST');
 
 export const PostLoadPostCommentsActionType = createAsyncActionType(
   'POST_LOAD_POST_COMMENTS',

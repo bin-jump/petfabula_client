@@ -2,8 +2,11 @@ import { useCallback } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { AppState } from '../../../stateProvider';
 import { PetState, FeedRecordForm } from './types';
-import { CreateFeedRecordActionType } from './actionTypes';
-import { ActionBase, UploadImage } from '../../shared';
+import {
+  CreateFeedRecordActionType,
+  LoadPetFeedRecordActionType,
+} from './actionTypes';
+import { ActionBase, fillCursorResponseData } from '../../shared';
 
 export const useCreateFeedRecord = () => {
   const dispatch = useDispatch();
@@ -34,6 +37,44 @@ export const useCreateFeedRecord = () => {
   };
 };
 
+export const useLoadFeedRecords = () => {
+  const dispatch = useDispatch();
+  const { petId, records, hasMore, nextCursor, initializing, pending, error } =
+    useSelector(
+      (state: AppState) => ({
+        petId: state.pet.petFeedRecords.petId,
+        records: state.pet.petFeedRecords.data,
+        pending: state.pet.petFeedRecords.pending,
+        error: state.pet.petFeedRecords.error,
+        hasMore: state.pet.petFeedRecords.hasMore,
+        nextCursor: state.pet.petFeedRecords.nextCursor,
+        initializing: state.pet.petFeedRecords.initializing,
+      }),
+      shallowEqual,
+    );
+
+  const boundAction = useCallback(
+    (petId: number, cursor: object | null) => {
+      dispatch({
+        type: LoadPetFeedRecordActionType.BEGIN,
+        payload: { petId, cursor },
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    petId,
+    loadRecords: boundAction,
+    records,
+    initializing,
+    hasMore,
+    nextCursor,
+    pending,
+    error,
+  };
+};
+
 export const feedRecordReducer = {
   [CreateFeedRecordActionType.BEGIN]: (
     state: PetState,
@@ -52,7 +93,7 @@ export const feedRecordReducer = {
     state: PetState,
     action: ActionBase,
   ): PetState => {
-    const feedRecords = state.myPetFeedRecords.data;
+    const feedRecords = state.petFeedRecords.data;
     return {
       ...state,
       createFeedRecord: {
@@ -60,9 +101,12 @@ export const feedRecordReducer = {
         pending: false,
         data: action.payload,
       },
-      myPetFeedRecords: {
-        ...state.myPetFeedRecords,
-        data: feedRecords ? [action.payload, ...feedRecords] : feedRecords,
+      petFeedRecords: {
+        ...state.petFeedRecords,
+        data:
+          state.petFeedRecords.petId == action.payload.petId
+            ? [action.payload, ...feedRecords]
+            : feedRecords,
       },
     };
   },
@@ -75,6 +119,48 @@ export const feedRecordReducer = {
       createFeedRecord: {
         ...state.createFeedRecord,
         pending: false,
+        error: action.error,
+      },
+    };
+  },
+
+  // load
+  [LoadPetFeedRecordActionType.BEGIN]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      petFeedRecords: {
+        ...state.petFeedRecords,
+        initializing: action.payload.cursor == null,
+        pending: true,
+        error: action.error,
+      },
+    };
+  },
+  [LoadPetFeedRecordActionType.SUCCESS]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      petFeedRecords: {
+        petId: action.extra.petId,
+        ...fillCursorResponseData(state.petFeedRecords, action),
+      },
+    };
+  },
+  [LoadPetFeedRecordActionType.FAILURE]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      petFeedRecords: {
+        ...state.petFeedRecords,
+        pending: false,
+        initializing: false,
         error: action.error,
       },
     };

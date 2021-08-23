@@ -143,7 +143,6 @@
       "disorderContentPlaceholder": "症状",
       "eventContentPlaceholder": "内容",
       "editEventContent": "内容を編集",
-
       "hospitalNamePlaceholder": "病院名",
       "symptomPlaceholder": "症状",
       "diagnosisPlaceholder": "診断結果(任意)",
@@ -161,7 +160,25 @@
       "TOILET": "トイレ",
       "WALK": "散歩",
       "BEAUTY": "美容院",
-      "OTHERS": "その他"
+      "OTHERS": "その他",
+
+      "recordsOfPetTitle": "{{name}}のペット記録",
+      "feedRecordTitle": "食事",
+      "weightRecordTitle": "体重",
+      "disorderRecordTitle": "異常",
+      "petEventRecordTitle": "日常",
+      "medicalRecordTitle": "医療",
+
+      "foodAmountLabel": "食糧",
+      "noteLabel": "ノート",
+      "weightLabel": "体重",
+      "disorderContentLabel": "症状",
+      "eventTypeLabel": "タイプ",
+      "eventContentLabel": "内容",
+      "hospitalNameLabel": "病院名",
+      "symptomLabel": "症状",
+      "diagnosisLabel": "診断結果",
+      "treatmentLabel": "治療"
     },
     "profile": {
       "petPostTitle": "成長投稿",

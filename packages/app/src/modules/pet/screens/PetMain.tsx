@@ -1,5 +1,11 @@
 import React, { useEffect } from "react";
-import { View, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  ScrollView,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  RefreshControl,
+} from "react-native";
 import { Text, useTheme, Icon, Divider } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
@@ -135,46 +141,58 @@ const PetItem = ({ item }: { item: PetDetail }) => {
         shadowRadius: 6,
         elevation: 2,
         padding: 12,
+        marginBottom: 16,
       }}
     >
-      <View style={{ flexDirection: "row" }}>
-        <Avatar source={{ uri: item.photo }} size={60} iconType="PET" />
-        <View style={{ marginLeft: 12 }}>
-          <View
-            style={{
-              marginBottom: 6,
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Text h3>{item.name}</Text>
-            <Text
-              numberOfLines={1}
-              style={{ color: theme.colors?.grey0, fontSize: 14 }}
-            >
-              {`   ${item.breed}`}
-            </Text>
-          </View>
-
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <GenderItem gender={item.gender} />
-            <AgeItem mili={item.birthday} />
-            <Text
+      <TouchableWithoutFeedback
+        onPress={() => {
+          navigation.navigate("SecondaryStack", {
+            screen: "PetDetailView",
+            params: {
+              petId: item.id,
+            },
+          });
+        }}
+      >
+        <View style={{ flexDirection: "row" }}>
+          <Avatar source={{ uri: item.photo }} size={60} iconType="PET" />
+          <View style={{ marginLeft: 12 }}>
+            <View
               style={{
-                marginLeft: 6,
-                color: theme.colors?.primary,
+                marginBottom: 6,
+                flexDirection: "row",
+                alignItems: "center",
               }}
             >
-              {`${t("pet.withYou", { day: daysTillNow(item.arrivalDay) })}`}
-            </Text>
+              <Text h3>{item.name}</Text>
+              <Text
+                numberOfLines={1}
+                style={{ color: theme.colors?.grey0, fontSize: 14 }}
+              >
+                {`   ${item.breed}`}
+              </Text>
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <GenderItem gender={item.gender} />
+              <AgeItem mili={item.birthday} />
+              <Text
+                style={{
+                  marginLeft: 6,
+                  color: theme.colors?.primary,
+                }}
+              >
+                {`${t("pet.withYou", { day: daysTillNow(item.arrivalDay) })}`}
+              </Text>
+            </View>
           </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
 
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text
@@ -268,11 +286,11 @@ const PetMain = () => {
   const { t } = useTranslation();
   const navigation = useNavigation();
   const { currentUser } = useCurrentUser();
-  const { loadPets, pets } = useLoadMyPets();
+  const { loadPets, pets, pending } = useLoadMyPets();
 
   useEffect(() => {
     loadPets();
-  }, [loadPets]);
+  }, [loadPets, currentUser]);
 
   return (
     <View style={{ backgroundColor: theme.colors?.white }}>
@@ -315,6 +333,15 @@ const PetMain = () => {
         </View>
       </View>
       <ScrollView
+        refreshControl={
+          <RefreshControl
+            // progressViewOffset={70}
+            refreshing={pending}
+            onRefresh={() => {
+              loadPets();
+            }}
+          />
+        }
         style={{
           minHeight: "100%",
           minWidth: "100%",

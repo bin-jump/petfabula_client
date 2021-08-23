@@ -1,6 +1,6 @@
 import { RouteProp } from "@react-navigation/native";
 import { ImageFile } from "../../shared";
-import { PostTopic, ParticiptorPet, Pet } from "@petfabula/common";
+import { PostTopic, ParticiptorPet, Pet, Post } from "@petfabula/common";
 
 type ParamTypes = {
   ImageSelect: {
@@ -8,6 +8,7 @@ type ParamTypes = {
   };
 
   CreatePost: {
+    post: Post | undefined;
     images: ImageFile[] | undefined;
     topic: PostTopic | undefined;
     pet: Pet | null;

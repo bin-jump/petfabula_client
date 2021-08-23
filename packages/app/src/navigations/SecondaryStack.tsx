@@ -23,7 +23,7 @@ import {
   UpvoteNotifications,
   FollowNotifications,
 } from "../modules/notification/screens";
-import { PetDetailView } from "../modules/pet/screens";
+import { PetDetailView, PetRecords } from "../modules/pet/screens";
 
 const SecondaryStackStack = createStackNavigator();
 
@@ -226,6 +226,14 @@ const SecondaryStack = () => {
         })}
         name="PetDetailView"
         component={PetDetailView}
+      />
+
+      <SecondaryStackStack.Screen
+        options={(navigation) => ({
+          ...plainGoBackHeaderOption({ navigation, theme }),
+        })}
+        name="PetRecords"
+        component={PetRecords}
       />
     </SecondaryStackStack.Navigator>
   );

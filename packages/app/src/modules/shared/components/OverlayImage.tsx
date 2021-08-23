@@ -4,8 +4,9 @@ import {
   View,
   useWindowDimensions,
   TouchableOpacity,
+  ImageStyle,
 } from "react-native";
-import { ImageProps, Overlay, Icon } from "react-native-elements";
+import { Overlay, Icon } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   PinchGestureHandler,
@@ -168,9 +169,10 @@ const OverlayImage = (
     height: number;
     width: number;
     image: DisplayImage;
+    imageStyle?: ImageStyle;
   } & ViewProps
 ) => {
-  const { height, width, image, ...viewProps } = props;
+  const { height, width, image, imageStyle, ...viewProps } = props;
   const [visiable, setVisiable] = useState(false);
 
   return (
@@ -191,7 +193,7 @@ const OverlayImage = (
         onPress={() => {
           setVisiable(true);
         }}
-        style={{ width, height }}
+        style={[{ width, height }, imageStyle]}
         source={{ uri: image.url }}
       />
       {/* </TouchableWithoutFeedback> */}

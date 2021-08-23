@@ -108,6 +108,7 @@ const initialStat: CommunityState = {
 
   createPost: { data: null, pending: false, error: null },
   removePost: { data: null, pending: false, error: null },
+  updatePost: { data: null, pending: false, error: null },
   createPostComment: { data: null, pending: false, error: null },
   removePostComment: { data: null, pending: false, error: null },
   createPostReply: { data: null, pending: false, error: null },

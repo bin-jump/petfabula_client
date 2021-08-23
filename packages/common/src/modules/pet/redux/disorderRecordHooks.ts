@@ -2,8 +2,11 @@ import { useCallback } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { AppState } from '../../../stateProvider';
 import { PetState, DisorderRecordForm } from './types';
-import { CreateDisorderRecordActionType } from './actionTypes';
-import { ActionBase, UploadImage } from '../../shared';
+import {
+  CreateDisorderRecordActionType,
+  LoadPetDisorderRecordActionType,
+} from './actionTypes';
+import { ActionBase, UploadImage, fillCursorResponseData } from '../../shared';
 
 export const useCreateDisroderRecord = () => {
   const dispatch = useDispatch();
@@ -46,6 +49,44 @@ export const useCreateDisroderRecord = () => {
   };
 };
 
+export const useLoadDisorderRecords = () => {
+  const dispatch = useDispatch();
+  const { petId, records, hasMore, nextCursor, initializing, pending, error } =
+    useSelector(
+      (state: AppState) => ({
+        petId: state.pet.petDisorderRecords.petId,
+        records: state.pet.petDisorderRecords.data,
+        pending: state.pet.petDisorderRecords.pending,
+        error: state.pet.petDisorderRecords.error,
+        hasMore: state.pet.petDisorderRecords.hasMore,
+        nextCursor: state.pet.petDisorderRecords.nextCursor,
+        initializing: state.pet.petDisorderRecords.initializing,
+      }),
+      shallowEqual,
+    );
+
+  const boundAction = useCallback(
+    (petId: number, cursor: object | null) => {
+      dispatch({
+        type: LoadPetDisorderRecordActionType.BEGIN,
+        payload: { petId, cursor },
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    petId,
+    loadRecords: boundAction,
+    records,
+    initializing,
+    hasMore,
+    nextCursor,
+    pending,
+    error,
+  };
+};
+
 export const disorderRecordReducer = {
   [CreateDisorderRecordActionType.BEGIN]: (
     state: PetState,
@@ -64,7 +105,7 @@ export const disorderRecordReducer = {
     state: PetState,
     action: ActionBase,
   ): PetState => {
-    const records = state.myPetDisorderRecords.data;
+    const records = state.petDisorderRecords.data;
     return {
       ...state,
       createDisorderRecord: {
@@ -72,9 +113,12 @@ export const disorderRecordReducer = {
         pending: false,
         data: action.payload,
       },
-      myPetDisorderRecords: {
-        ...state.myPetDisorderRecords,
-        data: records ? [action.payload, ...records] : records,
+      petDisorderRecords: {
+        ...state.petDisorderRecords,
+        data:
+          state.petDisorderRecords.petId == action.payload.petId
+            ? [action.payload, ...records]
+            : records,
       },
     };
   },
@@ -87,6 +131,48 @@ export const disorderRecordReducer = {
       createDisorderRecord: {
         ...state.createDisorderRecord,
         pending: false,
+        error: action.error,
+      },
+    };
+  },
+
+  // load
+  [LoadPetDisorderRecordActionType.BEGIN]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      petDisorderRecords: {
+        ...state.petDisorderRecords,
+        initializing: action.payload.cursor == null,
+        pending: true,
+        error: action.error,
+      },
+    };
+  },
+  [LoadPetDisorderRecordActionType.SUCCESS]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      petDisorderRecords: {
+        petId: action.extra.petId,
+        ...fillCursorResponseData(state.petDisorderRecords, action),
+      },
+    };
+  },
+  [LoadPetDisorderRecordActionType.FAILURE]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      petDisorderRecords: {
+        ...state.petDisorderRecords,
+        pending: false,
+        initializing: false,
         error: action.error,
       },
     };

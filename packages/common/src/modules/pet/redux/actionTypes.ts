@@ -27,18 +27,18 @@ export const CreateWeightRecordActionType = createAsyncActionType(
   'PET_CREATE_WEIGHT_RECORD',
 );
 
-export const LoadMyPetDisorderRecordActionType = createAsyncActionType(
-  'PET_LOAD_MY_PET_DISORDER_RECORD',
+export const LoadPetDisorderRecordActionType = createAsyncActionType(
+  'PET_LOAD_PET_DISORDER_RECORD',
 );
-export const LoadMyPetFeedRecordActionType = createAsyncActionType(
-  'PET_LOAD_MY_PET_FEED_RECORD',
+export const LoadPetFeedRecordActionType = createAsyncActionType(
+  'PET_LOAD_PET_FEED_RECORD',
 );
-export const LoadMyPetMedicalRecordActionType = createAsyncActionType(
-  'PET_LOAD_MY_PET_MEDICAL_RECORD',
+export const LoadPetMedicalRecordActionType = createAsyncActionType(
+  'PET_LOAD_PET_MEDICAL_RECORD',
 );
-export const LoadMyPetPetEventRecordActionType = createAsyncActionType(
-  'PET_LOAD_MY_PET_PET_EVENT_RECORD',
+export const LoadPetPetEventRecordActionType = createAsyncActionType(
+  'PET_LOAD_PET_PET_EVENT_RECORD',
 );
-export const LoadMyPetWeightRecordActionType = createAsyncActionType(
-  'PET_LOAD_MY_PET_WEIGHT_RECORD',
+export const LoadPetWeightRecordActionType = createAsyncActionType(
+  'PET_LOAD_PET_WEIGHT_RECORD',
 );

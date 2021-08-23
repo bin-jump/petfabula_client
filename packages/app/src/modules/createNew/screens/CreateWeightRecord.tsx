@@ -46,7 +46,7 @@ const CreateWeightRecord = () => {
   const initial: WeightRecordForm = {
     petId: pet?.id as any,
     weight: "" as any,
-    date: new Date().getTime(),
+    dateTime: new Date().getTime(),
   };
 
   const handleSubmit = (data: WeightRecordForm) => {
@@ -205,7 +205,7 @@ const FeedRecordFormContent = ({
       />
 
       <Field
-        name="date"
+        name="dateTime"
         component={RecordDateField}
         leftIcon={() => (
           <Text style={[styles.caption, { color: theme.colors?.black }]}>

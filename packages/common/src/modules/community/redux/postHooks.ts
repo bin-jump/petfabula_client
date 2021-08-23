@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { AppState } from '../../../stateProvider';
-import { PostForm, CommunityState } from './types';
+import { Post, PostForm, CommunityState } from './types';
 import {
   PostLoadDetailActionType,
   LoadRecommendPostsActionType,
@@ -9,6 +9,7 @@ import {
   PostCreatePostActionType,
   PostRemovePostActionType,
   LoadPetPostsActionType,
+  PostUpdatePostActionType,
 } from './actionTypes';
 import { ActionBase, UploadImage, fillCursorResponseData } from '../../shared';
 
@@ -183,6 +184,47 @@ export const useCreatePost = () => {
 
   return {
     createPost: boundAction,
+    result,
+    pending,
+    error,
+  };
+};
+
+export const useUpdatePost = () => {
+  const dispatch = useDispatch();
+  const { result, pending, error } = useSelector(
+    (state: AppState) => ({
+      result: state.community.updatePost.data,
+      pending: state.community.updatePost.pending,
+      error: state.community.updatePost.error,
+    }),
+    shallowEqual,
+  );
+
+  const boundAction = useCallback(
+    (post: Post, images: Array<UploadImage>) => {
+      const d = new FormData();
+      d.append('post', JSON.stringify(post));
+      for (const image of images) {
+        if (image) {
+          d.append('images', {
+            uri: image.uri,
+            name: image.name,
+            type: image.type,
+          } as any);
+        }
+      }
+
+      dispatch({
+        type: PostUpdatePostActionType.BEGIN,
+        payload: d,
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    updatePost: boundAction,
     result,
     pending,
     error,
@@ -422,6 +464,55 @@ export const postReducer = {
       ...state,
       createPost: {
         ...state.createPost,
+        pending: false,
+        error: action.error,
+      },
+    };
+  },
+
+  // update post
+  [PostUpdatePostActionType.BEGIN]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      updatePost: {
+        ...state.updatePost,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [PostUpdatePostActionType.SUCCESS]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    const postDetail = state.postDetail.data;
+    return {
+      ...state,
+      updatePost: {
+        ...state.updatePost,
+        pending: false,
+        data: action.payload,
+      },
+      postDetail: {
+        ...state.postDetail,
+        data:
+          postDetail && postDetail.id == action.payload.id
+            ? action.payload
+            : postDetail,
+      },
+    };
+  },
+  [PostUpdatePostActionType.FAILURE]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      updatePost: {
+        ...state.updatePost,
         pending: false,
         error: action.error,
       },

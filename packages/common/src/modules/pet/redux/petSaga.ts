@@ -11,6 +11,11 @@ import {
   CreateDisorderRecordActionType,
   CreatePetEventRecordActionType,
   CreateMedicalRecordActionType,
+  LoadPetFeedRecordActionType,
+  LoadPetWeightRecordActionType,
+  LoadPetDisorderRecordActionType,
+  LoadPetPetEventRecordActionType,
+  LoadPetMedicalRecordActionType,
 } from './actionTypes';
 
 const watchCreatePets = createSagaWatcher({
@@ -87,6 +92,51 @@ const watchCreateMedicalRecord = createSagaWatcher({
   watchType: 'EVERY',
 });
 
+const watchLoadFeedRecords = createSagaWatcher({
+  createUrl: (payload) => {
+    return `/api/pet/pets/${payload.petId}/feedrecords`;
+  },
+  method: 'GET',
+  asyncAction: LoadPetFeedRecordActionType,
+  watchType: 'LATEST',
+});
+
+const watchLoadWeightRecords = createSagaWatcher({
+  createUrl: (payload) => {
+    return `/api/pet/pets/${payload.petId}/weightrecords`;
+  },
+  method: 'GET',
+  asyncAction: LoadPetWeightRecordActionType,
+  watchType: 'LATEST',
+});
+
+const watchLoadDisorderRecords = createSagaWatcher({
+  createUrl: (payload) => {
+    return `/api/pet/pets/${payload.petId}/disorderrecords`;
+  },
+  method: 'GET',
+  asyncAction: LoadPetDisorderRecordActionType,
+  watchType: 'LATEST',
+});
+
+const watchLoadPetEventRecords = createSagaWatcher({
+  createUrl: (payload) => {
+    return `/api/pet/pets/${payload.petId}/peteventrecords`;
+  },
+  method: 'GET',
+  asyncAction: LoadPetPetEventRecordActionType,
+  watchType: 'LATEST',
+});
+
+const watchLoadMedicalRecords = createSagaWatcher({
+  createUrl: (payload) => {
+    return `/api/pet/pets/${payload.petId}/medicalrecords`;
+  },
+  method: 'GET',
+  asyncAction: LoadPetMedicalRecordActionType,
+  watchType: 'LATEST',
+});
+
 export function* petRootSaga() {
   yield all([
     fork(watchCreatePets),
@@ -100,5 +150,11 @@ export function* petRootSaga() {
     fork(watchCreateDisordertRecord),
     fork(watchCreatePetEventRecord),
     fork(watchCreateMedicalRecord),
+
+    fork(watchLoadFeedRecords),
+    fork(watchLoadWeightRecords),
+    fork(watchLoadDisorderRecords),
+    fork(watchLoadPetEventRecords),
+    fork(watchLoadMedicalRecords),
   ]);
 }

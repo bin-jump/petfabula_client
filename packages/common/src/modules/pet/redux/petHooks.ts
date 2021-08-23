@@ -186,6 +186,10 @@ export const petReducer = {
         data: action.payload,
         pending: false,
       },
+      myPets: {
+        ...state.myPets,
+        data: [...state.myPets.data, action.payload],
+      },
     };
   },
   [CreatePetsActionType.FAILURE]: (
