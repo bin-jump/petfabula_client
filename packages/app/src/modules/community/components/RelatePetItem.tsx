@@ -19,7 +19,7 @@ const RelatePetItem = ({
     <TouchableOpacity
       onPress={onPress}
       style={{
-        width: 160,
+        width: 140,
         marginTop: 12,
         // paddingVertical: 6,
         padding: 6,
@@ -37,7 +37,7 @@ const RelatePetItem = ({
       }}
     >
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Avatar source={{ uri: pet.photo }} size={46} iconType="PET" />
+        <Avatar source={{ uri: pet.photo }} size={40} iconType="PET" />
         <Text
           style={{
             fontSize: 20,

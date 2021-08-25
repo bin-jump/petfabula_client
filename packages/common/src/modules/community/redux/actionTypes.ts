@@ -94,14 +94,22 @@ export const PostSearchActionType = createAsyncActionType('POST_SEARCH');
 export const LoadRecommendQuestionsActionType = createAsyncActionType(
   'QUESTION_LOAD_RECOMMEND_QUESTIONS',
 );
-export const LoadUnansweredQuestionsActionType = createAsyncActionType(
-  'QUESTION_LOAD_UNANSWERED_QUESTIONS',
+export const LoadRecentQuestionsActionType = createAsyncActionType(
+  'QUESTION_LOAD_RECENT_QUESTIONS',
 );
 export const QuestionLoadQuestionDetailActionType = createAsyncActionType(
   'QUESTION_LOAD_QUESTION_DETAIL',
 );
 export const QuestionCreateActionType = createAsyncActionType(
   'QUESTION_CREATE_QUESTIONS',
+);
+
+export const QuestionUpdateQuestionActionType = createAsyncActionType(
+  'QUESTION_UPDATE_QUESTION',
+);
+
+export const QuestionRemoveQuestionActionType = createAsyncActionType(
+  'QUESTION_REMOVE_QUESTION',
 );
 
 export const QuestionLoadQuestionAnswersActionType = createAsyncActionType(
@@ -112,8 +120,20 @@ export const QuestionCreateAnswersActionType = createAsyncActionType(
   'QUESTION_CREATE_ANSWERS',
 );
 
+export const QuestionUpdateAnswerActionType = createAsyncActionType(
+  'QUESTION_UPDATE_ANSWER',
+);
+
+export const QuestionRemoveAnswerActionType = createAsyncActionType(
+  'QUESTION_REMOVE_ANSWER',
+);
+
 export const QuestionCreateAnswerCommentActionType = createAsyncActionType(
   'QUESTION_CREATE_ANSWER_COMMENT',
+);
+
+export const QuestionRemoveAnswerCommentActionType = createAsyncActionType(
+  'QUESTION_REMOVE_ANSWER_COMMENT',
 );
 
 export const QuestionLoadAnswerCommentActionType = createAsyncActionType(

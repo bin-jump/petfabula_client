@@ -10,3 +10,7 @@ export type DisplayImage = {
   width: number;
   height: number;
 };
+
+export type AlreadyDeleted = {
+  id: number;
+};

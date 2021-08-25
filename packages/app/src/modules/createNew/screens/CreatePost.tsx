@@ -12,19 +12,23 @@ import { Field, Formik } from "formik";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import {
+  PostForm,
+  validPostSchema,
+  useCreatePost,
+  useUpdatePost,
+  PostTopic,
+  PostDetail,
+  DisplayImage,
+  ParticiptorPet,
+} from "@petfabula/common";
+import {
   BlankInput,
   useDidUpdateEffect,
   DismissKeyboardView,
   PendingOverlay,
   ImageFile,
+  validSelect,
 } from "../../shared";
-import {
-  PostForm,
-  validPostSchema,
-  useCreatePost,
-  PostTopic,
-  Post,
-} from "@petfabula/common";
 import ParamTypes from "./paramTypes";
 import MultipleImageSelect from "../components/MultipleImageSelect";
 import PostPetSelector from "../components/PostPetSelector";
@@ -35,11 +39,31 @@ const CreatePost = () => {
   const { params } = useRoute<RouteProp<ParamTypes, "CreatePost">>();
   const { t } = useTranslation();
   const { createPost } = useCreatePost();
+  const { updatePost } = useUpdatePost();
   const post = params?.post;
   const images = params?.images ? params.images : [];
-  const topic = params?.topic;
-  const pet = params?.pet;
   const [img, setImg] = useState<ImageFile[]>([]);
+  const [existImages, setExistImages] = useState<DisplayImage[]>(
+    post ? post.images : []
+  );
+
+  const selectedTopic = params?.topic;
+  const initialTopic = params?.post?.postTopic ? params?.post?.postTopic : null;
+  const topic =
+    selectedTopic && validSelect(selectedTopic)
+      ? selectedTopic
+      : selectedTopic
+      ? null
+      : initialTopic;
+
+  const selectedPet = params?.pet;
+  const initialPet = params?.post?.relatePet ? params?.post?.relatePet : null;
+  const pet =
+    selectedPet && validSelect(selectedPet)
+      ? (selectedPet as ParticiptorPet)
+      : selectedPet
+      ? null
+      : initialPet;
 
   useEffect(() => {
     if (!(JSON.stringify(images) == JSON.stringify(img))) {
@@ -52,16 +76,51 @@ const CreatePost = () => {
     setImg([...img]);
   };
 
-  const initial: PostForm = {
-    content: "",
-    relatePetId: null,
-    topicId: topic ? topic.id : null,
+  const handleRemoveExistImage = (id: number) => {
+    const im = existImages.filter((item) => item.id != id);
+    setExistImages(im);
   };
+
+  // const postTopicId = post?.postTopic ? post.postTopic.id : null;
+
+  const initial: PostForm = post
+    ? {
+        content: post.content,
+        relatePetId: post.relatePetId,
+        topicId: topic ? topic.id : null,
+      }
+    : {
+        content: "",
+        relatePetId: null,
+        topicId: topic ? topic.id : null,
+      };
   // console.log("initial", initial);
-  const handleSubmit = (data: PostForm) => {
-    Keyboard.dismiss();
+
+  const handleUpdate = (data: PostForm) => {
+    if (post) {
+      const d = {
+        ...post,
+        ...data,
+        relatePetId: pet ? pet?.id : null,
+        topicId: topic ? topic.id : null,
+        images: existImages,
+      };
+      updatePost(d, img);
+    }
+  };
+
+  const handleCreate = (data: PostForm) => {
     const d = { ...data, topicId: topic ? topic.id : null };
     createPost(d, img);
+  };
+
+  const handleSubmit = (data: PostForm) => {
+    Keyboard.dismiss();
+    if (post) {
+      handleUpdate(data);
+    } else {
+      handleCreate(data);
+    }
   };
 
   return (
@@ -89,26 +148,12 @@ const CreatePost = () => {
                   handleBlur,
                   setValues,
                   topic,
+                  pet,
                 }}
               />
             )}
           </Formik>
-          <Divider
-            style={{
-              width: "100%",
-              marginTop: 12,
-              borderWidth: 0.5,
-              borderColor: theme.colors?.grey4,
-            }}
-          />
-          <PostPetSelector
-            pet={pet}
-            onPress={() => {
-              navigation.navigate("PetSelect", {
-                backScreen: "CreatePost",
-              });
-            }}
-          />
+
           {/* <TouchableOpacity
             style={{
               marginTop: 18,
@@ -135,6 +180,8 @@ const CreatePost = () => {
           </TouchableOpacity> */}
         </View>
         <MultipleImageSelect
+          onExistImageRemove={handleRemoveExistImage}
+          existImages={existImages}
           images={img}
           fromScreen="CreatePost"
           onRemove={handleRemove}
@@ -151,20 +198,22 @@ const PostFormContent = ({
   handleBlur,
   setValues,
   topic,
+  pet,
 }: {
   values: PostForm;
   handleSubmit: any;
   setErrors: (errors: any) => void;
   handleBlur: (e: any) => void;
   setValues: (val: PostForm) => void;
-  topic?: PostTopic;
+  topic?: PostTopic | null;
+  pet: ParticiptorPet | null;
 }) => {
   const { theme } = React.useContext(ThemeContext);
   const navigation = useNavigation();
   const { t } = useTranslation();
   const { pending, error, result } = useCreatePost();
-  const { params } = useRoute<RouteProp<ParamTypes, "CreatePost">>();
-  const pet = params?.pet;
+  const { pending: updatePending, result: updateResult } = useUpdatePost();
+  // const { params } = useRoute<RouteProp<ParamTypes, "CreatePost">>();
 
   useEffect(() => {
     navigation.setOptions({
@@ -182,11 +231,16 @@ const PostFormContent = ({
     });
   }, [navigation]);
 
-  useEffect(() => {
-    if (pet) {
-      setValues({ ...values, relatePetId: pet.id });
-    }
-  }, [pet]);
+  // useEffect(() => {
+  //   if (pet) {
+  //     if (validSelect(selectedPet)) {
+  //       const sPet = selectedPet as ParticiptorPet;
+  //       setValues({ ...values, relatePetId: sPet.id });
+  //     } else {
+  //       setValues({ ...values, relatePetId: null });
+  //     }
+  //   }
+  // }, [pet]);
 
   useDidUpdateEffect(() => {
     if (result) {
@@ -194,9 +248,15 @@ const PostFormContent = ({
     }
   }, [result]);
 
+  useDidUpdateEffect(() => {
+    if (updateResult) {
+      navigation.goBack();
+    }
+  }, [updateResult]);
+
   return (
     <View style={{ width: "100%", alignItems: "center" }}>
-      <PendingOverlay pending={pending} />
+      <PendingOverlay pending={pending || updatePending} />
       <Field
         name="content"
         placeholder={t("createNew.input.postcontent")}
@@ -271,6 +331,23 @@ const PostFormContent = ({
           >{`${values.content?.length}/3000`}</Text>
         </View>
       </View>
+
+      <Divider
+        style={{
+          width: "100%",
+          marginTop: 12,
+          borderWidth: 0.5,
+          borderColor: theme.colors?.grey4,
+        }}
+      />
+      <PostPetSelector
+        pet={pet}
+        onPress={() => {
+          navigation.navigate("PetSelect", {
+            backScreen: "CreatePost",
+          });
+        }}
+      />
     </View>
   );
 };

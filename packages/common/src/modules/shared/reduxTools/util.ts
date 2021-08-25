@@ -47,6 +47,9 @@ export const translateApiError = (response: ApiResponse): AsyncActionError => {
     res.type = 'FAILED_ON_RESPONSE';
   } else if (response.errors?.type == 'LOGIN_REQUIRED') {
     res.type = 'AUTHENTICATION_REQUIRED';
+  } else if (response.errors?.type == 'RESOURCE_NOT_FOUND') {
+    res.type = 'TARGET_NOT_FOUND';
+    res.content = response.errors.entityId;
   }
   return res;
 };
@@ -135,6 +138,13 @@ export const resolveResponseFormError = (err: AsyncActionError | null) => {
 
 export const checkFailedResponse = (err: AsyncActionError | null) => {
   return err?.type == 'FAILED_ON_RESPONSE';
+};
+
+export const resolveTargetNotFoundError = (err: AsyncActionError | null) => {
+  if (!err || err.type != 'TARGET_NOT_FOUND') {
+    return null;
+  }
+  return err.content;
 };
 
 export const fillCursorResponseData = (

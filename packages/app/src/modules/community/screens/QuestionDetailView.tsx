@@ -22,11 +22,7 @@ import {
   useFocusEffect,
 } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import {
-  BottomSheetModal,
-  BottomSheetBackdrop,
-  BottomSheetBackgroundProps,
-} from "@gorhom/bottom-sheet";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useTranslation } from "react-i18next";
 import Animated, {
   useSharedValue,
@@ -48,6 +44,7 @@ import {
   useUnfollowUser,
   useLoadQuestionAnswers,
   useLoadQuestionDetail,
+  useRemoveQuestion,
   useLoadAnswerComments,
   useUpvoteQuestion,
   useUnvoteQuestion,
@@ -63,9 +60,16 @@ import {
   Image,
   OverlayImage,
   useRefocusEffect,
+  BottomSheet,
+  BottomSheetButton,
+  AlertAction,
+  useDidUpdateEffect,
+  PendingOverlay,
+  useFirstFocusEffect,
 } from "../../shared";
 import ParamTypes from "./ParamTypes";
 import RelatePetItem from "../components/RelatePetItem";
+import AnswerList from "../components/AnswerList";
 
 const Footer = ({ question }: { question: QuestionDetail }) => {
   const { theme } = useTheme();
@@ -197,27 +201,6 @@ const Footer = ({ question }: { question: QuestionDetail }) => {
   );
 };
 
-const CustomBackground: React.FC<BottomSheetBackgroundProps> = ({
-  style,
-  animatedIndex,
-}) => {
-  const containerAnimatedStyle = useAnimatedStyle(() => ({
-    borderRadius: 12,
-    opacity: interpolate(animatedIndex.value, [0, 1], [0.3, 0.8]),
-    backgroundColor: interpolateColor(
-      animatedIndex.value,
-      [0, 1],
-      ["#ffffff", "#eaeaea"]
-    ),
-  }));
-  const containerStyle = useMemo(
-    () => [style, containerAnimatedStyle],
-    [style, containerAnimatedStyle]
-  );
-
-  return <Animated.View pointerEvents="none" style={containerStyle} />;
-};
-
 const Header = ({
   question,
   height,
@@ -233,6 +216,7 @@ const Header = ({
   const navigation = useNavigation<StackNavigationProp<any>>();
   const { t } = useTranslation();
   const { currentUser } = useCurrentUser();
+  const { removeQuestion, pending: removePending } = useRemoveQuestion();
   const { followUser, pending: followPending } = useFollowUser();
   const { unfollowUser, pending: unfollowPending } = useUnfollowUser();
 
@@ -241,6 +225,9 @@ const Header = ({
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
+  const handleClose = useCallback(() => {
+    bottomSheetModalRef.current?.close();
+  }, [bottomSheetModalRef]);
 
   const slideDerived = useDerivedValue(() => {
     return withTiming(slideSharedValue.value > 100 ? 70 : 0, {
@@ -283,79 +270,45 @@ const Header = ({
           color={theme.colors?.black}
         />
       </TouchableWithoutFeedback>
-      <BottomSheetModal
-        backdropComponent={BottomSheetBackdrop}
+      <BottomSheet
         ref={bottomSheetModalRef}
-        backgroundComponent={CustomBackground}
-        // index={1}
         snapPoints={snapPoints}
-        style={{
-          shadowColor: theme.colors?.grey1,
-          shadowOffset: { width: 2, height: 1 },
-          shadowOpacity: 0.8,
-          elevation: 2,
-        }}
+        handleClose={handleClose}
       >
         <View style={{ paddingHorizontal: 24 }}>
           <Divider />
           <View style={{ paddingTop: 16 }}>
-            <View style={{ width: 60 }}>
-              <TouchableOpacity
-                style={{
-                  borderRadius: 60,
-                  shadowColor: theme.colors?.grey2,
-                  shadowOffset: { width: 2, height: 1 },
-                  shadowOpacity: 0.8,
-                  elevation: 2,
-                  backgroundColor: theme.colors?.white,
-                  padding: 12,
-                  justifyContent: "center",
+            <View style={{ flexDirection: "row" }}>
+              <BottomSheetButton
+                label={t("common.edit")}
+                type="antdesign"
+                name="edit"
+                onPress={() => {
+                  navigation.navigate("CreateNew", {
+                    screen: "CreateQuestion",
+                    params: { question: question },
+                  });
+                  handleClose();
                 }}
-              >
-                <Icon
-                  type="antdesign"
-                  name="delete"
-                  size={32}
-                  color={theme.colors?.black}
-                />
-              </TouchableOpacity>
-              <Text
-                style={{
-                  textAlign: "center",
-                  marginTop: 6,
-                  fontSize: 16,
-                  fontWeight: "bold",
-                  color: theme.colors?.black,
-                }}
-              >
-                {t("common.delete")}
-              </Text>
-            </View>
+              />
 
-            <TouchableOpacity
-              onPress={() => {
-                bottomSheetModalRef.current?.close();
-              }}
-              style={{
-                marginTop: 12,
-                backgroundColor: theme.colors?.grey4,
-                borderRadius: 6,
-              }}
-            >
-              <Text
-                style={{
-                  textAlign: "center",
-                  fontSize: 18,
-                  color: theme.colors?.black,
-                  paddingVertical: 14,
+              <BottomSheetButton
+                label={t("common.delete")}
+                type="antdesign"
+                name="delete"
+                onPress={() => {
+                  AlertAction.AlertDelele(t, () => {
+                    if (question) {
+                      removeQuestion(question.id);
+                    }
+                  });
+                  handleClose();
                 }}
-              >
-                {t("common.cancel")}
-              </Text>
-            </TouchableOpacity>
+              />
+            </View>
           </View>
         </View>
-      </BottomSheetModal>
+      </BottomSheet>
 
       <Animated.View style={[slideStyle, { flex: 1 }]}>
         {question && question.id == currentQuestionId ? (
@@ -457,395 +410,13 @@ const Header = ({
   );
 };
 
-type WithReplyTo = AnswerComment & { replyToName: string | null };
-const formatComments = (replies: AnswerComment[]): WithReplyTo[] => {
-  const mp: { [key: number]: string } = {};
-  replies.forEach((item) => {
-    mp[item.id] = item.participator.name;
-  });
-
-  return replies.map((item) => {
-    if (item.replyTo && mp[item.replyTo]) {
-      return { ...item, replyToName: mp[item.replyTo] };
-    }
-    return { ...item, replyToName: null };
-  });
-};
-
-const CommentItem = ({
-  answerComment,
-  answer,
-}: {
-  answerComment: WithReplyTo;
-  answer: Answer;
-}) => {
-  const { theme } = useTheme();
-  const navigation = useNavigation();
-  const { t } = useTranslation();
-
-  const replyTargetComponent = () => {
-    if (answerComment.replyTo == null) {
-      return null;
-    }
-    if (answerComment.replyToName) {
-      return (
-        <Text>
-          <Text
-            style={{
-              fontSize: 16,
-            }}
-          >{`${t("common.reply")} `}</Text>
-          <Text
-            style={{
-              color: theme.colors?.grey0,
-              fontSize: 16,
-            }}
-          >{`@${answerComment.replyToName}: `}</Text>
-        </Text>
-      );
-    }
-
-    return (
-      <Text>
-        <Text
-          style={{
-            fontSize: 16,
-          }}
-        >{` ${t("common.reply")}`}</Text>
-        <Text
-          style={{
-            color: theme.colors?.grey0,
-            textDecorationLine: "line-through",
-            fontSize: 16,
-          }}
-        >{`@${t("common.deleted")}: `}</Text>
-      </Text>
-    );
-  };
-
-  return (
-    <View style={{ marginVertical: 10 }}>
-      <AvatarField
-        name={answerComment.participator.name}
-        size={24}
-        nameStyle={{
-          fontSize: 16,
-          marginLeft: 3,
-          fontWeight: "bold",
-          color: theme.colors?.grey0,
-        }}
-      />
-      <TouchableWithoutFeedback
-        onPress={() => {
-          navigation.navigate("CreateAnswerComment", {
-            answer: answer,
-            replyTarget: answerComment,
-          });
-        }}
-      >
-        <Text style={{ marginLeft: 26 }}>
-          {replyTargetComponent()}
-          <Text>{answerComment.content}</Text>
-          <Text style={{ fontSize: 14, color: theme.colors?.grey1 }}>
-            {`  ${milisecToAgo(answerComment.createdDate)}`}
-          </Text>
-        </Text>
-      </TouchableWithoutFeedback>
-    </View>
-  );
-};
-
-const AnswerItem = ({ answer }: { answer: Answer }) => {
-  const { theme } = useTheme();
-  const navigation = useNavigation();
-  const { t } = useTranslation();
-  const { loadAnswerComments } = useLoadAnswerComments();
-  const { upvoteAnswer } = useUpvoteAnswer();
-  const { unvoteAnswer } = useUnvoteAnswer();
-  const [upvoted, setUpvoted] = useState({
-    upvoted: answer.upvoted,
-    count: answer.upvoteCount,
-  });
-
-  const voteSharedValue = useSharedValue(1);
-  const voteStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          scale: voteSharedValue.value,
-        },
-      ],
-    };
-  });
-
-  const renderLoadMore = useCallback(() => {
-    if (
-      answer.commentCount == 0 ||
-      answer.commentCount == answer.comments.length
-    ) {
-      return null;
-    }
-    return (
-      <View
-        style={{
-          alignItems: "flex-start",
-          marginTop: 3,
-          marginLeft: answer.commentCursor ? 30 : 3,
-        }}
-      >
-        {answer.loadCommentPending ? (
-          <ActivityIndicator color={theme.colors?.grey1} />
-        ) : (
-          <TouchableWithoutFeedback
-            onPress={() => {
-              loadAnswerComments(answer.id, answer.commentCursor);
-            }}
-          >
-            <Text
-              style={{
-                color: theme.colors?.secondary,
-                fontSize: 16,
-                fontWeight: "bold",
-              }}
-            >
-              {!answer.commentCursor
-                ? `${answer.commentCount}${t("common.checkReplyByCount")}`
-                : `${t("common.loadMore")}`}
-            </Text>
-          </TouchableWithoutFeedback>
-        )}
-      </View>
-    );
-  }, [answer, theme]);
-
-  return (
-    <View
-      style={{
-        marginBottom: 12,
-        backgroundColor: theme.colors?.white,
-        padding: 16,
-        paddingBottom: 20,
-        shadowColor: theme.colors?.grey2,
-        shadowOffset: { width: 2, height: 4 },
-        shadowOpacity: 0.2,
-        elevation: 1,
-      }}
-    >
-      <AvatarField
-        style={{ marginBottom: 8 }}
-        name={answer.participator.name}
-        size={28}
-        nameStyle={{
-          fontSize: 16,
-          marginLeft: 5,
-          fontWeight: "bold",
-          color: theme.colors?.grey0,
-        }}
-        fieldRight={() => (
-          <Text style={{ color: theme.colors?.grey1 }}>
-            {milisecToAgo(answer.createdDate)}
-          </Text>
-        )}
-      />
-      <View style={{ flexDirection: "row", marginBottom: 8, flexWrap: "wrap" }}>
-        {answer.images.map((item, index) => {
-          return (
-            // <Image
-            //   key={index}
-            //   source={{ uri: item.url }}
-            //   style={{ width: 90, height: 90, marginRight: 6, marginTop: 6 }}
-            // />
-            <OverlayImage
-              key={index}
-              image={item}
-              height={90}
-              width={90}
-              style={{ marginRight: 6, marginTop: 6 }}
-            />
-          );
-        })}
-      </View>
-
-      <Text style={{ fontSize: 18 }}>{answer.content}</Text>
-      <View
-        style={{
-          marginTop: 8,
-          marginLeft: 20,
-          paddingLeft: 6,
-          marginRight: 12,
-        }}
-      >
-        {formatComments(answer.comments).map((item) => {
-          return (
-            <CommentItem key={item.id} answerComment={item} answer={answer} />
-          );
-        })}
-      </View>
-      {renderLoadMore()}
-
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "flex-end",
-          marginTop: 8,
-        }}
-      >
-        <View
-          style={{
-            marginRight: 22,
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <TouchableWithoutFeedback
-            onPress={() => {
-              navigation.navigate("CreateAnswerComment", {
-                answer: answer,
-              });
-            }}
-          >
-            <Icon
-              containerStyle={{ paddingBottom: 3 }}
-              type="font-awesome"
-              name="comment-o"
-              color={theme.colors?.grey0}
-              size={20}
-            />
-          </TouchableWithoutFeedback>
-          <Text
-            style={{
-              marginLeft: 6,
-              fontSize: 18,
-              textAlignVertical: "center",
-              color: theme.colors?.grey0,
-            }}
-          >
-            {answer.commentCount}
-          </Text>
-        </View>
-        <View
-          style={{
-            minWidth: 50,
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <TouchableWithoutFeedback
-            onPress={() => {
-              voteSharedValue.value = withSequence(
-                withTiming(1.5, {
-                  duration: 200,
-                  easing: Easing.quad,
-                }),
-                withTiming(1, {
-                  duration: 500,
-                  easing: Easing.sin,
-                })
-              );
-
-              if (!upvoted.upvoted) {
-                upvoteAnswer(answer.id);
-                setUpvoted({ upvoted: true, count: upvoted.count + 1 });
-              } else {
-                unvoteAnswer(answer.id);
-                setUpvoted({ upvoted: false, count: upvoted.count - 1 });
-              }
-            }}
-          >
-            <Animated.View style={voteStyle}>
-              <Icon
-                color={
-                  upvoted.upvoted ? theme.colors?.primary : theme.colors?.grey0
-                }
-                type="font-awesome"
-                name={upvoted.upvoted ? "thumbs-up" : "thumbs-o-up"}
-                size={22}
-              />
-            </Animated.View>
-          </TouchableWithoutFeedback>
-          <Text
-            style={{
-              marginLeft: 6,
-              fontSize: 18,
-              textAlignVertical: "center",
-              color: theme.colors?.grey0,
-            }}
-          >
-            {upvoted.count}
-          </Text>
-        </View>
-      </View>
-    </View>
-  );
-};
-
-const AnswerList = ({
-  answers,
-  question,
-}: {
-  answers: Answer[];
-  question: QuestionDetail;
-}) => {
-  const { theme } = useTheme();
-  const navigation = useNavigation();
-  const { t } = useTranslation();
-
-  return (
-    <View>
-      {answers.length > 0 ? (
-        answers.map((item) => {
-          return <AnswerItem key={item.id} answer={item} />;
-        })
-      ) : (
-        <View
-          style={{
-            height: 180,
-            backgroundColor: theme.colors?.white,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <TouchableWithoutFeedback
-            onPress={() => {
-              navigation.navigate("CreateNew", {
-                screen: "CreateAnswer",
-                params: {
-                  questionId: question.id,
-                  questionTitle: question.title,
-                },
-              });
-            }}
-          >
-            <View>
-              <Icon
-                size={50}
-                type="octicon"
-                name="comment-discussion"
-                color={theme.colors?.grey1}
-              />
-              <Text
-                style={{
-                  marginTop: 3,
-                  color: theme.colors?.grey1,
-                  fontSize: 18,
-                  fontWeight: "bold",
-                }}
-              >
-                {t("question.writeAnswer")}
-              </Text>
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
-      )}
-    </View>
-  );
-};
-
 const QuestionDetailView = () => {
   const { params } = useRoute<RouteProp<ParamTypes, "PostDetailView">>();
   const { id } = params;
   const { theme } = useTheme();
   const { t } = useTranslation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
+
   const slideSharedValue = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
@@ -867,6 +438,8 @@ const QuestionDetailView = () => {
     pending: questionPending,
     error,
   } = useLoadQuestionDetail();
+  const { pending: removePending, result } = useRemoveQuestion();
+
   const { height: screenHeight } = useWindowDimensions();
   const { top, bottom } = useSafeAreaInsets();
   const headerHeight = 66;
@@ -875,14 +448,18 @@ const QuestionDetailView = () => {
   useRefocusEffect(() => {
     if (id != question?.id) {
       loadQuestionDetail(id);
-      loadQuestionAnswers(id, null);
     }
-  }, [id, question, loadQuestionDetail, loadQuestionAnswers]);
+  }, [id, question, loadQuestionDetail]);
 
-  useEffect(() => {
+  useFirstFocusEffect(() => {
     loadQuestionDetail(id);
-    loadQuestionAnswers(id, null);
-  }, [id, loadQuestionDetail, loadQuestionAnswers]);
+  }, [loadQuestionDetail]);
+
+  useDidUpdateEffect(() => {
+    if (result && result.id == id) {
+      navigation.goBack();
+    }
+  }, [result]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -896,6 +473,8 @@ const QuestionDetailView = () => {
         slideSharedValue={slideSharedValue}
       />
       <Divider />
+      <PendingOverlay pending={removePending} />
+
       {question && question.id == id ? (
         <View
           style={{
@@ -957,7 +536,14 @@ const QuestionDetailView = () => {
               ) : null}
 
               {question.relatePet ? (
-                <RelatePetItem pet={question.relatePet} />
+                <RelatePetItem
+                  onPress={() => {
+                    navigation.push("PetDetailView", {
+                      petId: question.relatePetId,
+                    });
+                  }}
+                  pet={question.relatePet}
+                />
               ) : null}
 
               <Text
@@ -986,7 +572,8 @@ const QuestionDetailView = () => {
                 }}
               >{`${t("question.answerCount")} ${question.answerCount}`}</Text>
               <Divider />
-              <AnswerList answers={answers} question={question} />
+
+              <AnswerList id={id} question={question} />
             </View>
           </Animated.ScrollView>
 

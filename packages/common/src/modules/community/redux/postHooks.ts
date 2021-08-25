@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { AppState } from '../../../stateProvider';
-import { Post, PostForm, CommunityState } from './types';
+import { Post, PostForm, CommunityState, PostDetail } from './types';
 import {
   PostLoadDetailActionType,
   LoadRecommendPostsActionType,
@@ -202,7 +202,7 @@ export const useUpdatePost = () => {
   );
 
   const boundAction = useCallback(
-    (post: Post, images: Array<UploadImage>) => {
+    (post: PostDetail, images: Array<UploadImage>) => {
       const d = new FormData();
       d.append('post', JSON.stringify(post));
       for (const image of images) {
@@ -284,7 +284,7 @@ export const postReducer = {
       postDetail: {
         ...state.postDetail,
         pending: false,
-        data: { ...action.payload, likePending: false },
+        data: { ...action.payload, likePending: false, collectPending: false },
       },
     };
   },
@@ -500,7 +500,7 @@ export const postReducer = {
         ...state.postDetail,
         data:
           postDetail && postDetail.id == action.payload.id
-            ? action.payload
+            ? { ...action.payload, likePending: false, collectPending: false }
             : postDetail,
       },
     };
@@ -526,8 +526,8 @@ export const postReducer = {
   ): CommunityState => {
     return {
       ...state,
-      createPost: {
-        ...state.createPost,
+      removePost: {
+        ...state.removePost,
         pending: true,
         error: null,
       },
@@ -538,12 +538,11 @@ export const postReducer = {
     action: ActionBase,
   ): CommunityState => {
     const mDetail = state.myProfile.data;
-    const mPosts = state.myProfile.data;
-    const removedId = action.extra.postId;
+    const recommendPosts = state.recommendPosts.data;
     return {
       ...state,
-      createPost: {
-        ...state.createPost,
+      removePost: {
+        ...state.removePost,
         pending: false,
         data: action.payload,
       },
@@ -553,6 +552,11 @@ export const postReducer = {
           ? { ...mDetail, postCount: mDetail.postCount - 1 }
           : mDetail,
       },
+
+      recommendPosts: {
+        ...state.recommendPosts,
+        data: recommendPosts.filter((item) => item.id != action.payload.id),
+      },
     };
   },
   [PostRemovePostActionType.FAILURE]: (
@@ -561,8 +565,8 @@ export const postReducer = {
   ): CommunityState => {
     return {
       ...state,
-      createPost: {
-        ...state.createPost,
+      removePost: {
+        ...state.removePost,
         pending: false,
         error: action.error,
       },

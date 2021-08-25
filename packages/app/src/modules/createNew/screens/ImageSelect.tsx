@@ -8,12 +8,14 @@ import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { ImageFile } from "../../shared";
 import ParamTypes from "./paramTypes";
 
+const IMAGE_NUM_LIMIT = 6;
+
 export default function ImageSelect() {
-  const IMAGE_NUM_LIMIT = 6;
   const navigation = useNavigation();
   const { t } = useTranslation();
   const { params } = useRoute<RouteProp<ParamTypes, "ImageSelect">>();
   const backScreenName = params.fromScreen;
+  const limit = params?.limit ? params?.limit : IMAGE_NUM_LIMIT;
 
   const changeExtName = (filename: string, ext: string) => {
     const fileWithoutExt = filename.split(".").slice(0, -1).join(".");
@@ -42,7 +44,7 @@ export default function ImageSelect() {
 
   const updateHandler = (count: any, onSubmit: any) => {
     navigation.setOptions({
-      title: `${count}/${IMAGE_NUM_LIMIT}`,
+      title: `${count}/${limit}`,
       headerRight: () => _renderDoneButton(count, onSubmit),
     });
   };
@@ -68,7 +70,7 @@ export default function ImageSelect() {
   return (
     <View style={{ height: "100%" }}>
       <ImageBrowser
-        max={IMAGE_NUM_LIMIT}
+        max={limit}
         onChange={updateHandler}
         callback={imagesCallback}
       />

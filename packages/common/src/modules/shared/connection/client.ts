@@ -46,6 +46,7 @@ const axiosRequest = (
 const SERVER_ERROR_CODE = {
   INVALID_FIELD: 1001,
   AUTHENTICATION_FAILED: 1002,
+  NOT_FOUND: 1004,
 
   LOGIN_REQUIRED: 2001,
   NO_PERMISSION: 2002,
@@ -64,6 +65,9 @@ const translateServerError = (response: ApiResponse): ResponseError => {
     res.fieldErrors = response.errors as any;
   } else if (response.code == SERVER_ERROR_CODE.LOGIN_REQUIRED) {
     res.type = 'LOGIN_REQUIRED';
+  } else if (response.code == SERVER_ERROR_CODE.NOT_FOUND) {
+    res.type = 'RESOURCE_NOT_FOUND';
+    res.entityId = response.errors?.entityId;
   }
 
   return res;

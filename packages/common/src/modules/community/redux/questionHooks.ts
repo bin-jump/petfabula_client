@@ -1,12 +1,14 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { AppState } from '../../../stateProvider';
-import { QuestionForm, CommunityState } from './types';
+import { QuestionForm, CommunityState, QuestionDetail } from './types';
 import {
   QuestionCreateActionType,
-  LoadUnansweredQuestionsActionType,
+  LoadRecentQuestionsActionType,
   QuestionLoadQuestionDetailActionType,
   LoadRecommendQuestionsActionType,
+  QuestionUpdateQuestionActionType,
+  QuestionRemoveQuestionActionType,
 } from './actionTypes';
 import { ActionBase, UploadImage, fillCursorResponseData } from '../../shared';
 
@@ -46,17 +48,17 @@ export const useLoadRecommendsQuestions = () => {
   };
 };
 
-export const useLoadUnansweredQuestions = () => {
+export const useLoadRecentQuestions = () => {
   const dispatch = useDispatch();
   const { questions, hasMore, nextCursor, pending, initializing, error } =
     useSelector(
       (state: AppState) => ({
-        questions: state.community.unansweredQuestions.data,
-        hasMore: state.community.unansweredQuestions.hasMore,
-        nextCursor: state.community.unansweredQuestions.nextCursor,
-        pending: state.community.unansweredQuestions.pending,
-        initializing: state.community.unansweredQuestions.initializing,
-        error: state.community.unansweredQuestions.error,
+        questions: state.community.recentQuestions.data,
+        hasMore: state.community.recentQuestions.hasMore,
+        nextCursor: state.community.recentQuestions.nextCursor,
+        pending: state.community.recentQuestions.pending,
+        initializing: state.community.recentQuestions.initializing,
+        error: state.community.recentQuestions.error,
       }),
       shallowEqual,
     );
@@ -64,7 +66,7 @@ export const useLoadUnansweredQuestions = () => {
   const boundAction = useCallback(
     (cursor: object | null) => {
       dispatch({
-        type: LoadUnansweredQuestionsActionType.BEGIN,
+        type: LoadRecentQuestionsActionType.BEGIN,
         payload: { cursor },
       });
     },
@@ -111,6 +113,47 @@ export const useLoadQuestionDetail = () => {
   };
 };
 
+export const useUpdateQuestion = () => {
+  const dispatch = useDispatch();
+  const { result, pending, error } = useSelector(
+    (state: AppState) => ({
+      result: state.community.updateQuestion.data,
+      pending: state.community.updateQuestion.pending,
+      error: state.community.updateQuestion.error,
+    }),
+    shallowEqual,
+  );
+
+  const boundAction = useCallback(
+    (questionDetail: QuestionDetail, images: Array<UploadImage>) => {
+      const d = new FormData();
+      d.append('question', JSON.stringify(questionDetail));
+      for (const image of images) {
+        if (image) {
+          d.append('images', {
+            uri: image.uri,
+            name: image.name,
+            type: image.type,
+          } as any);
+        }
+      }
+
+      dispatch({
+        type: QuestionUpdateQuestionActionType.BEGIN,
+        payload: d,
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    updateQuestion: boundAction,
+    result,
+    pending,
+    error,
+  };
+};
+
 export const useCreateQuestion = () => {
   const dispatch = useDispatch();
   const { result, pending, error } = useSelector(
@@ -123,9 +166,9 @@ export const useCreateQuestion = () => {
   );
 
   const boundAction = useCallback(
-    (postForm: QuestionForm, images: Array<UploadImage>) => {
+    (questionForm: QuestionForm, images: Array<UploadImage>) => {
       const d = new FormData();
-      d.append('question', JSON.stringify(postForm));
+      d.append('question', JSON.stringify(questionForm));
       for (const image of images) {
         if (image) {
           d.append('images', {
@@ -146,6 +189,35 @@ export const useCreateQuestion = () => {
 
   return {
     createQuestion: boundAction,
+    result,
+    pending,
+    error,
+  };
+};
+
+export const useRemoveQuestion = () => {
+  const dispatch = useDispatch();
+  const { result, pending, error } = useSelector(
+    (state: AppState) => ({
+      result: state.community.removeQuestion.data,
+      pending: state.community.removeQuestion.pending,
+      error: state.community.removeQuestion.error,
+    }),
+    shallowEqual,
+  );
+
+  const boundAction = useCallback(
+    (questionId: number) => {
+      dispatch({
+        type: QuestionRemoveQuestionActionType.BEGIN,
+        payload: { questionId },
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    removeQuestion: boundAction,
     result,
     pending,
     error,
@@ -194,40 +266,40 @@ export const questionReducer = {
     };
   },
 
-  // unanswered questions
-  [LoadUnansweredQuestionsActionType.BEGIN]: (
+  // recent questions
+  [LoadRecentQuestionsActionType.BEGIN]: (
     state: CommunityState,
     action: ActionBase,
   ): CommunityState => {
     return {
       ...state,
-      unansweredQuestions: {
-        ...state.unansweredQuestions,
+      recentQuestions: {
+        ...state.recentQuestions,
         initializing: action.payload.cursor == null,
         pending: true,
         error: null,
       },
     };
   },
-  [LoadUnansweredQuestionsActionType.SUCCESS]: (
+  [LoadRecentQuestionsActionType.SUCCESS]: (
     state: CommunityState,
     action: ActionBase,
   ): CommunityState => {
     return {
       ...state,
-      unansweredQuestions: {
-        ...fillCursorResponseData(state.unansweredQuestions, action),
+      recentQuestions: {
+        ...fillCursorResponseData(state.recentQuestions, action),
       },
     };
   },
-  [LoadUnansweredQuestionsActionType.FAILURE]: (
+  [LoadRecentQuestionsActionType.FAILURE]: (
     state: CommunityState,
     action: ActionBase,
   ): CommunityState => {
     return {
       ...state,
-      unansweredQuestions: {
-        ...state.unansweredQuestions,
+      recentQuestions: {
+        ...state.recentQuestions,
         pending: false,
         initializing: false,
         error: action.error,
@@ -311,6 +383,108 @@ export const questionReducer = {
       ...state,
       questionDetail: {
         ...state.questionDetail,
+        pending: false,
+        error: action.error,
+      },
+    };
+  },
+
+  // update question detail
+  [QuestionUpdateQuestionActionType.BEGIN]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      updateQuestion: {
+        ...state.updateQuestion,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [QuestionUpdateQuestionActionType.SUCCESS]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    const questionDetail = state.questionDetail.data;
+    return {
+      ...state,
+      updateQuestion: {
+        ...state.updateQuestion,
+        pending: false,
+        data: action.payload,
+      },
+      questionDetail: {
+        ...state.questionDetail,
+        data:
+          questionDetail && questionDetail.id == action.payload.id
+            ? { ...action.payload, upvotePending: false }
+            : questionDetail,
+      },
+    };
+  },
+  [QuestionUpdateQuestionActionType.FAILURE]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      updateQuestion: {
+        ...state.updateQuestion,
+        pending: false,
+        error: action.error,
+      },
+    };
+  },
+
+  // remove question
+  [QuestionRemoveQuestionActionType.BEGIN]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      removeQuestion: {
+        ...state.removeQuestion,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [QuestionRemoveQuestionActionType.SUCCESS]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    const mDetail = state.myProfile.data;
+    const recommendQuestions = state.recommendQuestions.data;
+    return {
+      ...state,
+      removeQuestion: {
+        ...state.removeQuestion,
+        pending: false,
+        data: action.payload,
+      },
+      myProfile: {
+        ...state.myProfile,
+        data: mDetail
+          ? { ...mDetail, questionCount: mDetail.questionCount - 1 }
+          : mDetail,
+      },
+      recommendQuestions: {
+        ...state.recommendQuestions,
+        data: recommendQuestions.filter((item) => item.id != action.payload.id),
+      },
+    };
+  },
+  [QuestionRemoveQuestionActionType.FAILURE]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      removeQuestion: {
+        ...state.removeQuestion,
         pending: false,
         error: action.error,
       },

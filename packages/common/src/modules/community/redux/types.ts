@@ -3,6 +3,7 @@ import {
   AsyncCursorPageListBase,
   AsyncListBase,
   DisplayImage,
+  AlreadyDeleted,
 } from '../../shared';
 
 export interface Participator {
@@ -27,7 +28,7 @@ export interface ParticiptorPet {
   id: number;
   name: string;
   photo: string;
-  petCategory: string;
+  category: string;
 }
 
 export interface PostTopic {
@@ -229,15 +230,15 @@ export interface CommunityState {
   searchPosts: AsyncCursorPageListBase<Post> & { keyword: string | null };
 
   createPost: AsyncDataBase<Post>;
-  removePost: AsyncDataBase<number>;
+  removePost: AsyncDataBase<Post | AlreadyDeleted>;
   updatePost: AsyncDataBase<Post>;
   createPostComment: AsyncDataBase<PostComment>;
-  removePostComment: AsyncDataBase<number>;
+  removePostComment: AsyncDataBase<PostComment | AlreadyDeleted>;
   createPostReply: AsyncDataBase<PostCommentReply>;
-  removePostReply: AsyncDataBase<number>;
+  removePostReply: AsyncDataBase<PostCommentReply | AlreadyDeleted>;
 
   // question
-  unansweredQuestions: AsyncCursorPageListBase<Question>;
+  recentQuestions: AsyncCursorPageListBase<Question>;
   recommendQuestions: AsyncCursorPageListBase<Question>;
 
   questionDetail: AsyncDataBase<QuestionDetail>;
@@ -248,8 +249,14 @@ export interface CommunityState {
   answerComments: AsyncCursorPageListBase<Answer> & { answerId: number | null };
 
   createQuestion: AsyncDataBase<Question>;
+  updateQuestion: AsyncDataBase<Question>;
+  removeQuestion: AsyncDataBase<Question | AlreadyDeleted>;
   createAnswer: AsyncDataBase<Answer>;
+  updateAnswer: AsyncDataBase<Answer>;
+  removeAnswer: AsyncDataBase<Answer | AlreadyDeleted>;
+
   createAnswerComment: AsyncDataBase<AnswerComment>;
+  removeAnswerComment: AsyncDataBase<AnswerComment | AlreadyDeleted>;
 
   searchQuestionAnswers: AsyncCursorPageListBase<QuestionAnswerSearch> & {
     keyword: string | null;

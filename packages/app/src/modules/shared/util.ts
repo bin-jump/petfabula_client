@@ -1,3 +1,5 @@
+import { Alert } from "react-native";
+import { TFunction } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
 import "moment/locale/ja";
@@ -76,6 +78,19 @@ export const imageSizeUrl = (
   return `${url}!${sz.toLowerCase()}`;
 };
 
+export class AlertAction {
+  static AlertDelele(t: TFunction<"translation">, action: () => void) {
+    Alert.alert(t("common.alertDelete"), "", [
+      {
+        text: t("common.cancel"),
+        // onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      { text: t("common.ok"), onPress: action },
+    ]);
+  }
+}
+
 export class Storage {
   static async setItem(key: string, value: any) {
     return await AsyncStorage.setItem(key, JSON.stringify(value));
@@ -105,4 +120,12 @@ export const getFileName = (path: string) => {
 export const changeExtName = (filename: string, ext: string) => {
   const fileWithoutExt = filename.split(".").slice(0, -1).join(".");
   return `${fileWithoutExt}.${ext}`;
+};
+
+export const validSelect = (item: any) => {
+  return !(
+    item &&
+    Object.keys(item).length === 0 &&
+    item.constructor === Object
+  );
 };

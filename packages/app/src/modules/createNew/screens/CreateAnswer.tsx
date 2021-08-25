@@ -13,7 +13,9 @@ import {
 import {
   AnswerForm,
   useCreateAnswer,
+  useUpdateAnswer,
   validAnswerSchema,
+  DisplayImage,
 } from "@petfabula/common";
 import ParamTypes from "./paramTypes";
 import MultipleImageSelect from "../components/MultipleImageSelect";
@@ -23,9 +25,14 @@ const CreateAnswer = () => {
   const { t } = useTranslation();
   const { params } = useRoute<RouteProp<ParamTypes, "CreateAnswer">>();
   const { questionId, questionTitle } = params;
+  const answer = params?.answer;
   const { createAnswer } = useCreateAnswer();
+  const { updateAnswer } = useUpdateAnswer();
   const images = params?.images ? params.images : [];
   const [img, setImg] = useState(images);
+  const [existImages, setExistImages] = useState<DisplayImage[]>(
+    answer ? answer.images : []
+  );
 
   useEffect(() => {
     if (!(JSON.stringify(images) == JSON.stringify(img))) {
@@ -38,15 +45,40 @@ const CreateAnswer = () => {
     setImg([...img]);
   };
 
-  const initial: AnswerForm = {
-    questionId: questionId,
-    content: "",
+  const handleRemoveExistImage = (id: number) => {
+    const im = existImages.filter((item) => item.id != id);
+    setExistImages(im);
+  };
+
+  const initial: AnswerForm = answer
+    ? { questionId: questionId, content: answer.content }
+    : {
+        questionId: questionId,
+        content: "",
+      };
+
+  const handleUpdate = (data: AnswerForm) => {
+    if (answer) {
+      const d = {
+        ...answer,
+        ...data,
+        images: existImages,
+      };
+      updateAnswer(d, img);
+    }
+  };
+
+  const handleCreate = (data: AnswerForm) => {
+    createAnswer(data, img);
   };
 
   const handleSubmit = (data: AnswerForm) => {
     Keyboard.dismiss();
-    // console.log("data", data);
-    createAnswer(data, img);
+    if (answer) {
+      handleUpdate(data);
+    } else {
+      handleCreate(data);
+    }
   };
 
   return (
@@ -78,6 +110,8 @@ const CreateAnswer = () => {
           )}
         </Formik>
         <MultipleImageSelect
+          existImages={existImages}
+          onExistImageRemove={handleRemoveExistImage}
           images={img}
           fromScreen="CreateAnswer"
           onRemove={handleRemove}
@@ -107,6 +141,7 @@ const QuestionFormContent = ({
   const navigation = useNavigation();
   const { t } = useTranslation();
   const { pending, error, result } = useCreateAnswer();
+  const { pending: updatePending, result: updateResult } = useUpdateAnswer();
 
   React.useEffect(() => {
     navigation.setOptions({
@@ -130,9 +165,15 @@ const QuestionFormContent = ({
     }
   }, [result]);
 
+  useDidUpdateEffect(() => {
+    if (updateResult) {
+      navigation.goBack();
+    }
+  }, [updateResult]);
+
   return (
     <View style={{ width: "100%", alignItems: "center" }}>
-      <PendingOverlay pending={pending} />
+      <PendingOverlay pending={pending || updatePending} />
 
       <Field
         name="content"

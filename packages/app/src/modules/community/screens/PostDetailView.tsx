@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import {
   View,
+  Alert,
   TouchableWithoutFeedback,
   ScrollView,
   useWindowDimensions,
@@ -27,29 +28,22 @@ import Animated, {
   useAnimatedStyle,
   withSequence,
   withTiming,
-  interpolateColor,
-  interpolate,
   Easing,
 } from "react-native-reanimated";
-import {
-  BottomSheetModal,
-  BottomSheetBackdrop,
-  BottomSheetBackgroundProps,
-} from "@gorhom/bottom-sheet";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import {
   useLoadPostDetail,
   PostDetail,
   useLikePost,
   useUnlikePost,
   useCollectPost,
+  useRemovePost,
   useRemoveCollectPost,
   useCurrentUser,
   useFollowUser,
   useUnfollowUser,
-  useLoadPostComment,
-  useLoadPostCommentReply,
   PostTopic,
-  PostCommentReply,
+  resolveTargetNotFoundError,
 } from "@petfabula/common";
 import {
   ImageGallery,
@@ -57,9 +51,15 @@ import {
   AvatarField,
   ActivityIndicator,
   useRefocusEffect,
+  BottomSheet,
+  BottomSheetButton,
+  AlertAction,
+  PendingOverlay,
+  useDidUpdateEffect,
+  ResourceNotFoundView,
 } from "../../shared";
 import ParamTypes from "./ParamTypes";
-import CommentList from "../components/CommentList";
+import PostCommentList from "../components/PostCommentList";
 import RelatePetItem from "../components/RelatePetItem";
 
 const Footer = ({ post }: { post: PostDetail }) => {
@@ -230,27 +230,6 @@ const Footer = ({ post }: { post: PostDetail }) => {
   );
 };
 
-const CustomBackground: React.FC<BottomSheetBackgroundProps> = ({
-  style,
-  animatedIndex,
-}) => {
-  const containerAnimatedStyle = useAnimatedStyle(() => ({
-    borderRadius: 12,
-    opacity: interpolate(animatedIndex.value, [0, 1], [0.3, 0.8]),
-    backgroundColor: interpolateColor(
-      animatedIndex.value,
-      [0, 1],
-      ["#ffffff", "#eaeaea"]
-    ),
-  }));
-  const containerStyle = useMemo(
-    () => [style, containerAnimatedStyle],
-    [style, containerAnimatedStyle]
-  );
-
-  return <Animated.View pointerEvents="none" style={containerStyle} />;
-};
-
 const Header = ({
   height,
   post,
@@ -266,12 +245,16 @@ const Header = ({
   const { currentUser } = useCurrentUser();
   const { followUser, pending: followPending } = useFollowUser();
   const { unfollowUser, pending: unfollowPending } = useUnfollowUser();
+  const { removePost } = useRemovePost();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [200], []);
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
+  const handleClose = useCallback(() => {
+    bottomSheetModalRef.current?.close();
+  }, [bottomSheetModalRef]);
 
   return (
     <View
@@ -291,56 +274,46 @@ const Header = ({
           color={theme.colors?.black}
         />
       </TouchableWithoutFeedback>
-      <BottomSheetModal
-        backdropComponent={BottomSheetBackdrop}
+
+      <BottomSheet
         ref={bottomSheetModalRef}
-        backgroundComponent={CustomBackground}
-        // index={1}
         snapPoints={snapPoints}
-        style={{
-          shadowColor: theme.colors?.grey1,
-          shadowOffset: { width: 2, height: 1 },
-          shadowOpacity: 0.8,
-          elevation: 2,
-        }}
+        handleClose={handleClose}
       >
         <View style={{ paddingHorizontal: 24 }}>
           <Divider />
+
           <View style={{ paddingTop: 16 }}>
-            <View style={{ width: 60 }}>
-              <TouchableOpacity
-                style={{
-                  borderRadius: 60,
-                  shadowColor: theme.colors?.grey2,
-                  shadowOffset: { width: 2, height: 1 },
-                  shadowOpacity: 0.8,
-                  elevation: 2,
-                  backgroundColor: theme.colors?.white,
-                  padding: 12,
-                  justifyContent: "center",
+            <View style={{ flexDirection: "row" }}>
+              <BottomSheetButton
+                label={t("common.edit")}
+                type="antdesign"
+                name="edit"
+                onPress={() => {
+                  navigation.navigate("CreateNew", {
+                    screen: "CreatePost",
+                    params: { post: post },
+                  });
+                  bottomSheetModalRef.current?.close();
                 }}
-              >
-                <Icon
-                  type="antdesign"
-                  name="delete"
-                  size={32}
-                  color={theme.colors?.black}
-                />
-              </TouchableOpacity>
-              <Text
-                style={{
-                  textAlign: "center",
-                  marginTop: 6,
-                  fontSize: 16,
-                  fontWeight: "bold",
-                  color: theme.colors?.black,
+              />
+
+              <BottomSheetButton
+                label={t("common.delete")}
+                type="antdesign"
+                name="delete"
+                onPress={() => {
+                  AlertAction.AlertDelele(t, () => {
+                    if (post) {
+                      removePost(post.id);
+                    }
+                  });
+                  handleClose();
                 }}
-              >
-                {t("common.delete")}
-              </Text>
+              />
             </View>
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={() => {
                 bottomSheetModalRef.current?.close();
               }}
@@ -360,10 +333,10 @@ const Header = ({
               >
                 {t("common.cancel")}
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
-      </BottomSheetModal>
+      </BottomSheet>
 
       <View style={{ flex: 1 }}>
         {post && post.id == currentPostId ? (
@@ -455,51 +428,10 @@ const Comments = ({
 }) => {
   const navigation = useNavigation();
 
-  const {
-    initializing,
-    comments,
-    loadComment,
-    nextCursor,
-    pending,
-    postId: commentPostId,
-  } = useLoadPostComment();
-  const { loadCommentReply } = useLoadPostCommentReply();
-
-  useEffect(() => {
-    loadComment(currentPostId, null);
-  }, [currentPostId]);
-
   return (
-    <CommentList
-      comments={commentPostId == currentPostId ? comments : []}
+    <PostCommentList
+      currentPostId={currentPostId}
       commentCount={post.commentCount}
-      initializing={initializing}
-      nextCursor={nextCursor}
-      pending={pending}
-      onReplyContentClick={(reply) => {
-        const postReply = reply as PostCommentReply;
-        navigation.navigate("CreateCommentReply", {
-          replyTarget: postReply,
-          toComment: false,
-          commentId: postReply.commentId,
-        });
-      }}
-      onCommentContentClick={(comment) => {
-        navigation.navigate("CreateCommentReply", {
-          replyTarget: comment,
-          toComment: true,
-          commentId: comment.id,
-        });
-      }}
-      loadReply={(id, cursor) => {
-        loadCommentReply(id, cursor);
-      }}
-      createComment={() => {
-        navigation.navigate("CreateComment", { postId: post.id });
-      }}
-      loadMore={() => {
-        loadComment(currentPostId, nextCursor);
-      }}
     />
   );
 };
@@ -510,6 +442,7 @@ const PostDetailView = () => {
   const { params } = useRoute<RouteProp<ParamTypes, "PostDetailView">>();
   const { id } = params;
   const navigation = useNavigation<StackNavigationProp<any>>();
+  const { pending: removePending, result } = useRemovePost();
 
   const { height: screenHeight } = useWindowDimensions();
   const { top, bottom } = useSafeAreaInsets();
@@ -527,6 +460,14 @@ const PostDetailView = () => {
   useEffect(() => {
     loadPostDetail(id);
   }, [id, loadPostDetail]);
+
+  useDidUpdateEffect(() => {
+    if (result && result.id == id) {
+      navigation.goBack();
+    }
+  }, [result]);
+
+  const notFoundId = resolveTargetNotFoundError(error);
 
   const renderTopic = (topic: PostTopic | null) => {
     if (!topic) {
@@ -578,7 +519,9 @@ const PostDetailView = () => {
       ></View>
       <Header currentPostId={id} height={headerHeight} post={postDetail} />
       <Divider />
-      {postDetail && postDetail.id == id ? (
+      {!pending && notFoundId == id ? <ResourceNotFoundView /> : null}
+      <PendingOverlay pending={removePending} />
+      {postDetail?.id == id ? (
         <View
           style={{
             paddingBottom: top + footerHeight + headerHeight,
@@ -649,9 +592,10 @@ const PostDetailView = () => {
             <Footer post={postDetail} />
           </View>
         </View>
-      ) : (
+      ) : null}
+      {pending && !(postDetail?.id == id) ? (
         <ActivityIndicator color={theme.colors?.grey0} />
-      )}
+      ) : null}
     </View>
   );
 };

@@ -1,10 +1,12 @@
 {
   "common": {
+    "ok": "はい",
     "confirm": "確定",
     "send": "送信",
     "save": "保存",
     "next": "次へ",
     "done": "完了",
+    "edit": "編集",
     "search": "検索",
     "pending": "処理中",
     "comment": "コメント",
@@ -19,7 +21,8 @@
     "deleted": "削除済み",
     "cancel": "キャンセル",
     "date": "日付",
-    "time": "時間"
+    "time": "時間",
+    "alertDelete": "削除しますか？"
   },
 
   "mainTab": {
@@ -187,6 +190,7 @@
     "title": "ペットセンター",
     "createPet": "ペット追加",
     "petSelect": "ペット選択",
+    "emptySelect": "ペットを選択してください",
     "age": "{{age}}歳",
     "ageMonth": "{{month}}月",
     "withYou": "出会ってから{{day}}日"

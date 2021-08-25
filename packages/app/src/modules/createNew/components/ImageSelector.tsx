@@ -1,22 +1,25 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { useTheme, Icon, Overlay } from "react-native-elements";
-import { UploadImage } from "@petfabula/common";
+import { UploadImage, DisplayImage } from "@petfabula/common";
 import { ImageFile, changeExtName, getFileName, Image } from "../../shared";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 
 const ImageSelector = ({
+  existImages,
   images,
   onSelect,
   onRemove,
 }: {
+  existImages?: DisplayImage[];
   images: ImageFile[];
   onSelect: (image: ImageFile) => void;
   onRemove: (index: number) => void;
 }) => {
   const { theme } = useTheme();
   const [processing, setProcessing] = useState(false);
+  const displayImages = existImages ? existImages : [];
 
   const processImage = async (uri: string) => {
     const file = await ImageManipulator.manipulateAsync(
@@ -98,6 +101,48 @@ const ImageSelector = ({
           name="add"
         />
       </TouchableOpacity>
+
+      {displayImages.map((item, index) => (
+        <View key={item.id} style={{ alignItems: "flex-end" }}>
+          <View
+            style={{
+              marginTop: 12,
+              paddingRight: 12,
+              position: "absolute",
+              zIndex: 2,
+              width: "100%",
+              alignItems: "flex-end",
+            }}
+          >
+            <Icon
+              onPress={() => {
+                onRemove(index);
+              }}
+              containerStyle={{
+                width: 20,
+                backgroundColor: "#000",
+                opacity: 0.5,
+                borderRadius: 20,
+              }}
+              size={20}
+              color={theme.colors?.grey3}
+              type="Ionicons"
+              name="close"
+            />
+          </View>
+
+          <Image
+            key={item.id}
+            source={{ uri: item.url }}
+            style={{
+              width: 78,
+              height: 78,
+              marginRight: 10,
+              marginTop: 10,
+            }}
+          />
+        </View>
+      ))}
 
       {images.map((item, index) => (
         <View key={item.name} style={{ alignItems: "flex-end" }}>

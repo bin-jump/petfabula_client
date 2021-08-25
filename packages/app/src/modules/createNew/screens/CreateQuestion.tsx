@@ -10,11 +10,15 @@ import {
   DismissKeyboardView,
   PendingOverlay,
   ImageFile,
+  validSelect,
 } from "../../shared";
 import {
   QuestionForm,
   useCreateQuestion,
+  useUpdateQuestion,
   validQuestionSchema,
+  DisplayImage,
+  ParticiptorPet,
 } from "@petfabula/common";
 import ParamTypes from "./paramTypes";
 import MultipleImageSelect from "../components/MultipleImageSelect";
@@ -25,10 +29,24 @@ const CreateQuestion = () => {
   const { t } = useTranslation();
   const navigation = useNavigation();
   const { params } = useRoute<RouteProp<ParamTypes, "CreateQuestion">>();
-  const pet = params?.pet;
+  const question = params?.question;
   const { createQuestion } = useCreateQuestion();
+  const { updateQuestion } = useUpdateQuestion();
   const images = params?.images ? params.images : [];
   const [img, setImg] = useState<ImageFile[]>([]);
+  const [existImages, setExistImages] = useState<DisplayImage[]>(
+    question ? question.images : []
+  );
+
+  const selectedPet = params?.pet;
+  const initialPet = question?.relatePet ? question?.relatePet : null;
+
+  const pet =
+    selectedPet && validSelect(selectedPet)
+      ? (selectedPet as ParticiptorPet)
+      : selectedPet
+      ? null
+      : initialPet;
 
   useEffect(() => {
     if (!(JSON.stringify(images) == JSON.stringify(img))) {
@@ -41,15 +59,46 @@ const CreateQuestion = () => {
     setImg([...img]);
   };
 
-  const initial: QuestionForm = {
-    title: "",
-    relatePetId: null,
-    content: "",
+  const handleRemoveExistImage = (id: number) => {
+    const im = existImages.filter((item) => item.id != id);
+    setExistImages(im);
+  };
+
+  const initial: QuestionForm = question
+    ? {
+        title: question.title,
+        relatePetId: initialPet ? initialPet.id : null,
+        content: question.content,
+      }
+    : {
+        title: "",
+        relatePetId: null,
+        content: "",
+      };
+
+  const handleUpdate = (data: QuestionForm) => {
+    if (question) {
+      const d = {
+        ...question,
+        ...data,
+        relatePetId: pet ? pet.id : null,
+        images: existImages,
+      };
+      updateQuestion(d, img);
+    }
+  };
+
+  const handleCreate = (data: QuestionForm) => {
+    createQuestion(data, img);
   };
 
   const handleSubmit = (data: QuestionForm) => {
     Keyboard.dismiss();
-    createQuestion(data, img);
+    if (question) {
+      handleUpdate(data);
+    } else {
+      handleCreate(data);
+    }
   };
 
   return (
@@ -88,6 +137,8 @@ const CreateQuestion = () => {
           }}
         />
         <MultipleImageSelect
+          existImages={existImages}
+          onExistImageRemove={handleRemoveExistImage}
           images={img}
           fromScreen="CreateQuestion"
           onRemove={handleRemove}
@@ -114,6 +165,12 @@ const QuestionFormContent = ({
   const navigation = useNavigation();
   const { t } = useTranslation();
   const { pending, error, result } = useCreateQuestion();
+  const {
+    pending: updatePending,
+    error: updateError,
+    result: updateResult,
+  } = useUpdateQuestion();
+
   const { params } = useRoute<RouteProp<ParamTypes, "CreateQuestion">>();
   const pet = params?.pet;
 
@@ -145,9 +202,15 @@ const QuestionFormContent = ({
     }
   }, [result]);
 
+  useDidUpdateEffect(() => {
+    if (updateResult) {
+      navigation.goBack();
+    }
+  }, [updateResult]);
+
   return (
     <View style={{ width: "100%", alignItems: "center" }}>
-      <PendingOverlay pending={pending} />
+      <PendingOverlay pending={pending || updatePending} />
       <Field
         name="title"
         placeholder={`${t("createNew.input.questionTitlePlaceholder")}...`}

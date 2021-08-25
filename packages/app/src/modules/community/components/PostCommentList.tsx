@@ -1,83 +1,96 @@
-import React, { useCallback, useRef, useMemo } from "react";
+import React, { useEffect, useCallback, useRef, useMemo } from "react";
 import { View, TouchableWithoutFeedback, TouchableOpacity } from "react-native";
 import { useTheme, Text, Divider, Button, Icon } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useTranslation } from "react-i18next";
-import Animated, {
-  interpolate,
-  useAnimatedStyle,
-  interpolateColor,
-} from "react-native-reanimated";
+
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import {
-  BottomSheetModal,
-  BottomSheetBackdrop,
-  BottomSheetBackgroundProps,
-} from "@gorhom/bottom-sheet";
-import { useCurrentUser, Participator } from "@petfabula/common";
-import { milisecToAgo, AvatarField, ActivityIndicator } from "../../shared";
+  useCurrentUser,
+  PostCommentReply,
+  PostComment,
+  useLoadPostComment,
+  useLoadPostCommentReply,
+  useRemovePostComment,
+  useRemovePostCommentReply,
+} from "@petfabula/common";
+import {
+  milisecToAgo,
+  AvatarField,
+  ActivityIndicator,
+  BottomSheet,
+  AlertAction,
+  PendingOverlay,
+} from "../../shared";
 
-const CustomBackground: React.FC<BottomSheetBackgroundProps> = ({
-  style,
-  animatedIndex,
+type WithReplyTo = PostCommentReply & { replyToName: string | null };
+
+const ItemBottomSheetContent = ({
+  handleRemove,
+  content,
+}: {
+  handleRemove: () => void;
+  content: string;
 }) => {
-  const containerAnimatedStyle = useAnimatedStyle(() => ({
-    borderRadius: 12,
-    opacity: interpolate(animatedIndex.value, [0, 1], [0.3, 0.9]),
-    backgroundColor: interpolateColor(
-      animatedIndex.value,
-      [0, 1],
-      ["#ffffff", "#ffffff"]
-    ),
-  }));
-  const containerStyle = useMemo(
-    () => [style, containerAnimatedStyle],
-    [style, containerAnimatedStyle]
+  const { theme } = useTheme();
+  const { t } = useTranslation();
+
+  return (
+    <View style={{ paddingHorizontal: 24 }}>
+      <Text
+        style={{
+          marginVertical: 12,
+          fontSize: 16,
+          color: theme.colors?.grey0,
+          textAlign: "center",
+        }}
+      >
+        {content}
+      </Text>
+      <Divider />
+      <View style={{ paddingTop: 16 }}>
+        <TouchableOpacity onPress={handleRemove}>
+          <Text
+            style={{
+              textAlign: "center",
+              fontSize: 18,
+              color: theme.colors?.black,
+              marginBottom: 12,
+            }}
+          >
+            {t("common.delete")}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
-
-  return <Animated.View pointerEvents="none" style={containerStyle} />;
 };
-
-type ReplyItemBase = {
-  id: number;
-  content: string;
-  createdDate: number;
-  participator: Participator;
-  replyToId: number | null;
-};
-
-type CommentItemBase = {
-  id: number;
-  content: string;
-  createdDate: number;
-  participator: Participator;
-  replyCount: number;
-  replyCursor: object | null;
-  replies: ReplyItemBase[];
-  loadingReply: boolean;
-};
-
-type WithReplyTo = ReplyItemBase & { replyToName: string | null };
 
 const ReplyItem = ({
   reply,
   index,
   totalCount,
-  onReplyContentClick,
 }: {
   reply: WithReplyTo;
   index: number;
   totalCount: number;
-  onReplyContentClick: (reply: ReplyItemBase) => void;
 }) => {
   const { theme } = useTheme();
   const { t } = useTranslation();
+  const navigation = useNavigation();
+  const { removeCommentReply, pending: removePending } =
+    useRemovePostCommentReply();
+  const { currentUser } = useCurrentUser();
 
-  //   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  //   const snapPoints = useMemo(() => [160], []);
-  //   const handlePresentModalPress = useCallback(() => {
-  //     bottomSheetModalRef.current?.present();
-  //   }, []);
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const snapPoints = useMemo(() => [200], []);
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, [bottomSheetModalRef]);
+  const handleClose = useCallback(() => {
+    bottomSheetModalRef.current?.close();
+  }, [bottomSheetModalRef]);
 
   const replyTargetComponent = () => {
     if (reply.replyToId == null) {
@@ -121,6 +134,23 @@ const ReplyItem = ({
 
   return (
     <View style={{ marginTop: 12 }}>
+      <BottomSheet
+        ref={bottomSheetModalRef}
+        snapPoints={snapPoints}
+        handleClose={handleClose}
+      >
+        <ItemBottomSheetContent
+          content={`${reply.content.substr(0, 30)}...`}
+          handleRemove={() => {
+            AlertAction.AlertDelele(t, () => {
+              removeCommentReply(reply.id);
+              handleClose();
+            });
+          }}
+        />
+      </BottomSheet>
+
+      <PendingOverlay pending={removePending} />
       <AvatarField
         nameStyle={{
           fontSize: 16,
@@ -132,29 +162,35 @@ const ReplyItem = ({
         photo={reply.participator.photo}
         name={reply.participator.name}
         size={24}
-        // fieldRight={() => (
-        //   <View
-        //     style={{
-        //       justifyContent: "flex-end",
-        //       alignItems: "center",
-        //       width: 36,
-        //     }}
-        //   >
-        //     <Icon
-        //       onPress={() => {
-        //         handlePresentModalPress();
-        //       }}
-        //       type="aaterialicons"
-        //       name="expand-more"
-        //       color={theme.colors?.black}
-        //       size={18}
-        //     />
-        //   </View>
-        // )}
+        fieldRight={() => (
+          <View
+            style={{
+              justifyContent: "flex-end",
+              alignItems: "center",
+              width: 36,
+            }}
+          >
+            {currentUser?.id == reply.participator.id ? (
+              <Icon
+                onPress={() => {
+                  handlePresentModalPress();
+                }}
+                type="feather"
+                name="more-vertical"
+                color={theme.colors?.grey1}
+                size={18}
+              />
+            ) : null}
+          </View>
+        )}
       />
       <TouchableWithoutFeedback
         onPress={() => {
-          onReplyContentClick(reply);
+          navigation.navigate("CreateCommentReply", {
+            replyTarget: reply,
+            toComment: false,
+            commentId: reply.commentId,
+          });
         }}
       >
         <Text style={{ marginTop: -6, marginLeft: 30 }}>
@@ -177,7 +213,7 @@ const ReplyItem = ({
   );
 };
 
-const formatReplies = (replies: ReplyItemBase[]): WithReplyTo[] => {
+const formatReplies = (replies: PostCommentReply[]): WithReplyTo[] => {
   const mp: { [key: number]: string } = {};
   replies.forEach((item) => {
     mp[item.id] = item.participator.name;
@@ -195,26 +231,26 @@ const CommentItem = ({
   comment,
   index,
   totalCount,
-  onCommentContentClick,
-  onReplyContentClick,
-  loadReply,
 }: {
-  comment: CommentItemBase;
+  comment: PostComment;
   index: number;
   totalCount: number;
-  onCommentContentClick: (comment: CommentItemBase) => void;
-  onReplyContentClick: (reply: ReplyItemBase) => void;
-  loadReply: (id: number, cursor: object | null) => void;
 }) => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation<StackNavigationProp<any>>();
+  const { loadCommentReply } = useLoadPostCommentReply();
+  const { removeComment, pending: removePending } = useRemovePostComment();
+  const { currentUser } = useCurrentUser();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [200], []);
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
-  }, []);
+  }, [bottomSheetModalRef]);
+  const handleClose = useCallback(() => {
+    bottomSheetModalRef.current?.close();
+  }, [bottomSheetModalRef]);
 
   const renderLoadMore = useCallback(() => {
     if (
@@ -237,9 +273,9 @@ const CommentItem = ({
           <TouchableWithoutFeedback
             onPress={() => {
               if (!comment.replyCursor) {
-                loadReply(comment.id, null);
+                loadCommentReply(comment.id, null);
               } else {
-                loadReply(comment.id, comment.replyCursor);
+                loadCommentReply(comment.id, comment.replyCursor);
               }
             }}
           >
@@ -262,70 +298,26 @@ const CommentItem = ({
 
   return (
     <View>
-      <BottomSheetModal
-        backdropComponent={BottomSheetBackdrop}
+      <BottomSheet
         ref={bottomSheetModalRef}
-        backgroundComponent={CustomBackground}
-        // index={1}
         snapPoints={snapPoints}
-        style={{
-          shadowColor: theme.colors?.grey1,
-          shadowOffset: { width: 2, height: 1 },
-          shadowOpacity: 0.8,
-          elevation: 2,
-        }}
+        handleClose={handleClose}
       >
-        <View style={{ paddingHorizontal: 24 }}>
-          <Text
-            style={{
-              marginVertical: 12,
-              fontSize: 16,
-              color: theme.colors?.grey0,
-              textAlign: "center",
-            }}
-          >{`${comment.participator.name}: ${comment.content.substr(
+        <ItemBottomSheetContent
+          content={`${comment.participator.name}: ${comment.content.substr(
             0,
             30
-          )}...`}</Text>
-          <Divider />
-          <View style={{ paddingTop: 16 }}>
-            <TouchableOpacity>
-              <Text
-                style={{
-                  textAlign: "center",
-                  fontSize: 18,
-                  color: theme.colors?.black,
-                  marginBottom: 12,
-                }}
-              >
-                {t("common.delete")}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                bottomSheetModalRef.current?.close();
-              }}
-              style={{
-                marginTop: 12,
-                backgroundColor: theme.colors?.grey4,
-                borderRadius: 6,
-              }}
-            >
-              <Text
-                style={{
-                  textAlign: "center",
-                  fontSize: 18,
-                  color: theme.colors?.black,
-                  paddingVertical: 14,
-                }}
-              >
-                {t("common.cancel")}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </BottomSheetModal>
+          )}...`}
+          handleRemove={() => {
+            AlertAction.AlertDelele(t, () => {
+              removeComment(comment.id);
+              handleClose();
+            });
+          }}
+        />
+      </BottomSheet>
 
+      <PendingOverlay pending={removePending} />
       <View style={{ marginTop: 12, marginBottom: 16 }}>
         <AvatarField
           onAvatarClick={() => {
@@ -341,6 +333,27 @@ const CommentItem = ({
           photo={comment.participator.photo}
           name={comment.participator.name}
           size={36}
+          fieldRight={() => (
+            <View
+              style={{
+                justifyContent: "flex-end",
+                alignItems: "center",
+                width: 36,
+              }}
+            >
+              {currentUser?.id == comment.participator.id ? (
+                <Icon
+                  onPress={() => {
+                    handlePresentModalPress();
+                  }}
+                  type="feather"
+                  name="more-vertical"
+                  color={theme.colors?.grey1}
+                  size={20}
+                />
+              ) : null}
+            </View>
+          )}
         />
         <View
           style={{
@@ -359,7 +372,11 @@ const CommentItem = ({
             <Text>
               <Text
                 onPress={() => {
-                  onCommentContentClick(comment);
+                  navigation.navigate("CreateCommentReply", {
+                    replyTarget: comment,
+                    toComment: true,
+                    commentId: comment.id,
+                  });
                 }}
                 style={{
                   fontSize: 16,
@@ -375,46 +392,19 @@ const CommentItem = ({
                   fontSize: 14,
                 }}
               >
-                {`  ` + milisecToAgo(comment.createdDate)}
+                {`  ${milisecToAgo(comment.createdDate)}`}
               </Text>
             </Text>
-            {/* <Text
-                style={{
-                  marginTop: 6,
-                  color: theme.colors?.grey1,
-                  fontSize: 14,
-                }}
-              >
-                {milisecToAgo(comment.createdDate)}
-              </Text> */}
+
             {formatReplies(comment.replies).map((item, index) => (
               <ReplyItem
                 key={item.id}
                 reply={item}
                 index={index}
                 totalCount={comment.replyCount}
-                onReplyContentClick={onReplyContentClick}
               />
             ))}
             {renderLoadMore()}
-          </View>
-
-          <View
-            style={{
-              justifyContent: "flex-end",
-              alignItems: "center",
-              width: 36,
-            }}
-          >
-            <Icon
-              onPress={() => {
-                handlePresentModalPress();
-              }}
-              type="feather"
-              name="more-vertical"
-              color={theme.colors?.black}
-              size={20}
-            />
           </View>
         </View>
       </View>
@@ -423,38 +413,36 @@ const CommentItem = ({
   );
 };
 
-const CommentList = ({
+const PostCommentList = ({
+  currentPostId,
   commentCount,
-  comments,
-  initializing,
-  nextCursor,
-  pending,
-  onReplyContentClick,
-  onCommentContentClick,
-  loadReply,
-  createComment,
-  loadMore,
 }: {
+  currentPostId: number;
   commentCount: number;
-  comments: CommentItemBase[];
-  initializing: boolean;
-  nextCursor: object | null;
-  pending: boolean;
-  onReplyContentClick: (reply: ReplyItemBase) => void;
-  onCommentContentClick: (comment: CommentItemBase) => void;
-  loadReply: (id: number, cursor: object | null) => void;
-  createComment: () => void;
-  loadMore: () => void;
 }) => {
   const { theme } = useTheme();
   const { t } = useTranslation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
+
+  const {
+    initializing,
+    comments,
+    loadComment,
+    nextCursor,
+    pending,
+    postId: commentPostId,
+  } = useLoadPostComment();
+
+  useEffect(() => {
+    loadComment(currentPostId, null);
+  }, [currentPostId]);
 
   const renderLoadMore = () => {
     if (commentCount == 0) {
       return (
         <TouchableWithoutFeedback
           onPress={() => {
-            createComment();
+            navigation.navigate("CreateComment", { postId: currentPostId });
           }}
         >
           <View style={{ marginBottom: 12 }}>
@@ -484,7 +472,7 @@ const CommentList = ({
       <View style={{ width: "100%" }}>
         <Button
           onPress={() => {
-            loadMore();
+            loadComment(currentPostId, nextCursor);
           }}
           loadingProps={{ color: theme.colors?.grey1 }}
           type="clear"
@@ -539,9 +527,6 @@ const CommentList = ({
               comment={item}
               index={index}
               totalCount={comments.length}
-              onCommentContentClick={onCommentContentClick}
-              onReplyContentClick={onReplyContentClick}
-              loadReply={loadReply}
             />
           ))}
 
@@ -558,4 +543,4 @@ const CommentList = ({
   );
 };
 
-export default CommentList;
+export default PostCommentList;

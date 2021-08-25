@@ -1,13 +1,18 @@
 import { all, fork } from 'redux-saga/effects';
 import { createSagaWatcher } from '../../shared';
 import {
-  LoadUnansweredQuestionsActionType,
+  LoadRecentQuestionsActionType,
   QuestionCreateActionType,
+  QuestionUpdateQuestionActionType,
+  QuestionRemoveQuestionActionType,
   QuestionLoadQuestionDetailActionType,
   QuestionLoadQuestionAnswersActionType,
+  QuestionUpdateAnswerActionType,
+  QuestionRemoveAnswerActionType,
   QuestionCreateAnswersActionType,
   LoadRecommendQuestionsActionType,
   QuestionCreateAnswerCommentActionType,
+  QuestionRemoveAnswerCommentActionType,
   QuestionLoadAnswerCommentActionType,
   QuestionUpvoteQuestionActionType,
   QuestionUnvoteQuestionActionType,
@@ -23,10 +28,10 @@ const watchLoadRecommendQuestions = createSagaWatcher({
   watchType: 'LATEST',
 });
 
-const watchLoadUnansweredQuestions = createSagaWatcher({
-  url: `/api/question/unanswered-questions`,
+const watchLoadRecentQuestions = createSagaWatcher({
+  url: `/api/question/recent-questions`,
   method: 'GET',
-  asyncAction: LoadUnansweredQuestionsActionType,
+  asyncAction: LoadRecentQuestionsActionType,
   watchType: 'LATEST',
 });
 
@@ -35,6 +40,22 @@ const watchCreateQuestion = createSagaWatcher({
   method: 'POST',
   asyncAction: QuestionCreateActionType,
   watchType: 'EVERY',
+});
+
+const watchUpdateQuestion = createSagaWatcher({
+  url: `/api/question/questions`,
+  method: 'PUT',
+  asyncAction: QuestionUpdateQuestionActionType,
+  watchType: 'EVERY',
+});
+
+const watchRemoveQuestion = createSagaWatcher({
+  method: 'DELETE',
+  asyncAction: QuestionRemoveQuestionActionType,
+  watchType: 'EVERY',
+  createUrl: (payload) => {
+    return `/api/question/questions/${payload.questionId}`;
+  },
 });
 
 const watchLoadQuestionDetail = createSagaWatcher({
@@ -62,20 +83,45 @@ const watchCreateAnswer = createSagaWatcher({
   watchType: 'EVERY',
 });
 
-const watchCreateAnswerComments = createSagaWatcher({
+const watchUpdateAnswer = createSagaWatcher({
+  url: `/api/question/answers`,
+  method: 'PUT',
+  asyncAction: QuestionUpdateAnswerActionType,
+  watchType: 'EVERY',
+});
+
+const watchRemoveAnswer = createSagaWatcher({
+  createUrl: (payload) => {
+    return `/api/question/answers/${payload.answerId}`;
+  },
+  method: 'DELETE',
+  asyncAction: QuestionRemoveAnswerActionType,
+  watchType: 'EVERY',
+});
+
+const watchCreateAnswerComment = createSagaWatcher({
   url: `/api/question/answers/comments`,
   method: 'POST',
   asyncAction: QuestionCreateAnswerCommentActionType,
   watchType: 'EVERY',
 });
 
+const watchRemoveAnswerComment = createSagaWatcher({
+  createUrl: (payload) => {
+    return `/api/question/answers/comments/${payload.answerCommentId}`;
+  },
+  method: 'DELETE',
+  asyncAction: QuestionRemoveAnswerCommentActionType,
+  watchType: 'EVERY',
+});
+
 const watchLoadAnswerComments = createSagaWatcher({
-  method: 'GET',
-  asyncAction: QuestionLoadAnswerCommentActionType,
-  watchType: 'LATEST',
   createUrl: (payload) => {
     return `/api/question/answers/${payload.answerId}/comments`;
   },
+  method: 'GET',
+  asyncAction: QuestionLoadAnswerCommentActionType,
+  watchType: 'LATEST',
 });
 
 const watchUpvoteQuestion = createSagaWatcher({
@@ -128,11 +174,17 @@ export function* questionRootSaga() {
   yield all([
     fork(watchLoadRecommendQuestions),
     fork(watchCreateQuestion),
-    fork(watchLoadUnansweredQuestions),
+    fork(watchUpdateQuestion),
+    fork(watchRemoveQuestion),
+
+    fork(watchLoadRecentQuestions),
     fork(watchLoadQuestionDetail),
     fork(watchLoadQuestionAnswers),
     fork(watchCreateAnswer),
-    fork(watchCreateAnswerComments),
+    fork(watchUpdateAnswer),
+    fork(watchRemoveAnswer),
+    fork(watchCreateAnswerComment),
+    fork(watchRemoveAnswerComment),
     fork(watchLoadAnswerComments),
     fork(watchUpvoteQuestion),
     fork(watchUnvoteQuestion),

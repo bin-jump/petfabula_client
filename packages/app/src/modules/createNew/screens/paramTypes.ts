@@ -1,24 +1,34 @@
 import { RouteProp } from "@react-navigation/native";
-import { ImageFile } from "../../shared";
-import { PostTopic, ParticiptorPet, Pet, Post } from "@petfabula/common";
+import { ImageFile, EmptySelect } from "../../shared";
+import {
+  PostTopic,
+  ParticiptorPet,
+  Pet,
+  PostDetail,
+  QuestionDetail,
+  Answer,
+} from "@petfabula/common";
 
 type ParamTypes = {
   ImageSelect: {
     fromScreen: string;
+    limit: number | undefined;
   };
 
   CreatePost: {
-    post: Post | undefined;
+    post: PostDetail | undefined;
     images: ImageFile[] | undefined;
     topic: PostTopic | undefined;
-    pet: Pet | null;
+    pet: Pet | null | EmptySelect;
   };
 
   CreateQuestion: {
+    question: QuestionDetail | undefined;
     images: ImageFile[] | undefined;
     pet: Pet | null;
   };
   CreateAnswer: {
+    answer: Answer | undefined;
     images: ImageFile[] | undefined;
     questionId: number;
     questionTitle: string;

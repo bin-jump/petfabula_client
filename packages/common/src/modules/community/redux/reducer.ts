@@ -116,7 +116,7 @@ const initialStat: CommunityState = {
   postTopics: { data: [], pending: false, error: null },
 
   // question
-  unansweredQuestions: {
+  recentQuestions: {
     data: [],
     pending: false,
     error: null,
@@ -163,16 +163,31 @@ const initialStat: CommunityState = {
     pending: false,
     error: null,
   },
+  updateQuestion: {
+    data: null,
+    pending: false,
+    error: null,
+  },
+  removeQuestion: { data: null, pending: false, error: null },
   createAnswer: {
     data: null,
     pending: false,
     error: null,
   },
+  updateAnswer: {
+    data: null,
+    pending: false,
+    error: null,
+  },
+  removeAnswer: { data: null, pending: false, error: null },
+
   createAnswerComment: {
     data: null,
     pending: false,
     error: null,
   },
+  removeAnswerComment: { data: null, pending: false, error: null },
+
   searchQuestionAnswers: {
     keyword: null,
     data: [],

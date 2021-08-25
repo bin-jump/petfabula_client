@@ -23,8 +23,10 @@ import {
   PostRemoveCollectActionType,
   PostLoadPostCommentsActionType,
   PostCreatePostCommentActionType,
+  PostRemovePostCommentActionType,
   PostLoadCommentReplyActionType,
   PostCreateCommentReplyActionType,
+  PostRemoveCommentReplyActionType,
   PostLoadTopicActionType,
   PostSearchActionType,
 } from './actionTypes';
@@ -217,6 +219,15 @@ const watchCreatePostComments = createSagaWatcher({
   watchType: 'EVERY',
 });
 
+const watchRemovePostComment = createSagaWatcher({
+  method: 'DELETE',
+  asyncAction: PostRemovePostCommentActionType,
+  watchType: 'EVERY',
+  createUrl: (payload) => {
+    return `/api/post/comments/${payload.commentId}`;
+  },
+});
+
 const watchLoadPostCommentReplies = createSagaWatcher({
   method: 'GET',
   asyncAction: PostLoadCommentReplyActionType,
@@ -231,6 +242,15 @@ const watchCreatePostCommentReply = createSagaWatcher({
   method: 'POST',
   asyncAction: PostCreateCommentReplyActionType,
   watchType: 'EVERY',
+});
+
+const watchRemovePostCommentReply = createSagaWatcher({
+  method: 'DELETE',
+  asyncAction: PostRemoveCommentReplyActionType,
+  watchType: 'EVERY',
+  createUrl: (payload) => {
+    return `/api/post/replies/${payload.replyId}`;
+  },
 });
 
 // topic
@@ -257,6 +277,7 @@ export function* postRootSaga() {
     fork(watchLoadRecommendPosts),
     fork(watchLoadFollowedPosts),
     fork(watchCreatePost),
+    fork(watchUpdatePost),
     fork(watchRemovePost),
     fork(watchLikePost),
     fork(watchUnlikePost),
@@ -266,6 +287,8 @@ export function* postRootSaga() {
     fork(watchCreatePostComments),
     fork(watchLoadPostCommentReplies),
     fork(watchCreatePostCommentReply),
+    fork(watchRemovePostComment),
+    fork(watchRemovePostCommentReply),
 
     fork(watchSearchPost),
 

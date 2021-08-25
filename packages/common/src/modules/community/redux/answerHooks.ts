@@ -13,6 +13,9 @@ import {
   QuestionCreateAnswersActionType,
   QuestionCreateAnswerCommentActionType,
   QuestionLoadAnswerCommentActionType,
+  QuestionUpdateAnswerActionType,
+  QuestionRemoveAnswerActionType,
+  QuestionRemoveAnswerCommentActionType,
 } from './actionTypes';
 import { ActionBase, UploadImage, fillCursorResponseData } from '../../shared';
 
@@ -64,9 +67,9 @@ export const useCreateAnswer = () => {
   );
 
   const boundAction = useCallback(
-    (postForm: AnswerForm, images: Array<UploadImage>) => {
+    (answerForm: AnswerForm, images: Array<UploadImage>) => {
       const d = new FormData();
-      d.append('answer', JSON.stringify(postForm));
+      d.append('answer', JSON.stringify(answerForm));
       for (const image of images) {
         if (image) {
           d.append('images', {
@@ -87,6 +90,76 @@ export const useCreateAnswer = () => {
 
   return {
     createAnswer: boundAction,
+    result,
+    pending,
+    error,
+  };
+};
+
+export const useUpdateAnswer = () => {
+  const dispatch = useDispatch();
+  const { result, pending, error } = useSelector(
+    (state: AppState) => ({
+      result: state.community.updateAnswer.data,
+      pending: state.community.updateAnswer.pending,
+      error: state.community.updateAnswer.error,
+    }),
+    shallowEqual,
+  );
+
+  const boundAction = useCallback(
+    (answer: Answer, images: Array<UploadImage>) => {
+      const d = new FormData();
+      d.append('answer', JSON.stringify(answer));
+      for (const image of images) {
+        if (image) {
+          d.append('images', {
+            uri: image.uri,
+            name: image.name,
+            type: image.type,
+          } as any);
+        }
+      }
+
+      dispatch({
+        type: QuestionUpdateAnswerActionType.BEGIN,
+        payload: d,
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    updateAnswer: boundAction,
+    result,
+    pending,
+    error,
+  };
+};
+
+export const useRemoveAnswer = () => {
+  const dispatch = useDispatch();
+  const { result, pending, error } = useSelector(
+    (state: AppState) => ({
+      result: state.community.removeAnswer.data,
+      pending: state.community.removeAnswer.pending,
+      error: state.community.removeAnswer.error,
+    }),
+    shallowEqual,
+  );
+
+  const boundAction = useCallback(
+    (answerId: number) => {
+      dispatch({
+        type: QuestionRemoveAnswerActionType.BEGIN,
+        payload: { answerId },
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    removeAnswer: boundAction,
     result,
     pending,
     error,
@@ -116,6 +189,35 @@ export const useCreateAnswerComment = () => {
 
   return {
     createAnswerComment: boundAction,
+    result,
+    pending,
+    error,
+  };
+};
+
+export const useRemoveAnswerComment = () => {
+  const dispatch = useDispatch();
+  const { result, pending, error } = useSelector(
+    (state: AppState) => ({
+      result: state.community.removeAnswerComment.data,
+      pending: state.community.removeAnswerComment.pending,
+      error: state.community.removeAnswerComment.error,
+    }),
+    shallowEqual,
+  );
+
+  const boundAction = useCallback(
+    (answerCommentId: number) => {
+      dispatch({
+        type: QuestionRemoveAnswerCommentActionType.BEGIN,
+        payload: { answerCommentId },
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    removeAnswerComment: boundAction,
     result,
     pending,
     error,
@@ -272,6 +374,113 @@ export const answerReducer = {
     };
   },
 
+  // update answer
+  [QuestionUpdateAnswerActionType.BEGIN]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      updateAnswer: {
+        ...state.updateAnswer,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [QuestionUpdateAnswerActionType.SUCCESS]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    const answer = action.payload as Answer;
+    const answers = state.questionAnswers.data;
+    return {
+      ...state,
+      updateAnswer: {
+        ...state.updateAnswer,
+        data: action.payload,
+        pending: false,
+      },
+      questionAnswers: {
+        ...state.questionAnswers,
+        data: answers.map((item) => {
+          if (item.id != answer.id) {
+            return item;
+          }
+          return formatAnswer(answer);
+        }),
+      },
+    };
+  },
+  [QuestionUpdateAnswerActionType.FAILURE]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      updateAnswer: {
+        ...state.updateAnswer,
+        error: action.error,
+        pending: false,
+      },
+    };
+  },
+
+  // remove answer
+  [QuestionRemoveAnswerActionType.BEGIN]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      removeAnswer: {
+        ...state.removeAnswer,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [QuestionRemoveAnswerActionType.SUCCESS]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    const answers = state.questionAnswers.data;
+    const questionId = action.payload.questionId;
+    const questionDetail = state.questionDetail.data;
+    return {
+      ...state,
+      removeAnswer: {
+        ...state.removeAnswer,
+        data: action.payload,
+        pending: false,
+      },
+      questionAnswers: {
+        ...state.questionAnswers,
+        data: answers.filter((item) => item.id != action.payload.id),
+      },
+      questionDetail: {
+        ...state.questionDetail,
+        data:
+          questionDetail && questionId == questionDetail?.id
+            ? { ...questionDetail, answerCount: questionDetail.answerCount - 1 }
+            : questionDetail,
+      },
+    };
+  },
+  [QuestionRemoveAnswerActionType.FAILURE]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      removeAnswer: {
+        ...state.removeAnswer,
+        error: action.error,
+        pending: false,
+      },
+    };
+  },
+
   // create answer comment
   [QuestionCreateAnswerCommentActionType.BEGIN]: (
     state: CommunityState,
@@ -323,6 +532,65 @@ export const answerReducer = {
       ...state,
       createAnswerComment: {
         ...state.createAnswerComment,
+        pending: false,
+        error: action.error,
+      },
+    };
+  },
+
+  // remove answer comment
+  [QuestionRemoveAnswerCommentActionType.BEGIN]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      removeAnswerComment: {
+        ...state.removeAnswerComment,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [QuestionRemoveAnswerCommentActionType.SUCCESS]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    const answerId = action.payload.answerId;
+    return {
+      ...state,
+      removeAnswerComment: {
+        ...state.removeAnswerComment,
+        data: action.payload,
+        pending: false,
+      },
+      questionAnswers: {
+        ...state.questionAnswers,
+        data: state.questionAnswers.data
+          ? state.questionAnswers.data.map((item) => {
+              if (item.id == answerId) {
+                return {
+                  ...item,
+                  commentCount: item.commentCount - 1,
+                  comments: item.comments.filter(
+                    (c) => c.id != action.payload.id,
+                  ),
+                };
+              }
+              return item;
+            })
+          : state.questionAnswers.data,
+      },
+    };
+  },
+  [QuestionRemoveAnswerCommentActionType.FAILURE]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      removeAnswerComment: {
+        ...state.removeAnswerComment,
         pending: false,
         error: action.error,
       },

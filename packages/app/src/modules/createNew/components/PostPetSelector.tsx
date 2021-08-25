@@ -9,14 +9,14 @@ import {
   Divider,
 } from "react-native-elements";
 import { useTranslation } from "react-i18next";
-import { Pet } from "@petfabula/common";
+import { Pet, ParticiptorPet } from "@petfabula/common";
 import { Avatar } from "../../shared";
 
 const PostPetSelector = ({
   pet,
   onPress,
 }: {
-  pet: Pet | null;
+  pet: ParticiptorPet | null;
   onPress: () => void;
 }) => {
   const { theme } = useTheme();

@@ -68,7 +68,7 @@ const PostTopics = () => {
       >
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("CreatePost", { topic: undefined });
+            navigation.navigate("CreatePost", { topic: {} });
           }}
         >
           <View style={{ paddingVertical: 16 }}>
