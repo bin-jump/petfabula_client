@@ -15,6 +15,9 @@ const initialStat: PetState = {
   petBreeds: { data: [], pending: false, error: null },
 
   createPet: { data: null, pending: false, error: null },
+  editPet: { data: null, pending: false, error: null },
+  removePet: { data: null, pending: false, error: null },
+
   createDisorderRecord: { data: null, pending: false, error: null },
   createFeedRecord: { data: null, pending: false, error: null },
   createMedicalRecord: { data: null, pending: false, error: null },

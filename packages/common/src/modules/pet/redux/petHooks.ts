@@ -1,13 +1,15 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { AppState } from '../../../stateProvider';
-import { PetState, PetForm } from './types';
+import { PetState, PetForm, PetDetail } from './types';
 import {
   LoadMyPetsActionType,
   LoadFeederPetsActionType,
   CreatePetsActionType,
   LoadPetBreedsActionType,
   LoadPetActionType,
+  UpdatePetActionType,
+  RemovePetActionType,
 } from './actionTypes';
 import { ActionBase, UploadImage } from '../../shared';
 
@@ -44,6 +46,74 @@ export const useCreatePet = () => {
 
   return {
     createPet: boundAction,
+    result,
+    pending,
+    error,
+  };
+};
+
+export const useUpdatePet = () => {
+  const dispatch = useDispatch();
+  const { result, pending, error } = useSelector(
+    (state: AppState) => ({
+      result: state.pet.editPet.data,
+      pending: state.pet.editPet.pending,
+      error: state.pet.editPet.error,
+    }),
+    shallowEqual,
+  );
+
+  const boundAction = useCallback(
+    (pet: PetDetail, image: UploadImage | null) => {
+      const d = new FormData();
+      d.append('pet', JSON.stringify(pet));
+      if (image) {
+        d.append('image', {
+          uri: image.uri,
+          name: image.name,
+          type: image.type,
+        } as any);
+      }
+
+      dispatch({
+        type: UpdatePetActionType.BEGIN,
+        payload: d,
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    updatePet: boundAction,
+    result,
+    pending,
+    error,
+  };
+};
+
+export const useRemovePet = () => {
+  const dispatch = useDispatch();
+  const { result, pending, error } = useSelector(
+    (state: AppState) => ({
+      result: state.pet.removePet.data,
+      pending: state.pet.removePet.pending,
+      error: state.pet.removePet.error,
+    }),
+    shallowEqual,
+  );
+
+  const boundAction = useCallback(
+    (petId: number) => {
+      dispatch({
+        type: RemovePetActionType.BEGIN,
+        payload: { petId },
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    removePet: boundAction,
     result,
     pending,
     error,
@@ -200,6 +270,108 @@ export const petReducer = {
       ...state,
       createPet: {
         ...state.createPet,
+        pending: false,
+        error: action.error,
+      },
+    };
+  },
+
+  // update pet
+  [UpdatePetActionType.BEGIN]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      editPet: {
+        ...state.editPet,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [UpdatePetActionType.SUCCESS]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    const myPets = state.myPets.data;
+    const pet = action.payload as PetDetail;
+    const fetchedPet = state.pet.data;
+    return {
+      ...state,
+      editPet: {
+        ...state.editPet,
+        data: action.payload,
+        pending: false,
+      },
+      myPets: {
+        ...state.myPets,
+        data: myPets.map((item) => {
+          if (item.id == pet.id) {
+            return { ...item, ...pet };
+          }
+          return item;
+        }),
+      },
+      pet: {
+        ...state.pet,
+        data: fetchedPet?.id == pet.id ? pet : fetchedPet,
+      },
+    };
+  },
+  [UpdatePetActionType.FAILURE]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      editPet: {
+        ...state.editPet,
+        pending: false,
+        error: action.error,
+      },
+    };
+  },
+
+  // remove pet
+  [RemovePetActionType.BEGIN]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      removePet: {
+        ...state.removePet,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [RemovePetActionType.SUCCESS]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      removePet: {
+        ...state.removePet,
+        data: action.payload,
+        pending: false,
+      },
+      myPets: {
+        ...state.myPets,
+        data: state.myPets.data.filter((item) => item.id != action.payload.id),
+      },
+    };
+  },
+  [RemovePetActionType.FAILURE]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      removePet: {
+        ...state.removePet,
         pending: false,
         error: action.error,
       },

@@ -5,6 +5,8 @@ import {
   LoadPetActionType,
   LoadFeederPetsActionType,
   CreatePetsActionType,
+  UpdatePetActionType,
+  RemovePetActionType,
   LoadPetBreedsActionType,
   CreateFeedRecordActionType,
   CreateWeightRecordActionType,
@@ -18,10 +20,26 @@ import {
   LoadPetMedicalRecordActionType,
 } from './actionTypes';
 
-const watchCreatePets = createSagaWatcher({
+const watchCreatePet = createSagaWatcher({
   url: `/api/pet/pets`,
   method: 'POST',
   asyncAction: CreatePetsActionType,
+  watchType: 'EVERY',
+});
+
+const watchUpdatePet = createSagaWatcher({
+  url: `/api/pet/pets`,
+  method: 'PUT',
+  asyncAction: UpdatePetActionType,
+  watchType: 'EVERY',
+});
+
+const watchRemovePet = createSagaWatcher({
+  createUrl: (payload) => {
+    return `/api/pet/pets/${payload.petId}`;
+  },
+  method: 'DELETE',
+  asyncAction: RemovePetActionType,
   watchType: 'EVERY',
 });
 
@@ -139,7 +157,9 @@ const watchLoadMedicalRecords = createSagaWatcher({
 
 export function* petRootSaga() {
   yield all([
-    fork(watchCreatePets),
+    fork(watchCreatePet),
+    fork(watchUpdatePet),
+    fork(watchRemovePet),
     fork(watchLoadPetBreeds),
     fork(watchLoadMyPets),
     fork(watchLoadPetDetail),

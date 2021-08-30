@@ -3,6 +3,7 @@ import {
   AsyncListBase,
   AsyncCursorPageListBase,
   DisplayImage,
+  AlreadyDeleted,
 } from '../../shared';
 
 // type PetType = 'DOG' | 'CAT' | 'RABBIT' | 'BIRD' | 'OTHER' ;
@@ -23,7 +24,7 @@ export interface Pet {
   birthday: number;
   gender: PetGender;
   category: string;
-  breed: string;
+  breed: PetBreed;
   breedId: number;
   bio: string;
 }
@@ -144,6 +145,9 @@ export interface PetState {
   petBreeds: AsyncListBase<PetBreed>;
 
   createPet: AsyncDataBase<PetDetail>;
+  editPet: AsyncDataBase<PetDetail>;
+  removePet: AsyncDataBase<PetDetail | AlreadyDeleted>;
+
   createDisorderRecord: AsyncDataBase<DisorderRecord>;
   createFeedRecord: AsyncDataBase<FeedRecord>;
   createMedicalRecord: AsyncDataBase<MedicalRecord>;

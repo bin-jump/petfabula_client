@@ -1,16 +1,32 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useRef, useMemo, useCallback, useEffect } from "react";
 import { View, TouchableWithoutFeedback, TouchableOpacity } from "react-native";
-import { useTheme, Text, Icon } from "react-native-elements";
+import { useTheme, Text, Icon, Divider } from "react-native-elements";
 import { useTranslation } from "react-i18next";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import {
   createMaterialTopTabNavigator,
   MaterialTopTabBarProps,
 } from "@react-navigation/material-top-tabs";
-import { Pet, useLoadPet, useCurrentUser } from "@petfabula/common";
-import { Avatar, toAge, toAgeMonth, useRefocusEffect } from "../../shared";
+import {
+  Pet,
+  useLoadPet,
+  useRemovePet,
+  useCurrentUser,
+} from "@petfabula/common";
+import {
+  Avatar,
+  toAge,
+  toAgeMonth,
+  useRefocusEffect,
+  BottomSheet,
+  BottomSheetButton,
+  AlertAction,
+  PendingOverlay,
+  useDidUpdateEffect,
+} from "../../shared";
 import ParamTypes from "./ParamTypes";
 import TabBar from "../components/TabBar";
 import PetPostList from "../components/PetPostList";
@@ -91,6 +107,15 @@ const PetContent = ({ pet, petId }: { pet: Pet | null; petId: number }) => {
   const navigation = useNavigation<StackNavigationProp<any>>();
   const { currentUser } = useCurrentUser();
 
+  // const handleOpenEdit = () => {
+  //   if (currentUser) {
+  //     navigation.navigate("CreateNew", {
+  //       screen: "CreatePet",
+  //       params: { pet: pet },
+  //     });
+  //   }
+  // };
+
   return (
     <View style={{}}>
       {pet && pet.id == petId ? (
@@ -108,22 +133,37 @@ const PetContent = ({ pet, petId }: { pet: Pet | null; petId: number }) => {
             <View style={{ flexDirection: "row" }}>
               <View
                 style={{
+                  width: 90,
+                  height: 90,
                   borderRadius: 90,
                   padding: 6,
                   backgroundColor: theme.colors?.white,
                   shadowColor: theme.colors?.grey2,
                   shadowOffset: { width: 2, height: 4 },
-                  shadowOpacity: 0.5,
+                  shadowOpacity: 0.6,
                   shadowRadius: 5,
                   elevation: 2,
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
                 <Avatar source={{ uri: pet.photo }} size={80} iconType="PET" />
               </View>
 
-              <View style={{ marginLeft: 20 }}>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View
+                style={{
+                  marginLeft: 20,
+                  paddingRight: 10,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
                   <Text
+                    numberOfLines={1}
                     style={{
                       lineHeight: 30,
                       height: 30,
@@ -148,19 +188,24 @@ const PetContent = ({ pet, petId }: { pet: Pet | null; petId: number }) => {
                   <AgeItem mili={pet.birthday} />
                 </View>
 
-                <Text
-                  style={{
-                    marginTop: 4,
-                    fontSize: 16,
-                    color: theme.colors?.grey1,
-                  }}
-                >
-                  {pet.breed}
-                </Text>
+                <View style={{ flexShrink: 1 }}>
+                  <Text
+                    numberOfLines={2}
+                    style={{
+                      maxWidth: 200,
+                      marginTop: 4,
+                      fontSize: 14,
+                      color: theme.colors?.grey1,
+                      flexShrink: 1,
+                    }}
+                  >
+                    {pet.breed.name}
+                  </Text>
+                </View>
               </View>
             </View>
 
-            <View style={{}}>
+            <View style={{ marginTop: 20, width: 50 }}>
               {currentUser?.id == pet.feederId ? (
                 <TouchableOpacity
                   onPress={() => {
@@ -215,6 +260,21 @@ const PetDetailView = () => {
   const { params } = useRoute<RouteProp<ParamTypes, "PetDetailView">>();
   const petId = params.petId;
   const { pet, pending, loadPet } = useLoadPet();
+  const { currentUser } = useCurrentUser();
+  const {
+    removePet,
+    pending: removePending,
+    result: removeResult,
+  } = useRemovePet();
+
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const snapPoints = useMemo(() => [200], []);
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+  const handleClose = useCallback(() => {
+    bottomSheetModalRef.current?.close();
+  }, [bottomSheetModalRef]);
 
   const renderPetPostList = useCallback(
     () => <PetPostList petId={petId} />,
@@ -240,12 +300,63 @@ const PetDetailView = () => {
     loadPet(petId);
   }, [loadPet, petId]);
 
+  useDidUpdateEffect(() => {
+    if (removeResult) {
+      navigation.goBack();
+    }
+  }, [removePet, removeResult]);
+
   return (
     <View style={{ flex: 1 }}>
+      <BottomSheet
+        ref={bottomSheetModalRef}
+        snapPoints={snapPoints}
+        handleClose={handleClose}
+      >
+        <View style={{ paddingHorizontal: 24 }}>
+          <Divider />
+
+          <View style={{ paddingTop: 16 }}>
+            <View style={{ flexDirection: "row" }}>
+              <BottomSheetButton
+                label={t("common.edit")}
+                type="antdesign"
+                name="edit"
+                onPress={() => {
+                  if (currentUser) {
+                    navigation.navigate("CreateNew", {
+                      screen: "CreatePet",
+                      params: { pet: pet },
+                    });
+                  }
+                  bottomSheetModalRef.current?.close();
+                }}
+              />
+
+              <BottomSheetButton
+                label={t("common.delete")}
+                type="antdesign"
+                name="delete"
+                onPress={() => {
+                  AlertAction.AlertDelele(t, () => {
+                    if (pet) {
+                      removePet(pet.id);
+                    }
+                  });
+                  handleClose();
+                }}
+              />
+            </View>
+          </View>
+        </View>
+      </BottomSheet>
+
+      <PendingOverlay pending={removePending} />
       <View style={{ backgroundColor: theme.colors?.white, height: top }} />
       <View
         style={{
           flexDirection: "row",
+          justifyContent: "space-between",
           alignItems: "flex-start",
           backgroundColor: theme.colors?.white,
           paddingHorizontal: 16,
@@ -259,6 +370,21 @@ const PetDetailView = () => {
             color={theme.colors?.black}
           />
         </TouchableWithoutFeedback>
+
+        {currentUser?.id == pet?.feederId ? (
+          <TouchableWithoutFeedback
+            onPress={() => {
+              handlePresentModalPress();
+            }}
+          >
+            <Icon
+              type="feather"
+              name="more-vertical"
+              size={24}
+              color={theme.colors?.black}
+            />
+          </TouchableWithoutFeedback>
+        ) : null}
       </View>
       <PetContent pet={pet} petId={petId} />
 

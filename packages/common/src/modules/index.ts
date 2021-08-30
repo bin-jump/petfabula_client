@@ -118,6 +118,8 @@ export {
   DisorderRecordForm,
   PetEventRecordForm,
   useCreatePet,
+  useUpdatePet,
+  useRemovePet,
   useLoadPetBreeds,
   useLoadMyPets,
   useLoadUserPets,

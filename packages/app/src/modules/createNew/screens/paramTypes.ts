@@ -7,6 +7,8 @@ import {
   PostDetail,
   QuestionDetail,
   Answer,
+  PetBreed,
+  PetDetail,
 } from "@petfabula/common";
 
 type ParamTypes = {
@@ -32,6 +34,11 @@ type ParamTypes = {
     images: ImageFile[] | undefined;
     questionId: number;
     questionTitle: string;
+  };
+
+  CreatePet: {
+    pet: PetDetail;
+    breed: PetBreed | undefined | null;
   };
 
   CreateFeedRecord: {

@@ -11,6 +11,8 @@ import PostTopics from "./screens/PostTopics";
 import CreateAnswer from "./screens/CreateAnswer";
 import PetSelect from "./screens/PetSelect";
 
+import CreatePet from "./screens/CreatePet";
+import PetBreedSelect from "./screens/PetBreedSelect";
 import CreateFeedRecord from "./screens/CreateFeedRecord";
 import CreateWeightRecord from "./screens/CreateWeightRecord";
 import CreateDisorderRecord from "./screens/CreateDisorderRecord";
@@ -74,6 +76,29 @@ const CreateNewScreens = () => {
         component={PetSelect}
       />
 
+      {/* pet  */}
+      <CreateNewStack.Screen
+        options={(navigation) => ({
+          ...plainGoBackHeaderOption({ navigation, theme }),
+          headerStyle: {
+            shadowColor: theme.colors?.grey2,
+            shadowOffset: { width: 2, height: 4 },
+            shadowOpacity: 0.3,
+            shadowRadius: 3,
+            elevation: 2,
+          },
+          title: t("pet.createPet"),
+        })}
+        name="CreatePet"
+        component={CreatePet}
+      />
+      <CreateNewStack.Screen
+        options={(navigation) => ({
+          ...plainGoBackHeaderOption({ navigation, theme }),
+        })}
+        name="PetBreedSelect"
+        component={PetBreedSelect}
+      />
       <CreateNewStack.Screen
         options={(navigation) => ({
           ...plainGoBackHeaderOption({ navigation, theme }),

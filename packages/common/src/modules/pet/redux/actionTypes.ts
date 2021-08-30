@@ -11,6 +11,9 @@ export const LoadPetBreedsActionType = createAsyncActionType(
 );
 export const CreatePetsActionType = createAsyncActionType('PET_CREATE_PET');
 
+export const UpdatePetActionType = createAsyncActionType('PET_UPDATE_PET');
+export const RemovePetActionType = createAsyncActionType('PET_REMOVE_PET');
+
 export const CreateDisorderRecordActionType = createAsyncActionType(
   'PET_CREATE_DISORDER_RECORD',
 );

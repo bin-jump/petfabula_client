@@ -156,20 +156,25 @@ const PetItem = ({ item }: { item: PetDetail }) => {
       >
         <View style={{ flexDirection: "row" }}>
           <Avatar source={{ uri: item.photo }} size={60} iconType="PET" />
-          <View style={{ marginLeft: 12 }}>
+          <View style={{ marginLeft: 12, flex: 1 }}>
             <View
               style={{
                 marginBottom: 6,
                 flexDirection: "row",
                 alignItems: "center",
+                flex: 1,
               }}
             >
               <Text h3>{item.name}</Text>
               <Text
                 numberOfLines={1}
-                style={{ color: theme.colors?.grey0, fontSize: 14 }}
+                style={{
+                  flex: 1,
+                  color: theme.colors?.grey0,
+                  fontSize: 14,
+                }}
               >
-                {`   ${item.breed}`}
+                {`   ${item.breed.name}`}
               </Text>
             </View>
 
@@ -320,7 +325,10 @@ const PetMain = () => {
         <View style={{ width: 50, paddingRight: 16 }}>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("CreatePet", { feederId: currentUser?.id });
+              // navigation.navigate("CreatePet", { feederId: currentUser?.id });
+              navigation.navigate("CreateNew", {
+                screen: "CreatePet",
+              });
             }}
           >
             <Icon
@@ -348,6 +356,7 @@ const PetMain = () => {
           backgroundColor: theme.colors?.white,
           padding: 24,
         }}
+        contentContainerStyle={{ paddingBottom: 320 }}
       >
         {pets.map((item) => (
           <PetItem key={item.id} item={item} />

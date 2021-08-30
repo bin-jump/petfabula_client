@@ -33,7 +33,7 @@ const PetScreens = () => {
         component={PetMain}
       />
 
-      <PetStack.Screen
+      {/* <PetStack.Screen
         options={(navigation) => ({
           ...plainGoBackHeaderOption({ navigation, theme }),
           headerStyle: {
@@ -43,7 +43,6 @@ const PetScreens = () => {
             shadowRadius: 3,
             elevation: 2,
           },
-          // headerShown: false,
           title: t("pet.createPet"),
         })}
         name="CreatePet"
@@ -56,7 +55,7 @@ const PetScreens = () => {
         })}
         name="PetBreedSelect"
         component={PetBreedSelect}
-      />
+      /> */}
     </PetStack.Navigator>
   );
 };
