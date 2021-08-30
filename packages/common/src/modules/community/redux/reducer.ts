@@ -105,6 +105,15 @@ const initialStat: CommunityState = {
     nextCursor: null,
     initializing: false,
   },
+  petPostImages: {
+    petId: null,
+    data: [],
+    pending: false,
+    error: null,
+    hasMore: false,
+    nextCursor: null,
+    initializing: false,
+  },
 
   createPost: { data: null, pending: false, error: null },
   removePost: { data: null, pending: false, error: null },

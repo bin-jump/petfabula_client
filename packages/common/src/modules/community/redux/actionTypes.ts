@@ -90,6 +90,10 @@ export const PostLoadTopicActionType = createAsyncActionType(
 
 export const PostSearchActionType = createAsyncActionType('POST_SEARCH');
 
+export const PostLoadPetPostImagesActionType = createAsyncActionType(
+  'POST_LOAD_PET_POST_IMAGES',
+);
+
 // question
 export const LoadRecommendQuestionsActionType = createAsyncActionType(
   'QUESTION_LOAD_RECOMMEND_QUESTIONS',

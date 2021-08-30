@@ -14,6 +14,7 @@ import { Avatar, toAge, toAgeMonth, useRefocusEffect } from "../../shared";
 import ParamTypes from "./ParamTypes";
 import TabBar from "../components/TabBar";
 import PetPostList from "../components/PetPostList";
+import PetPostImageList from "../components/PetPostImageList";
 
 const Tabs = createMaterialTopTabNavigator();
 
@@ -220,6 +221,11 @@ const PetDetailView = () => {
     [petId]
   );
 
+  const renderPetPostImageList = useCallback(
+    () => <PetPostImageList petId={petId} />,
+    [petId]
+  );
+
   const renderTabBar = useCallback<
     (props: MaterialTopTabBarProps) => React.ReactElement
   >((props) => <TabBar {...props} />, []);
@@ -277,7 +283,7 @@ const PetDetailView = () => {
           options={{ tabBarLabel: t("pet.profile.petAlbumTitle") }}
           name="PetAlbum"
         >
-          {renderPetPostList}
+          {renderPetPostImageList}
         </Tabs.Screen>
       </Tabs.Navigator>
     </View>

@@ -87,6 +87,11 @@ export interface PostCommentReply {
   participator: Participator;
 }
 
+export interface PostImage extends DisplayImage {
+  postId: number;
+  petId: number;
+}
+
 export interface PostForm {
   content: string;
   relatePetId: number | null;
@@ -228,6 +233,7 @@ export interface CommunityState {
     postId: number | null;
   };
   searchPosts: AsyncCursorPageListBase<Post> & { keyword: string | null };
+  petPostImages: AsyncCursorPageListBase<PostImage> & { petId: number | null };
 
   createPost: AsyncDataBase<Post>;
   removePost: AsyncDataBase<Post | AlreadyDeleted>;

@@ -193,6 +193,7 @@ const PetPostList = ({ petId }: { petId: number }) => {
 
   return (
     <FlatList
+      // style={{ backgroundColor: theme.colors?.white }}
       contentContainerStyle={{
         paddingTop: 20,
         paddingBottom: 40,

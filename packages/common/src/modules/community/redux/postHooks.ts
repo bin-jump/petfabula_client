@@ -10,6 +10,7 @@ import {
   PostRemovePostActionType,
   LoadPetPostsActionType,
   PostUpdatePostActionType,
+  PostLoadPetPostImagesActionType,
 } from './actionTypes';
 import { ActionBase, UploadImage, fillCursorResponseData } from '../../shared';
 
@@ -141,6 +142,44 @@ export const useLoadPetPosts = () => {
     petId,
     loadPetPosts: boundAction,
     posts,
+    hasMore,
+    nextCursor,
+    initializing,
+    pending,
+    error,
+  };
+};
+
+export const useLoadPetPostImages = () => {
+  const dispatch = useDispatch();
+  const { images, petId, initializing, hasMore, nextCursor, pending, error } =
+    useSelector(
+      (state: AppState) => ({
+        petId: state.community.petPostImages.petId,
+        images: state.community.petPostImages.data,
+        hasMore: state.community.petPostImages.hasMore,
+        nextCursor: state.community.petPostImages.nextCursor,
+        pending: state.community.petPostImages.pending,
+        initializing: state.community.petPostImages.initializing,
+        error: state.community.petPostImages.error,
+      }),
+      shallowEqual,
+    );
+
+  const boundAction = useCallback(
+    (petId: number, cursor: object | null) => {
+      dispatch({
+        type: PostLoadPetPostImagesActionType.BEGIN,
+        payload: { petId, cursor },
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    petId,
+    loadPetPostImages: boundAction,
+    images,
     hasMore,
     nextCursor,
     initializing,
@@ -415,6 +454,48 @@ export const postReducer = {
       ...state,
       petPosts: {
         ...state.petPosts,
+        pending: false,
+        initializing: false,
+        error: action.error,
+      },
+    };
+  },
+
+  // pet post images
+  [PostLoadPetPostImagesActionType.BEGIN]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      petPostImages: {
+        ...state.petPostImages,
+        initializing: action.payload.cursor == null,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [PostLoadPetPostImagesActionType.SUCCESS]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      petPostImages: {
+        ...fillCursorResponseData(state.petPostImages, action),
+        petId: action.extra.petId,
+      },
+    };
+  },
+  [PostLoadPetPostImagesActionType.FAILURE]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      petPostImages: {
+        ...state.petPostImages,
         pending: false,
         initializing: false,
         error: action.error,

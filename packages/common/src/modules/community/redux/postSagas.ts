@@ -29,6 +29,7 @@ import {
   PostRemoveCommentReplyActionType,
   PostLoadTopicActionType,
   PostSearchActionType,
+  PostLoadPetPostImagesActionType,
 } from './actionTypes';
 
 // user
@@ -123,10 +124,19 @@ const watchLoadRecommendPosts = createSagaWatcher({
 
 const watchLoadPetPosts = createSagaWatcher({
   createUrl: (payload) => {
-    return `/api/post/pet/${payload.petId}/posts`;
+    return `/api/post/pets/${payload.petId}/posts`;
   },
   method: 'GET',
   asyncAction: LoadPetPostsActionType,
+  watchType: 'LATEST',
+});
+
+const watchLoadPetPostImages = createSagaWatcher({
+  createUrl: (payload) => {
+    return `/api/post/pets/${payload.petId}/images`;
+  },
+  method: 'GET',
+  asyncAction: PostLoadPetPostImagesActionType,
   watchType: 'LATEST',
 });
 
@@ -264,6 +274,7 @@ const watchLoadTopics = createSagaWatcher({
 export function* postRootSaga() {
   yield all([
     fork(watchLoadPetPosts),
+    fork(watchLoadPetPostImages),
     fork(watchFollowParticipator),
     fork(watchUnfollowParticipator),
     fork(watchLoadMyProfile),
