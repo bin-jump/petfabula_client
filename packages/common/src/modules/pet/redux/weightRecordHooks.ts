@@ -1,10 +1,12 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { AppState } from '../../../stateProvider';
-import { PetState, WeightRecordForm } from './types';
+import { PetState, WeightRecordForm, WeightRecord } from './types';
 import {
   CreateWeightRecordActionType,
   LoadPetWeightRecordActionType,
+  UpdateWeightRecordActionType,
+  RemoveWeightRecordActionType,
 } from './actionTypes';
 import { ActionBase, fillCursorResponseData } from '../../shared';
 
@@ -31,6 +33,64 @@ export const useCreateWeightRecord = () => {
 
   return {
     createWeightRecord: boundAction,
+    result,
+    pending,
+    error,
+  };
+};
+
+export const useUpdateWeightRecord = () => {
+  const dispatch = useDispatch();
+  const { result, pending, error } = useSelector(
+    (state: AppState) => ({
+      result: state.pet.updateWeightRecord.data,
+      pending: state.pet.updateWeightRecord.pending,
+      error: state.pet.updateWeightRecord.error,
+    }),
+    shallowEqual,
+  );
+
+  const boundAction = useCallback(
+    (data: WeightRecord) => {
+      dispatch({
+        type: UpdateWeightRecordActionType.BEGIN,
+        payload: data,
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    updateWeightRecord: boundAction,
+    result,
+    pending,
+    error,
+  };
+};
+
+export const useRemoveWeightRecord = () => {
+  const dispatch = useDispatch();
+  const { result, pending, error } = useSelector(
+    (state: AppState) => ({
+      result: state.pet.removeWeightRecord.data,
+      pending: state.pet.removeWeightRecord.pending,
+      error: state.pet.removeWeightRecord.error,
+    }),
+    shallowEqual,
+  );
+
+  const boundAction = useCallback(
+    (recordId: number) => {
+      dispatch({
+        type: RemoveWeightRecordActionType.BEGIN,
+        payload: { recordId },
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    removeWeightRecord: boundAction,
     result,
     pending,
     error,
@@ -124,6 +184,104 @@ export const weightRecordReducer = {
     };
   },
 
+  [UpdateWeightRecordActionType.BEGIN]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      updateWeightRecord: {
+        ...state.updateWeightRecord,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [UpdateWeightRecordActionType.SUCCESS]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    const records = state.petWeightRecords.data;
+    return {
+      ...state,
+      updateWeightRecord: {
+        ...state.updateWeightRecord,
+        pending: false,
+        data: action.payload,
+      },
+      petWeightRecords: {
+        ...state.petWeightRecords,
+        data:
+          state.petWeightRecords.petId == action.payload.petId
+            ? records.map((item) => {
+                if (item.id == action.payload.id) {
+                  return action.payload;
+                }
+                return item;
+              })
+            : records,
+      },
+    };
+  },
+  [UpdateWeightRecordActionType.FAILURE]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      updateWeightRecord: {
+        ...state.updateWeightRecord,
+        pending: false,
+        error: action.error,
+      },
+    };
+  },
+
+  [RemoveWeightRecordActionType.BEGIN]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      removeWeightRecord: {
+        ...state.removeWeightRecord,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [RemoveWeightRecordActionType.SUCCESS]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    const records = state.petWeightRecords.data;
+    return {
+      ...state,
+      removeWeightRecord: {
+        ...state.removeWeightRecord,
+        pending: false,
+        data: action.payload,
+      },
+      petWeightRecords: {
+        ...state.petWeightRecords,
+        data: records.filter((item) => item.id != action.payload.id),
+      },
+    };
+  },
+  [RemoveWeightRecordActionType.FAILURE]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      removeWeightRecord: {
+        ...state.removeWeightRecord,
+        pending: false,
+        error: action.error,
+      },
+    };
+  },
+
   // load
   [LoadPetWeightRecordActionType.BEGIN]: (
     state: PetState,
@@ -146,8 +304,8 @@ export const weightRecordReducer = {
     return {
       ...state,
       petWeightRecords: {
-        petId: action.extra.petId,
         ...fillCursorResponseData(state.petWeightRecords, action),
+        petId: action.extra.petId,
       },
     };
   },

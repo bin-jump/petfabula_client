@@ -165,16 +165,16 @@ export function* petRootSaga() {
     fork(watchLoadPetDetail),
     fork(watchLoadFeederPets),
 
-    fork(watchCreateFeedRecord),
-    fork(watchCreateWeightRecord),
-    fork(watchCreateDisordertRecord),
-    fork(watchCreatePetEventRecord),
-    fork(watchCreateMedicalRecord),
+    // fork(watchCreateFeedRecord),
+    // fork(watchCreateWeightRecord),
+    // fork(watchCreateDisordertRecord),
+    // fork(watchCreatePetEventRecord),
+    // fork(watchCreateMedicalRecord),
 
-    fork(watchLoadFeedRecords),
-    fork(watchLoadWeightRecords),
-    fork(watchLoadDisorderRecords),
-    fork(watchLoadPetEventRecords),
-    fork(watchLoadMedicalRecords),
+    // fork(watchLoadFeedRecords),
+    // fork(watchLoadWeightRecords),
+    // fork(watchLoadDisorderRecords),
+    // fork(watchLoadPetEventRecords),
+    // fork(watchLoadMedicalRecords),
   ]);
 }

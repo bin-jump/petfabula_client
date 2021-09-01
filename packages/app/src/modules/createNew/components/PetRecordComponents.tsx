@@ -455,9 +455,11 @@ export const RecordBlankInputField: React.FC<
 export const PetSelector: React.FC<
   FieldProps<any> & {
     pet: Pet | null;
+    disabled?: boolean;
     onPress?: () => void;
   }
 > = ({
+  disabled,
   field: { onChange, ...field },
   form: { touched, errors, values, setFieldValue, handleBlur },
   pet,
@@ -472,7 +474,11 @@ export const PetSelector: React.FC<
       : undefined;
 
   return (
-    <TouchableOpacity style={{ width: "100%" }} onPress={onPress}>
+    <TouchableOpacity
+      disabled={disabled}
+      style={{ width: "100%" }}
+      onPress={onPress}
+    >
       <View
         style={{
           width: "100%",
@@ -481,7 +487,14 @@ export const PetSelector: React.FC<
           justifyContent: "space-between",
         }}
       >
-        <Text h4>{t("pet.record.selectPet")}</Text>
+        <Text
+          h4
+          h4Style={{
+            color: disabled ? theme.colors?.grey2 : theme.colors?.black,
+          }}
+        >
+          {t("pet.record.selectPet")}
+        </Text>
         <View
           style={{
             flexDirection: "row",

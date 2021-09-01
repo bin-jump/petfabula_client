@@ -21,6 +21,9 @@ import {
   Pet,
   MedicalRecordForm,
   validMedicalRecordFormSchema,
+  useCreateMedicalRecord,
+  useUpdateMedicalRecord,
+  DisplayImage,
 } from "@petfabula/common";
 import ParamTypes from "./paramTypes";
 import ActionIcon from "../components/ActionIcon";
@@ -31,28 +34,43 @@ import {
   PetSelector,
 } from "../components/PetRecordComponents";
 import ImageSelector from "../components/ImageSelector";
-import { useCreateMedicalRecord } from "@petfabula/common";
-import { ImageFile } from "../../shared";
+import { ImageFile, validSelect } from "../../shared";
 
 const CreateMedicalRecord = () => {
   const [images, setImages] = useState<ImageFile[]>([]);
   const { theme } = useTheme();
   const { t } = useTranslation();
   const { createMedicalRecord } = useCreateMedicalRecord();
-  const { params } = useRoute<RouteProp<ParamTypes, "CreateDisorderRecord">>();
-  const pet = params?.pet;
+  const { updateMedicalRecord } = useUpdateMedicalRecord();
+  const { params } = useRoute<RouteProp<ParamTypes, "CreateMedicalRecord">>();
+  const record = params?.record;
+  const [existImages, setExistImages] = useState<DisplayImage[]>(
+    record ? record.images : []
+  );
+  const pet = validSelect(params?.pet) ? params?.pet : record?.pet;
+  const disableSelectPet = record ? true : false;
   const navigation = useNavigation();
   const { top } = useSafeAreaInsets();
 
-  const initial: MedicalRecordForm = {
-    petId: pet?.id as any,
-    dateTime: new Date().getTime(),
-    hospitalName: "",
-    symptom: "",
-    diagnosis: "",
-    treatment: "",
-    note: "",
-  };
+  const initial: MedicalRecordForm = record
+    ? {
+        petId: record.pet.id,
+        dateTime: record.dateTime,
+        hospitalName: record.hospitalName,
+        symptom: record.symptom,
+        diagnosis: record.diagnosis,
+        treatment: record.treatment,
+        note: record.note,
+      }
+    : {
+        petId: pet?.id as any,
+        dateTime: new Date().getTime(),
+        hospitalName: "",
+        symptom: "",
+        diagnosis: "",
+        treatment: "",
+        note: "",
+      };
 
   const handleSelect = (image: ImageFile) => {
     setImages([...images, image]);
@@ -63,9 +81,28 @@ const CreateMedicalRecord = () => {
     setImages([...images]);
   };
 
+  const handleUpdate = (data: MedicalRecordForm) => {
+    if (record) {
+      updateMedicalRecord({ ...record, ...data, images: existImages }, images);
+    }
+  };
+
+  const handleCreate = (data: MedicalRecordForm) => {
+    createMedicalRecord({ ...data }, images);
+  };
+
   const handleSubmit = (data: MedicalRecordForm) => {
     // console.log(data);
-    createMedicalRecord(data, images);
+    if (record) {
+      handleUpdate(data);
+    } else {
+      handleCreate(data);
+    }
+  };
+
+  const handleRemoveExistImage = (id: number) => {
+    const im = existImages.filter((item) => item.id != id);
+    setExistImages(im);
   };
 
   return (
@@ -145,6 +182,9 @@ const CreateMedicalRecord = () => {
                     setValues,
                     pet,
 
+                    disableSelectPet,
+                    handleRemoveExistImage,
+                    existImages,
                     images,
                     handleSelect,
                     handleRemove,
@@ -167,30 +207,36 @@ const FeedRecordFormContent = ({
   handleBlur,
   setValues,
 
+  disableSelectPet,
+  existImages,
   images,
   handleSelect,
   handleRemove,
+  handleRemoveExistImage,
 }: {
   values: MedicalRecordForm;
   handleSubmit: any;
-  pet: Pet | null;
+  pet: Pet | null | undefined;
   setErrors: (errors: any) => void;
   handleBlur: (e: any) => void;
   setValues: (val: MedicalRecordForm) => void;
 
+  disableSelectPet: boolean;
+  existImages?: DisplayImage[];
   images: ImageFile[];
   handleSelect: (image: ImageFile) => void;
   handleRemove: (index: number) => void;
+  handleRemoveExistImage: (id: number) => void;
 }) => {
   const { theme } = React.useContext(ThemeContext);
   const navigation = useNavigation();
   const { t } = useTranslation();
   const { result, pending } = useCreateMedicalRecord();
+  const { result: updateResult, pending: updatePending } =
+    useUpdateMedicalRecord();
 
   useEffect(() => {
-    if (pet) {
-      setValues({ ...values, petId: pet.id });
-    }
+    setValues({ ...values, petId: pet ? pet.id : (null as any) });
   }, [pet]);
 
   useDidUpdateEffect(() => {
@@ -199,16 +245,23 @@ const FeedRecordFormContent = ({
     }
   }, [result]);
 
+  useDidUpdateEffect(() => {
+    if (updateResult) {
+      navigation.goBack();
+    }
+  }, [updateResult]);
+
   return (
     <View
       style={{ width: "100%", alignItems: "center", paddingHorizontal: 12 }}
     >
-      <PendingOverlay pending={pending} />
+      <PendingOverlay pending={pending || updatePending} />
 
       <Field
         name="petId"
         pet={pet}
         component={PetSelector}
+        disabled={disableSelectPet}
         onPress={() => {
           navigation.navigate("PetSelect", {
             backScreen: "CreateMedicalRecord",
@@ -276,6 +329,8 @@ const FeedRecordFormContent = ({
 
       <View style={{ width: "100%", marginBottom: 12 }}>
         <ImageSelector
+          handleExistImageRemove={handleRemoveExistImage}
+          existImages={existImages}
           images={images}
           onSelect={handleSelect}
           onRemove={handleRemove}

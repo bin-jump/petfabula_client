@@ -134,6 +134,16 @@ export {
   useLoadDisorderRecords,
   useLoadMeidcalRecords,
   useLoadPetEventRecords,
+  useUpdateDisroderRecord,
+  useUpdateFeedRecord,
+  useUpdateMedicalRecord,
+  useUpdatePetEventRecord,
+  useUpdateWeightRecord,
+  useRemoveDisroderRecord,
+  useRemoveFeedRecord,
+  useRemoveMedicalRecord,
+  useRemovePetEventRecord,
+  useRemoveWeightRecord,
 } from './pet';
 
 export {

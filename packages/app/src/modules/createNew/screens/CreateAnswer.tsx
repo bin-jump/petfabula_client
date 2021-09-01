@@ -111,7 +111,7 @@ const CreateAnswer = () => {
         </Formik>
         <MultipleImageSelect
           existImages={existImages}
-          onExistImageRemove={handleRemoveExistImage}
+          handleExistImageRemove={handleRemoveExistImage}
           images={img}
           fromScreen="CreateAnswer"
           onRemove={handleRemove}

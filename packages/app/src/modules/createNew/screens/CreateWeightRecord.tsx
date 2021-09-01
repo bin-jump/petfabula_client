@@ -17,11 +17,14 @@ import {
   DismissKeyboardView,
   PendingOverlay,
   Avatar,
+  validSelect,
 } from "../../shared";
 import {
   Pet,
   WeightRecordForm,
   validWeightRecordFormSchema,
+  useCreateWeightRecord,
+  useUpdateWeightRecord,
 } from "@petfabula/common";
 import ParamTypes from "./paramTypes";
 import ActionIcon from "../components/ActionIcon";
@@ -32,26 +35,45 @@ import {
   RecordBlankInputField,
   PetSelector,
 } from "../components/PetRecordComponents";
-import { useCreateWeightRecord } from "@petfabula/common";
 
 const CreateWeightRecord = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const { createWeightRecord } = useCreateWeightRecord();
+  const { updateWeightRecord } = useUpdateWeightRecord();
   const { params } = useRoute<RouteProp<ParamTypes, "CreateWeightRecord">>();
-  const pet = params?.pet;
+  const record = params?.record;
+  const pet = validSelect(params?.pet) ? params?.pet : record?.pet;
+  const disableSelectPet = record ? true : false;
+
   const navigation = useNavigation();
   const { top } = useSafeAreaInsets();
 
-  const initial: WeightRecordForm = {
-    petId: pet?.id as any,
-    weight: "" as any,
-    dateTime: new Date().getTime(),
+  const initial: WeightRecordForm = record
+    ? {
+        petId: record.petId,
+        weight: record.weight,
+        dateTime: record.dateTime,
+      }
+    : {
+        petId: pet?.id as any,
+        weight: "" as any,
+        dateTime: new Date().getTime(),
+      };
+
+  const handleUpdate = (data: WeightRecordForm) => {
+    if (record) {
+      updateWeightRecord({ ...record, ...data });
+    }
   };
 
   const handleSubmit = (data: WeightRecordForm) => {
     // console.log(data);
-    createWeightRecord(data);
+    if (record) {
+      handleUpdate(data);
+    } else {
+      createWeightRecord(data);
+    }
   };
 
   return (
@@ -128,6 +150,7 @@ const CreateWeightRecord = () => {
                     handleBlur,
                     setValues,
                     pet,
+                    disableSelectPet,
                   }}
                 />
               )}
@@ -142,6 +165,7 @@ const CreateWeightRecord = () => {
 const FeedRecordFormContent = ({
   values,
   pet,
+  disableSelectPet,
   handleSubmit,
   setErrors,
   handleBlur,
@@ -149,7 +173,8 @@ const FeedRecordFormContent = ({
 }: {
   values: WeightRecordForm;
   handleSubmit: any;
-  pet: Pet | null;
+  pet: Pet | null | undefined;
+  disableSelectPet: boolean;
   setErrors: (errors: any) => void;
   handleBlur: (e: any) => void;
   setValues: (val: WeightRecordForm) => void;
@@ -158,6 +183,8 @@ const FeedRecordFormContent = ({
   const navigation = useNavigation();
   const { t } = useTranslation();
   const { result, pending } = useCreateWeightRecord();
+  const { result: updateResult, pending: updatePending } =
+    useUpdateWeightRecord();
 
   useEffect(() => {
     if (pet) {
@@ -187,15 +214,22 @@ const FeedRecordFormContent = ({
     }
   }, [result]);
 
+  useDidUpdateEffect(() => {
+    if (updateResult) {
+      navigation.goBack();
+    }
+  }, [updateResult]);
+
   return (
     <View
       style={{ width: "100%", alignItems: "center", paddingHorizontal: 12 }}
     >
-      <PendingOverlay pending={pending} />
+      <PendingOverlay pending={pending || updatePending} />
 
       <Field
         name="petId"
         pet={pet}
+        disabled={disableSelectPet}
         component={PetSelector}
         onPress={() => {
           navigation.navigate("PetSelect", {

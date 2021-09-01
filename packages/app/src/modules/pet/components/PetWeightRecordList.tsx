@@ -1,12 +1,27 @@
-import React, { useCallback } from "react";
-import { View, FlatList, ListRenderItem } from "react-native";
-import { useTheme, Text, Icon } from "react-native-elements";
+import React, { useRef, useMemo, useCallback } from "react";
+import {
+  View,
+  FlatList,
+  ListRenderItem,
+  TouchableWithoutFeedback,
+} from "react-native";
+import { useTheme, Text, Icon, Divider } from "react-native-elements";
 import { useTranslation } from "react-i18next";
-import { WeightRecord, useLoadWeightRecords } from "@petfabula/common";
+import { useNavigation } from "@react-navigation/native";
+import {
+  WeightRecord,
+  useLoadWeightRecords,
+  useRemoveWeightRecord,
+} from "@petfabula/common";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import {
   useFirstFocusEffect,
   toDateText,
   LoadingMoreIndicator,
+  BottomSheetButton,
+  BottomSheet,
+  AlertAction,
+  PendingOverlay,
 } from "../../shared";
 import {
   RecordBaseType,
@@ -19,6 +34,17 @@ type RecordItemType = WeightRecord & RecordBaseType;
 const Item = ({ record }: { record: RecordItemType }) => {
   const { theme } = useTheme();
   const { t } = useTranslation();
+  const navigation = useNavigation();
+  const { removeWeightRecord } = useRemoveWeightRecord();
+
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const snapPoints = useMemo(() => [200], []);
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+  const handleClose = useCallback(() => {
+    bottomSheetModalRef.current?.close();
+  }, [bottomSheetModalRef]);
 
   return (
     <View
@@ -37,17 +63,80 @@ const Item = ({ record }: { record: RecordItemType }) => {
         flexDirection: "row",
       }}
     >
-      <View>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Icon
-            type="material-community"
-            name="clock-time-seven-outline"
-            size={20}
-            color={theme.colors?.grey1}
-          />
-          <Text style={{ marginLeft: 6, color: theme.colors?.grey0 }}>
-            {`${toDateText(record.dateTime)}`}
-          </Text>
+      <BottomSheet
+        ref={bottomSheetModalRef}
+        snapPoints={snapPoints}
+        handleClose={handleClose}
+      >
+        <View style={{ paddingHorizontal: 24 }}>
+          <Divider />
+
+          <View style={{ paddingTop: 16 }}>
+            <View style={{ flexDirection: "row" }}>
+              <BottomSheetButton
+                label={t("common.edit")}
+                type="antdesign"
+                name="edit"
+                onPress={() => {
+                  navigation.navigate("CreateNew", {
+                    screen: "CreateWeightRecord",
+                    params: { record: record },
+                  });
+
+                  bottomSheetModalRef.current?.close();
+                }}
+              />
+
+              <BottomSheetButton
+                label={t("common.delete")}
+                type="antdesign"
+                name="delete"
+                onPress={() => {
+                  AlertAction.AlertDelele(t, () => {
+                    removeWeightRecord(record.id);
+                  });
+                  handleClose();
+                }}
+              />
+            </View>
+          </View>
+        </View>
+      </BottomSheet>
+
+      <View style={{ flex: 1 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            flex: 1,
+            justifyContent: "space-between",
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Icon
+              type="material-community"
+              name="clock-time-seven-outline"
+              size={20}
+              color={theme.colors?.grey1}
+            />
+            <Text style={{ marginLeft: 6, color: theme.colors?.grey0 }}>
+              {`${toDateText(record.dateTime)}`}
+            </Text>
+          </View>
+
+          <TouchableWithoutFeedback onPress={handlePresentModalPress}>
+            <Icon
+              type="feather"
+              name="more-vertical"
+              size={20}
+              color={theme.colors?.grey1}
+            />
+          </TouchableWithoutFeedback>
         </View>
         <View
           style={{
@@ -59,7 +148,7 @@ const Item = ({ record }: { record: RecordItemType }) => {
           <Text style={{ marginTop: 3 }}>
             <Text style={{ fontWeight: "bold", fontSize: 16 }}>{`${t(
               "pet.record.weightLabel"
-            )}:`}</Text>
+            )}: `}</Text>
 
             <Text style={{ fontWeight: "bold", fontSize: 18 }}>
               {`${record.weight}kg`}
@@ -91,6 +180,7 @@ const PetWeightRecordList = ({ petId }: { petId: number }) => {
     nextCursor,
     error,
   } = useLoadWeightRecords();
+  const { pending: removePending } = useRemoveWeightRecord();
 
   useFirstFocusEffect(() => {
     loadRecords(petId, null);
@@ -103,26 +193,29 @@ const PetWeightRecordList = ({ petId }: { petId: number }) => {
   }, []);
 
   return (
-    <FlatList
-      style={
-        {
-          // backgroundColor: theme.colors?.white,
+    <View style={{ flex: 1 }}>
+      <PendingOverlay pending={removePending} />
+      <FlatList
+        style={
+          {
+            // backgroundColor: theme.colors?.white,
+          }
         }
-      }
-      contentContainerStyle={{
-        paddingBottom: 40,
-      }}
-      keyExtractor={keyExtractor}
-      data={makeListData(records)}
-      renderItem={renderItem}
-      ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
-      onEndReached={() => {
-        if (hasMore && !pending && !error) {
-          loadRecords(petId, nextCursor);
-        }
-      }}
-      onEndReachedThreshold={0.2}
-    />
+        contentContainerStyle={{
+          paddingBottom: 40,
+        }}
+        keyExtractor={keyExtractor}
+        data={makeListData(records)}
+        renderItem={renderItem}
+        ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
+        onEndReached={() => {
+          if (hasMore && !pending && !error) {
+            loadRecords(petId, nextCursor);
+          }
+        }}
+        onEndReachedThreshold={0.2}
+      />
+    </View>
   );
 };
 

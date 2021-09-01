@@ -21,6 +21,7 @@ import {
   Pet,
   DisorderRecordForm,
   validDisorderRecordFormSchema,
+  DisplayImage,
 } from "@petfabula/common";
 import ParamTypes from "./paramTypes";
 import ActionIcon from "../components/ActionIcon";
@@ -31,25 +32,42 @@ import {
   PetSelector,
 } from "../components/PetRecordComponents";
 import ImageSelector from "../components/ImageSelector";
-import { useCreateDisroderRecord } from "@petfabula/common";
-import { ImageFile } from "../../shared";
+import {
+  useCreateDisroderRecord,
+  useUpdateDisroderRecord,
+} from "@petfabula/common";
+import { ImageFile, validSelect } from "../../shared";
 
 const CreateDisorderRecord = () => {
   const [images, setImages] = useState<ImageFile[]>([]);
   const { theme } = useTheme();
   const { t } = useTranslation();
   const { createDisorderRecord } = useCreateDisroderRecord();
+  const { updateDisorderRecord } = useUpdateDisroderRecord();
   const { params } = useRoute<RouteProp<ParamTypes, "CreateDisorderRecord">>();
-  const pet = params?.pet;
+  const record = params?.record;
+  const [existImages, setExistImages] = useState<DisplayImage[]>(
+    record ? record.images : []
+  );
+  const pet = validSelect(params?.pet) ? params?.pet : record?.pet;
+  const disableSelectPet = record ? true : false;
+
   const navigation = useNavigation();
   const { top } = useSafeAreaInsets();
 
-  const initial: DisorderRecordForm = {
-    petId: pet?.id as any,
-    disorderType: null,
-    content: "",
-    dateTime: new Date().getTime(),
-  };
+  const initial: DisorderRecordForm = record
+    ? {
+        petId: record.pet.id,
+        disorderType: record.disorderType,
+        content: record.content,
+        dateTime: record.dateTime,
+      }
+    : {
+        petId: pet?.id as any,
+        disorderType: null,
+        content: "",
+        dateTime: new Date().getTime(),
+      };
 
   const handleSelect = (image: ImageFile) => {
     setImages([...images, image]);
@@ -60,9 +78,28 @@ const CreateDisorderRecord = () => {
     setImages([...images]);
   };
 
+  const handleUpdate = (data: DisorderRecordForm) => {
+    if (record) {
+      updateDisorderRecord({ ...record, ...data, images: existImages }, images);
+    }
+  };
+
+  const handleCreate = (data: DisorderRecordForm) => {
+    createDisorderRecord({ ...data }, images);
+  };
+
   const handleSubmit = (data: DisorderRecordForm) => {
     // console.log(data);
-    createDisorderRecord(data, images);
+    if (record) {
+      handleUpdate(data);
+    } else {
+      handleCreate(data);
+    }
+  };
+
+  const handleRemoveExistImage = (id: number) => {
+    const im = existImages.filter((item) => item.id != id);
+    setExistImages(im);
   };
 
   return (
@@ -140,6 +177,9 @@ const CreateDisorderRecord = () => {
                     setValues,
                     pet,
 
+                    disableSelectPet,
+                    handleRemoveExistImage,
+                    existImages,
                     images,
                     handleSelect,
                     handleRemove,
@@ -162,46 +202,36 @@ const FeedRecordFormContent = ({
   handleBlur,
   setValues,
 
+  disableSelectPet,
+  existImages,
   images,
   handleSelect,
   handleRemove,
+  handleRemoveExistImage,
 }: {
   values: DisorderRecordForm;
   handleSubmit: any;
-  pet: Pet | null;
+  pet: Pet | null | undefined;
   setErrors: (errors: any) => void;
   handleBlur: (e: any) => void;
   setValues: (val: DisorderRecordForm) => void;
 
+  disableSelectPet: boolean;
+  existImages?: DisplayImage[];
   images: ImageFile[];
   handleSelect: (image: ImageFile) => void;
   handleRemove: (index: number) => void;
+  handleRemoveExistImage: (id: number) => void;
 }) => {
   const { theme } = React.useContext(ThemeContext);
   const navigation = useNavigation();
   const { t } = useTranslation();
   const { result, pending } = useCreateDisroderRecord();
-
-  // React.useEffect(() => {
-  //   navigation.setOptions({
-  //     headerRight: () => (
-  //       <View style={{ flexDirection: "row", marginRight: 24 }}>
-  //         <TouchableOpacity
-  //           onPress={() => {
-  //             handleSubmit();
-  //           }}
-  //         >
-  //           <Text style={{ fontSize: 20 }}>{t("common.send")}</Text>
-  //         </TouchableOpacity>
-  //       </View>
-  //     ),
-  //   });
-  // }, [navigation]);
+  const { result: updateResult, pending: updatePending } =
+    useUpdateDisroderRecord();
 
   useEffect(() => {
-    if (pet) {
-      setValues({ ...values, petId: pet.id });
-    }
+    setValues({ ...values, petId: pet ? pet.id : (null as any) });
   }, [pet]);
 
   useDidUpdateEffect(() => {
@@ -210,15 +240,22 @@ const FeedRecordFormContent = ({
     }
   }, [result]);
 
+  useDidUpdateEffect(() => {
+    if (updateResult) {
+      navigation.goBack();
+    }
+  }, [updateResult]);
+
   return (
     <View
       style={{ width: "100%", alignItems: "center", paddingHorizontal: 12 }}
     >
-      <PendingOverlay pending={pending} />
+      <PendingOverlay pending={pending || updatePending} />
 
       <Field
         name="petId"
         pet={pet}
+        disabled={disableSelectPet}
         component={PetSelector}
         onPress={() => {
           navigation.navigate("PetSelect", {
@@ -256,6 +293,8 @@ const FeedRecordFormContent = ({
 
       <View style={{ width: "100%", marginBottom: 12 }}>
         <ImageSelector
+          handleExistImageRemove={handleRemoveExistImage}
+          existImages={existImages}
           images={images}
           onSelect={handleSelect}
           onRemove={handleRemove}

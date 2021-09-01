@@ -46,7 +46,7 @@ export interface DisorderRecord {
   disorderType: string | null;
   content: string;
   images: DisplayImage[];
-  //   createDate: number;
+  pet: Pet;
 }
 
 export interface FeedRecord {
@@ -56,7 +56,7 @@ export interface FeedRecord {
   amount: number;
   foodContent: string;
   note: string;
-  //   createDate: number;
+  pet: Pet;
 }
 
 export interface MedicalRecord {
@@ -69,7 +69,7 @@ export interface MedicalRecord {
   treatment: string;
   note: string;
   images: DisplayImage[];
-  // createDate: number;
+  pet: Pet;
 }
 
 export interface PetEventRecord {
@@ -79,7 +79,7 @@ export interface PetEventRecord {
   eventType: string;
   content: string;
   images: DisplayImage[];
-  // createDate: number;
+  pet: Pet;
 }
 
 export interface WeightRecord {
@@ -87,6 +87,7 @@ export interface WeightRecord {
   petId: number;
   dateTime: number;
   weight: number;
+  pet: Pet;
 }
 
 export interface PetForm {
@@ -147,6 +148,7 @@ export interface PetState {
   createPet: AsyncDataBase<PetDetail>;
   editPet: AsyncDataBase<PetDetail>;
   removePet: AsyncDataBase<PetDetail | AlreadyDeleted>;
+  pet: AsyncDataBase<Pet>;
 
   createDisorderRecord: AsyncDataBase<DisorderRecord>;
   createFeedRecord: AsyncDataBase<FeedRecord>;
@@ -154,7 +156,17 @@ export interface PetState {
   createPetEventRecord: AsyncDataBase<PetEventRecord>;
   createWeightRecord: AsyncDataBase<WeightRecord>;
 
-  pet: AsyncDataBase<Pet>;
+  updateDisorderRecord: AsyncDataBase<DisorderRecord>;
+  updateFeedRecord: AsyncDataBase<FeedRecord>;
+  updateMedicalRecord: AsyncDataBase<MedicalRecord>;
+  updatePetEventRecord: AsyncDataBase<PetEventRecord>;
+  updateWeightRecord: AsyncDataBase<WeightRecord>;
+
+  removeDisorderRecord: AsyncDataBase<DisorderRecord>;
+  removeFeedRecord: AsyncDataBase<FeedRecord>;
+  removeMedicalRecord: AsyncDataBase<MedicalRecord>;
+  removePetEventRecord: AsyncDataBase<PetEventRecord>;
+  removeWeightRecord: AsyncDataBase<WeightRecord>;
 
   petDisorderRecords: AsyncCursorPageListBase<DisorderRecord> & {
     petId: number | null;

@@ -1,10 +1,12 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { AppState } from '../../../stateProvider';
-import { PetState, MedicalRecordForm } from './types';
+import { PetState, MedicalRecordForm, MedicalRecord } from './types';
 import {
   CreateMedicalRecordActionType,
   LoadPetMedicalRecordActionType,
+  UpdateMedicalRecordActionType,
+  RemoveMedicalRecordActionType,
 } from './actionTypes';
 import { ActionBase, UploadImage, fillCursorResponseData } from '../../shared';
 
@@ -43,6 +45,76 @@ export const useCreateMedicalRecord = () => {
 
   return {
     createMedicalRecord: boundAction,
+    result,
+    pending,
+    error,
+  };
+};
+
+export const useUpdateMedicalRecord = () => {
+  const dispatch = useDispatch();
+  const { result, pending, error } = useSelector(
+    (state: AppState) => ({
+      result: state.pet.updateMedicalRecord.data,
+      pending: state.pet.updateMedicalRecord.pending,
+      error: state.pet.updateMedicalRecord.error,
+    }),
+    shallowEqual,
+  );
+
+  const boundAction = useCallback(
+    (data: MedicalRecord, images: UploadImage[]) => {
+      const d = new FormData();
+      d.append('record', JSON.stringify(data));
+      for (const image of images) {
+        if (image) {
+          d.append('images', {
+            uri: image.uri,
+            name: image.name,
+            type: image.type,
+          } as any);
+        }
+      }
+
+      dispatch({
+        type: UpdateMedicalRecordActionType.BEGIN,
+        payload: d,
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    updateMedicalRecord: boundAction,
+    result,
+    pending,
+    error,
+  };
+};
+
+export const useRemoveMedicalRecord = () => {
+  const dispatch = useDispatch();
+  const { result, pending, error } = useSelector(
+    (state: AppState) => ({
+      result: state.pet.removeMedicalRecord.data,
+      pending: state.pet.removeMedicalRecord.pending,
+      error: state.pet.removeMedicalRecord.error,
+    }),
+    shallowEqual,
+  );
+
+  const boundAction = useCallback(
+    (recordId: number) => {
+      dispatch({
+        type: RemoveMedicalRecordActionType.BEGIN,
+        payload: { recordId },
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    removeMedicalRecord: boundAction,
     result,
     pending,
     error,
@@ -136,6 +208,104 @@ export const medicalRecordReducer = {
     };
   },
 
+  [UpdateMedicalRecordActionType.BEGIN]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      updateMedicalRecord: {
+        ...state.updateMedicalRecord,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [UpdateMedicalRecordActionType.SUCCESS]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    const records = state.petMedicalRecords.data;
+    return {
+      ...state,
+      updateMedicalRecord: {
+        ...state.updateMedicalRecord,
+        pending: false,
+        data: action.payload,
+      },
+      petMedicalRecords: {
+        ...state.petMedicalRecords,
+        data:
+          state.petMedicalRecords.petId == action.payload.petId
+            ? records.map((item) => {
+                if (item.id == action.payload.id) {
+                  return action.payload;
+                }
+                return item;
+              })
+            : records,
+      },
+    };
+  },
+  [UpdateMedicalRecordActionType.FAILURE]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      updateMedicalRecord: {
+        ...state.updateMedicalRecord,
+        pending: false,
+        error: action.error,
+      },
+    };
+  },
+
+  [RemoveMedicalRecordActionType.BEGIN]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      removeMedicalRecord: {
+        ...state.removeMedicalRecord,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [RemoveMedicalRecordActionType.SUCCESS]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    const records = state.petMedicalRecords.data;
+    return {
+      ...state,
+      removeMedicalRecord: {
+        ...state.removeMedicalRecord,
+        pending: false,
+        data: action.payload,
+      },
+      petMedicalRecords: {
+        ...state.petMedicalRecords,
+        data: records.filter((item) => item.id != action.payload.id),
+      },
+    };
+  },
+  [RemoveMedicalRecordActionType.FAILURE]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      removeMedicalRecord: {
+        ...state.removeMedicalRecord,
+        pending: false,
+        error: action.error,
+      },
+    };
+  },
+
   // load
   [LoadPetMedicalRecordActionType.BEGIN]: (
     state: PetState,
@@ -158,8 +328,8 @@ export const medicalRecordReducer = {
     return {
       ...state,
       petMedicalRecords: {
-        petId: action.extra.petId,
         ...fillCursorResponseData(state.petMedicalRecords, action),
+        petId: action.extra.petId,
       },
     };
   },

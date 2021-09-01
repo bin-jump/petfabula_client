@@ -12,16 +12,21 @@ import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import {
+  Pet,
+  PetEventRecordForm,
+  validPetEventRecordFormSchema,
+  useCreatePetEventRecord,
+  useUpdatePetEventRecord,
+  DisplayImage,
+} from "@petfabula/common";
+import {
   BlankInput,
   useDidUpdateEffect,
   DismissKeyboardView,
   PendingOverlay,
+  ImageFile,
+  validSelect,
 } from "../../shared";
-import {
-  Pet,
-  PetEventRecordForm,
-  validPetEventRecordFormSchema,
-} from "@petfabula/common";
 import ParamTypes from "./paramTypes";
 import ActionIcon from "../components/ActionIcon";
 import {
@@ -31,28 +36,38 @@ import {
   PetSelector,
 } from "../components/PetRecordComponents";
 import ImageSelector from "../components/ImageSelector";
-import { useCreatePetEventRecord } from "@petfabula/common";
-import { ImageFile } from "../../shared";
 
 const CreatePetEventRecord = () => {
   const [images, setImages] = useState<ImageFile[]>([]);
   const { theme } = useTheme();
   const { t } = useTranslation();
   const { createPetEventRecord } = useCreatePetEventRecord();
+  const { updatePetEventRecord } = useUpdatePetEventRecord();
   const { params } = useRoute<RouteProp<ParamTypes, "CreatePetEventRecord">>();
-  const pet = params?.pet;
+  const record = params?.record;
+  const [existImages, setExistImages] = useState<DisplayImage[]>(
+    record ? record.images : []
+  );
+  const pet = validSelect(params?.pet) ? params?.pet : record?.pet;
+  const disableSelectPet = record ? true : false;
   const { type } = params;
   const navigation = useNavigation();
   const { top } = useSafeAreaInsets();
-
   const eventName = t(`${t(`pet.record.${type}`)}`);
 
-  const initial: PetEventRecordForm = {
-    petId: pet?.id as any,
-    eventType: type,
-    content: "",
-    dateTime: new Date().getTime(),
-  };
+  const initial: PetEventRecordForm = record
+    ? {
+        petId: record.pet.id,
+        dateTime: record.dateTime,
+        eventType: type,
+        content: record.content,
+      }
+    : {
+        petId: pet?.id as any,
+        eventType: type,
+        content: "",
+        dateTime: new Date().getTime(),
+      };
 
   const handleSelect = (image: ImageFile) => {
     setImages([...images, image]);
@@ -63,9 +78,28 @@ const CreatePetEventRecord = () => {
     setImages([...images]);
   };
 
+  const handleRemoveExistImage = (id: number) => {
+    const im = existImages.filter((item) => item.id != id);
+    setExistImages(im);
+  };
+
+  const handleUpdate = (data: PetEventRecordForm) => {
+    if (record) {
+      updatePetEventRecord({ ...record, ...data, images: existImages }, images);
+    }
+  };
+
+  const handleCreate = (data: PetEventRecordForm) => {
+    createPetEventRecord({ ...data }, images);
+  };
+
   const handleSubmit = (data: PetEventRecordForm) => {
     // console.log(data);
-    createPetEventRecord(data, images);
+    if (record) {
+      handleUpdate(data);
+    } else {
+      handleCreate(data);
+    }
   };
 
   return (
@@ -141,6 +175,9 @@ const CreatePetEventRecord = () => {
                     setValues,
                     pet,
 
+                    disableSelectPet,
+                    handleRemoveExistImage,
+                    existImages,
                     images,
                     handleSelect,
                     handleRemove,
@@ -163,25 +200,37 @@ const FeedRecordFormContent = ({
   handleBlur,
   setValues,
 
+  disableSelectPet,
+  existImages,
   images,
   handleSelect,
   handleRemove,
+  handleRemoveExistImage,
 }: {
   values: PetEventRecordForm;
   handleSubmit: any;
-  pet: Pet | null;
+  pet: Pet | null | undefined;
   setErrors: (errors: any) => void;
   handleBlur: (e: any) => void;
   setValues: (val: PetEventRecordForm) => void;
 
+  disableSelectPet: boolean;
+  existImages?: DisplayImage[];
   images: ImageFile[];
   handleSelect: (image: ImageFile) => void;
   handleRemove: (index: number) => void;
+  handleRemoveExistImage: (id: number) => void;
 }) => {
   const { theme } = React.useContext(ThemeContext);
   const navigation = useNavigation();
   const { t } = useTranslation();
   const { result, pending } = useCreatePetEventRecord();
+  const { result: updateResult, pending: updatePending } =
+    useUpdatePetEventRecord();
+
+  useEffect(() => {
+    setValues({ ...values, petId: pet ? pet.id : (null as any) });
+  }, [pet]);
 
   useEffect(() => {
     if (pet) {
@@ -195,15 +244,22 @@ const FeedRecordFormContent = ({
     }
   }, [result]);
 
+  useDidUpdateEffect(() => {
+    if (updateResult) {
+      navigation.goBack();
+    }
+  }, [updateResult]);
+
   return (
     <View
       style={{ width: "100%", alignItems: "center", paddingHorizontal: 12 }}
     >
-      <PendingOverlay pending={pending} />
+      <PendingOverlay pending={pending || updatePending} />
 
       <Field
         name="petId"
         pet={pet}
+        disabled={disableSelectPet}
         component={PetSelector}
         onPress={() => {
           navigation.navigate("PetSelect", {
@@ -241,6 +297,8 @@ const FeedRecordFormContent = ({
 
       <View style={{ width: "100%", marginBottom: 12 }}>
         <ImageSelector
+          handleExistImageRemove={handleRemoveExistImage}
+          existImages={existImages}
           images={images}
           onSelect={handleSelect}
           onRemove={handleRemove}

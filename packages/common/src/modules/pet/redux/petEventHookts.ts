@@ -1,10 +1,12 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { AppState } from '../../../stateProvider';
-import { PetState, PetEventRecordForm } from './types';
+import { PetState, PetEventRecordForm, PetEventRecord } from './types';
 import {
   CreatePetEventRecordActionType,
   LoadPetPetEventRecordActionType,
+  UpdatePetEventRecordActionType,
+  RemovePetEventRecordActionType,
 } from './actionTypes';
 import { ActionBase, UploadImage, fillCursorResponseData } from '../../shared';
 
@@ -43,6 +45,76 @@ export const useCreatePetEventRecord = () => {
 
   return {
     createPetEventRecord: boundAction,
+    result,
+    pending,
+    error,
+  };
+};
+
+export const useUpdatePetEventRecord = () => {
+  const dispatch = useDispatch();
+  const { result, pending, error } = useSelector(
+    (state: AppState) => ({
+      result: state.pet.updatePetEventRecord.data,
+      pending: state.pet.updatePetEventRecord.pending,
+      error: state.pet.updatePetEventRecord.error,
+    }),
+    shallowEqual,
+  );
+
+  const boundAction = useCallback(
+    (data: PetEventRecord, images: UploadImage[]) => {
+      const d = new FormData();
+      d.append('record', JSON.stringify(data));
+      for (const image of images) {
+        if (image) {
+          d.append('images', {
+            uri: image.uri,
+            name: image.name,
+            type: image.type,
+          } as any);
+        }
+      }
+
+      dispatch({
+        type: UpdatePetEventRecordActionType.BEGIN,
+        payload: d,
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    updatePetEventRecord: boundAction,
+    result,
+    pending,
+    error,
+  };
+};
+
+export const useRemovePetEventRecord = () => {
+  const dispatch = useDispatch();
+  const { result, pending, error } = useSelector(
+    (state: AppState) => ({
+      result: state.pet.removePetEventRecord.data,
+      pending: state.pet.removePetEventRecord.pending,
+      error: state.pet.removePetEventRecord.error,
+    }),
+    shallowEqual,
+  );
+
+  const boundAction = useCallback(
+    (recordId: number) => {
+      dispatch({
+        type: RemovePetEventRecordActionType.BEGIN,
+        payload: { recordId },
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    removePetEventRecord: boundAction,
     result,
     pending,
     error,
@@ -136,6 +208,104 @@ export const petEventRecordReducer = {
     };
   },
 
+  [UpdatePetEventRecordActionType.BEGIN]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      updatePetEventRecord: {
+        ...state.updatePetEventRecord,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [UpdatePetEventRecordActionType.SUCCESS]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    const records = state.petPetEventRecords.data;
+    return {
+      ...state,
+      updatePetEventRecord: {
+        ...state.updatePetEventRecord,
+        pending: false,
+        data: action.payload,
+      },
+      petPetEventRecords: {
+        ...state.petPetEventRecords,
+        data:
+          state.petPetEventRecords.petId == action.payload.petId
+            ? records.map((item) => {
+                if (item.id == action.payload.id) {
+                  return action.payload;
+                }
+                return item;
+              })
+            : records,
+      },
+    };
+  },
+  [UpdatePetEventRecordActionType.FAILURE]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      updatePetEventRecord: {
+        ...state.updatePetEventRecord,
+        pending: false,
+        error: action.error,
+      },
+    };
+  },
+
+  [RemovePetEventRecordActionType.BEGIN]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      removePetEventRecord: {
+        ...state.removePetEventRecord,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [RemovePetEventRecordActionType.SUCCESS]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    const records = state.petPetEventRecords.data;
+    return {
+      ...state,
+      removePetEventRecord: {
+        ...state.removePetEventRecord,
+        pending: false,
+        data: action.payload,
+      },
+      petPetEventRecords: {
+        ...state.petPetEventRecords,
+        data: records.filter((item) => item.id != action.payload.id),
+      },
+    };
+  },
+  [RemovePetEventRecordActionType.FAILURE]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      removePetEventRecord: {
+        ...state.removePetEventRecord,
+        pending: false,
+        error: action.error,
+      },
+    };
+  },
+
   // load
   [LoadPetPetEventRecordActionType.BEGIN]: (
     state: PetState,
@@ -158,8 +328,8 @@ export const petEventRecordReducer = {
     return {
       ...state,
       petPetEventRecords: {
-        petId: action.extra.petId,
         ...fillCursorResponseData(state.petPetEventRecords, action),
+        petId: action.extra.petId,
       },
     };
   },

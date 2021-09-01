@@ -123,9 +123,8 @@ export const changeExtName = (filename: string, ext: string) => {
 };
 
 export const validSelect = (item: any) => {
-  return !(
+  return (
     item &&
-    Object.keys(item).length === 0 &&
-    item.constructor === Object
+    !(item && Object.keys(item).length === 0 && item.constructor === Object)
   );
 };

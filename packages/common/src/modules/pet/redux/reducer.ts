@@ -24,6 +24,18 @@ const initialStat: PetState = {
   createPetEventRecord: { data: null, pending: false, error: null },
   createWeightRecord: { data: null, pending: false, error: null },
 
+  updateFeedRecord: { data: null, pending: false, error: null },
+  updateWeightRecord: { data: null, pending: false, error: null },
+  updateDisorderRecord: { data: null, pending: false, error: null },
+  updateMedicalRecord: { data: null, pending: false, error: null },
+  updatePetEventRecord: { data: null, pending: false, error: null },
+
+  removeFeedRecord: { data: null, pending: false, error: null },
+  removeWeightRecord: { data: null, pending: false, error: null },
+  removeDisorderRecord: { data: null, pending: false, error: null },
+  removeMedicalRecord: { data: null, pending: false, error: null },
+  removePetEventRecord: { data: null, pending: false, error: null },
+
   petDisorderRecords: {
     petId: null,
     data: [],

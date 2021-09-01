@@ -16,7 +16,7 @@ import {
   useDidUpdateEffect,
   DismissKeyboardView,
   PendingOverlay,
-  Avatar,
+  validSelect,
 } from "../../shared";
 import {
   Pet,
@@ -32,28 +32,51 @@ import {
   RecordBlankInputField,
   PetSelector,
 } from "../components/PetRecordComponents";
-import { useCreateFeedRecord } from "@petfabula/common";
+import { useCreateFeedRecord, useUpdateFeedRecord } from "@petfabula/common";
 
 const CreateFeedRecord = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const { createFeedRecord } = useCreateFeedRecord();
+  const { updateFeedRecord } = useUpdateFeedRecord();
+
   const { params } = useRoute<RouteProp<ParamTypes, "CreateFeedRecord">>();
-  const pet = params?.pet;
+  const record = params?.record;
+  const pet = validSelect(params?.pet) ? params?.pet : record?.pet;
+  const disableSelectPet = record ? true : false;
+
   const navigation = useNavigation();
   const { top } = useSafeAreaInsets();
 
-  const initial: FeedRecordForm = {
-    petId: pet?.id as any,
-    amount: "" as any,
-    foodContent: "",
-    note: "",
-    dateTime: new Date().getTime(),
+  const initial: FeedRecordForm = record
+    ? {
+        petId: record.petId,
+        amount: record.amount,
+        foodContent: record.foodContent,
+        note: record.note,
+        dateTime: record.dateTime,
+      }
+    : {
+        petId: pet?.id as any,
+        amount: "" as any,
+        foodContent: "",
+        note: "",
+        dateTime: new Date().getTime(),
+      };
+
+  const handleUpdate = (data: FeedRecordForm) => {
+    if (record) {
+      updateFeedRecord({ ...record, ...data });
+    }
   };
 
   const handleSubmit = (data: FeedRecordForm) => {
     // console.log(data);
-    createFeedRecord(data);
+    if (record) {
+      handleUpdate(data);
+    } else {
+      createFeedRecord(data);
+    }
   };
 
   return (
@@ -130,6 +153,7 @@ const CreateFeedRecord = () => {
                     handleBlur,
                     setValues,
                     pet,
+                    disableSelectPet,
                   }}
                 />
               )}
@@ -144,6 +168,7 @@ const CreateFeedRecord = () => {
 const FeedRecordFormContent = ({
   values,
   pet,
+  disableSelectPet,
   handleSubmit,
   setErrors,
   handleBlur,
@@ -151,7 +176,8 @@ const FeedRecordFormContent = ({
 }: {
   values: FeedRecordForm;
   handleSubmit: any;
-  pet: Pet | null;
+  pet: Pet | null | undefined;
+  disableSelectPet: boolean;
   setErrors: (errors: any) => void;
   handleBlur: (e: any) => void;
   setValues: (val: FeedRecordForm) => void;
@@ -160,28 +186,18 @@ const FeedRecordFormContent = ({
   const navigation = useNavigation();
   const { t } = useTranslation();
   const { result, pending } = useCreateFeedRecord();
-
-  // React.useEffect(() => {
-  //   navigation.setOptions({
-  //     headerRight: () => (
-  //       <View style={{ flexDirection: "row", marginRight: 24 }}>
-  //         <TouchableOpacity
-  //           onPress={() => {
-  //             handleSubmit();
-  //           }}
-  //         >
-  //           <Text style={{ fontSize: 20 }}>{t("common.send")}</Text>
-  //         </TouchableOpacity>
-  //       </View>
-  //     ),
-  //   });
-  // }, [navigation]);
+  const { result: updateResult, pending: updatePending } =
+    useUpdateFeedRecord();
 
   useEffect(() => {
-    if (pet) {
-      setValues({ ...values, petId: pet.id });
-    }
+    setValues({ ...values, petId: pet ? pet.id : (null as any) });
   }, [pet]);
+
+  useDidUpdateEffect(() => {
+    if (updateResult) {
+      navigation.goBack();
+    }
+  }, [updateResult]);
 
   useDidUpdateEffect(() => {
     if (result) {
@@ -193,11 +209,12 @@ const FeedRecordFormContent = ({
     <View
       style={{ width: "100%", alignItems: "center", paddingHorizontal: 12 }}
     >
-      <PendingOverlay pending={pending} />
+      <PendingOverlay pending={pending || updatePending} />
 
       <Field
         name="petId"
         pet={pet}
+        disabled={disableSelectPet}
         component={PetSelector}
         onPress={() => {
           navigation.navigate("PetSelect", { backScreen: "CreateFeedRecord" });

@@ -1,10 +1,12 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { AppState } from '../../../stateProvider';
-import { PetState, DisorderRecordForm } from './types';
+import { PetState, DisorderRecordForm, DisorderRecord } from './types';
 import {
   CreateDisorderRecordActionType,
   LoadPetDisorderRecordActionType,
+  UpdateDisorderRecordActionType,
+  RemoveDisorderRecordActionType,
 } from './actionTypes';
 import { ActionBase, UploadImage, fillCursorResponseData } from '../../shared';
 
@@ -43,6 +45,76 @@ export const useCreateDisroderRecord = () => {
 
   return {
     createDisorderRecord: boundAction,
+    result,
+    pending,
+    error,
+  };
+};
+
+export const useUpdateDisroderRecord = () => {
+  const dispatch = useDispatch();
+  const { result, pending, error } = useSelector(
+    (state: AppState) => ({
+      result: state.pet.updateDisorderRecord.data,
+      pending: state.pet.updateDisorderRecord.pending,
+      error: state.pet.updateDisorderRecord.error,
+    }),
+    shallowEqual,
+  );
+
+  const boundAction = useCallback(
+    (data: DisorderRecord, images: UploadImage[]) => {
+      const d = new FormData();
+      d.append('record', JSON.stringify(data));
+      for (const image of images) {
+        if (image) {
+          d.append('images', {
+            uri: image.uri,
+            name: image.name,
+            type: image.type,
+          } as any);
+        }
+      }
+
+      dispatch({
+        type: UpdateDisorderRecordActionType.BEGIN,
+        payload: d,
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    updateDisorderRecord: boundAction,
+    result,
+    pending,
+    error,
+  };
+};
+
+export const useRemoveDisroderRecord = () => {
+  const dispatch = useDispatch();
+  const { result, pending, error } = useSelector(
+    (state: AppState) => ({
+      result: state.pet.removeDisorderRecord.data,
+      pending: state.pet.removeDisorderRecord.pending,
+      error: state.pet.removeDisorderRecord.error,
+    }),
+    shallowEqual,
+  );
+
+  const boundAction = useCallback(
+    (recordId: number) => {
+      dispatch({
+        type: RemoveDisorderRecordActionType.BEGIN,
+        payload: { recordId },
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    removeDisorderRecord: boundAction,
     result,
     pending,
     error,
@@ -136,6 +208,104 @@ export const disorderRecordReducer = {
     };
   },
 
+  [UpdateDisorderRecordActionType.BEGIN]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      updateDisorderRecord: {
+        ...state.updateDisorderRecord,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [UpdateDisorderRecordActionType.SUCCESS]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    const records = state.petDisorderRecords.data;
+    return {
+      ...state,
+      updateDisorderRecord: {
+        ...state.updateDisorderRecord,
+        pending: false,
+        data: action.payload,
+      },
+      petDisorderRecords: {
+        ...state.petDisorderRecords,
+        data:
+          state.petDisorderRecords.petId == action.payload.petId
+            ? records.map((item) => {
+                if (item.id == action.payload.id) {
+                  return action.payload;
+                }
+                return item;
+              })
+            : records,
+      },
+    };
+  },
+  [UpdateDisorderRecordActionType.FAILURE]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      updateDisorderRecord: {
+        ...state.updateDisorderRecord,
+        pending: false,
+        error: action.error,
+      },
+    };
+  },
+
+  [RemoveDisorderRecordActionType.BEGIN]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      removeDisorderRecord: {
+        ...state.removeDisorderRecord,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [RemoveDisorderRecordActionType.SUCCESS]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    const records = state.petDisorderRecords.data;
+    return {
+      ...state,
+      removeDisorderRecord: {
+        ...state.removeDisorderRecord,
+        pending: false,
+        data: action.payload,
+      },
+      petDisorderRecords: {
+        ...state.petDisorderRecords,
+        data: records.filter((item) => item.id != action.payload.id),
+      },
+    };
+  },
+  [RemoveDisorderRecordActionType.FAILURE]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      removeDisorderRecord: {
+        ...state.removeDisorderRecord,
+        pending: false,
+        error: action.error,
+      },
+    };
+  },
+
   // load
   [LoadPetDisorderRecordActionType.BEGIN]: (
     state: PetState,
@@ -158,8 +328,8 @@ export const disorderRecordReducer = {
     return {
       ...state,
       petDisorderRecords: {
-        petId: action.extra.petId,
         ...fillCursorResponseData(state.petDisorderRecords, action),
+        petId: action.extra.petId,
       },
     };
   },

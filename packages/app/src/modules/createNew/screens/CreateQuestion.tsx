@@ -138,7 +138,7 @@ const CreateQuestion = () => {
         />
         <MultipleImageSelect
           existImages={existImages}
-          onExistImageRemove={handleRemoveExistImage}
+          handleExistImageRemove={handleRemoveExistImage}
           images={img}
           fromScreen="CreateQuestion"
           onRemove={handleRemove}

@@ -1,6 +1,7 @@
 export * from './redux/types';
 export * from './redux/reducer';
 export * from './redux/petSaga';
+export * from './redux/recordSaga';
 export * from './redux/petHooks';
 export * from './redux/feedRecordHooks';
 export * from './redux/weightRecordHooks';

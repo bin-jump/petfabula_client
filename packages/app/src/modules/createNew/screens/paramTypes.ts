@@ -2,13 +2,17 @@ import { RouteProp } from "@react-navigation/native";
 import { ImageFile, EmptySelect } from "../../shared";
 import {
   PostTopic,
-  ParticiptorPet,
   Pet,
   PostDetail,
   QuestionDetail,
   Answer,
   PetBreed,
   PetDetail,
+  FeedRecord,
+  DisorderRecord,
+  MedicalRecord,
+  PetEventRecord,
+  WeightRecord,
 } from "@petfabula/common";
 
 type ParamTypes = {
@@ -43,10 +47,12 @@ type ParamTypes = {
 
   CreateFeedRecord: {
     pet: Pet | null;
+    record: FeedRecord | undefined;
   };
 
   CreateWeightRecord: {
     pet: Pet | null;
+    record: WeightRecord | undefined;
   };
 
   PetSelect: {
@@ -55,6 +61,12 @@ type ParamTypes = {
 
   CreateDisorderRecord: {
     pet: Pet | null;
+    record: DisorderRecord | undefined;
+  };
+
+  CreateMedicalRecord: {
+    pet: Pet | null;
+    record: MedicalRecord | undefined;
   };
 
   SelectPetEventType: {
@@ -64,6 +76,7 @@ type ParamTypes = {
 
   CreatePetEventRecord: {
     pet: Pet | null;
+    record: PetEventRecord | undefined;
     type: string;
   };
 };

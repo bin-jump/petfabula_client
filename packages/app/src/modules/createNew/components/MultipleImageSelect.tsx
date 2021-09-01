@@ -10,13 +10,13 @@ const MultipleImageSelect = ({
   images,
   fromScreen,
   onRemove,
-  onExistImageRemove,
+  handleExistImageRemove,
 }: {
   existImages?: DisplayImage[];
   images: ImageFile[];
   fromScreen: string;
   onRemove: (index: number) => void;
-  onExistImageRemove?: (id: number) => void;
+  handleExistImageRemove?: (id: number) => void;
 }) => {
   const navigation = useNavigation();
   const { theme } = useTheme();
@@ -71,8 +71,8 @@ const MultipleImageSelect = ({
             >
               <Icon
                 onPress={() => {
-                  if (onExistImageRemove) {
-                    onExistImageRemove(item.id);
+                  if (handleExistImageRemove) {
+                    handleExistImageRemove(item.id);
                   }
                 }}
                 containerStyle={{

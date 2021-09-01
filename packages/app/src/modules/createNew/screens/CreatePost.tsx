@@ -180,7 +180,7 @@ const CreatePost = () => {
           </TouchableOpacity> */}
         </View>
         <MultipleImageSelect
-          onExistImageRemove={handleRemoveExistImage}
+          handleExistImageRemove={handleRemoveExistImage}
           existImages={existImages}
           images={img}
           fromScreen="CreatePost"

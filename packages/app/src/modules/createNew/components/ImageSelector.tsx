@@ -6,20 +6,25 @@ import { ImageFile, changeExtName, getFileName, Image } from "../../shared";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 
+const DEFAULT_LIMIT = 6;
+
 const ImageSelector = ({
   existImages,
   images,
   onSelect,
   onRemove,
+  handleExistImageRemove,
 }: {
   existImages?: DisplayImage[];
   images: ImageFile[];
   onSelect: (image: ImageFile) => void;
   onRemove: (index: number) => void;
+  handleExistImageRemove?: (id: number) => void;
 }) => {
   const { theme } = useTheme();
   const [processing, setProcessing] = useState(false);
   const displayImages = existImages ? existImages : [];
+  const canAdd = displayImages.length + images.length < DEFAULT_LIMIT;
 
   const processImage = async (uri: string) => {
     const file = await ImageManipulator.manipulateAsync(
@@ -80,16 +85,18 @@ const ImageSelector = ({
       />
 
       <TouchableOpacity
-        disabled={processing}
+        disabled={processing || !canAdd}
         onPress={() => {
-          openImagePickerAsync();
+          if (canAdd) {
+            openImagePickerAsync();
+          }
         }}
         style={{
           width: 80,
           height: 80,
           justifyContent: "center",
           borderRadius: 10,
-          backgroundColor: theme.colors?.grey3,
+          backgroundColor: canAdd ? theme.colors?.grey3 : theme.colors?.grey5,
           marginRight: 10,
           marginTop: 10,
         }}
@@ -116,7 +123,9 @@ const ImageSelector = ({
           >
             <Icon
               onPress={() => {
-                onRemove(index);
+                if (handleExistImageRemove) {
+                  handleExistImageRemove(item.id);
+                }
               }}
               containerStyle={{
                 width: 20,
@@ -132,13 +141,17 @@ const ImageSelector = ({
           </View>
 
           <Image
+            containerStyle={{
+              borderWidth: 3,
+              borderColor: "#ffbc83",
+              marginRight: 10,
+              marginTop: 10,
+            }}
             key={item.id}
             source={{ uri: item.url }}
             style={{
               width: 78,
               height: 78,
-              marginRight: 10,
-              marginTop: 10,
             }}
           />
         </View>

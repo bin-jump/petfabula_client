@@ -1,10 +1,12 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { AppState } from '../../../stateProvider';
-import { PetState, FeedRecordForm } from './types';
+import { PetState, FeedRecordForm, FeedRecord } from './types';
 import {
   CreateFeedRecordActionType,
   LoadPetFeedRecordActionType,
+  UpdateFeedRecordActionType,
+  RemoveFeedRecordActionType,
 } from './actionTypes';
 import { ActionBase, fillCursorResponseData } from '../../shared';
 
@@ -31,6 +33,64 @@ export const useCreateFeedRecord = () => {
 
   return {
     createFeedRecord: boundAction,
+    result,
+    pending,
+    error,
+  };
+};
+
+export const useUpdateFeedRecord = () => {
+  const dispatch = useDispatch();
+  const { result, pending, error } = useSelector(
+    (state: AppState) => ({
+      result: state.pet.updateFeedRecord.data,
+      pending: state.pet.updateFeedRecord.pending,
+      error: state.pet.updateFeedRecord.error,
+    }),
+    shallowEqual,
+  );
+
+  const boundAction = useCallback(
+    (data: FeedRecord) => {
+      dispatch({
+        type: UpdateFeedRecordActionType.BEGIN,
+        payload: data,
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    updateFeedRecord: boundAction,
+    result,
+    pending,
+    error,
+  };
+};
+
+export const useRemoveFeedRecord = () => {
+  const dispatch = useDispatch();
+  const { result, pending, error } = useSelector(
+    (state: AppState) => ({
+      result: state.pet.removeFeedRecord.data,
+      pending: state.pet.removeFeedRecord.pending,
+      error: state.pet.removeFeedRecord.error,
+    }),
+    shallowEqual,
+  );
+
+  const boundAction = useCallback(
+    (recordId: number) => {
+      dispatch({
+        type: RemoveFeedRecordActionType.BEGIN,
+        payload: { recordId },
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    removeFeedRecord: boundAction,
     result,
     pending,
     error,
@@ -124,6 +184,104 @@ export const feedRecordReducer = {
     };
   },
 
+  [UpdateFeedRecordActionType.BEGIN]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      updateFeedRecord: {
+        ...state.updateFeedRecord,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [UpdateFeedRecordActionType.SUCCESS]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    const records = state.petFeedRecords.data;
+    return {
+      ...state,
+      updateFeedRecord: {
+        ...state.updateFeedRecord,
+        pending: false,
+        data: action.payload,
+      },
+      petFeedRecords: {
+        ...state.petFeedRecords,
+        data:
+          state.petFeedRecords.petId == action.payload.petId
+            ? records.map((item) => {
+                if (item.id == action.payload.id) {
+                  return action.payload;
+                }
+                return item;
+              })
+            : records,
+      },
+    };
+  },
+  [UpdateFeedRecordActionType.FAILURE]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      updateFeedRecord: {
+        ...state.updateFeedRecord,
+        pending: false,
+        error: action.error,
+      },
+    };
+  },
+
+  [RemoveFeedRecordActionType.BEGIN]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      removeFeedRecord: {
+        ...state.removeFeedRecord,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [RemoveFeedRecordActionType.SUCCESS]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    const records = state.petFeedRecords.data;
+    return {
+      ...state,
+      removeFeedRecord: {
+        ...state.removeFeedRecord,
+        pending: false,
+        data: action.payload,
+      },
+      petFeedRecords: {
+        ...state.petFeedRecords,
+        data: records.filter((item) => item.id != action.payload.id),
+      },
+    };
+  },
+  [RemoveFeedRecordActionType.FAILURE]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      removeFeedRecord: {
+        ...state.removeFeedRecord,
+        pending: false,
+        error: action.error,
+      },
+    };
+  },
+
   // load
   [LoadPetFeedRecordActionType.BEGIN]: (
     state: PetState,
@@ -146,8 +304,8 @@ export const feedRecordReducer = {
     return {
       ...state,
       petFeedRecords: {
-        petId: action.extra.petId,
         ...fillCursorResponseData(state.petFeedRecords, action),
+        petId: action.extra.petId,
       },
     };
   },
