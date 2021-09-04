@@ -22,7 +22,7 @@ import { LoginRequire } from "../modules/aspect";
 import AuthenticaionScreen from "../modules/authentication";
 import CommunityMain from "../modules/community";
 import PetMain from "../modules/pet";
-import User from "../modules/user";
+import UserMain from "../modules/user";
 import NotificationMain from "../modules/notification";
 import CreateNew from "../modules/createNew";
 import SecondaryStack from "./SecondaryStack";
@@ -393,13 +393,13 @@ const TabScreen = () => {
       />
 
       <Tabs.Screen
-        name="User"
-        component={User}
+        name="UserMain"
+        component={UserMain}
         options={(navigation) => {
           return {
             tabBarVisible:
               !getFocusedRouteNameFromRoute(navigation.route) ||
-              getFocusedRouteNameFromRoute(navigation.route) == "User",
+              getFocusedRouteNameFromRoute(navigation.route) == "UserMain",
             tabBarIcon: ({ focused }) => {
               return (
                 <View style={styles.tabIconContainer}>

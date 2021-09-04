@@ -8,69 +8,60 @@ import {
   ListRenderItem,
 } from "react-native";
 import { Text, useTheme, Icon, Divider, Button } from "react-native-elements";
-import { Field, Formik } from "formik";
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
-import { useLoadPetBreeds, PetBreed } from "@petfabula/common";
+import { useLoadCities, City } from "@petfabula/common";
 
-const breedComparator = (x: PetBreed, y: PetBreed) => {
-  if (x.name == "その他") {
-    return 1;
-  }
-  if (y.name == "その他") {
-    return -1;
+const cityComparator = (x: City, y: City) => {
+  if (x.prefectureName != y.prefectureName) {
+    return x.prefectureName.localeCompare(y.prefectureName, "ja");
   }
   return x.name.localeCompare(y.name, "ja");
 };
 
-const makeBreedLists = (breeds: PetBreed[], filterWord: string) => {
-  const res: { [key: string]: PetBreed[] } = {};
-  for (let b of breeds) {
+const prefectureKeyComparator = (x: string, y: string) => {
+  return x.localeCompare(y, "ja");
+};
+
+const makeBreedLists = (cities: City[], filterWord: string) => {
+  const res: { [key: string]: City[] } = {};
+  for (let c of cities) {
     if (
       filterWord &&
-      !b.name.toLowerCase().startsWith(filterWord.toLowerCase())
+      !c.name.toLowerCase().startsWith(filterWord.toLowerCase())
     ) {
       continue;
     }
 
-    if (!res[b.category]) {
-      res[b.category] = [];
+    if (!res[c.prefectureName]) {
+      res[c.prefectureName] = [];
     }
 
-    res[b.category].push(b);
+    res[c.prefectureName].push(c);
   }
 
   const keys = Object.keys(res);
   for (let k of keys) {
-    res[k] = res[k].sort(breedComparator);
+    res[k] = res[k].sort(cityComparator);
   }
 
   return res;
 };
 
-const sortedKey = (breedMap: { [key: string]: PetBreed[] }) => {
-  let categories = Object.keys(breedMap).sort((a, b) =>
-    breedMap[a].length > breedMap[b].length ? -1 : 1
-  );
-  categories = categories.filter((item) => item != "DOG" && item != "CAT");
-  if (breedMap["CAT"]) {
-    categories.unshift("CAT");
-  }
-  if (breedMap["DOG"]) {
-    categories.unshift("DOG");
-  }
-  return categories;
+const sortedKey = (cityMap: { [key: string]: City[] }) => {
+  let res = Object.keys(cityMap).sort(prefectureKeyComparator);
+
+  return res;
 };
 
-const PetBreedItem = ({ breed }: { breed: PetBreed }) => {
+const CityItem = ({ city }: { city: City }) => {
   const { theme } = useTheme();
   const navigation = useNavigation();
 
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("CreatePet", { breed });
+        navigation.navigate("EditAccount", { city });
       }}
       style={{
         minHeight: 50,
@@ -84,27 +75,27 @@ const PetBreedItem = ({ breed }: { breed: PetBreed }) => {
           paddingHorizontal: 16,
         }}
       >
-        <Text style={{ fontWeight: "bold" }}>{breed.name}</Text>
+        <Text style={{ fontWeight: "bold" }}>{city.name}</Text>
       </View>
       <Divider />
     </TouchableOpacity>
   );
 };
 
-const PetBreedSelect = () => {
+const CitySelect = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation();
-  const { loadPetBreeds, petBreeds } = useLoadPetBreeds();
-  const [category, setCategory] = useState<string>("DOG");
+  const { loadCities, cities } = useLoadCities();
+  const [prefecture, setPrefecture] = useState<string>("");
   const [search, setSearch] = useState<string>("");
 
-  const renderItem = useCallback<ListRenderItem<PetBreed>>(({ item }) => {
-    return <PetBreedItem breed={item} />;
+  const renderItem = useCallback<ListRenderItem<City>>(({ item }) => {
+    return <CityItem city={item} />;
   }, []);
 
   useEffect(() => {
-    loadPetBreeds();
+    loadCities();
   }, []);
 
   useEffect(() => {
@@ -135,18 +126,26 @@ const PetBreedSelect = () => {
     });
   }, [search, setSearch, theme]);
 
-  const breeds = petBreeds;
-  const breedMap = makeBreedLists(breeds, search);
+  const cityMap = makeBreedLists(cities, search);
 
-  // const breedMap = makeBreedLists(breeds);
-  const categories = sortedKey(breedMap);
-  const breedList = breedMap[category] ? breedMap[category] : [];
+  const prefectures = sortedKey(cityMap);
+  const cityList = cityMap[prefecture] ? cityMap[prefecture] : [];
 
   useEffect(() => {
-    if (search && categories.length > 0 && categories.indexOf(category) < 0) {
-      setCategory(categories[0]);
+    if (prefecture.length == 0 && prefectures.length > 0) {
+      setPrefecture(prefectures[0]);
     }
-  }, [search, categories]);
+  }, [prefectures]);
+
+  useEffect(() => {
+    if (
+      search &&
+      prefectures.length > 0 &&
+      prefectures.indexOf(prefecture) < 0
+    ) {
+      setPrefecture(prefectures[0]);
+    }
+  }, [search, prefectures]);
 
   return (
     <View
@@ -165,25 +164,25 @@ const PetBreedSelect = () => {
           }}
           contentContainerStyle={{ height: 50, alignItems: "center" }}
         >
-          {categories.map((item) => (
+          {prefectures.map((item) => (
             <TouchableOpacity
               key={item}
               onPress={() => {
-                setCategory(item);
+                setPrefecture(item);
               }}
-              style={{ paddingHorizontal: 18 }}
+              style={{ paddingHorizontal: 12 }}
             >
               <Text
                 style={{
-                  fontWeight: category == item ? "bold" : "normal",
-                  fontSize: category == item ? 22 : 20,
+                  fontWeight: prefecture == item ? "bold" : "normal",
+                  fontSize: prefecture == item ? 20 : 18,
                   color:
-                    category == item
+                    prefecture == item
                       ? theme.colors?.black
                       : theme.colors?.grey1,
                 }}
               >
-                {t(`pet.petCategory.${item}`)}
+                {t(`${item}`)}
               </Text>
             </TouchableOpacity>
           ))}
@@ -194,7 +193,7 @@ const PetBreedSelect = () => {
       <FlatList
         style={{ backgroundColor: theme.colors?.white }}
         contentContainerStyle={{ paddingBottom: 30 }}
-        data={breedList}
+        data={cityList}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
       />
@@ -202,4 +201,4 @@ const PetBreedSelect = () => {
   );
 };
 
-export default PetBreedSelect;
+export default CitySelect;

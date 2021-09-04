@@ -6,6 +6,10 @@ import {
   CommunityUnfollowUserActionType,
   LoadPetPostsActionType,
   LoadMyProfileActionType,
+  LoadMyAnswersActionType,
+  LoadMyPostsActionType,
+  LoadMyFavoritePostsActionType,
+  LoadMyQuestionsActionType,
   LoadUserProfileActionType,
   LoadUserPostsActionType,
   LoadUserQuestionsActionType,
@@ -39,6 +43,42 @@ const watchLoadMyProfile = createSagaWatcher({
   method: 'GET',
   asyncAction: LoadMyProfileActionType,
   watchType: 'LATEST',
+});
+
+const watchLoadMyPosts = createSagaWatcher({
+  method: 'GET',
+  asyncAction: LoadMyPostsActionType,
+  watchType: 'LATEST',
+  createUrl: (payload) => {
+    return `/api/participator/my-posts`;
+  },
+});
+
+const watchLoadMyQuestions = createSagaWatcher({
+  method: 'GET',
+  asyncAction: LoadMyQuestionsActionType,
+  watchType: 'LATEST',
+  createUrl: (payload) => {
+    return `/api/participator/my-questions`;
+  },
+});
+
+const watchLoadMyAnswers = createSagaWatcher({
+  method: 'GET',
+  asyncAction: LoadMyAnswersActionType,
+  watchType: 'LATEST',
+  createUrl: (payload) => {
+    return `/api/participator/my-answers`;
+  },
+});
+
+const watchLoadMyFavoritePosts = createSagaWatcher({
+  method: 'GET',
+  asyncAction: LoadMyFavoritePostsActionType,
+  watchType: 'LATEST',
+  createUrl: (payload) => {
+    return `/api/participator/my-favorite-posts`;
+  },
 });
 
 const watchLoadUserProfile = createSagaWatcher({
@@ -278,6 +318,11 @@ export function* postRootSaga() {
     fork(watchFollowParticipator),
     fork(watchUnfollowParticipator),
     fork(watchLoadMyProfile),
+    fork(watchLoadMyPosts),
+    fork(watchLoadMyQuestions),
+    fork(watchLoadMyAnswers),
+    fork(watchLoadMyFavoritePosts),
+
     fork(watchLoadUserProfile),
     fork(watchLoadUserPosts),
     fork(watchLoadUserQuestions),

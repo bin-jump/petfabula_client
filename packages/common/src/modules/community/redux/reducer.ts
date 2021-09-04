@@ -16,6 +16,39 @@ import { participatorReducer } from './participatorHooks';
 const initialStat: CommunityState = {
   // user
   myProfile: { data: null, pending: false, error: null },
+  myPosts: {
+    data: [],
+    pending: false,
+    error: null,
+    hasMore: false,
+    nextCursor: null,
+    initializing: false,
+  },
+  myAnswers: {
+    data: [],
+    pending: false,
+    error: null,
+    hasMore: false,
+    nextCursor: null,
+    initializing: false,
+  },
+  myQuestions: {
+    data: [],
+    pending: false,
+    error: null,
+    hasMore: false,
+    nextCursor: null,
+    initializing: false,
+  },
+  myFavoritePosts: {
+    data: [],
+    pending: false,
+    error: null,
+    hasMore: false,
+    nextCursor: null,
+    initializing: false,
+  },
+
   userProfile: { data: null, pending: false, error: null },
   userPosts: {
     userId: null,

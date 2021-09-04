@@ -7,6 +7,7 @@ import { authenticationRootSaga } from '../modules/authentication';
 import { questionRootSaga, postRootSaga } from '../modules/community';
 import { notificationRootSaga } from '../modules/notification';
 import { petRootSaga, petRecordRootSaga } from '../modules/pet';
+import { userRootSaga } from '../modules/user';
 
 import { logHandleMiddleware } from './middlewares/logHandleMiddleware';
 import { toastHandleMiddleware } from './middlewares/toastHandleMiddleware';
@@ -34,6 +35,7 @@ function* rootSaga() {
     fork(notificationRootSaga),
     fork(petRootSaga),
     fork(petRecordRootSaga),
+    fork(userRootSaga),
   ]);
 }
 

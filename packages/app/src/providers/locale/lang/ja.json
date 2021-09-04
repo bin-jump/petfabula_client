@@ -87,14 +87,45 @@
     "userPost": "投稿",
     "userQuestion": "質問",
     "userAnswer": "回答",
-    "userCollectedPost": "お気に入り",
+    "userfavouritePost": "お気に入り",
+    "userPet": "私のペット",
     "followedCount": "フォロワー",
     "followCount": "フォロー",
     "postCount": "投稿数",
+    "questionCount": "問題数",
     "petCount": "ペット数",
     "detail": "詳細",
     "unsetBio": "まだ自己紹介がありません",
-    "noPet": "またペットを登録していません"
+    "noPet": "またペットを登録していません",
+    "userContent": "私のコンテンツ",
+
+    "input": {
+      "bioEdit": "ユーザー紹介を編集",
+      "birthday": "誕生日",
+      "birthdayPlaceholder": "誕生日",
+      "birthdayCaption": "誕生日",
+      "genderPlaceholder": "性別を選択してください",
+      "genderCaption": "性別",
+      "cityPlaceholder": "地域を選択してください",
+      "cityCaption": "地域"
+    },
+    "gender": {
+      "MALE": "男性",
+      "FEMALE": "女性",
+      "OTHER": "その他"
+    }
+  },
+
+  "setting": {
+    "setting": "設定",
+    "notificationSetting": "通知設定",
+    "userAgreement": "利用規約",
+    "privacyAgreement": "プライバシーポリシー",
+    "notifyAnswerComment": "回答とコメント通知",
+    "notifyVote": "いいねと賛成通知",
+    "notifyFollow": "フォロー通知",
+    "feedback": "フィードバック",
+    "logout": "ログアウト"
   },
 
   "pet": {
@@ -257,8 +288,8 @@
       "answerContentLength": "回答を5000文字以内にしてください"
     },
     "pet": {
-      "petName": "名前を3-16文字にしてください",
-      "bio": "紹介を300文字以内にしてください",
+      "petName": "名前を1-12文字にしてください",
+      "bio": "紹介を140文字以内にしてください",
       "arrivalDay": "誕生日の後にしてください",
       "breedId": "種類を選択してください",
 
@@ -272,6 +303,10 @@
 
       "disorderContent": "500文字以内にしてください",
       "eventContent": "240文字以内にしてください"
+    },
+    "user": {
+      "userName": "名前を3-16文字にしてください",
+      "bio": "紹介を140文字以内にしてください"
     }
   },
   "aspect": {

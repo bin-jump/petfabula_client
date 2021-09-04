@@ -209,6 +209,11 @@ export interface AnswerCommentForm {
 export interface CommunityState {
   // user
   myProfile: AsyncDataBase<Participator>;
+  myPosts: AsyncCursorPageListBase<Post>;
+  myQuestions: AsyncCursorPageListBase<Question>;
+  myAnswers: AsyncCursorPageListBase<AnswerWithQuestion>;
+  myFavoritePosts: AsyncCursorPageListBase<Post>;
+
   // othersDetail: AsyncDataBase<ParticiptorDetail>;
   // myPosts: AsyncCursorPageListBase<Post>;
   // othersPosts: AsyncCursorPageListBase<Post> & { userId: number | null };

@@ -12,7 +12,7 @@ export const validPetFormSchema = yup.object().shape({
     // .min(1, petMessageKey.petName)
     // .max(12, petMessageKey.petName)
     .required(petMessageKey.petName),
-  bio: yup.string().trim().max(300, petMessageKey.petName),
+  bio: yup.string().trim().max(140, petMessageKey.petName),
   birthday: yup
     .number()
     .nullable()

@@ -33,6 +33,19 @@ export const LoadUserCollectedPostsActionType = createAsyncActionType(
   'POST_LOAD_USER_COLLECTION_POSTS',
 );
 
+// my things
+export const LoadMyPostsActionType =
+  createAsyncActionType('POST_LOAD_MY_POSTS');
+export const LoadMyQuestionsActionType = createAsyncActionType(
+  'POST_LOAD_MY_QUESTIONS',
+);
+export const LoadMyAnswersActionType = createAsyncActionType(
+  'QUESTION_LOAD_MY_ANSWERS',
+);
+export const LoadMyFavoritePostsActionType = createAsyncActionType(
+  'POST_LOAD_MY_FAVORITE_POSTS',
+);
+
 // post
 export const LoadRecommendPostsActionType = createAsyncActionType(
   'POST_LOAD_RECOMMEND_POSTS',

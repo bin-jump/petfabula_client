@@ -24,9 +24,9 @@ import BottomSheet, {
 } from "@gorhom/bottom-sheet";
 import {
   UploadImage,
-  PetForm,
-  useCreatePet,
-  validPetFormSchema,
+  Account,
+  useUpdateAccount,
+  validAccountSchema,
   resolveResponseFormError,
 } from "@petfabula/common";
 import {
@@ -40,35 +40,27 @@ import {
 } from "../../shared";
 import ParamTypes from "./ParamTypes";
 
-const CreatePet = () => {
+const EditAccount = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation();
   const { top } = useSafeAreaInsets();
-  const { createPet } = useCreatePet();
+  const { updateAccount } = useUpdateAccount();
   const [selectedImage, setSelectedImage] = useState<UploadImage | null>(null);
-  const { params } = useRoute<RouteProp<ParamTypes, "CreatePet">>();
-  const { feederId, breed } = params;
+  const { params } = useRoute<RouteProp<ParamTypes, "EditAccount">>();
+  const account = params.account;
+  const initial = { ...account };
 
-  const initial: PetForm = {
-    name: "",
-    birthday: null,
-    arrivalDay: null,
-    gender: null,
-    breedId: null,
-    bio: "",
-  };
+  const uri = selectedImage ? selectedImage.uri : account.photo;
 
   const onImageSelected = (image: UploadImage) => {
     setSelectedImage(image);
   };
 
-  const handleSubmit = (data: PetForm) => {
-    console.log("data", data);
-    createPet(data, selectedImage);
+  const handleSubmit = (data: Account) => {
+    // console.log("data", data);
+    updateAccount(data, selectedImage);
   };
-
-  const uri = selectedImage ? selectedImage.uri : undefined;
 
   return (
     <View style={{ backgroundColor: theme.colors?.white }}>
@@ -84,16 +76,18 @@ const CreatePet = () => {
           <Avatar
             source={{ uri }}
             size={90}
-            iconType="PET"
+            iconType="USER"
             editProps={{
               onImageSelected: onImageSelected,
             }}
           />
-
+          <Text style={{ marginTop: 6 }} h2>
+            {account.name}
+          </Text>
           <Formik
             initialValues={initial}
             onSubmit={handleSubmit}
-            validationSchema={validPetFormSchema}
+            validationSchema={validAccountSchema}
           >
             {({ values, setErrors, handleSubmit, handleBlur, setValues }) => (
               <PetFormContent
@@ -120,19 +114,20 @@ const PetFormContent = ({
   handleBlur,
   setValues,
 }: {
-  values: PetForm;
+  values: Account;
   handleSubmit: any;
   setErrors: (errors: any) => void;
   handleBlur: (e: any) => void;
-  setValues: (val: PetForm) => void;
+  setValues: (val: Account) => void;
 }) => {
   const { top } = useSafeAreaInsets();
   const { theme } = useTheme();
   const navigation = useNavigation();
   const { t } = useTranslation();
-  const { pending, error, result } = useCreatePet();
-  const { params } = useRoute<RouteProp<ParamTypes, "CreatePet">>();
-  const { feederId, breed } = params;
+  const { pending, error, result } = useUpdateAccount();
+  const { params } = useRoute<RouteProp<ParamTypes, "EditAccount">>();
+  const account = params.account;
+  const city = params.city ? params.city : account.city;
 
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [200], []);
@@ -191,10 +186,10 @@ const PetFormContent = ({
   }, [result]);
 
   useEffect(() => {
-    if (breed) {
-      setValues({ ...values, breedId: breed.id });
+    if (city) {
+      setValues({ ...values, cityId: city.id });
     }
-  }, [breed]);
+  }, [city]);
 
   return (
     <DismissKeyboardView>
@@ -214,7 +209,7 @@ const PetFormContent = ({
         >
           <View style={{ padding: 16, paddingHorizontal: 24 }}>
             <Divider />
-            {["MALE", "FEMALE"].map((item) => (
+            {["MALE", "FEMALE", "OTHER"].map((item) => (
               <TouchableOpacity
                 key={item}
                 onPress={() => {
@@ -230,7 +225,7 @@ const PetFormContent = ({
                   }}
                 >
                   <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-                    {t(`pet.gender.${item}`)}
+                    {t(`user.gender.${item}`)}
                   </Text>
                 </View>
                 <Divider />
@@ -260,7 +255,7 @@ const PetFormContent = ({
               <View></View>
               <View>
                 <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                  {t("pet.input.bioEdit")}
+                  {t("user.input.bioEdit")}
                 </Text>
               </View>
               <TouchableOpacity onPress={toggleOverlay}>
@@ -283,101 +278,26 @@ const PetFormContent = ({
         <PendingOverlay pending={pending} />
 
         <Field
-          name="name"
-          placeholder={`${t("pet.input.petNamePlaceholder")}...`}
-          component={BlankInput}
-          leftIcon={() => (
-            // <Icon
-            //   type="material"
-            //   name="pets"
-            //   size={22}
-            //   color={theme.colors?.grey0}
-            // />
-            <Text style={[styles.caption, { color: theme.colors?.black }]}>
-              {t("pet.input.nameCaption")}
-            </Text>
-          )}
-        />
-        <Field
           name="birthday"
-          placeholder={`${t("pet.input.birthdayPlaceholder")}...`}
+          placeholder={`${t("user.input.birthdayPlaceholder")}...`}
           mode="DATE"
           component={DateTimeField}
-          makeContent={(value: string) => {
-            if (!value) {
-              return "";
-            }
-            return t("pet.input.birthday", { date: value });
-          }}
+          // makeContent={(value: string) => {
+          //   if (!value) {
+          //     return "";
+          //   }
+          //   return t("user.input.birthday", { date: value });
+          // }}
           leftIcon={() => (
-            // <Icon
-            //   type="font-awesome"
-            //   name="birthday-cake"
-            //   size={18}
-            //   color={theme.colors?.grey0}
-            // />
             <Text style={[styles.caption, { color: theme.colors?.black }]}>
-              {t("pet.input.birthdayCaption")}
-            </Text>
-          )}
-        />
-
-        <Field
-          name="arrivalDay"
-          placeholder={`${t("pet.input.arrivalDayPlaceholder")}...`}
-          mode="DATE"
-          component={DateTimeField}
-          makeContent={(value: string) => {
-            if (!value) {
-              return "";
-            }
-            return t("pet.input.arrivalDay", { date: value });
-          }}
-          leftIcon={() => (
-            // <Icon
-            //   iconStyle={{ width: 22 }}
-            //   type="material"
-            //   name="home-filled"
-            //   size={22}
-            //   color={theme.colors?.grey0}
-            // />
-            <Text style={[styles.caption, { color: theme.colors?.black }]}>
-              {t("pet.input.arrivalDayCaption")}
-            </Text>
-          )}
-        />
-
-        <Field
-          name="breedId"
-          placeholder={`${t("pet.input.breedPlaceholder")}...`}
-          component={ButtonInputField}
-          onPress={() => {
-            navigation.navigate("PetBreedSelect");
-          }}
-          makeContent={() => {
-            if (!breed) {
-              return "";
-            }
-            const cate = t(`pet.petCategory.${breed.category}`);
-            return `${cate}, ${breed.name}`;
-          }}
-          leftIcon={() => (
-            // <Icon
-            //   iconStyle={{ width: 22 }}
-            //   type="font-awesome"
-            //   name="puzzle-piece"
-            //   size={22}
-            //   color={theme.colors?.grey0}
-            // />
-            <Text style={[styles.caption, { color: theme.colors?.black }]}>
-              {t("pet.input.breedCaption")}
+              {t("user.input.birthdayCaption")}
             </Text>
           )}
         />
 
         <Field
           name="gender"
-          placeholder={`${t("pet.input.genderPlaceholder")}...`}
+          placeholder={`${t("user.input.genderPlaceholder")}...`}
           component={ButtonInputField}
           onPress={() => {
             handleOpenSelectGender();
@@ -386,18 +306,32 @@ const PetFormContent = ({
             if (!value) {
               return "";
             }
-            return t(`pet.gender.${value}`);
+            return t(`user.gender.${value}`);
           }}
           leftIcon={() => (
-            // <Icon
-            //   iconStyle={{ width: 22 }}
-            //   type="font-awesome"
-            //   name="puzzle-piece"
-            //   size={22}
-            //   color={theme.colors?.grey0}
-            // />
             <Text style={[styles.caption, { color: theme.colors?.black }]}>
-              {t("pet.input.genderCaption")}
+              {t("user.input.genderCaption")}
+            </Text>
+          )}
+        />
+
+        <Field
+          name="cityId"
+          placeholder={`${t("user.input.cityPlaceholder")}...`}
+          component={ButtonInputField}
+          onPress={() => {
+            navigation.navigate("CitySelect");
+          }}
+          makeContent={() => {
+            if (!city) {
+              return "";
+            }
+            const prefecture = `${city.prefectureName}`;
+            return `${prefecture}, ${city.name}`;
+          }}
+          leftIcon={() => (
+            <Text style={[styles.caption, { color: theme.colors?.black }]}>
+              {t("user.input.cityCaption")}
             </Text>
           )}
         />
@@ -416,8 +350,6 @@ const PetFormContent = ({
   );
 };
 
-export default CreatePet;
-
 const styles = StyleSheet.create({
   caption: {
     fontWeight: "bold",
@@ -425,3 +357,5 @@ const styles = StyleSheet.create({
     minWidth: 50,
   },
 });
+
+export default EditAccount;

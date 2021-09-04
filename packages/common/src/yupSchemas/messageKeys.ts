@@ -38,6 +38,12 @@ export const questionMessageKey = {
   answerCommentReplyContentLength: `${questionPrefix}.replyContentLength`,
 };
 
+const userPrefix = `${messagePrefix}.user`;
+export const userMessageKey = {
+  userName: `${postPrefix}.userName`,
+  userBio: `${postPrefix}.userBio`,
+};
+
 const petPrefix = `${messagePrefix}.pet`;
 export const petMessageKey = {
   petName: `${petPrefix}.petName`,

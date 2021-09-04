@@ -9,6 +9,10 @@ import {
   LoadUserQuestionsActionType,
   LoadUserAnswersActionType,
   LoadUserCollectedPostsActionType,
+  LoadMyAnswersActionType,
+  LoadMyPostsActionType,
+  LoadMyFavoritePostsActionType,
+  LoadMyQuestionsActionType,
 } from './actionTypes';
 import { ActionBase, fillCursorResponseData } from '../../shared';
 
@@ -33,6 +37,150 @@ export const useLoadMyProfile = () => {
     profile,
     loadMyProfile: boundAction,
     pending,
+    error,
+  };
+};
+
+export const useLoadMyPosts = () => {
+  const dispatch = useDispatch();
+  const { posts, hasMore, nextCursor, pending, initializing, error } =
+    useSelector(
+      (state: AppState) => ({
+        posts: state.community.myPosts.data,
+        hasMore: state.community.myPosts.hasMore,
+        nextCursor: state.community.myPosts.nextCursor,
+        pending: state.community.myPosts.pending,
+        initializing: state.community.myPosts.initializing,
+        error: state.community.myPosts.error,
+      }),
+      shallowEqual,
+    );
+
+  const boundAction = useCallback(
+    (cursor: object | null) => {
+      dispatch({
+        type: LoadMyPostsActionType.BEGIN,
+        payload: { cursor },
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    loadMyPosts: boundAction,
+    hasMore,
+    nextCursor,
+    posts,
+    pending,
+    initializing,
+    error,
+  };
+};
+
+export const useLoadMyQuestions = () => {
+  const dispatch = useDispatch();
+  const { questions, hasMore, nextCursor, pending, initializing, error } =
+    useSelector(
+      (state: AppState) => ({
+        questions: state.community.myQuestions.data,
+        hasMore: state.community.myQuestions.hasMore,
+        nextCursor: state.community.myQuestions.nextCursor,
+        pending: state.community.myQuestions.pending,
+        initializing: state.community.myQuestions.initializing,
+        error: state.community.myQuestions.error,
+      }),
+      shallowEqual,
+    );
+
+  const boundAction = useCallback(
+    (cursor: object | null) => {
+      dispatch({
+        type: LoadMyQuestionsActionType.BEGIN,
+        payload: { cursor },
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    loadMyQuestions: boundAction,
+    hasMore,
+    nextCursor,
+    questions,
+    pending,
+    initializing,
+    error,
+  };
+};
+
+export const useLoadMyAnswers = () => {
+  const dispatch = useDispatch();
+  const { answers, hasMore, nextCursor, pending, initializing, error } =
+    useSelector(
+      (state: AppState) => ({
+        answers: state.community.myAnswers.data,
+        hasMore: state.community.myAnswers.hasMore,
+        nextCursor: state.community.myAnswers.nextCursor,
+        pending: state.community.myAnswers.pending,
+        initializing: state.community.myAnswers.initializing,
+        error: state.community.myAnswers.error,
+      }),
+      shallowEqual,
+    );
+
+  const boundAction = useCallback(
+    (cursor: object | null) => {
+      dispatch({
+        type: LoadMyAnswersActionType.BEGIN,
+        payload: { cursor },
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    loadMyAnswers: boundAction,
+    hasMore,
+    nextCursor,
+    answers,
+    pending,
+    initializing,
+    error,
+  };
+};
+
+export const useLoadMyFavoritePosts = () => {
+  const dispatch = useDispatch();
+  const { posts, hasMore, nextCursor, pending, initializing, error } =
+    useSelector(
+      (state: AppState) => ({
+        posts: state.community.myFavoritePosts.data,
+        hasMore: state.community.myFavoritePosts.hasMore,
+        nextCursor: state.community.myFavoritePosts.nextCursor,
+        pending: state.community.myFavoritePosts.pending,
+        initializing: state.community.myFavoritePosts.initializing,
+        error: state.community.myFavoritePosts.error,
+      }),
+      shallowEqual,
+    );
+
+  const boundAction = useCallback(
+    (cursor: object | null) => {
+      dispatch({
+        type: LoadMyFavoritePostsActionType.BEGIN,
+        payload: { cursor },
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    loadMyFavoritePosts: boundAction,
+    hasMore,
+    nextCursor,
+    posts,
+    pending,
+    initializing,
     error,
   };
 };
@@ -303,6 +451,170 @@ export const participatorReducer = {
       userProfile: {
         ...state.userProfile,
         pending: false,
+        error: action.error,
+      },
+    };
+  },
+
+  // my posts
+  [LoadMyPostsActionType.BEGIN]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      myPosts: {
+        ...state.myPosts,
+        initializing: action.payload.cursor == null,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [LoadMyPostsActionType.SUCCESS]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      myPosts: {
+        ...fillCursorResponseData(state.myPosts, action),
+      },
+    };
+  },
+  [LoadMyPostsActionType.FAILURE]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      myPosts: {
+        ...state.myPosts,
+        pending: false,
+        initializing: false,
+        error: action.error,
+      },
+    };
+  },
+
+  // my questions
+  [LoadMyQuestionsActionType.BEGIN]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      myQuestions: {
+        ...state.myQuestions,
+        initializing: action.payload.cursor == null,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [LoadMyQuestionsActionType.SUCCESS]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      myQuestions: {
+        ...fillCursorResponseData(state.myQuestions, action),
+      },
+    };
+  },
+  [LoadMyQuestionsActionType.FAILURE]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      myQuestions: {
+        ...state.myQuestions,
+        pending: false,
+        initializing: false,
+        error: action.error,
+      },
+    };
+  },
+
+  // my answers
+  [LoadMyAnswersActionType.BEGIN]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      myAnswers: {
+        ...state.myAnswers,
+        initializing: action.payload.cursor == null,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [LoadMyAnswersActionType.SUCCESS]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      myAnswers: {
+        ...fillCursorResponseData(state.myAnswers, action),
+      },
+    };
+  },
+  [LoadMyAnswersActionType.FAILURE]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      myAnswers: {
+        ...state.myAnswers,
+        pending: false,
+        initializing: false,
+        error: action.error,
+      },
+    };
+  },
+
+  // my favorite posts
+  [LoadMyFavoritePostsActionType.BEGIN]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      myFavoritePosts: {
+        ...state.myFavoritePosts,
+        initializing: action.payload.cursor == null,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [LoadMyFavoritePostsActionType.SUCCESS]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      myFavoritePosts: {
+        ...fillCursorResponseData(state.myFavoritePosts, action),
+      },
+    };
+  },
+  [LoadMyFavoritePostsActionType.FAILURE]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      myFavoritePosts: {
+        ...state.myFavoritePosts,
+        pending: false,
+        initializing: false,
         error: action.error,
       },
     };

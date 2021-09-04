@@ -289,28 +289,30 @@ const UserCollectedPosts = forwardRef<FlatList, ListProps>((props, ref) => {
   );
 });
 
-const UserPart = ({ profile }: { profile: Participator | null }) => {
+const TextNumber = ({ text, count }: { count: number; text: string }) => {
   const { theme } = useTheme();
+
+  return (
+    <View style={{}}>
+      <Text
+        style={{
+          textAlign: "center",
+          marginRight: 3,
+          fontSize: 18,
+          fontWeight: "bold",
+        }}
+      >
+        {count}
+      </Text>
+      <Text style={{ fontSize: 14, color: theme.colors?.grey0 }}>{text}</Text>
+    </View>
+  );
+};
+
+const UserPart = ({ profile }: { profile: Participator | null }) => {
   const { t } = useTranslation();
   const navigation = useNavigation();
-
-  const TextNumber = ({ text, count }: { count: number; text: string }) => {
-    return (
-      <View style={{}}>
-        <Text
-          style={{
-            textAlign: "center",
-            marginRight: 3,
-            fontSize: 18,
-            fontWeight: "bold",
-          }}
-        >
-          {count}
-        </Text>
-        <Text style={{ fontSize: 14, color: theme.colors?.grey0 }}>{text}</Text>
-      </View>
-    );
-  };
+  const { theme } = useTheme();
 
   return (
     <View>
@@ -626,7 +628,7 @@ const UserProfile = () => {
 
           {currentUser?.id == profile.id ? (
             <Tab.Screen
-              options={{ tabBarLabel: t("user.userCollectedPost") }}
+              options={{ tabBarLabel: t("user.userfavouritePost") }}
               name="UserCollectedPosts"
             >
               {renderUserCollectedPosts}
