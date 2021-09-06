@@ -24,8 +24,13 @@ import {
   useLoadUpdateNotifySetting,
   NotifySetting,
   useLogout,
+  useCurrentUser,
 } from "@petfabula/common";
-import { ActivityIndicator } from "../../shared";
+import {
+  ActivityIndicator,
+  useDidUpdateEffect,
+  AlertAction,
+} from "../../shared";
 
 const Setting = () => {
   const { theme } = useTheme();
@@ -41,17 +46,9 @@ const Setting = () => {
     setting,
     pending: loadNotifySettingPending,
   } = useLoadMyNotifySetting();
+  const { currentUser } = useCurrentUser();
   const { updateNotifySetting } = useLoadUpdateNotifySetting();
-
-  useEffect(() => {
-    loadNotifySetting();
-  }, []);
-
-  useEffect(() => {
-    if (setting) {
-      setNotifySetting(setting);
-    }
-  }, [setting]);
+  const { logout, logoutResult } = useLogout();
 
   const resetNavigationState = () => {
     navigation.dispatch(
@@ -61,6 +58,22 @@ const Setting = () => {
       })
     );
   };
+
+  useEffect(() => {
+    loadNotifySetting();
+  }, []);
+
+  useDidUpdateEffect(() => {
+    if (!currentUser) {
+      resetNavigationState();
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (setting) {
+      setNotifySetting(setting);
+    }
+  }, [setting]);
 
   const handleAnswerCommentChange = () => {
     const val = {
@@ -161,6 +174,9 @@ const Setting = () => {
         <TouchableWithoutFeedback
           onPress={() => {
             // resetNavigationState()
+            AlertAction.AlertLogout(t, () => {
+              logout();
+            });
           }}
         >
           <View style={styles.settingItem}>

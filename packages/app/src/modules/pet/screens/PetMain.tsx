@@ -6,12 +6,13 @@ import {
   TouchableWithoutFeedback,
   RefreshControl,
 } from "react-native";
-import { Text, useTheme, Icon, Divider } from "react-native-elements";
+import { Text, useTheme, Icon, Divider, Button } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import { useCurrentUser, useLoadMyPets, PetDetail } from "@petfabula/common";
 import { Avatar, toAge, toAgeMonth, daysTillNow } from "../../shared";
+import PetLoginPlease from "../components/PetLoginPlease";
 
 const AgeItem = ({ mili }: { mili: number }) => {
   const { theme } = useTheme();
@@ -133,7 +134,7 @@ const PetItem = ({ item }: { item: PetDetail }) => {
       style={{
         width: "100%",
         height: 190,
-        borderRadius: 10,
+        borderRadius: 24,
         backgroundColor: theme.colors?.white,
         shadowColor: theme.colors?.grey3,
         shadowOffset: { width: 2, height: 1 },
@@ -285,6 +286,43 @@ const PetItem = ({ item }: { item: PetDetail }) => {
   );
 };
 
+const PetContent = () => {
+  const { theme } = useTheme();
+  const { t } = useTranslation();
+  const navigation = useNavigation();
+  const { currentUser } = useCurrentUser();
+  const { loadPets, pets, pending } = useLoadMyPets();
+
+  useEffect(() => {
+    loadPets();
+  }, [loadPets, currentUser]);
+
+  return (
+    <ScrollView
+      refreshControl={
+        <RefreshControl
+          // progressViewOffset={70}
+          refreshing={pending}
+          onRefresh={() => {
+            loadPets();
+          }}
+        />
+      }
+      style={{
+        minHeight: "100%",
+        minWidth: "100%",
+        backgroundColor: theme.colors?.white,
+        padding: 24,
+      }}
+      contentContainerStyle={{ paddingBottom: 320 }}
+    >
+      {pets.map((item) => (
+        <PetItem key={item.id} item={item} />
+      ))}
+    </ScrollView>
+  );
+};
+
 const PetMain = () => {
   const { top } = useSafeAreaInsets();
   const { theme } = useTheme();
@@ -298,13 +336,13 @@ const PetMain = () => {
   }, [loadPets, currentUser]);
 
   return (
-    <View style={{ backgroundColor: theme.colors?.white }}>
+    <View style={{ backgroundColor: theme.colors?.white, flex: 1 }}>
       <View
         style={{
           width: "100%",
           height: top,
         }}
-      ></View>
+      />
       <View
         style={{
           width: "100%",
@@ -340,28 +378,7 @@ const PetMain = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <ScrollView
-        refreshControl={
-          <RefreshControl
-            // progressViewOffset={70}
-            refreshing={pending}
-            onRefresh={() => {
-              loadPets();
-            }}
-          />
-        }
-        style={{
-          minHeight: "100%",
-          minWidth: "100%",
-          backgroundColor: theme.colors?.white,
-          padding: 24,
-        }}
-        contentContainerStyle={{ paddingBottom: 320 }}
-      >
-        {pets.map((item) => (
-          <PetItem key={item.id} item={item} />
-        ))}
-      </ScrollView>
+      {currentUser ? <PetContent /> : <PetLoginPlease />}
     </View>
   );
 };

@@ -9,7 +9,8 @@ import { Text, useTheme, Icon, Divider } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
-import { useCheckNotifications } from "@petfabula/common";
+import { useCheckNotifications, useCurrentUser } from "@petfabula/common";
+import NotificationLoginPlease from "../components/NotificationLoginPlease";
 
 const Badge = ({ count }: { count: number }) => {
   const { theme } = useTheme();
@@ -104,7 +105,7 @@ const IconButton = ({
   );
 };
 
-const NotificationMain = () => {
+const NotificationContent = () => {
   const { top } = useSafeAreaInsets();
   const { theme } = useTheme();
   const { t } = useTranslation();
@@ -114,6 +115,112 @@ const NotificationMain = () => {
   useEffect(() => {
     checkNotifications();
   }, []);
+
+  return (
+    <View style={{ width: "100%", backgroundColor: theme.colors?.white }}>
+      <View
+        style={{
+          paddingTop: 26,
+          paddingBottom: 16,
+          paddingHorizontal: 8,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-around",
+          width: "100%",
+          backgroundColor: theme.colors?.white,
+        }}
+      >
+        <IconButton
+          type="font-awesome"
+          name="comment"
+          color="#6ebefb"
+          count={checkResult?.answerCommentCount || 0}
+          onPress={() => {
+            navigation.navigate("SecondaryStack", {
+              screen: "AnswerCommentNotifications",
+            });
+          }}
+          text={t("notification.answerComment")}
+        />
+        <IconButton
+          type="font-awesome"
+          name="heart"
+          color="#fdab90"
+          text={t("notification.upvote")}
+          count={checkResult?.voteCount || 0}
+          onPress={() => {
+            navigation.navigate("SecondaryStack", {
+              screen: "UpvoteNotifications",
+            });
+          }}
+        />
+        <IconButton
+          type="ionicons"
+          name="people"
+          color="#90b5fa"
+          text={t("notification.follow")}
+          count={checkResult?.followCount || 0}
+          onPress={() => {
+            navigation.navigate("SecondaryStack", {
+              screen: "FollowNotifications",
+            });
+          }}
+        />
+      </View>
+      <View style={{ height: 6, backgroundColor: theme.colors?.grey5 }}></View>
+      <View style={{}}>
+        <View
+          style={{
+            height: 90,
+            width: "100%",
+            flexDirection: "row",
+            paddingVertical: 16,
+            paddingHorizontal: 20,
+          }}
+        >
+          <View>
+            <View
+              style={{
+                borderRadius: 60,
+                width: 50,
+                height: 50,
+                backgroundColor: "#31d2c0",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Icon
+                type="materialIcons"
+                name="notifications"
+                color="white"
+                size={32}
+              />
+            </View>
+            {checkResult?.hasSystemNotificationUnread ? (
+              <Badge count={1} />
+            ) : null}
+          </View>
+
+          <View
+            style={{
+              marginLeft: 12,
+              justifyContent: "center",
+            }}
+          >
+            <Text h4>{t("notification.systemNotification")}</Text>
+          </View>
+        </View>
+        <Divider />
+      </View>
+    </View>
+  );
+};
+
+const NotificationMain = () => {
+  const { top } = useSafeAreaInsets();
+  const { theme } = useTheme();
+  const { t } = useTranslation();
+  const { currentUser } = useCurrentUser();
 
   return (
     <View
@@ -150,8 +257,9 @@ const NotificationMain = () => {
         <Text h2>{t("notification.title")}</Text>
       </View>
 
+      {currentUser ? <NotificationContent /> : <NotificationLoginPlease />}
       {/* <ScrollView style={{}}> */}
-      <View style={{ width: "100%", backgroundColor: theme.colors?.white }}>
+      {/* <View style={{ width: "100%", backgroundColor: theme.colors?.white }}>
         <View
           style={{
             paddingTop: 26,
@@ -248,7 +356,7 @@ const NotificationMain = () => {
           </View>
           <Divider />
         </View>
-      </View>
+      </View> */}
       {/* </ScrollView> */}
     </View>
   );

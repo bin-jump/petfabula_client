@@ -89,6 +89,17 @@ export class AlertAction {
       { text: t("common.ok"), onPress: action },
     ]);
   }
+
+  static AlertLogout(t: TFunction<"translation">, action: () => void) {
+    Alert.alert(t("setting.alertLogout"), "", [
+      {
+        text: t("common.cancel"),
+        // onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      { text: t("common.ok"), onPress: action },
+    ]);
+  }
 }
 
 export class Storage {

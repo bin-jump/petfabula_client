@@ -125,7 +125,8 @@
     "notifyVote": "いいねと賛成通知",
     "notifyFollow": "フォロー通知",
     "feedback": "フィードバック",
-    "logout": "ログアウト"
+    "logout": "ログアウト",
+    "alertLogout": "ログアウトしますか？"
   },
 
   "pet": {

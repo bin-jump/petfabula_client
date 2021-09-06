@@ -26,6 +26,7 @@ import {
   useFirstFocusEffect,
 } from "../../shared";
 import SettingContent from "../components/SettingContent";
+import UserLoginPlease from "../components/UserLoginPlease";
 
 const PetAgeItem = ({ mili }: { mili: number }) => {
   const { theme } = useTheme();
@@ -150,14 +151,17 @@ const TextNumber = ({ text, count }: { count: number; text: string }) => {
 const UserContent = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
+  const { currentUser } = useCurrentUser();
   const { loadMyProfile, profile } = useLoadMyProfile();
   const { loadAccount, account } = useLoadMyAccount();
   const { t } = useTranslation();
 
   useFirstFocusEffect(() => {
-    loadMyProfile();
-    loadAccount();
-  }, [loadMyProfile]);
+    if (currentUser) {
+      loadMyProfile();
+      loadAccount();
+    }
+  }, [loadMyProfile, currentUser]);
 
   return (
     <View
@@ -297,10 +301,13 @@ const PetContent = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const { loadPets, pets } = useLoadMyPets();
+  const { currentUser } = useCurrentUser();
 
   useFirstFocusEffect(() => {
-    loadPets();
-  }, [loadPets]);
+    if (currentUser) {
+      loadPets();
+    }
+  }, [loadPets, currentUser]);
 
   return (
     <View
@@ -316,9 +323,6 @@ const PetContent = () => {
         shadowRadius: 6,
       }}
     >
-      {/* <View style={{ marginLeft: 16, marginTop: 8 }}>
-        <Text h4>{t("user.userPet")}</Text>
-      </View> */}
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -461,6 +465,7 @@ const UserMain = () => {
   const navigation = useNavigation();
   const { theme } = useTheme();
   const { top } = useSafeAreaInsets();
+  const { currentUser } = useCurrentUser();
 
   return (
     <View
@@ -469,17 +474,20 @@ const UserMain = () => {
       }}
     >
       <View style={{ height: top, backgroundColor: theme.colors?.white }} />
-
-      <ScrollView
-        // bounces={false}
-        contentContainerStyle={{ paddingBottom: 110 }}
-        showsVerticalScrollIndicator={false}
-      >
-        <UserContent />
-        <PetContent />
-        <PostContent />
-        <SettingContent />
-      </ScrollView>
+      {currentUser ? (
+        <ScrollView
+          // bounces={false}
+          contentContainerStyle={{ paddingBottom: 110 }}
+          showsVerticalScrollIndicator={false}
+        >
+          <UserContent />
+          <PetContent />
+          <PostContent />
+          <SettingContent />
+        </ScrollView>
+      ) : (
+        <UserLoginPlease />
+      )}
     </View>
   );
 };
