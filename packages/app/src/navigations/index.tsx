@@ -135,8 +135,14 @@ const TabScreen = () => {
   const fontSize = 14;
   const iconSize = 22;
 
-  const { checkResult } = useCheckNotifications();
-  const { getCurrentUser } = useCurrentUser();
+  const { checkResult, checkNotifications } = useCheckNotifications();
+  const {
+    getCurrentUser,
+    currentUser,
+    pending: currentUserPending,
+  } = useCurrentUser();
+  const shoudlCheckNotification = useRef(true);
+  const checkingCurrentUser = useRef(false);
 
   const hasNotification =
     checkResult &&
@@ -149,10 +155,15 @@ const TabScreen = () => {
   const _handleAppStateChange = useCallback(
     (nextAppState: any) => {
       if (nextAppState === "active") {
-        getCurrentUser();
+        shoudlCheckNotification.current = true;
+        if (!checkingCurrentUser.current) {
+          getCurrentUser();
+        }
+      } else {
+        shoudlCheckNotification.current = false;
       }
     },
-    [getCurrentUser]
+    [getCurrentUser, shoudlCheckNotification, checkingCurrentUser]
   );
   useEffect(() => {
     AppState.addEventListener("change", _handleAppStateChange);
@@ -161,6 +172,27 @@ const TabScreen = () => {
       AppState.removeEventListener("change", _handleAppStateChange);
     };
   }, []);
+
+  useEffect(() => {
+    var notificationCheckInterval = setInterval(function () {
+      if (shoudlCheckNotification.current && currentUser) {
+        // console.log("check notification", new Date());
+        checkNotifications();
+      }
+    }, 90 * 1000);
+
+    return () => clearInterval(notificationCheckInterval);
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (!checkingCurrentUser.current) {
+      getCurrentUser();
+    }
+  }, [getCurrentUser, checkingCurrentUser]);
+
+  useEffect(() => {
+    checkingCurrentUser.current = currentUserPending;
+  }, [checkingCurrentUser, currentUserPending]);
 
   const navigation = useNavigation();
   registerLoginReqiureHandler({

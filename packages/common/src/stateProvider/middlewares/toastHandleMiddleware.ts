@@ -1,6 +1,11 @@
 import { MiddlewareAPI, Dispatch, Middleware, AnyAction } from 'redux';
-import { ActionBase } from '../../modules/shared';
+import { ActionBase, ReduxAsyncAction } from '../../modules/shared';
 import { LogoutActionType } from '../../modules/authentication/redux/actionTypes';
+import { NotificationCheckActionType } from '../../modules/notification/redux/actionTypes';
+
+// const SILENT_FAILURE_ACTIONS: ReduxAsyncAction[] = [NotificationCheckActionType];
+
+const slientFailureActionTypes = new Set(NotificationCheckActionType.FAILURE);
 
 interface ToastHandler {
   handleSuccess?: (msg: string) => void;
@@ -36,7 +41,11 @@ export const toastHandleMiddleware: Middleware<Dispatch> =
       }
     }
 
-    if (actionBase.type.endsWith('FAILURE') && handler.handleFailure) {
+    if (
+      actionBase.type.endsWith('FAILURE') &&
+      handler.handleFailure &&
+      !slientFailureActionTypes.has(action.type as string)
+    ) {
       if (actionBase.error?.type == 'FAILED_ON_RESPONSE') {
         handler.handleFailure('error.noNetwork');
       } else if (actionBase.error?.type == 'SERVICE_ERROR') {

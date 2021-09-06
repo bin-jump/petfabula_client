@@ -28,9 +28,26 @@ import {
   RecordBaseType,
   makeListData,
   RecordItem,
+  DateItem,
+  TimeItem,
 } from "./RecordListComponents";
 
 type FeedRecordItemType = FeedRecord & RecordBaseType;
+
+const Content = ({ content }: { content: string }) => {
+  const { theme } = useTheme();
+  const { t } = useTranslation();
+
+  return content && content.length > 0 ? (
+    <Text
+      style={{ fontSize: 18, color: theme.colors?.grey0, marginTop: 6 }}
+    >{`${content}`}</Text>
+  ) : (
+    <Text style={{ color: theme.colors?.grey1, fontSize: 18 }}>
+      {t("pet.record.emptyContent")}
+    </Text>
+  );
+};
 
 const Item = ({ record }: { record: FeedRecordItemType }) => {
   const { theme } = useTheme();
@@ -54,7 +71,7 @@ const Item = ({ record }: { record: FeedRecordItemType }) => {
         // height: 100,
         padding: 12,
         backgroundColor: theme.colors?.white,
-        borderRadius: 6,
+        borderRadius: 12,
         shadowColor: theme.colors?.grey2,
         shadowOffset: { width: 2, height: 2 },
         shadowOpacity: 0.7,
@@ -113,23 +130,7 @@ const Item = ({ record }: { record: FeedRecordItemType }) => {
             justifyContent: "space-between",
           }}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Icon
-              type="material-community"
-              name="clock-time-seven-outline"
-              size={20}
-              color={theme.colors?.grey1}
-            />
-            <Text style={{ marginLeft: 6, color: theme.colors?.grey0 }}>
-              {`${toDateText(record.dateTime)} ${getTimeText(record.dateTime)}`}
-            </Text>
-          </View>
-
+          <DateItem mili={record.dateTime} />
           <TouchableWithoutFeedback onPress={handlePresentModalPress}>
             <Icon
               type="feather"
@@ -139,39 +140,53 @@ const Item = ({ record }: { record: FeedRecordItemType }) => {
             />
           </TouchableWithoutFeedback>
         </View>
+        <TimeItem mili={record.dateTime} />
 
         <View
           style={{
             flexDirection: "row",
             alignItems: "center",
-            marginTop: 3,
+            marginTop: 8,
           }}
         >
-          <Text style={{ marginTop: 3 }}>
-            <Text style={{ fontWeight: "bold", fontSize: 16 }}>{`${t(
-              "pet.record.foodAmountLabel"
-            )}:`}</Text>
+          <Text style={{ lineHeight: 30 }}>
+            <Text
+              style={{ fontWeight: "bold", fontSize: 20, lineHeight: 30 }}
+            >{`${t("pet.record.foodAmountLabel")}:  `}</Text>
 
-            <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-              {`${record.amount}g`}
+            <Text
+              style={{
+                lineHeight: 30,
+                fontWeight: "bold",
+                fontSize: 24,
+                color: theme.colors?.primary,
+              }}
+            >
+              {`${record.amount}`}
             </Text>
-            <Text style={{}}>{`　${record.foodContent}`}</Text>
+            <Text style={{ fontSize: 18 }}>{`g`}</Text>
           </Text>
         </View>
 
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginTop: 3,
-          }}
-        >
-          <Text style={{ fontWeight: "bold", color: theme.colors?.black }}>
-            {`${t("pet.record.noteLabel")}:`}
+        <View style={{ marginTop: 12 }}>
+          <Text style={{ fontWeight: "bold", fontSize: 18 }}>{`${t(
+            "pet.record.foodContentLabel"
+          )} `}</Text>
+
+          <Content content={record.foodContent} />
+        </View>
+
+        <View style={{ marginTop: 8 }}>
+          <Text
+            style={{
+              fontWeight: "bold",
+              color: theme.colors?.black,
+              fontSize: 18,
+            }}
+          >
+            {`${t("pet.record.noteLabel")}`}
           </Text>
-          <Text numberOfLines={1} style={{ color: theme.colors?.black }}>
-            {`${record.note}`}
-          </Text>
+          <Content content={record.note} />
         </View>
       </View>
     </View>

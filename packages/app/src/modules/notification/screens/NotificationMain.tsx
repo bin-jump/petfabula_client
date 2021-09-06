@@ -110,11 +110,14 @@ const NotificationContent = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation();
+  const { currentUser } = useCurrentUser();
   const { checkNotifications, checkResult } = useCheckNotifications();
 
   useEffect(() => {
-    checkNotifications();
-  }, []);
+    if (currentUser) {
+      checkNotifications();
+    }
+  }, [JSON.stringify(currentUser)]);
 
   return (
     <View style={{ width: "100%", backgroundColor: theme.colors?.white }}>

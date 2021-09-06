@@ -122,7 +122,7 @@ const watchLoadUserCollectedPosts = createSagaWatcher({
   asyncAction: LoadUserCollectedPostsActionType,
   watchType: 'LATEST',
   createUrl: (payload) => {
-    return `/api/participator/${payload.userId}/collected-posts`;
+    return `/api/participator/${payload.userId}/favorite-posts`;
   },
 });
 
@@ -241,7 +241,7 @@ const watchCollectPost = createSagaWatcher({
   asyncAction: PostCollectActionType,
   watchType: 'LATEST',
   createUrl: (payload) => {
-    return `/api/post/posts/${payload.postId}/collect`;
+    return `/api/post/posts/${payload.postId}/favorites`;
   },
 });
 const watchRemoveCollectPost = createSagaWatcher({
@@ -249,7 +249,7 @@ const watchRemoveCollectPost = createSagaWatcher({
   asyncAction: PostRemoveCollectActionType,
   watchType: 'LATEST',
   createUrl: (payload) => {
-    return `/api/post/posts/${payload.postId}/collect`;
+    return `/api/post/posts/${payload.postId}/favorites`;
   },
 });
 

@@ -4,6 +4,7 @@ import {
   FlatList,
   ListRenderItem,
   TouchableWithoutFeedback,
+  StyleSheet,
 } from "react-native";
 import { useTheme, Text, Icon, Divider } from "react-native-elements";
 import { useTranslation } from "react-i18next";
@@ -28,9 +29,26 @@ import {
   RecordBaseType,
   makeListData,
   RecordItem,
+  DateItem,
+  TimeItem,
 } from "./RecordListComponents";
 
 type RecordItemType = MedicalRecord & RecordBaseType;
+
+const Content = ({ content }: { content: string }) => {
+  const { theme } = useTheme();
+  const { t } = useTranslation();
+
+  return content && content.length > 0 ? (
+    <Text
+      style={{ fontSize: 18, color: theme.colors?.grey0, marginTop: 6 }}
+    >{`${content}`}</Text>
+  ) : (
+    <Text style={{ color: theme.colors?.grey1, fontSize: 18 }}>
+      {t("pet.record.emptyContent")}
+    </Text>
+  );
+};
 
 const Item = ({ record }: { record: RecordItemType }) => {
   const { theme } = useTheme();
@@ -54,7 +72,7 @@ const Item = ({ record }: { record: RecordItemType }) => {
         // height: 100,
         padding: 12,
         backgroundColor: theme.colors?.white,
-        borderRadius: 6,
+        borderRadius: 16,
         shadowColor: theme.colors?.grey2,
         shadowOffset: { width: 2, height: 2 },
         shadowOpacity: 0.7,
@@ -113,23 +131,7 @@ const Item = ({ record }: { record: RecordItemType }) => {
             justifyContent: "space-between",
           }}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Icon
-              type="material-community"
-              name="clock-time-seven-outline"
-              size={20}
-              color={theme.colors?.grey1}
-            />
-            <Text style={{ marginLeft: 6, color: theme.colors?.grey0 }}>
-              {`${toDateText(record.dateTime)}`}
-            </Text>
-          </View>
-
+          <DateItem mili={record.dateTime} />
           <TouchableWithoutFeedback onPress={handlePresentModalPress}>
             <Icon
               type="feather"
@@ -139,44 +141,48 @@ const Item = ({ record }: { record: RecordItemType }) => {
             />
           </TouchableWithoutFeedback>
         </View>
+
+        <TimeItem mili={record.dateTime} />
         <View
           style={{
             marginTop: 3,
           }}
         >
-          <Text style={{ marginTop: 3 }}>
-            <Text style={{ fontWeight: "bold", fontSize: 16 }}>{`${t(
+          <View style={styles.blockContainer}>
+            <Text style={styles.captionText}>{`${t(
               "pet.record.hospitalNameLabel"
-            )}: `}</Text>
+            )} `}</Text>
+            <Content content={record.hospitalName} />
+          </View>
 
-            <Text style={{ fontSize: 16 }}>{`${record.hospitalName}`}</Text>
-          </Text>
-
-          <Text style={{ marginTop: 3 }}>
-            <Text style={{ fontWeight: "bold", fontSize: 16 }}>{`${t(
+          <View style={styles.blockContainer}>
+            <Text style={styles.captionText}>{`${t(
               "pet.record.symptomLabel"
-            )}: `}</Text>
+            )} `}</Text>
+            <Content content={record.symptom} />
+          </View>
 
-            <Text style={{ fontSize: 16 }}>{`${record.symptom}`}</Text>
-          </Text>
-          <Text style={{ marginTop: 3 }}>
-            <Text style={{ fontWeight: "bold", fontSize: 16 }}>{`${t(
+          <View style={styles.blockContainer}>
+            <Text style={styles.captionText}>{`${t(
               "pet.record.diagnosisLabel"
-            )}: `}</Text>
+            )} `}</Text>
+            <Content content={record.diagnosis} />
+          </View>
 
-            <Text style={{ fontSize: 16 }}>{`${record.diagnosis}`}</Text>
-          </Text>
-          <Text style={{ marginTop: 3 }}>
-            <Text style={{ fontWeight: "bold", fontSize: 16 }}>{`${t(
+          <View style={styles.blockContainer}>
+            <Text style={styles.captionText}>{`${t(
               "pet.record.treatmentLabel"
-            )}: `}</Text>
-
-            <Text style={{ fontSize: 16 }}>{`${record.treatment}`}</Text>
-          </Text>
+            )} `}</Text>
+            <Content content={record.treatment} />
+          </View>
         </View>
-
         <View
-          style={{ flexDirection: "row", marginBottom: 8, flexWrap: "wrap" }}
+          style={{
+            marginTop: 8,
+            flexDirection: "row",
+            marginBottom: 8,
+            flexWrap: "wrap",
+          }}
         >
           {record.images.map((item, index) => {
             return (
@@ -256,3 +262,13 @@ const MedicalRecordList = ({ petId }: { petId: number }) => {
 };
 
 export default MedicalRecordList;
+
+const styles = StyleSheet.create({
+  blockContainer: {
+    marginTop: 16,
+  },
+  captionText: {
+    fontWeight: "bold",
+    fontSize: 20,
+  },
+});

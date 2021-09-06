@@ -294,8 +294,10 @@ const PetContent = () => {
   const { loadPets, pets, pending } = useLoadMyPets();
 
   useEffect(() => {
-    loadPets();
-  }, [loadPets, currentUser]);
+    if (currentUser) {
+      loadPets();
+    }
+  }, [loadPets, JSON.stringify(currentUser)]);
 
   return (
     <ScrollView
@@ -329,11 +331,6 @@ const PetMain = () => {
   const { t } = useTranslation();
   const navigation = useNavigation();
   const { currentUser } = useCurrentUser();
-  const { loadPets, pets, pending } = useLoadMyPets();
-
-  useEffect(() => {
-    loadPets();
-  }, [loadPets, currentUser]);
 
   return (
     <View style={{ backgroundColor: theme.colors?.white, flex: 1 }}>

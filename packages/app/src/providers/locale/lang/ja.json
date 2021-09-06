@@ -205,6 +205,7 @@
       "medicalRecordTitle": "医療",
 
       "foodAmountLabel": "食糧",
+      "foodContentLabel": "食事内容",
       "noteLabel": "ノート",
       "weightLabel": "体重",
       "disorderContentLabel": "症状",
@@ -213,7 +214,8 @@
       "hospitalNameLabel": "病院名",
       "symptomLabel": "症状",
       "diagnosisLabel": "診断結果",
-      "treatmentLabel": "治療"
+      "treatmentLabel": "治療",
+      "emptyContent": "なし"
     },
     "profile": {
       "petPostTitle": "成長投稿",

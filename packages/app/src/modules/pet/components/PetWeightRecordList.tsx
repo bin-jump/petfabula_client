@@ -27,6 +27,7 @@ import {
   RecordBaseType,
   makeListData,
   RecordItem,
+  DateItem,
 } from "./RecordListComponents";
 
 type RecordItemType = WeightRecord & RecordBaseType;
@@ -50,10 +51,10 @@ const Item = ({ record }: { record: RecordItemType }) => {
     <View
       style={{
         flex: 1,
-        // height: 100,
+        // minHeight: 100,
         padding: 12,
         backgroundColor: theme.colors?.white,
-        borderRadius: 6,
+        borderRadius: 16,
         shadowColor: theme.colors?.grey2,
         shadowOffset: { width: 2, height: 2 },
         shadowOpacity: 0.7,
@@ -112,22 +113,7 @@ const Item = ({ record }: { record: RecordItemType }) => {
             justifyContent: "space-between",
           }}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Icon
-              type="material-community"
-              name="clock-time-seven-outline"
-              size={20}
-              color={theme.colors?.grey1}
-            />
-            <Text style={{ marginLeft: 6, color: theme.colors?.grey0 }}>
-              {`${toDateText(record.dateTime)}`}
-            </Text>
-          </View>
+          <DateItem mili={record.dateTime} />
 
           <TouchableWithoutFeedback onPress={handlePresentModalPress}>
             <Icon
@@ -142,17 +128,24 @@ const Item = ({ record }: { record: RecordItemType }) => {
           style={{
             flexDirection: "row",
             alignItems: "center",
-            marginTop: 3,
+            marginTop: 6,
           }}
         >
-          <Text style={{ marginTop: 3 }}>
-            <Text style={{ fontWeight: "bold", fontSize: 16 }}>{`${t(
-              "pet.record.weightLabel"
-            )}: `}</Text>
-
-            <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-              {`${record.weight}kg`}
+          <Text style={{ marginTop: 3, lineHeight: 30 }}>
+            <Text
+              style={{ fontWeight: "bold", fontSize: 20, lineHeight: 30 }}
+            >{`${t("pet.record.weightLabel")}:  `}</Text>
+            <Text
+              style={{
+                lineHeight: 30,
+                fontWeight: "bold",
+                fontSize: 24,
+                color: theme.colors?.primary,
+              }}
+            >
+              {`${record.weight}`}
             </Text>
+            <Text style={{ fontSize: 18, lineHeight: 30 }}>{` kg`}</Text>
           </Text>
         </View>
       </View>

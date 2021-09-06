@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  RefreshControl,
 } from "react-native";
 import { Text, Button, Icon, useTheme, Divider } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
@@ -161,7 +162,7 @@ const UserContent = () => {
       loadMyProfile();
       loadAccount();
     }
-  }, [loadMyProfile, currentUser]);
+  }, [loadMyProfile, JSON.stringify(currentUser)]);
 
   return (
     <View
@@ -307,7 +308,7 @@ const PetContent = () => {
     if (currentUser) {
       loadPets();
     }
-  }, [loadPets, currentUser]);
+  }, [loadPets, JSON.stringify(currentUser)]);
 
   return (
     <View
@@ -466,6 +467,18 @@ const UserMain = () => {
   const { theme } = useTheme();
   const { top } = useSafeAreaInsets();
   const { currentUser } = useCurrentUser();
+  const {
+    loadMyProfile,
+    profile,
+    pending: profilePending,
+  } = useLoadMyProfile();
+  const { loadAccount, account, pending: accountPending } = useLoadMyAccount();
+  const { loadPets, pending: petPending } = useLoadMyPets();
+
+  const refreshing =
+    (profilePending || accountPending || petPending) &&
+    profile != null &&
+    account != null;
 
   return (
     <View
@@ -477,6 +490,17 @@ const UserMain = () => {
       {currentUser ? (
         <ScrollView
           // bounces={false}
+          refreshControl={
+            <RefreshControl
+              // progressViewOffset={70}
+              refreshing={refreshing}
+              onRefresh={() => {
+                loadMyProfile();
+                loadAccount();
+                loadPets();
+              }}
+            />
+          }
           contentContainerStyle={{ paddingBottom: 110 }}
           showsVerticalScrollIndicator={false}
         >

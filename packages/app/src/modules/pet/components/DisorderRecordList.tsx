@@ -28,6 +28,8 @@ import {
   RecordBaseType,
   makeListData,
   RecordItem,
+  DateItem,
+  TimeItem,
 } from "./RecordListComponents";
 
 type RecordItemType = DisorderRecord & RecordBaseType;
@@ -54,7 +56,7 @@ const Item = ({ record }: { record: RecordItemType }) => {
         // height: 100,
         padding: 12,
         backgroundColor: theme.colors?.white,
-        borderRadius: 6,
+        borderRadius: 12,
         shadowColor: theme.colors?.grey2,
         shadowOffset: { width: 2, height: 2 },
         shadowOpacity: 0.7,
@@ -112,23 +114,7 @@ const Item = ({ record }: { record: RecordItemType }) => {
             justifyContent: "space-between",
           }}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Icon
-              type="material-community"
-              name="clock-time-seven-outline"
-              size={20}
-              color={theme.colors?.grey1}
-            />
-            <Text style={{ marginLeft: 6, color: theme.colors?.grey0 }}>
-              {`${toDateText(record.dateTime)}`}
-            </Text>
-          </View>
-
+          <DateItem mili={record.dateTime} />
           <TouchableWithoutFeedback onPress={handlePresentModalPress}>
             <Icon
               type="feather"
@@ -138,6 +124,7 @@ const Item = ({ record }: { record: RecordItemType }) => {
             />
           </TouchableWithoutFeedback>
         </View>
+        <TimeItem mili={record.dateTime} />
 
         <View
           style={{
@@ -146,13 +133,15 @@ const Item = ({ record }: { record: RecordItemType }) => {
             marginTop: 3,
           }}
         >
-          <Text style={{ marginTop: 3 }}>
-            <Text style={{ fontWeight: "bold", fontSize: 16 }}>{`${t(
+          <View style={{ marginTop: 8 }}>
+            <Text style={{ fontWeight: "bold", fontSize: 20 }}>{`${t(
               "pet.record.disorderContentLabel"
-            )}: `}</Text>
+            )} `}</Text>
 
-            <Text style={{ fontSize: 16 }}>{`${record.content}`}</Text>
-          </Text>
+            <Text
+              style={{ marginTop: 6, fontSize: 18, color: theme.colors?.grey0 }}
+            >{`${record.content}`}</Text>
+          </View>
         </View>
 
         <View

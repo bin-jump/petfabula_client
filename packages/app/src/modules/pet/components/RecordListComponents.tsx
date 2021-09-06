@@ -96,3 +96,50 @@ export const RecordItem: React.FC<Props> = ({ children, record }: Props) => {
     </View>
   );
 };
+
+export const DateItem = ({ mili }: { mili: number }) => {
+  const { theme } = useTheme();
+
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+      }}
+    >
+      <Icon
+        type="material-community"
+        name="calendar-outline"
+        size={22}
+        color={theme.colors?.grey1}
+      />
+      <Text style={{ marginLeft: 6, color: theme.colors?.grey0 }}>
+        {`${toDateText(mili)}`}
+      </Text>
+    </View>
+  );
+};
+
+export const TimeItem = ({ mili }: { mili: number }) => {
+  const { theme } = useTheme();
+
+  return (
+    <View
+      style={{
+        marginTop: 6,
+        flexDirection: "row",
+        alignItems: "center",
+      }}
+    >
+      <Icon
+        type="material-community"
+        name="clock-time-seven-outline"
+        size={22}
+        color={theme.colors?.grey1}
+      />
+      <Text style={{ marginLeft: 6, color: theme.colors?.grey0 }}>
+        {`${getTimeText(mili)}`}
+      </Text>
+    </View>
+  );
+};

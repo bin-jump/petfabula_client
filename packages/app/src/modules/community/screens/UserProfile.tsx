@@ -490,9 +490,19 @@ const UserPets = ({ userId }: { userId: number }) => {
   const { feederId, pets, loadPets } = useLoadUserPets();
   const { t } = useTranslation();
 
-  useEffect(() => {
+  useRefocusEffect(() => {
+    if (userId != feederId) {
+      loadPets(userId);
+    }
+  }, [userId, feederId, loadPets]);
+
+  useFirstFocusEffect(() => {
     loadPets(userId);
-  }, [userId]);
+  }, [userId, loadPets]);
+
+  // useEffect(() => {
+  //   loadPets(userId);
+  // }, [userId]);
 
   return (
     <ScrollView
