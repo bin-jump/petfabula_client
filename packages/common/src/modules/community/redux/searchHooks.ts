@@ -70,7 +70,7 @@ export const useSearchQuestionAnswer = () => {
   );
 
   const boundAction = useCallback(
-    (keyword: string, cursor: number | null) => {
+    (keyword: string, cursor: object | null) => {
       dispatch({
         type: QuestionAnswerSearchActionType.BEGIN,
         payload: { keyword, cursor },
