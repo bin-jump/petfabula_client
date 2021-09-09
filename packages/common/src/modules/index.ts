@@ -20,7 +20,6 @@ export {
   PostCommentForm,
   PostCommentReplyForm,
   PostTopic,
-  PostTopicCategory,
   Participator,
   ParticiptorPet,
   Post,

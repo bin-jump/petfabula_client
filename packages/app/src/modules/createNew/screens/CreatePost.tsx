@@ -274,7 +274,7 @@ const PostFormContent = ({
       >
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("PostTopics");
+            navigation.navigate("PostTopicSelect");
           }}
           style={{
             flexDirection: "row",

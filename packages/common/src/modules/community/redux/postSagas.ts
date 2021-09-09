@@ -164,7 +164,7 @@ const watchLoadRecommendPosts = createSagaWatcher({
 
 const watchLoadPetPosts = createSagaWatcher({
   createUrl: (payload) => {
-    return `/api/post/pets/${payload.petId}/posts`;
+    return `/api/participator/pets/${payload.petId}/posts`;
   },
   method: 'GET',
   asyncAction: LoadPetPostsActionType,
@@ -173,7 +173,7 @@ const watchLoadPetPosts = createSagaWatcher({
 
 const watchLoadPetPostImages = createSagaWatcher({
   createUrl: (payload) => {
-    return `/api/post/pets/${payload.petId}/images`;
+    return `/api/participator/pets/${payload.petId}/images`;
   },
   method: 'GET',
   asyncAction: PostLoadPetPostImagesActionType,

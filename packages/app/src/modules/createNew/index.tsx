@@ -7,7 +7,7 @@ import CreateNew from "./screens/CreateNew";
 import CreatePost from "./screens/CreatePost";
 import CreateQuestion from "./screens/CreateQuestion";
 import ImageSelect from "./screens/ImageSelect";
-import PostTopics from "./screens/PostTopics";
+import PostTopicSelect from "./screens/PostTopicSelect";
 import CreateAnswer from "./screens/CreateAnswer";
 import PetSelect from "./screens/PetSelect";
 
@@ -58,9 +58,12 @@ const CreateNewScreens = () => {
         component={ImageSelect}
       />
       <CreateNewStack.Screen
-        options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
-        name="PostTopics"
-        component={PostTopics}
+        options={(navigation) => ({
+          ...plainGoBackHeaderOption({ navigation, theme }),
+          title: t("createNew.topicSelectTitle"),
+        })}
+        name="PostTopicSelect"
+        component={PostTopicSelect}
       />
       <CreateNewStack.Screen
         options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}

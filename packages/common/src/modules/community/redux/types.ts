@@ -34,12 +34,8 @@ export interface ParticiptorPet {
 export interface PostTopic {
   id: number;
   title: string;
-}
-
-export interface PostTopicCategory {
-  id: number;
-  title: string;
-  topics: PostTopic[];
+  topicCategoryId: number;
+  topicCategoryTitle: string;
 }
 
 export interface Post {
@@ -229,7 +225,7 @@ export interface CommunityState {
   userPets: AsyncListBase<ParticiptorPet> & { userId: number | null };
 
   // post
-  postTopics: AsyncListBase<PostTopicCategory>;
+  postTopics: AsyncListBase<PostTopic>;
 
   followedPosts: AsyncCursorPageListBase<Post>;
   recommendPosts: AsyncCursorPageListBase<Post>;
