@@ -23,13 +23,13 @@ import Animated, {
   interpolate,
 } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
+import { useCurrentUser } from "@petfabula/common";
 import Recommends from "./Recommends";
 import Followed from "./Followed";
-import Questions from "./Questions";
 import RecommendQuestions from "./RecommendQuestions";
+import TopicSquare from "./TopicSquare";
 import SearchHeader from "../components/SearchHeader";
 import TabBar from "../components/TabBar";
-import { useCurrentUser } from "@petfabula/common";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -136,6 +136,15 @@ const CommunityMain = () => {
     headerHeight: HEADER_HEIGHT,
   });
 
+  const {
+    listSlideStyle: topicSlideStyle,
+    listRef: topicListRef,
+    scrollHandler: topicScrollHandler,
+  } = useCollpaseHeaderListTab({
+    translateVal: translateVal,
+    headerHeight: HEADER_HEIGHT,
+  });
+
   const headerSlideStyle = useAnimatedStyle(() => {
     return {
       transform: [
@@ -228,6 +237,22 @@ const CommunityMain = () => {
     [sharedProps, listViewStyle]
   );
 
+  const renderTopicSquare = useCallback(
+    () => (
+      <TopicSquare
+        style={[
+          listViewStyle,
+          topicSlideStyle,
+          { backgroundColor: theme.colors?.white },
+        ]}
+        ref={topicListRef}
+        onScroll={topicScrollHandler}
+        {...sharedProps}
+      />
+    ),
+    [sharedProps, listViewStyle]
+  );
+
   const headerContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => [
       styles.headerContainer,
@@ -283,7 +308,8 @@ const CommunityMain = () => {
       </Animated.View>
 
       <Tab.Navigator
-        // tabBarOptions={{}}
+        screenOptions={{}}
+        tabBarOptions={{ scrollEnabled: true, tabStyle: { width: 120 } }}
         initialRouteName="Recommends"
         tabBar={renderTabBar}
       >
@@ -308,6 +334,13 @@ const CommunityMain = () => {
           name="Questions"
         >
           {renderQuestion}
+        </Tab.Screen>
+
+        <Tab.Screen
+          options={{ tabBarLabel: t("post.topicSquare") }}
+          name="TopicSquare"
+        >
+          {renderTopicSquare}
         </Tab.Screen>
       </Tab.Navigator>
     </View>

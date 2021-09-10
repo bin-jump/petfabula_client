@@ -235,6 +235,7 @@ export interface CommunityState {
   };
   searchPosts: AsyncCursorPageListBase<Post> & { keyword: string | null };
   petPostImages: AsyncCursorPageListBase<PostImage> & { petId: number | null };
+  topicPosts: AsyncCursorPageListBase<Post> & { topicId: number | null };
 
   createPost: AsyncDataBase<Post>;
   removePost: AsyncDataBase<Post | AlreadyDeleted>;

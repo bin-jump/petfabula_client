@@ -33,6 +33,10 @@ export const LoadUserCollectedPostsActionType = createAsyncActionType(
   'POST_LOAD_USER_COLLECTION_POSTS',
 );
 
+export const LoadTopicPostsActionType = createAsyncActionType(
+  'POST_LOAD_TOPIC_POSTS',
+);
+
 // my things
 export const LoadMyPostsActionType =
   createAsyncActionType('POST_LOAD_MY_POSTS');

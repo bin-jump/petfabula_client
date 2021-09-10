@@ -196,7 +196,7 @@ const PostTopicSelect = () => {
       ) : (
         <Tab.Navigator
           tabBar={renderTabBar}
-          tabBarOptions={{ scrollEnabled: true }}
+          // tabBarOptions={{ scrollEnabled: true }}
         >
           {catetories.map((category, index) => (
             <Tab.Screen

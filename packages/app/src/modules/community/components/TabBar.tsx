@@ -40,6 +40,7 @@ const TabBar: FC<Props> = ({ onIndexChange, ...props }) => {
         return (
           <View
             style={{
+              marginTop: 2,
               width: route.getTabWidth(),
               height: "100%",
               left: route.navigationState.index * route.getTabWidth(),

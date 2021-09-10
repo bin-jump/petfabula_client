@@ -17,6 +17,7 @@ import {
   CreateAnswerComment,
   UserProfile,
   UserInfomation,
+  TopicPostList,
 } from "../modules/community/screens";
 import {
   AnswerCommentNotifications,
@@ -190,6 +191,17 @@ const SecondaryStack = () => {
         options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
         name="UserInfomation"
         component={UserInfomation}
+      />
+
+      <SecondaryStackStack.Screen
+        options={(navigation) => {
+          return {
+            ...headerBaseOption({ theme }),
+            headerShown: false,
+          };
+        }}
+        name="TopicPostList"
+        component={TopicPostList}
       />
 
       {/* notification */}

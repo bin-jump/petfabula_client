@@ -34,6 +34,7 @@ import {
   PostLoadTopicActionType,
   PostSearchActionType,
   PostLoadPetPostImagesActionType,
+  LoadTopicPostsActionType,
 } from './actionTypes';
 
 // user
@@ -311,6 +312,15 @@ const watchLoadTopics = createSagaWatcher({
   watchType: 'LATEST',
 });
 
+const watchLoadTopicPosts = createSagaWatcher({
+  createUrl: (payload) => {
+    return `/api/post/topic/${payload.topicId}/posts`;
+  },
+  method: 'GET',
+  asyncAction: LoadTopicPostsActionType,
+  watchType: 'LATEST',
+});
+
 export function* postRootSaga() {
   yield all([
     fork(watchLoadPetPosts),
@@ -349,5 +359,6 @@ export function* postRootSaga() {
     fork(watchSearchPost),
 
     fork(watchLoadTopics),
+    fork(watchLoadTopicPosts),
   ]);
 }

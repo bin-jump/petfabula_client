@@ -15,12 +15,7 @@ import {
 } from "react-native";
 import { useTheme, Text, Divider, Button, Icon } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import {
-  useNavigation,
-  useRoute,
-  RouteProp,
-  useFocusEffect,
-} from "@react-navigation/native";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useTranslation } from "react-i18next";
 import Animated, {

@@ -101,6 +101,15 @@ const initialStat: CommunityState = {
     pending: false,
     error: null,
   },
+  topicPosts: {
+    topicId: null,
+    data: [],
+    pending: false,
+    error: null,
+    hasMore: false,
+    nextCursor: null,
+    initializing: false,
+  },
 
   // post
   followedPosts: {

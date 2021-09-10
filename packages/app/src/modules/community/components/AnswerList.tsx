@@ -438,7 +438,7 @@ const AnswerItem = ({
               type="font-awesome"
               name="comment-o"
               color={theme.colors?.grey0}
-              size={24}
+              size={28}
             />
           </TouchableWithoutFeedback>
           <Text
@@ -488,7 +488,7 @@ const AnswerItem = ({
                 }
                 type="font-awesome"
                 name={upvoted.upvoted ? "thumbs-up" : "thumbs-o-up"}
-                size={24}
+                size={28}
               />
             </Animated.View>
           </TouchableWithoutFeedback>

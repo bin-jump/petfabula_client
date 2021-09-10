@@ -8,3 +8,4 @@ export { default as QuestionDetailView } from "./QuestionDetailView";
 export { default as CreateAnswerComment } from "./CreateAnswerComment";
 export { default as UserProfile } from "./UserProfile";
 export { default as UserInfomation } from "./UserInfomation";
+export { default as TopicPostList } from "./TopicPostList";

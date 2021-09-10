@@ -69,6 +69,7 @@ export {
   useRemovePostCommentReply,
   useLoadPostCommentReply,
   useLoadPostTopics,
+  useLoadTopicPosts,
   useLoadRecentQuestions,
   useLoadQuestionDetail,
   useCreateQuestion,

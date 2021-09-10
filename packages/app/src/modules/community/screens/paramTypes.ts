@@ -4,6 +4,7 @@ import {
   Answer,
   AnswerComment,
   Participator,
+  PostTopic,
 } from "@petfabula/common";
 
 type ParamTypes = {
@@ -33,6 +34,9 @@ type ParamTypes = {
   };
   UserInfomation: {
     user: Participator;
+  };
+  TopicPostList: {
+    topic: PostTopic;
   };
 };
 

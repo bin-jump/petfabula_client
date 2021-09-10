@@ -11,6 +11,7 @@ import {
   LoadPetPostsActionType,
   PostUpdatePostActionType,
   PostLoadPetPostImagesActionType,
+  LoadTopicPostsActionType,
 } from './actionTypes';
 import { ActionBase, UploadImage, fillCursorResponseData } from '../../shared';
 
@@ -184,6 +185,44 @@ export const useLoadPetPostImages = () => {
     nextCursor,
     initializing,
     pending,
+    error,
+  };
+};
+
+export const useLoadTopicPosts = () => {
+  const dispatch = useDispatch();
+  const { posts, topicId, hasMore, nextCursor, pending, initializing, error } =
+    useSelector(
+      (state: AppState) => ({
+        topicId: state.community.topicPosts.topicId,
+        posts: state.community.topicPosts.data,
+        hasMore: state.community.topicPosts.hasMore,
+        nextCursor: state.community.topicPosts.nextCursor,
+        pending: state.community.topicPosts.pending,
+        initializing: state.community.topicPosts.initializing,
+        error: state.community.topicPosts.error,
+      }),
+      shallowEqual,
+    );
+
+  const boundAction = useCallback(
+    (topicId: number, cursor: object | null) => {
+      dispatch({
+        type: LoadTopicPostsActionType.BEGIN,
+        payload: { topicId, cursor },
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    topicId,
+    loadTopicPosts: boundAction,
+    posts,
+    hasMore,
+    nextCursor,
+    pending,
+    initializing,
     error,
   };
 };
@@ -496,6 +535,48 @@ export const postReducer = {
       ...state,
       petPostImages: {
         ...state.petPostImages,
+        pending: false,
+        initializing: false,
+        error: action.error,
+      },
+    };
+  },
+
+  // topic posts
+  [LoadTopicPostsActionType.BEGIN]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      topicPosts: {
+        ...state.topicPosts,
+        initializing: action.payload.cursor == null,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [LoadTopicPostsActionType.SUCCESS]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      topicPosts: {
+        ...fillCursorResponseData(state.topicPosts, action),
+        topicId: action.extra.topicId,
+      },
+    };
+  },
+  [LoadTopicPostsActionType.FAILURE]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      topicPosts: {
+        ...state.topicPosts,
         pending: false,
         initializing: false,
         error: action.error,
