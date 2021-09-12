@@ -19,6 +19,8 @@ import CreateDisorderRecord from "./screens/CreateDisorderRecord";
 import SelectPetEventType from "./screens/SelectPetEventType";
 import CreatePetEventRecord from "./screens/CreatePetEventRecord";
 import CreateMedicalRecord from "./screens/CreateMedicalRecord";
+import CreateReport from "./screens/CreateReport";
+import CreateFeedback from "./screens/CreateFeedback";
 
 const CreateNewStack = createStackNavigator();
 
@@ -155,6 +157,24 @@ const CreateNewScreens = () => {
         })}
         name="CreateMedicalRecord"
         component={CreateMedicalRecord}
+      />
+
+      <CreateNewStack.Screen
+        options={(navigation) => ({
+          ...plainGoBackHeaderOption({ navigation, theme }),
+          title: t("createNew.reportTitle"),
+        })}
+        name="CreateReport"
+        component={CreateReport}
+      />
+
+      <CreateNewStack.Screen
+        options={(navigation) => ({
+          ...plainGoBackHeaderOption({ navigation, theme }),
+          title: t("createNew.feedbackTitle"),
+        })}
+        name="CreateFeedback"
+        component={CreateFeedback}
       />
     </CreateNewStack.Navigator>
   );

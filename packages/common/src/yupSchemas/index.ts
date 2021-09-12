@@ -3,3 +3,4 @@ export * from './postScheme';
 export * from './questionScheme';
 export * from './petScheme';
 export * from './userScheme';
+export * from './feedbackScheme';

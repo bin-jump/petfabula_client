@@ -7,6 +7,7 @@
     "next": "次へ",
     "done": "完了",
     "edit": "編集",
+    "report": "報告",
     "search": "検索",
     "pending": "処理中",
     "comment": "コメント",
@@ -39,11 +40,15 @@
       "postcontent": "内容を入力してください",
       "questionTitlePlaceholder": "質問タイトル(必須)",
       "questionContentPlaceholder": "質問の詳細",
-      "answerContentPlaceholder": "回答"
+      "answerContentPlaceholder": "回答",
+      "reportReasonPlaceholder": "報告内容",
+      "feedbackPlaceholder": "フィードバック内容"
     },
     "topicSelectTitle": "トピック選択",
     "topicSelect": "トピックを選択します",
-    "petSelect": "関連ペットを選択します"
+    "petSelect": "関連ペットを選択します",
+    "reportTitle": "問題報告",
+    "feedbackTitle": "フィードバック"
   },
 
   "search": {
@@ -312,6 +317,10 @@
     "user": {
       "userName": "名前を3-16文字にしてください",
       "bio": "紹介を140文字以内にしてください"
+    },
+    "feedback": {
+      "reportReason": "10-500文字にしてください",
+      "feedbackContent": "10-240文字にしてください"
     }
   },
   "aspect": {

@@ -162,6 +162,15 @@ export {
 } from './user';
 
 export {
+  Feedback,
+  ReportForm,
+  FeedbackForm,
+  ReportResult,
+  useCreateFeedback,
+  useCreateReport,
+} from './feedback';
+
+export {
   resolveTargetNotFoundError,
   resolveResponseFormError,
   checkFailedResponse,

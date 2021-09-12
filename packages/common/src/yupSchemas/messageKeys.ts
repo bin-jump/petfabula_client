@@ -40,8 +40,8 @@ export const questionMessageKey = {
 
 const userPrefix = `${messagePrefix}.user`;
 export const userMessageKey = {
-  userName: `${postPrefix}.userName`,
-  userBio: `${postPrefix}.userBio`,
+  userName: `${userPrefix}.userName`,
+  userBio: `${userPrefix}.userBio`,
 };
 
 const petPrefix = `${messagePrefix}.pet`;
@@ -68,4 +68,10 @@ export const petMessageKey = {
   symptom: `${petPrefix}.symptom`,
   diagnosis: `${petPrefix}.diagnosis`,
   treatment: `${petPrefix}.treatment`,
+};
+
+const feedbackPrefix = `${messagePrefix}.feedback`;
+export const feedbackMessageKey = {
+  feedbackContent: `${feedbackPrefix}.feedbackContent`,
+  reportReason: `${feedbackPrefix}.reportReason`,
 };

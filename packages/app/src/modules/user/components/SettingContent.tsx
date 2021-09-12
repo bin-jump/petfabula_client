@@ -131,17 +131,26 @@ const Settings = () => {
       </View>
       <Divider />
 
-      <View style={styles.settingItem}>
-        <View style={styles.settingTextContainer}>
-          <Text style={styles.settingText}>{t("setting.feedback")}</Text>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          navigation.navigate("CreateNew", {
+            screen: "CreateFeedback",
+          });
+        }}
+      >
+        <View style={styles.settingItem}>
+          <View style={styles.settingTextContainer}>
+            <Text style={styles.settingText}>{t("setting.feedback")}</Text>
+          </View>
+          <Icon
+            type="entypo"
+            name="chevron-right"
+            color={theme.colors?.grey3}
+            size={24}
+          />
         </View>
-        <Icon
-          type="entypo"
-          name="chevron-right"
-          color={theme.colors?.grey3}
-          size={24}
-        />
-      </View>
+      </TouchableWithoutFeedback>
+
       {/* <Divider />
 
       <View style={styles.settingItem}>

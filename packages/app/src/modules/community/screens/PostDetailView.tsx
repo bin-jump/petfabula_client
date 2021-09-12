@@ -280,55 +280,51 @@ const Header = ({
 
           <View style={{ paddingTop: 16 }}>
             <View style={{ flexDirection: "row" }}>
-              <BottomSheetButton
-                label={t("common.edit")}
-                type="antdesign"
-                name="edit"
-                onPress={() => {
-                  navigation.navigate("CreateNew", {
-                    screen: "CreatePost",
-                    params: { post: post },
-                  });
-                  bottomSheetModalRef.current?.close();
-                }}
-              />
+              {currentUser?.id == post?.participator.id ? (
+                <BottomSheetButton
+                  label={t("common.edit")}
+                  type="antdesign"
+                  name="edit"
+                  onPress={() => {
+                    navigation.navigate("CreateNew", {
+                      screen: "CreatePost",
+                      params: { post: post },
+                    });
+                    bottomSheetModalRef.current?.close();
+                  }}
+                />
+              ) : null}
+              {currentUser?.id == post?.participator.id ? (
+                <BottomSheetButton
+                  label={t("common.delete")}
+                  type="antdesign"
+                  name="delete"
+                  onPress={() => {
+                    AlertAction.AlertDelele(t, () => {
+                      if (post) {
+                        removePost(post.id);
+                      }
+                    });
+                    handleClose();
+                  }}
+                />
+              ) : null}
 
-              <BottomSheetButton
-                label={t("common.delete")}
-                type="antdesign"
-                name="delete"
-                onPress={() => {
-                  AlertAction.AlertDelele(t, () => {
-                    if (post) {
-                      removePost(post.id);
-                    }
-                  });
-                  handleClose();
-                }}
-              />
+              {currentUser?.id != post?.participator.id ? (
+                <BottomSheetButton
+                  label={t("common.report")}
+                  type="antdesign"
+                  name="warning"
+                  onPress={() => {
+                    navigation.navigate("CreateNew", {
+                      screen: "CreateReport",
+                      params: { entityId: post?.id, entityType: "POST" },
+                    });
+                    bottomSheetModalRef.current?.close();
+                  }}
+                />
+              ) : null}
             </View>
-
-            {/* <TouchableOpacity
-              onPress={() => {
-                bottomSheetModalRef.current?.close();
-              }}
-              style={{
-                marginTop: 12,
-                backgroundColor: theme.colors?.grey4,
-                borderRadius: 6,
-              }}
-            >
-              <Text
-                style={{
-                  textAlign: "center",
-                  fontSize: 18,
-                  color: theme.colors?.black,
-                  paddingVertical: 14,
-                }}
-              >
-                {t("common.cancel")}
-              </Text>
-            </TouchableOpacity> */}
           </View>
         </View>
       </BottomSheet>

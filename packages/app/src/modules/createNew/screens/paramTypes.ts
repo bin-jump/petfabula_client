@@ -79,6 +79,11 @@ type ParamTypes = {
     record: PetEventRecord | undefined;
     type: string;
   };
+
+  CreateReport: {
+    entityType: string;
+    entityId: number;
+  };
 };
 
 export default ParamTypes;

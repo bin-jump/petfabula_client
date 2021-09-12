@@ -191,7 +191,7 @@ const watchGetPostDetail = createSagaWatcher({
 });
 
 const watchLoadFollowedPosts = createSagaWatcher({
-  url: `/api/post/followed`,
+  url: `/api/participator/followed-posts`,
   method: 'GET',
   asyncAction: LoadFollowedPostsActionType,
   watchType: 'LATEST',
