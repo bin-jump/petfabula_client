@@ -237,10 +237,26 @@ const LoginFormContent = ({
               textDecorationLine: "underline",
             }}
             onPress={() => {
-              navigation.navigate("UserAgreement");
+              navigation.navigate("SecondaryStack", {
+                screen: "UserAgreement",
+              });
             }}
           >
             {t("authentication.login.oauthAutoUserAgreement")}
+          </Text>
+          <Text>{t("authentication.login.oauthAutoWithWord")}</Text>
+          <Text
+            style={{
+              color: theme.colors?.primary,
+              textDecorationLine: "underline",
+            }}
+            onPress={() => {
+              navigation.navigate("SecondaryStack", {
+                screen: "PrivacyAgreement",
+              });
+            }}
+          >
+            {t("authentication.login.oauthAutoPrivacyAgreement")}
           </Text>
           <Text>{t("authentication.login.oauthAutoUserAgreementBack")}</Text>
         </Text>

@@ -6,7 +6,6 @@ import Login from "./screens/Login";
 import Signup from "./screens/Signup";
 import SignupVerification from "./screens/SignupVerification";
 import LoginVerification from "./screens/LoginVerification";
-import UserAgreement from "./screens/UserAgreement";
 
 const AuthStack = createStackNavigator();
 
@@ -52,11 +51,6 @@ const AuthenticationScreen = () => {
         options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
         name="SignupVerification"
         component={SignupVerification}
-      />
-      <AuthStack.Screen
-        options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
-        name="UserAgreement"
-        component={UserAgreement}
       />
     </AuthStack.Navigator>
   );

@@ -5,6 +5,7 @@ import { notificationRootReducer } from '../modules/notification';
 import { petRootReducer } from '../modules/pet';
 import { userRootReducer } from '../modules/user';
 import { feedbackRootReducer } from '../modules/feedback';
+import { documentRootReducer } from '../modules/document';
 import { LogoutActionType } from '../modules/authentication/redux/actionTypes';
 
 const appReducer = combineReducers({
@@ -14,6 +15,7 @@ const appReducer = combineReducers({
   pet: petRootReducer,
   user: userRootReducer,
   feedback: feedbackRootReducer,
+  document: documentRootReducer,
 });
 
 const rootReducer = (state: any, action: any) => {

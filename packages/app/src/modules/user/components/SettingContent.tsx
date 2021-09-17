@@ -97,38 +97,54 @@ const Settings = () => {
       </TouchableWithoutFeedback>
       <Divider />
 
-      <View style={styles.settingItem}>
-        <View style={styles.settingTextContainer}>
-          <Text style={styles.settingText}>{t("setting.userAgreement")}</Text>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          navigation.navigate("SecondaryStack", {
+            screen: "UserAgreement",
+          });
+        }}
+      >
+        <View style={styles.settingItem}>
+          <View style={styles.settingTextContainer}>
+            <Text style={styles.settingText}>{t("setting.userAgreement")}</Text>
+          </View>
+          <Icon
+            type="entypo"
+            name="chevron-right"
+            color={theme.colors?.grey3}
+            size={24}
+          />
         </View>
-        <Icon
-          type="entypo"
-          name="chevron-right"
-          color={theme.colors?.grey3}
-          size={24}
-        />
-      </View>
+      </TouchableWithoutFeedback>
       <Divider />
 
-      <View style={styles.settingItem}>
-        <View style={styles.settingTextContainer}>
-          {/* <Icon
+      <TouchableWithoutFeedback
+        onPress={() => {
+          navigation.navigate("SecondaryStack", {
+            screen: "PrivacyAgreement",
+          });
+        }}
+      >
+        <View style={styles.settingItem}>
+          <View style={styles.settingTextContainer}>
+            {/* <Icon
             name="eye-outline"
             type="ionicon"
             size={28}
             color={theme.colors?.black}
           /> */}
-          <Text style={styles.settingText}>
-            {t("setting.privacyAgreement")}
-          </Text>
+            <Text style={styles.settingText}>
+              {t("setting.privacyAgreement")}
+            </Text>
+          </View>
+          <Icon
+            type="entypo"
+            name="chevron-right"
+            color={theme.colors?.grey3}
+            size={24}
+          />
         </View>
-        <Icon
-          type="entypo"
-          name="chevron-right"
-          color={theme.colors?.grey3}
-          size={24}
-        />
-      </View>
+      </TouchableWithoutFeedback>
       <Divider />
 
       <TouchableWithoutFeedback

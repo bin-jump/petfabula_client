@@ -10,7 +10,6 @@ export {
   useEmailCodeSendRegisterCode,
   useLogout,
   useOauthRegisterAndLogin,
-  useUserAgreement,
   useCurrentUser,
   OauthConfig,
 } from './authentication';
@@ -169,6 +168,12 @@ export {
   useCreateFeedback,
   useCreateReport,
 } from './feedback';
+
+export {
+  Document,
+  useLoadPrivacyAgreement,
+  useLoadUserAgreement,
+} from './document';
 
 export {
   resolveTargetNotFoundError,

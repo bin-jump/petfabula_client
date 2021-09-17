@@ -9,6 +9,7 @@ import { notificationRootSaga } from '../modules/notification';
 import { petRootSaga, petRecordRootSaga } from '../modules/pet';
 import { userRootSaga } from '../modules/user';
 import { feedbackRootSaga } from '../modules/feedback';
+import { documentRootSaga } from '../modules/document';
 
 import { logHandleMiddleware } from './middlewares/logHandleMiddleware';
 import { toastHandleMiddleware } from './middlewares/toastHandleMiddleware';
@@ -38,6 +39,7 @@ function* rootSaga() {
     fork(petRecordRootSaga),
     fork(userRootSaga),
     fork(feedbackRootSaga),
+    fork(documentRootSaga),
   ]);
 }
 

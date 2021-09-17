@@ -55,11 +55,6 @@ export interface RegisterConfirmTokenRequest {
 //   email: string;
 // }
 
-export interface UserAgreement {
-  title: string;
-  content: string;
-}
-
 export interface AuthenticationState {
   currentUser: AsyncDataBase<User>;
 
@@ -72,7 +67,6 @@ export interface AuthenticationState {
   oauthRegisterLoginResult: AsyncDataBase<User>;
   logoutResult: AsyncDataBase<{ done: boolean }>;
 
-  userAgreement: AsyncDataBase<UserAgreement>;
   // registerResult: AsyncDataBase<User>;
   // registerTokenResult: AsyncDataBase<string>;
   // checkedToken: AsyncDataBase<{ email: string }>;

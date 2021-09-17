@@ -25,6 +25,7 @@ import {
   FollowNotifications,
 } from "../modules/notification/screens";
 import { PetDetailView, PetRecords } from "../modules/pet/screens";
+import { UserAgreement, PrivacyAgreement } from "../modules/user/screens";
 
 const SecondaryStackStack = createStackNavigator();
 
@@ -246,6 +247,23 @@ const SecondaryStack = () => {
         })}
         name="PetRecords"
         component={PetRecords}
+      />
+
+      <SecondaryStackStack.Screen
+        options={(navigation) => ({
+          ...plainGoBackHeaderOption({ navigation, theme }),
+          title: t("setting.userAgreement"),
+        })}
+        name="UserAgreement"
+        component={UserAgreement}
+      />
+      <SecondaryStackStack.Screen
+        options={(navigation) => ({
+          ...plainGoBackHeaderOption({ navigation, theme }),
+          title: t("setting.privacyAgreement"),
+        })}
+        name="PrivacyAgreement"
+        component={PrivacyAgreement}
       />
     </SecondaryStackStack.Navigator>
   );

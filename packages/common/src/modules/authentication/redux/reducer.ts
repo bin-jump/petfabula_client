@@ -3,7 +3,6 @@ import { AuthenticationState } from './types';
 import { loginReducer } from './loginHooks';
 import { registerReducer } from './registerHooks';
 import { checkLoginReducer } from './checkLoginHooks';
-import { userAgreementReducer } from './userAgreementHooks';
 
 const initialStat: AuthenticationState = {
   // emailPassordLoginResult: { data: null, pending: false, error: null },
@@ -14,8 +13,6 @@ const initialStat: AuthenticationState = {
   logoutResult: { data: null, pending: false, error: null },
   currentUser: { data: null, pending: false, error: null },
   oauthRegisterLoginResult: { data: null, pending: false, error: null },
-
-  userAgreement: { data: null, pending: false, error: null },
 };
 
 export const authenticationRootReducer = createReducer<
@@ -25,5 +22,4 @@ export const authenticationRootReducer = createReducer<
   ...loginReducer,
   ...registerReducer,
   ...checkLoginReducer,
-  ...userAgreementReducer,
 });

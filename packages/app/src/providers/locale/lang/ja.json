@@ -73,7 +73,9 @@
       "sendMailMessage": "下記のメールアドレスに認証コードを送ったので、ご確認ください",
       "loginAction": "認証してログイン",
       "oauthAutoUserAgreementFront": "その他によるログインすることで、",
-      "oauthAutoUserAgreement": "利用規約とプライバシーポリシー",
+      "oauthAutoUserAgreement": "利用規約",
+      "oauthAutoWithWord": "と",
+      "oauthAutoPrivacyAgreement": "プライバシーポリシー",
       "oauthAutoUserAgreementBack": "に同意したものとみなされます"
     },
 

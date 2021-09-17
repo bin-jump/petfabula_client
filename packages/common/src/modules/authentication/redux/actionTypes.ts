@@ -26,6 +26,3 @@ export const EmailCodeRegisterAndLoginActionType = createAsyncActionType(
 export const OauthRegisterAndLoginActionType = createAsyncActionType(
   'AUTHENTICATION_REGISTER_LOGIN_OAUTH',
 );
-export const GetUserAgreementActionType = createAsyncActionType(
-  'AUTHENTICATION_USER_AGREEMENT',
-);

@@ -6,7 +6,6 @@ import {
   EmailCodeSendRegisterCodeActionType,
   EmailCodeRegisterAndLoginActionType,
   OauthRegisterAndLoginActionType,
-  GetUserAgreementActionType,
   GetCurrentUserActionType,
   LogoutActionType,
 } from './actionTypes';
@@ -53,13 +52,6 @@ const watchOauthRegisterOrLogin = createSagaWatcher({
   watchType: 'EVERY',
 });
 
-const watchGetUserAgreement = createSagaWatcher({
-  url: `/api/identity/user-agreement`,
-  method: 'GET',
-  asyncAction: GetUserAgreementActionType,
-  watchType: 'LATEST',
-});
-
 const watchLogout = createSagaWatcher({
   url: `/api/identity/logout`,
   method: 'POST',
@@ -75,7 +67,6 @@ export function* authenticationRootSaga() {
     fork(watchEmailCodeSendLoginCode),
     fork(watchEmailCodeLogin),
     fork(watchOauthRegisterOrLogin),
-    fork(watchGetUserAgreement),
     fork(watchLogout),
   ]);
 }

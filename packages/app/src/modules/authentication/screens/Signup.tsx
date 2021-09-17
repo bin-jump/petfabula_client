@@ -135,18 +135,34 @@ const RegisterFormContent = ({
           }}
           checked={values.userAgreement}
         />
-        <Text
-          onPress={() => {
-            navigation.navigate("UserAgreement");
-          }}
-          style={{
-            textAlign: "center",
-            fontSize: 16,
-            textDecorationLine: "underline",
-            color: theme.colors?.primary,
-          }}
-        >
-          {t("authentication.signup.userAgreement")}
+        <Text>
+          <Text
+            style={{
+              color: theme.colors?.primary,
+              textDecorationLine: "underline",
+            }}
+            onPress={() => {
+              navigation.navigate("SecondaryStack", {
+                screen: "UserAgreement",
+              });
+            }}
+          >
+            {t("authentication.login.oauthAutoUserAgreement")}
+          </Text>
+          <Text>{t("authentication.login.oauthAutoWithWord")}</Text>
+          <Text
+            style={{
+              color: theme.colors?.primary,
+              textDecorationLine: "underline",
+            }}
+            onPress={() => {
+              navigation.navigate("SecondaryStack", {
+                screen: "PrivacyAgreement",
+              });
+            }}
+          >
+            {t("authentication.login.oauthAutoPrivacyAgreement")}
+          </Text>
         </Text>
       </View>
 
