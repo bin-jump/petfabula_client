@@ -12,7 +12,10 @@ export const useFollowUser = () => {
   const dispatch = useDispatch();
   const { pending } = useSelector(
     (state: AppState) => ({
-      pending: state.community.postDetail.data?.participator.followPending,
+      pending:
+        state.community.postDetail.data?.participator.followPending ||
+        state.community.questionDetail.data?.participator.followPending ||
+        state.community.userProfile.data?.followPending,
     }),
     shallowEqual,
   );
@@ -37,7 +40,10 @@ export const useUnfollowUser = () => {
   const dispatch = useDispatch();
   const { pending } = useSelector(
     (state: AppState) => ({
-      pending: state.community.postDetail.data?.participator.followPending,
+      pending:
+        state.community.postDetail.data?.participator.followPending ||
+        state.community.questionDetail.data?.participator.followPending ||
+        state.community.userProfile.data?.followPending,
     }),
     shallowEqual,
   );
@@ -67,6 +73,7 @@ export const userFollowReducer = {
     const actionParticipatorId = action.payload.participatorId;
     const postDetailState = state.postDetail.data;
     const questionDetailState = state.questionDetail.data;
+    const userProfile = state.userProfile.data;
 
     return {
       ...state,
@@ -98,6 +105,16 @@ export const userFollowReducer = {
               }
             : questionDetailState,
       },
+      userProfile: {
+        ...state.userProfile,
+        data:
+          userProfile && userProfile.id == actionParticipatorId
+            ? {
+                ...userProfile,
+                followPending: true,
+              }
+            : userProfile,
+      },
     };
   },
   [CommunityFollowUserActionType.SUCCESS]: (
@@ -107,6 +124,7 @@ export const userFollowReducer = {
     const actionParticipatorId = action.payload.participatorId;
     const postState = state.postDetail.data;
     const questionDetailState = state.questionDetail.data;
+    const userProfile = state.userProfile.data;
 
     return {
       ...state,
@@ -138,6 +156,18 @@ export const userFollowReducer = {
                 },
               }
             : questionDetailState,
+      },
+      userProfile: {
+        ...state.userProfile,
+        data:
+          userProfile && userProfile.id == actionParticipatorId
+            ? {
+                ...userProfile,
+                followPending: false,
+                followed: true,
+                followerCount: userProfile.followerCount + 1,
+              }
+            : userProfile,
       },
     };
   },
@@ -190,6 +220,7 @@ export const userFollowReducer = {
     const actionParticipatorId = action.payload.participatorId;
     const postDetailState = state.postDetail.data;
     const questionDetailState = state.questionDetail.data;
+    const userProfile = state.userProfile.data;
 
     return {
       ...state,
@@ -221,6 +252,17 @@ export const userFollowReducer = {
               }
             : questionDetailState,
       },
+
+      userProfile: {
+        ...state.userProfile,
+        data:
+          userProfile && userProfile.id == actionParticipatorId
+            ? {
+                ...userProfile,
+                followPending: true,
+              }
+            : userProfile,
+      },
     };
   },
   [CommunityUnfollowUserActionType.SUCCESS]: (
@@ -230,6 +272,7 @@ export const userFollowReducer = {
     const postDetailState = state.postDetail.data;
     const actionParticipatorId = action.payload.participatorId;
     const questionDetailState = state.questionDetail.data;
+    const userProfile = state.userProfile.data;
 
     return {
       ...state,
@@ -262,6 +305,18 @@ export const userFollowReducer = {
                 },
               }
             : questionDetailState,
+      },
+      userProfile: {
+        ...state.userProfile,
+        data:
+          userProfile && userProfile.id == actionParticipatorId
+            ? {
+                ...userProfile,
+                followed: false,
+                followPending: false,
+                followerCount: userProfile.followerCount - 1,
+              }
+            : userProfile,
       },
     };
   },

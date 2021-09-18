@@ -170,49 +170,59 @@ const NotificationContent = () => {
           }}
         />
       </View>
+
       <View style={{ height: 6, backgroundColor: theme.colors?.grey5 }}></View>
+
       <View style={{}}>
-        <View
-          style={{
-            height: 90,
-            width: "100%",
-            flexDirection: "row",
-            paddingVertical: 16,
-            paddingHorizontal: 20,
+        <TouchableWithoutFeedback
+          onPress={() => {
+            navigation.navigate("SecondaryStack", {
+              screen: "SystemNotifications",
+            });
           }}
         >
-          <View>
-            <View
-              style={{
-                borderRadius: 60,
-                width: 50,
-                height: 50,
-                backgroundColor: "#31d2c0",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Icon
-                type="materialIcons"
-                name="notifications"
-                color="white"
-                size={32}
-              />
-            </View>
-            {checkResult?.hasSystemNotificationUnread ? (
-              <Badge count={1} />
-            ) : null}
-          </View>
-
           <View
             style={{
-              marginLeft: 12,
-              justifyContent: "center",
+              height: 90,
+              width: "100%",
+              flexDirection: "row",
+              paddingVertical: 16,
+              paddingHorizontal: 20,
             }}
           >
-            <Text h4>{t("notification.systemNotification")}</Text>
+            <View>
+              <View
+                style={{
+                  borderRadius: 60,
+                  width: 50,
+                  height: 50,
+                  backgroundColor: "#31d2c0",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Icon
+                  type="materialIcons"
+                  name="notifications"
+                  color="white"
+                  size={32}
+                />
+              </View>
+              {checkResult?.hasSystemNotificationUnread ? (
+                <Badge count={1} />
+              ) : null}
+            </View>
+
+            <View
+              style={{
+                marginLeft: 12,
+                justifyContent: "center",
+              }}
+            >
+              <Text h4>{t("notification.systemNotification")}</Text>
+            </View>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
         <Divider />
       </View>
     </View>

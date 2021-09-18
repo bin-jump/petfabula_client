@@ -23,6 +23,7 @@ import {
   AnswerCommentNotifications,
   UpvoteNotifications,
   FollowNotifications,
+  SystemNotifications,
 } from "../modules/notification/screens";
 import { PetDetailView, PetRecords } from "../modules/pet/screens";
 import { UserAgreement, PrivacyAgreement } from "../modules/user/screens";
@@ -229,6 +230,14 @@ const SecondaryStack = () => {
         })}
         name="FollowNotifications"
         component={FollowNotifications}
+      />
+      <SecondaryStackStack.Screen
+        options={(navigation) => ({
+          ...plainGoBackHeaderOption({ navigation, theme }),
+          title: t("notification.systemNotification"),
+        })}
+        name="SystemNotifications"
+        component={SystemNotifications}
       />
 
       {/* pet */}

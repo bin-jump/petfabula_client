@@ -12,6 +12,9 @@ export const NotificationReadUpvoteActionType = createAsyncActionType(
 export const NotificationReadFollowActionType = createAsyncActionType(
   'NOTIFICATION_READ_FOLLOW',
 );
+export const NotificationReadSystemActionType = createAsyncActionType(
+  'NOTIFICATION_READ_SYSTEM',
+);
 
 export const LoadAnswerCommentNotificationsActionType = createAsyncActionType(
   'NOTIFICATION_LOAD_COMMENT_ANSWER',
@@ -21,4 +24,7 @@ export const LoadUpvoteNotificationsActionType = createAsyncActionType(
 );
 export const LoadFollowNotificationsActionType = createAsyncActionType(
   'NOTIFICATION_LOAD_FOLLOW',
+);
+export const LoadSystemNotificationsActionType = createAsyncActionType(
+  'NOTIFICATION_LOAD_SYSTEM',
 );

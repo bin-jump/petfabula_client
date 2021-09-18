@@ -5,9 +5,11 @@ import {
   NotificationReadAnswerCommentActionType,
   NotificationReadUpvoteActionType,
   NotificationReadFollowActionType,
+  NotificationReadSystemActionType,
   LoadAnswerCommentNotificationsActionType,
   LoadUpvoteNotificationsActionType,
   LoadFollowNotificationsActionType,
+  LoadSystemNotificationsActionType,
 } from './actionTypes';
 
 const watchCheckNotification = createSagaWatcher({
@@ -21,42 +23,56 @@ const watchReadAnswerCommentNotification = createSagaWatcher({
   url: `/api/notification/answer-comment-notifications`,
   method: 'PUT',
   asyncAction: NotificationReadAnswerCommentActionType,
-  watchType: 'EVERY',
+  watchType: 'LATEST',
 });
 
 const watchReadFollowNotification = createSagaWatcher({
   url: `/api/notification/follow-notifications`,
   method: 'PUT',
   asyncAction: NotificationReadFollowActionType,
-  watchType: 'EVERY',
+  watchType: 'LATEST',
 });
 
 const watchReadVoteNotification = createSagaWatcher({
   url: `/api/notification/vote-notifications`,
   method: 'PUT',
   asyncAction: NotificationReadUpvoteActionType,
-  watchType: 'EVERY',
+  watchType: 'LATEST',
+});
+
+const watchReadSystemNotification = createSagaWatcher({
+  url: `/api/notification/system-notifications`,
+  method: 'PUT',
+  asyncAction: NotificationReadSystemActionType,
+  watchType: 'LATEST',
 });
 
 const watchLoadAnswerCommentNotifications = createSagaWatcher({
   url: `/api/notification/answer-comment-notifications`,
   method: 'GET',
   asyncAction: LoadAnswerCommentNotificationsActionType,
-  watchType: 'EVERY',
+  watchType: 'LATEST',
 });
 
 const watchLoadFollowNotifications = createSagaWatcher({
   url: `/api/notification/follow-notifications`,
   method: 'GET',
   asyncAction: LoadFollowNotificationsActionType,
-  watchType: 'EVERY',
+  watchType: 'LATEST',
 });
 
 const watchLoadVoteNotifications = createSagaWatcher({
   url: `/api/notification/vote-notifications`,
   method: 'GET',
   asyncAction: LoadUpvoteNotificationsActionType,
-  watchType: 'EVERY',
+  watchType: 'LATEST',
+});
+
+const watchLoadSystemNotifications = createSagaWatcher({
+  url: `/api/notification/system-notifications`,
+  method: 'GET',
+  asyncAction: LoadSystemNotificationsActionType,
+  watchType: 'LATEST',
 });
 
 export function* notificationRootSaga() {
@@ -65,8 +81,11 @@ export function* notificationRootSaga() {
     fork(watchReadAnswerCommentNotification),
     fork(watchReadFollowNotification),
     fork(watchReadVoteNotification),
+    fork(watchReadSystemNotification),
+
     fork(watchLoadAnswerCommentNotifications),
     fork(watchLoadFollowNotifications),
     fork(watchLoadVoteNotifications),
+    fork(watchLoadSystemNotifications),
   ]);
 }

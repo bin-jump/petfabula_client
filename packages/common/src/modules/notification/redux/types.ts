@@ -58,9 +58,17 @@ export interface FollowNotification {
   createdDate: number;
 }
 
+export interface SystemNotification {
+  id: number;
+  title: string;
+  content: string;
+  createdDate: number;
+}
+
 export interface NotificationState {
   notificationCheckResult: AsyncDataBase<NotificationCheckResult>;
   answerCommentNotifications: AsyncCursorPageListBase<AnswerCommentNotification>;
   upvoteNotifications: AsyncCursorPageListBase<VoteNotification>;
   followNotifications: AsyncCursorPageListBase<FollowNotification>;
+  systemNotifications: AsyncCursorPageListBase<SystemNotification>;
 }

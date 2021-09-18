@@ -6,6 +6,7 @@ import {
   NotificationReadAnswerCommentActionType,
   NotificationReadFollowActionType,
   NotificationReadUpvoteActionType,
+  NotificationReadSystemActionType,
 } from './actionTypes';
 import { ActionBase } from '../../shared';
 
@@ -38,6 +39,18 @@ export const useReadUpvoteNotifications = () => {
 
   const boundAction = useCallback(() => {
     dispatch({ type: NotificationReadUpvoteActionType.BEGIN });
+  }, [dispatch]);
+
+  return {
+    readNotifications: boundAction,
+  };
+};
+
+export const useReadSystemNotifications = () => {
+  const dispatch = useDispatch();
+
+  const boundAction = useCallback(() => {
+    dispatch({ type: NotificationReadSystemActionType.BEGIN });
   }, [dispatch]);
 
   return {
@@ -86,6 +99,22 @@ export const readNotificationReducer = {
       notificationCheckResult: {
         ...state.notificationCheckResult,
         data: checkState ? { ...checkState, voteCount: 0 } : checkState,
+      },
+    };
+  },
+
+  [NotificationReadSystemActionType.SUCCESS]: (
+    state: NotificationState,
+    action: ActionBase,
+  ): NotificationState => {
+    const checkState = state.notificationCheckResult.data;
+    return {
+      ...state,
+      notificationCheckResult: {
+        ...state.notificationCheckResult,
+        data: checkState
+          ? { ...checkState, hasSystemNotificationUnread: false }
+          : checkState,
       },
     };
   },

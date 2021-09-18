@@ -227,8 +227,8 @@ const UserContent = () => {
               />
               {/* <Divider style={{ height: "100%", width: 1 }} /> */}
               <TextNumber
-                count={profile.followedCount}
-                text={t("user.followedCount")}
+                count={profile.followerCount}
+                text={t("user.followerCount")}
               />
               <TextNumber
                 count={profile.postCount}

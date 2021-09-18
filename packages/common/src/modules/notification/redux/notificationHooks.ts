@@ -6,6 +6,7 @@ import {
   LoadAnswerCommentNotificationsActionType,
   LoadFollowNotificationsActionType,
   LoadUpvoteNotificationsActionType,
+  LoadSystemNotificationsActionType,
 } from './actionTypes';
 import { ActionBase, fillCursorResponseData } from '../../shared';
 
@@ -101,6 +102,42 @@ export const useLoadUpvoteNotifications = () => {
     (cursor: object | null) => {
       dispatch({
         type: LoadUpvoteNotificationsActionType.BEGIN,
+        payload: { cursor },
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    loadNotifications: boundAction,
+    notifications,
+    hasMore,
+    nextCursor,
+    initializing,
+    pending,
+    error,
+  };
+};
+
+export const useLoadSystemNotifications = () => {
+  const dispatch = useDispatch();
+  const { notifications, hasMore, nextCursor, initializing, pending, error } =
+    useSelector(
+      (state: AppState) => ({
+        notifications: state.notification.systemNotifications.data,
+        hasMore: state.notification.systemNotifications.hasMore,
+        nextCursor: state.notification.systemNotifications.nextCursor,
+        pending: state.notification.systemNotifications.pending,
+        initializing: state.notification.systemNotifications.initializing,
+        error: state.notification.systemNotifications.error,
+      }),
+      shallowEqual,
+    );
+
+  const boundAction = useCallback(
+    (cursor: object | null) => {
+      dispatch({
+        type: LoadSystemNotificationsActionType.BEGIN,
         payload: { cursor },
       });
     },
@@ -235,6 +272,47 @@ export const notificationReducer = {
       ...state,
       upvoteNotifications: {
         ...state.upvoteNotifications,
+        pending: false,
+        initializing: false,
+        error: action.error,
+      },
+    };
+  },
+
+  // system notification
+  [LoadSystemNotificationsActionType.BEGIN]: (
+    state: NotificationState,
+    action: ActionBase,
+  ): NotificationState => {
+    return {
+      ...state,
+      systemNotifications: {
+        ...state.systemNotifications,
+        initializing: action.payload.cursor == null,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [LoadSystemNotificationsActionType.SUCCESS]: (
+    state: NotificationState,
+    action: ActionBase,
+  ): NotificationState => {
+    return {
+      ...state,
+      systemNotifications: {
+        ...fillCursorResponseData(state.systemNotifications, action),
+      },
+    };
+  },
+  [LoadSystemNotificationsActionType.FAILURE]: (
+    state: NotificationState,
+    action: ActionBase,
+  ): NotificationState => {
+    return {
+      ...state,
+      systemNotifications: {
+        ...state.systemNotifications,
         pending: false,
         initializing: false,
         error: action.error,

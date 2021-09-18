@@ -30,6 +30,14 @@ const initialStat: NotificationState = {
     nextCursor: null,
     initializing: false,
   },
+  systemNotifications: {
+    data: [],
+    pending: false,
+    error: null,
+    hasMore: false,
+    nextCursor: null,
+    initializing: false,
+  },
 };
 
 export const notificationRootReducer = createReducer<
