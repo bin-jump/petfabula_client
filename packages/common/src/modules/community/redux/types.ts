@@ -19,7 +19,7 @@ export interface Participator {
   answerCount: number;
 }
 
-export interface ParticiptorDetail extends Participator {
+export interface ParticipatorDetail extends Participator {
   followed: boolean;
   followPending: boolean;
 }
@@ -58,7 +58,7 @@ export interface PostDetail extends Post {
   likePending: boolean;
   collectPending: boolean;
   postTopic: PostTopic | null;
-  participator: ParticiptorDetail;
+  participator: ParticipatorDetail;
 }
 
 export interface PostComment {
@@ -151,7 +151,7 @@ export interface QuestionDetail extends Question {
   relatePet: ParticiptorPet | null;
   upvoted: boolean;
   upvotePending: boolean;
-  participator: ParticiptorDetail;
+  participator: ParticipatorDetail;
 }
 
 export interface QuestionAnswerSearch {
@@ -210,11 +210,11 @@ export interface CommunityState {
   myAnswers: AsyncCursorPageListBase<AnswerWithQuestion>;
   myFavoritePosts: AsyncCursorPageListBase<Post>;
 
-  // othersDetail: AsyncDataBase<ParticiptorDetail>;
+  // othersDetail: AsyncDataBase<ParticipatorDetail>;
   // myPosts: AsyncCursorPageListBase<Post>;
   // othersPosts: AsyncCursorPageListBase<Post> & { userId: number | null };
   // mypets: AsyncListBase<ParticiptorPet>;
-  userProfile: AsyncDataBase<ParticiptorDetail>;
+  userProfile: AsyncDataBase<ParticipatorDetail>;
   userPosts: AsyncCursorPageListBase<Post> & { userId: number | null };
   petPosts: AsyncCursorPageListBase<Post> & { petId: number | null };
   userQuestions: AsyncCursorPageListBase<Question> & { userId: number | null };
@@ -223,6 +223,15 @@ export interface CommunityState {
   };
   userCollectedPosts: AsyncCursorPageListBase<Post> & { userId: number | null };
   userPets: AsyncListBase<ParticiptorPet> & { userId: number | null };
+
+  userFollowed: AsyncCursorPageListBase<Participator> & {
+    userId: number | null;
+  };
+  userFollower: AsyncCursorPageListBase<Participator> & {
+    userId: number | null;
+  };
+  // myFollowed: AsyncCursorPageListBase<Participator>;
+  // myFollower: AsyncCursorPageListBase<Participator>;
 
   // post
   postTopics: AsyncListBase<PostTopic>;

@@ -5,6 +5,7 @@ import {
   AnswerComment,
   Participator,
   PostTopic,
+  User,
 } from "@petfabula/common";
 
 type ParamTypes = {
@@ -37,6 +38,10 @@ type ParamTypes = {
   };
   TopicPostList: {
     topic: PostTopic;
+  };
+  FollowList: {
+    user: User;
+    initialTab?: string;
   };
 };
 

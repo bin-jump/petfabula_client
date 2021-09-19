@@ -15,6 +15,8 @@ import {
   LoadUserQuestionsActionType,
   LoadUserAnswersActionType,
   LoadUserCollectedPostsActionType,
+  LoadUserFollowedActionType,
+  LoadUserFollowerActionType,
   // post
   LoadRecommendPostsActionType,
   LoadFollowedPostsActionType,
@@ -36,6 +38,7 @@ import {
   PostLoadPetPostImagesActionType,
   LoadTopicPostsActionType,
 } from './actionTypes';
+import { useLoadUserFollower } from './participatorHooks';
 
 // user
 
@@ -124,6 +127,24 @@ const watchLoadUserCollectedPosts = createSagaWatcher({
   watchType: 'LATEST',
   createUrl: (payload) => {
     return `/api/participator/${payload.userId}/favorite-posts`;
+  },
+});
+
+const watchLoadUserfollowed = createSagaWatcher({
+  method: 'GET',
+  asyncAction: LoadUserFollowedActionType,
+  watchType: 'LATEST',
+  createUrl: (payload) => {
+    return `/api/participator/participators/${payload.userId}/followeds`;
+  },
+});
+
+const watchLoadUserfollower = createSagaWatcher({
+  method: 'GET',
+  asyncAction: LoadUserFollowerActionType,
+  watchType: 'LATEST',
+  createUrl: (payload) => {
+    return `/api/participator/participators/${payload.userId}/followers`;
   },
 });
 
@@ -332,6 +353,8 @@ export function* postRootSaga() {
     fork(watchLoadMyQuestions),
     fork(watchLoadMyAnswers),
     fork(watchLoadMyFavoritePosts),
+    fork(watchLoadUserfollowed),
+    fork(watchLoadUserfollower),
 
     fork(watchLoadUserProfile),
     fork(watchLoadUserPosts),

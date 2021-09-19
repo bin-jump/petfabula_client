@@ -111,6 +111,41 @@ const initialStat: CommunityState = {
     initializing: false,
   },
 
+  userFollowed: {
+    userId: null,
+    data: [],
+    pending: false,
+    error: null,
+    hasMore: false,
+    nextCursor: null,
+    initializing: false,
+  },
+  userFollower: {
+    userId: null,
+    data: [],
+    pending: false,
+    error: null,
+    hasMore: false,
+    nextCursor: null,
+    initializing: false,
+  },
+  // myFollowed: {
+  //   data: [],
+  //   pending: false,
+  //   error: null,
+  //   hasMore: false,
+  //   nextCursor: null,
+  //   initializing: false,
+  // },
+  // myFollower: {
+  //   data: [],
+  //   pending: false,
+  //   error: null,
+  //   hasMore: false,
+  //   nextCursor: null,
+  //   initializing: false,
+  // },
+
   // post
   followedPosts: {
     data: [],

@@ -18,6 +18,7 @@ import {
   UserProfile,
   UserInfomation,
   TopicPostList,
+  FollowList,
 } from "../modules/community/screens";
 import {
   AnswerCommentNotifications,
@@ -204,6 +205,17 @@ const SecondaryStack = () => {
         }}
         name="TopicPostList"
         component={TopicPostList}
+      />
+
+      <SecondaryStackStack.Screen
+        options={(navigation) => {
+          return {
+            ...plainGoBackHeaderOption({ navigation, theme }),
+            title: t("follow list"),
+          };
+        }}
+        name="FollowList"
+        component={FollowList}
       />
 
       {/* notification */}

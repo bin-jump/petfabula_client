@@ -50,12 +50,20 @@ const UserInfomation = () => {
           size={100}
         />
 
-        <Text h3 style={{ marginTop: 12 }}>
+        <Text h1 style={{ marginTop: 8 }}>
           {user.name}
         </Text>
 
         <View>
-          <Text style={{ marginTop: 12 }}>{user.bio}</Text>
+          <Text
+            style={{
+              textAlign: "center",
+              marginTop: 16,
+              color: user.bio ? theme.colors?.grey0 : theme.colors?.grey1,
+            }}
+          >
+            {user.bio ? user.bio : `${t("user.unsetBio")}...`}
+          </Text>
         </View>
       </View>
     </ScrollView>

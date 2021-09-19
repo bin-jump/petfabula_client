@@ -33,6 +33,19 @@ export const LoadUserCollectedPostsActionType = createAsyncActionType(
   'POST_LOAD_USER_COLLECTION_POSTS',
 );
 
+export const LoadUserFollowedActionType = createAsyncActionType(
+  'POST_LOAD_USER_FOLLOWED',
+);
+export const LoadUserFollowerActionType = createAsyncActionType(
+  'POST_LOAD_USER_FOLLOWER',
+);
+export const LoadMyFollowedActionType = createAsyncActionType(
+  'POST_LOAD_MY_FOLLOWED',
+);
+export const LoadNyFollowerActionType = createAsyncActionType(
+  'POST_LOAD_MY_FOLLOWER',
+);
+
 export const LoadTopicPostsActionType = createAsyncActionType(
   'POST_LOAD_TOPIC_POSTS',
 );

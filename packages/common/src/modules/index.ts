@@ -1,4 +1,5 @@
 export {
+  User,
   EmailCodeLoginForm,
   OauthForm,
   EmailCodeRegisterForm,
@@ -20,7 +21,7 @@ export {
   PostCommentReplyForm,
   PostTopic,
   Participator,
-  ParticiptorDetail,
+  ParticipatorDetail,
   ParticiptorPet,
   Post,
   PostImage,
@@ -53,6 +54,8 @@ export {
   useLoadUserQuestions,
   useLoadUserAnswers,
   useLoadUserCollectedPosts,
+  useLoadUserFollowed,
+  useLoadUserFollower,
   useLoadPostDetail,
   useLoadRecommendPosts,
   useRemovePost,

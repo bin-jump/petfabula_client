@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   RefreshControl,
+  useWindowDimensions,
 } from "react-native";
 import { Text, Button, Icon, useTheme, Divider } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
@@ -221,15 +222,33 @@ const UserContent = () => {
                 justifyContent: "space-between",
               }}
             >
-              <TextNumber
-                count={profile.followedCount}
-                text={t("user.followCount")}
-              />
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("SecondaryStack", {
+                    screen: "FollowList",
+                    params: { user: profile, initialTab: "Followed" },
+                  });
+                }}
+              >
+                <TextNumber
+                  count={profile.followedCount}
+                  text={t("user.followCount")}
+                />
+              </TouchableOpacity>
               {/* <Divider style={{ height: "100%", width: 1 }} /> */}
-              <TextNumber
-                count={profile.followerCount}
-                text={t("user.followerCount")}
-              />
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("SecondaryStack", {
+                    screen: "FollowList",
+                    params: { user: profile, initialTab: "Follower" },
+                  });
+                }}
+              >
+                <TextNumber
+                  count={profile.followerCount}
+                  text={t("user.followerCount")}
+                />
+              </TouchableOpacity>
               <TextNumber
                 count={profile.postCount}
                 text={t("user.postCount")}
@@ -346,12 +365,14 @@ const PostContentIconText = ({
   text,
   color,
   onPress,
+  width,
 }: {
   onPress: () => void;
   name: string;
   type: string;
   text: string;
   color: string;
+  width: number;
 }) => {
   const { theme } = useTheme();
 
@@ -359,7 +380,7 @@ const PostContentIconText = ({
     <TouchableOpacity
       onPress={onPress}
       style={{
-        minWidth: 60,
+        width,
         justifyContent: "center",
         alignItems: "center",
       }}
@@ -394,10 +415,16 @@ const PostContentIconText = ({
     </TouchableOpacity>
   );
 };
+
 const PostContent = () => {
+  const { currentUser } = useCurrentUser();
   const navigation = useNavigation();
   const { theme } = useTheme();
   const { t } = useTranslation();
+  const { width } = useWindowDimensions();
+
+  const PaddingHorizontal = 16;
+  const ItemWidth = (width - PaddingHorizontal * 2) / 4;
 
   return (
     <View
@@ -414,8 +441,9 @@ const PostContent = () => {
     >
       <View
         style={{
-          padding: 16,
-          justifyContent: "space-around",
+          paddingHorizontal: PaddingHorizontal,
+          paddingVertical: 16,
+          // justifyContent: "space-around",
           flexDirection: "row",
         }}
       >
@@ -423,6 +451,7 @@ const PostContent = () => {
           onPress={() => {
             navigation.navigate("UserActivity", { initial: "UserPosts" });
           }}
+          width={ItemWidth}
           name="ios-images"
           type="ionicon"
           text={t("user.userPost")}
@@ -434,6 +463,7 @@ const PostContent = () => {
               initial: "UserFavoritePosts",
             });
           }}
+          width={ItemWidth}
           name="star"
           type="ionicon"
           text={t("user.userfavouritePost")}
@@ -443,6 +473,7 @@ const PostContent = () => {
           onPress={() => {
             navigation.navigate("UserActivity", { initial: "UserQuestions" });
           }}
+          width={ItemWidth}
           name="chatbox-ellipses"
           type="ionicon"
           text={t("user.userQuestion")}
@@ -452,12 +483,49 @@ const PostContent = () => {
           onPress={() => {
             navigation.navigate("UserActivity", { initial: "UserAnswers" });
           }}
+          width={ItemWidth}
           name="chatbubble"
           type="ionicon"
           text={t("user.userAnswer")}
           color="#28d5bd"
         />
       </View>
+
+      {/* <View
+        style={{
+          paddingHorizontal: PaddingHorizontal,
+          paddingVertical: 16,
+          flexDirection: "row",
+        }}
+      >
+        <PostContentIconText
+          onPress={() => {
+            navigation.navigate("SecondaryStack", {
+              screen: "FollowList",
+              params: { user: currentUser, initialTab: "Followed" },
+            });
+          }}
+          width={ItemWidth}
+          name="person"
+          type="ionicon"
+          text={t("user.userFollowed")}
+          color="#8fb3fe"
+        />
+        <PostContentIconText
+          onPress={() => {
+            navigation.navigate("SecondaryStack", {
+              screen: "FollowList",
+              params: { user: currentUser, initialTab: "Follower" },
+            });
+          }}
+          width={ItemWidth}
+          name="people"
+          type="ionicon"
+          text={t("user.userFollower")}
+          color="#28d5bd"
+        />
+        
+      </View> */}
     </View>
   );
 };

@@ -28,7 +28,7 @@ import {
 import { useTranslation } from "react-i18next";
 import {
   Participator,
-  ParticiptorDetail,
+  ParticipatorDetail,
   Post,
   Question,
   AnswerWithQuestion,
@@ -312,10 +312,11 @@ const TextNumber = ({ text, count }: { count: number; text: string }) => {
   );
 };
 
-const UserPart = ({ profile }: { profile: ParticiptorDetail | null }) => {
+const UserPart = ({ profile }: { profile: ParticipatorDetail | null }) => {
   const { t } = useTranslation();
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
   const { theme } = useTheme();
+  const { currentUser } = useCurrentUser();
   const { followUser } = useFollowUser();
   const { unfollowUser } = useUnfollowUser();
 
@@ -361,15 +362,34 @@ const UserPart = ({ profile }: { profile: ParticiptorDetail | null }) => {
                   justifyContent: "space-between",
                 }}
               >
-                <TextNumber
-                  count={profile.followedCount}
-                  text={t("user.followCount")}
-                />
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.push("FollowList", {
+                      user: profile,
+                      initialTab: "Followed",
+                    });
+                  }}
+                >
+                  <TextNumber
+                    count={profile.followedCount}
+                    text={t("user.followCount")}
+                  />
+                </TouchableOpacity>
+
                 {/* <Divider style={{ height: "100%", width: 1 }} /> */}
-                <TextNumber
-                  count={profile.followerCount}
-                  text={t("user.followerCount")}
-                />
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.push("FollowList", {
+                      user: profile,
+                      initialTab: "Follower",
+                    });
+                  }}
+                >
+                  <TextNumber
+                    count={profile.followerCount}
+                    text={t("user.followerCount")}
+                  />
+                </TouchableOpacity>
                 <TextNumber
                   count={profile.postCount}
                   text={t("user.postCount")}
@@ -379,12 +399,13 @@ const UserPart = ({ profile }: { profile: ParticiptorDetail | null }) => {
               <View
                 style={{
                   flexDirection: "row",
-                  justifyContent: "space-between",
+                  // justifyContent: "space-between",
+                  justifyContent: "flex-end",
                   marginHorizontal: 8,
                   marginTop: 6,
                 }}
               >
-                <View
+                {/* <View
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
@@ -398,42 +419,46 @@ const UserPart = ({ profile }: { profile: ParticiptorDetail | null }) => {
                   >
                     {`${t("user.detail")} >>`}
                   </Text>
-                </View>
-
-                <Button
-                  loading={profile.followPending}
-                  containerStyle={{
-                    height: 36,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                  buttonStyle={{
-                    backgroundColor: profile.followed
-                      ? theme.colors?.grey4
-                      : theme.colors?.primary,
-                    height: 36,
-                    width: 140,
-                  }}
-                  titleStyle={{
-                    fontSize: 18,
-                    fontWeight: "bold",
-                    color: profile.followed
-                      ? theme.colors?.black
-                      : theme.colors?.white,
-                  }}
-                  title={
-                    !profile.followed
-                      ? t("user.followAction")
-                      : t("user.unfollowAction")
-                  }
-                  onPress={() => {
-                    if (profile.followed) {
-                      unfollowUser(profile.id);
-                    } else {
-                      followUser(profile.id);
+                </View> */}
+                {currentUser?.id != profile.id ? (
+                  <Button
+                    loading={profile.followPending}
+                    containerStyle={{
+                      flex: 1,
+                      height: 34,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                    style={{ flex: 1, alignSelf: "stretch" }}
+                    buttonStyle={{
+                      flex: 1,
+                      backgroundColor: profile.followed
+                        ? theme.colors?.grey4
+                        : theme.colors?.primary,
+                      height: 34,
+                      // width: 140,
+                    }}
+                    titleStyle={{
+                      fontSize: 18,
+                      fontWeight: "bold",
+                      color: profile.followed
+                        ? theme.colors?.black
+                        : theme.colors?.white,
+                    }}
+                    title={
+                      !profile.followed
+                        ? t("user.followAction")
+                        : t("user.unfollowAction")
                     }
-                  }}
-                />
+                    onPress={() => {
+                      if (profile.followed) {
+                        unfollowUser(profile.id);
+                      } else {
+                        followUser(profile.id);
+                      }
+                    }}
+                  />
+                ) : null}
               </View>
             </View>
           </View>

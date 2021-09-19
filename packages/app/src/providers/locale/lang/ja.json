@@ -23,7 +23,9 @@
     "cancel": "キャンセル",
     "date": "日付",
     "time": "時間",
-    "alertDelete": "削除しますか？"
+    "alertDelete": "削除しますか？",
+    "goback": "戻る",
+    "thanks": "ありがとうございます"
   },
 
   "mainTab": {
@@ -107,6 +109,9 @@
     "noPet": "またペットを登録していません",
     "userContent": "私のコンテンツ",
 
+    "userFollowed": "フォロー",
+    "userFollower": "フォロワー",
+
     "input": {
       "bioEdit": "ユーザー紹介を編集",
       "birthday": "誕生日",
@@ -134,7 +139,9 @@
     "notifyFollow": "フォロー通知",
     "feedback": "フィードバック",
     "logout": "ログアウト",
-    "alertLogout": "ログアウトしますか？"
+    "alertLogout": "ログアウトしますか？",
+
+    "gobackAfter": "{{second}}秒に戻ります"
   },
 
   "pet": {

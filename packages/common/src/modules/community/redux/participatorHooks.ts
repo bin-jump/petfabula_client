@@ -13,6 +13,10 @@ import {
   LoadMyPostsActionType,
   LoadMyFavoritePostsActionType,
   LoadMyQuestionsActionType,
+  LoadUserFollowedActionType,
+  LoadUserFollowerActionType,
+  LoadMyFollowedActionType,
+  LoadNyFollowerActionType,
 } from './actionTypes';
 import { ActionBase, fillCursorResponseData } from '../../shared';
 
@@ -365,6 +369,82 @@ export const useLoadUserAnswers = () => {
     userId,
     loadUserAnswers: boundAction,
     answers,
+    hasMore,
+    nextCursor,
+    pending,
+    initializing,
+    error,
+  };
+};
+
+export const useLoadUserFollowed = () => {
+  const dispatch = useDispatch();
+  const { userId, users, hasMore, nextCursor, pending, initializing, error } =
+    useSelector(
+      (state: AppState) => ({
+        userId: state.community.userFollowed.userId,
+        users: state.community.userFollowed.data,
+        hasMore: state.community.userFollowed.hasMore,
+        nextCursor: state.community.userFollowed.nextCursor,
+        pending: state.community.userFollowed.pending,
+        initializing: state.community.userFollowed.initializing,
+        error: state.community.userFollowed.error,
+      }),
+      shallowEqual,
+    );
+
+  const boundAction = useCallback(
+    (userId: number, cursor: object | null) => {
+      dispatch({
+        type: LoadUserFollowedActionType.BEGIN,
+        payload: { userId, cursor },
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    userId,
+    loadFollowed: boundAction,
+    users,
+    hasMore,
+    nextCursor,
+    pending,
+    initializing,
+    error,
+  };
+};
+
+export const useLoadUserFollower = () => {
+  const dispatch = useDispatch();
+  const { userId, users, hasMore, nextCursor, pending, initializing, error } =
+    useSelector(
+      (state: AppState) => ({
+        userId: state.community.userFollower.userId,
+        users: state.community.userFollower.data,
+        hasMore: state.community.userFollower.hasMore,
+        nextCursor: state.community.userFollower.nextCursor,
+        pending: state.community.userFollower.pending,
+        initializing: state.community.userFollower.initializing,
+        error: state.community.userFollower.error,
+      }),
+      shallowEqual,
+    );
+
+  const boundAction = useCallback(
+    (userId: number, cursor: object | null) => {
+      dispatch({
+        type: LoadUserFollowerActionType.BEGIN,
+        payload: { userId, cursor },
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    userId,
+    loadFollower: boundAction,
+    users,
     hasMore,
     nextCursor,
     pending,
@@ -781,6 +861,90 @@ export const participatorReducer = {
       ...state,
       userAnswers: {
         ...state.userAnswers,
+        pending: false,
+        initializing: false,
+        error: action.error,
+      },
+    };
+  },
+
+  // user followed
+  [LoadUserFollowedActionType.BEGIN]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      userFollowed: {
+        ...state.userFollowed,
+        initializing: action.payload.cursor == null,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [LoadUserFollowedActionType.SUCCESS]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      userFollowed: {
+        ...fillCursorResponseData(state.userFollowed, action),
+        userId: action.extra.userId,
+      },
+    };
+  },
+  [LoadUserFollowedActionType.FAILURE]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      userFollowed: {
+        ...state.userFollowed,
+        pending: false,
+        initializing: false,
+        error: action.error,
+      },
+    };
+  },
+
+  // user follower
+  [LoadUserFollowerActionType.BEGIN]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      userFollower: {
+        ...state.userFollower,
+        initializing: action.payload.cursor == null,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [LoadUserFollowerActionType.SUCCESS]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      userFollower: {
+        ...fillCursorResponseData(state.userFollower, action),
+        userId: action.extra.userId,
+      },
+    };
+  },
+  [LoadUserFollowerActionType.FAILURE]: (
+    state: CommunityState,
+    action: ActionBase,
+  ): CommunityState => {
+    return {
+      ...state,
+      userFollower: {
+        ...state.userFollower,
         pending: false,
         initializing: false,
         error: action.error,
