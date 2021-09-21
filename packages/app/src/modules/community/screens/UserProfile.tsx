@@ -48,12 +48,14 @@ import {
   useFirstFocusEffect,
   LoadingMoreIndicator,
   useRefocusEffect,
+  ActivityIndicator,
 } from "../../shared";
 import ParamTypes from "./ParamTypes";
 import PostItem from "../components/PostItem";
 import QuestionItem from "../components/QuestionItem";
 import AnswerWithQuestionItem from "../components/AnswerWithQuestionItem";
 import TabBar from "../components/TabBar";
+import { UserDetailSkeleton } from "../components/Skeletons";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -103,6 +105,10 @@ const UserPosts = forwardRef<FlatList, ListProps>((props, ref) => {
   useFirstFocusEffect(() => {
     loadUserPosts(userId, null);
   }, [loadUserPosts, userId]);
+
+  if (userId != postUserId) {
+    return <ActivityIndicator style={{ marginTop: 12 }} />;
+  }
 
   return (
     <AnimatedFlatList
@@ -160,6 +166,10 @@ const UserQuestions = forwardRef<FlatList, ListProps>((props, ref) => {
   useFirstFocusEffect(() => {
     loadUserQuestions(userId, null);
   }, [loadUserQuestions, userId]);
+
+  if (userId != questionUserId) {
+    return <ActivityIndicator style={{ marginTop: 12 }} />;
+  }
 
   return (
     <AnimatedFlatList
@@ -219,6 +229,10 @@ const UserAnswers = forwardRef<FlatList, ListProps>((props, ref) => {
     loadUserAnswers(userId, null);
   }, [userId, loadUserAnswers]);
 
+  if (userId != answerUserId) {
+    return <ActivityIndicator style={{ marginTop: 12 }} />;
+  }
+
   return (
     <AnimatedFlatList
       keyExtractor={keyExtractor}
@@ -274,6 +288,10 @@ const UserCollectedPosts = forwardRef<FlatList, ListProps>((props, ref) => {
     loadCollectedPosts(userId, null);
   }, [userId, loadCollectedPosts]);
 
+  if (userId != postUserId) {
+    return <ActivityIndicator style={{ marginTop: 12 }} />;
+  }
+
   return (
     <AnimatedFlatList
       keyExtractor={keyExtractor}
@@ -312,7 +330,13 @@ const TextNumber = ({ text, count }: { count: number; text: string }) => {
   );
 };
 
-const UserPart = ({ profile }: { profile: ParticipatorDetail | null }) => {
+const UserPart = ({
+  profile,
+  id,
+}: {
+  profile: ParticipatorDetail | null;
+  id: number;
+}) => {
   const { t } = useTranslation();
   const navigation = useNavigation<StackNavigationProp<any>>();
   const { theme } = useTheme();
@@ -337,10 +361,10 @@ const UserPart = ({ profile }: { profile: ParticipatorDetail | null }) => {
           />
         </TouchableWithoutFeedback>
         <View style={{ flex: 1, alignItems: "center" }}>
-          <Text h3>{profile?.name}</Text>
+          {profile?.id == id ? <Text h3>{profile?.name}</Text> : null}
         </View>
       </View>
-      {profile ? (
+      {profile?.id == id ? (
         <View style={{ paddingBottom: 12 }}>
           <View style={{ flexDirection: "row" }}>
             <Avatar
@@ -473,7 +497,9 @@ const UserPart = ({ profile }: { profile: ParticipatorDetail | null }) => {
             {profile.bio ? profile.bio : `${t("user.unsetBio")}...`}
           </Text>
         </View>
-      ) : null}
+      ) : (
+        <UserDetailSkeleton />
+      )}
     </View>
   );
 };
@@ -534,7 +560,7 @@ const PetItem = ({ pet }: { pet: Pet }) => {
 
 const UserPets = ({ userId }: { userId: number }) => {
   const { theme } = useTheme();
-  const { feederId, pets, loadPets } = useLoadUserPets();
+  const { feederId, pets, loadPets, pending } = useLoadUserPets();
   const { t } = useTranslation();
 
   useRefocusEffect(() => {
@@ -550,6 +576,14 @@ const UserPets = ({ userId }: { userId: number }) => {
   // useEffect(() => {
   //   loadPets(userId);
   // }, [userId]);
+
+  if (pending) {
+    return (
+      <View style={{ height: 60 }}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
 
   return (
     <ScrollView
@@ -653,7 +687,7 @@ const UserProfile = () => {
             padding: 16,
           }}
         >
-          <UserPart profile={profile} />
+          <UserPart profile={profile} id={id} />
         </View>
         {/* <Divider /> */}
 

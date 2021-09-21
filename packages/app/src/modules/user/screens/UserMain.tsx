@@ -26,9 +26,11 @@ import {
   toAgeMonth,
   daysTillNow,
   useFirstFocusEffect,
+  ActivityIndicator,
 } from "../../shared";
 import SettingContent from "../components/SettingContent";
 import UserLoginPlease from "../components/UserLoginPlease";
+import { UseContentSkeleton } from "../components/Skeletons";
 
 const PetAgeItem = ({ mili }: { mili: number }) => {
   const { theme } = useTheme();
@@ -260,7 +262,9 @@ const UserContent = () => {
             </View>
           </View>
         </View>
-      ) : null}
+      ) : (
+        <UseContentSkeleton />
+      )}
     </View>
   );
 };
@@ -320,8 +324,9 @@ const PetItem = ({ pet }: { pet: PetDetail }) => {
 const PetContent = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
-  const { loadPets, pets } = useLoadMyPets();
+  const { loadPets, pets, pending } = useLoadMyPets();
   const { currentUser } = useCurrentUser();
+  const navigation = useNavigation();
 
   useFirstFocusEffect(() => {
     if (currentUser) {
@@ -334,8 +339,8 @@ const PetContent = () => {
       style={{
         marginTop: 12,
         backgroundColor: theme.colors?.white,
-        justifyContent: "center",
-        height: 160,
+        // justifyContent: "center",
+        height: 180,
         shadowColor: theme.colors?.grey3,
         shadowOffset: { width: 2, height: 4 },
         shadowOpacity: 0.3,
@@ -343,18 +348,69 @@ const PetContent = () => {
         shadowRadius: 6,
       }}
     >
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{
-          justifyContent: "center",
-          alignItems: "center",
+      <Text
+        style={{
+          paddingLeft: 16,
+          marginTop: 6,
+          fontSize: 18,
+          color: theme.colors?.grey1,
         }}
-      >
-        {pets.map((item) => (
-          <PetItem key={item.id} pet={item} />
-        ))}
-      </ScrollView>
+      >{`私のペット`}</Text>
+      {!pending ? (
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            // marginTop: 16,
+            justifyContent: "center",
+            alignItems: "center",
+            paddingLeft: 16,
+          }}
+        >
+          {pets.length > 0 ? (
+            pets.map((item) => <PetItem key={item.id} pet={item} />)
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("CreateNew", {
+                  screen: "CreatePet",
+                });
+              }}
+              style={{
+                backgroundColor: theme.colors?.white,
+                // justifyContent: "center",
+                height: 120,
+                width: 120,
+                borderRadius: 12,
+                shadowColor: theme.colors?.grey3,
+                shadowOffset: { width: 2, height: 4 },
+                shadowOpacity: 0.3,
+                elevation: 2,
+                shadowRadius: 6,
+                paddingTop: 16,
+              }}
+            >
+              <Icon
+                size={36}
+                color={theme.colors?.black}
+                type="Ionicons"
+                name="add-circle-outline"
+              />
+              <Text
+                style={{
+                  textAlign: "center",
+                  marginTop: 16,
+                  fontWeight: "bold",
+                }}
+              >
+                {t("createNew.createPet")}
+              </Text>
+            </TouchableOpacity>
+          )}
+        </ScrollView>
+      ) : (
+        <ActivityIndicator />
+      )}
     </View>
   );
 };

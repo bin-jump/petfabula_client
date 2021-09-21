@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import { View, TouchableWithoutFeedback } from "react-native";
+import { View, TouchableWithoutFeedback, RefreshControl } from "react-native";
 import { useTheme, Text, Icon } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { useLoadTopicPosts } from "@petfabula/common";
-import { LoadingMoreIndicator } from "../../shared";
+import { LoadingMoreIndicator, ActivityIndicator } from "../../shared";
 import PostFlatList from "../components/PostFlatList";
 import ParamTypes from "./ParamTypes";
 
@@ -75,6 +75,15 @@ const TopicPostList = () => {
       </View>
       <PostFlatList
         contentContainerStyle={{ paddingTop: 10 }}
+        refreshControl={
+          <RefreshControl
+            // progressViewOffset={70}
+            refreshing={initializing}
+            onRefresh={() => {
+              loadTopicPosts(topicId, null);
+            }}
+          />
+        }
         posts={data}
         ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
         onEndReached={() => {

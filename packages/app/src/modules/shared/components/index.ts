@@ -15,3 +15,4 @@ export { default as DateTimeField } from "./DateTimeField";
 export { default as ButtonInputField } from "./ButtonInputField";
 export { default as BottomSheet, BottomSheetButton } from "./BottomSheet";
 export { default as ResourceNotFoundView } from "./ResourceNotFoundView";
+export { default as Skeleton } from "./Skeleton";

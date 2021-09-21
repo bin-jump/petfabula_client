@@ -26,11 +26,13 @@ import {
   AlertAction,
   PendingOverlay,
   useDidUpdateEffect,
+  ActivityIndicator,
 } from "../../shared";
 import ParamTypes from "./ParamTypes";
 import TabBar from "../components/TabBar";
 import PetPostList from "../components/PetPostList";
 import PetPostImageList from "../components/PetPostImageList";
+import { PetDetailSkeleton } from "../components/Skeletons";
 
 const Tabs = createMaterialTopTabNavigator();
 
@@ -247,7 +249,9 @@ const PetContent = ({ pet, petId }: { pet: Pet | null; petId: number }) => {
             {pet.bio}
           </Text>
         </View>
-      ) : null}
+      ) : (
+        <PetDetailSkeleton />
+      )}
     </View>
   );
 };

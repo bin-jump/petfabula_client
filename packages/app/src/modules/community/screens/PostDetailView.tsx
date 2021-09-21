@@ -52,10 +52,12 @@ import {
   PendingOverlay,
   useDidUpdateEffect,
   ResourceNotFoundView,
+  Skeleton,
 } from "../../shared";
 import ParamTypes from "./ParamTypes";
 import PostCommentList from "../components/PostCommentList";
 import RelatePetItem from "../components/RelatePetItem";
+import { PostDetailSkeleton } from "../components/Skeletons";
 
 const Footer = ({ post }: { post: PostDetail }) => {
   const { theme } = useTheme();
@@ -583,10 +585,12 @@ const PostDetailView = () => {
             <Footer post={postDetail} />
           </View>
         </View>
-      ) : null}
-      {pending && !(postDetail?.id == id) ? (
-        <ActivityIndicator color={theme.colors?.grey0} />
-      ) : null}
+      ) : (
+        <PostDetailSkeleton />
+      )}
+      {/* {pending && !(postDetail?.id == id) ? (
+       
+      ) : null} */}
     </View>
   );
 };

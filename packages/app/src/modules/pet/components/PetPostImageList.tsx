@@ -17,6 +17,7 @@ import {
   getMonthDateText,
   useRefocusEffect,
   useFirstFocusEffect,
+  ActivityIndicator,
 } from "../../shared";
 
 type ListItemType = {
@@ -129,6 +130,10 @@ const PetPostImages = ({ petId }: { petId: number }) => {
   const renderItem = useCallback<ListRenderItem<ListItemType>>(({ item }) => {
     return <RowItem item={item} />;
   }, []);
+
+  if (postPetId != petId) {
+    return <ActivityIndicator style={{ marginTop: 12 }} />;
+  }
 
   return (
     <FlatList

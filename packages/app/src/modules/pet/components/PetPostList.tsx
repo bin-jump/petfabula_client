@@ -17,6 +17,7 @@ import {
   getMonthDateText,
   useRefocusEffect,
   useFirstFocusEffect,
+  ActivityIndicator,
 } from "../../shared";
 
 type ShowDate = { showDate: boolean };
@@ -190,6 +191,10 @@ const PetPostList = ({ petId }: { petId: number }) => {
       loadPetPosts(petId, null);
     }
   }, [petId, postPetId, loadPetPosts]);
+
+  if (postPetId != petId) {
+    return <ActivityIndicator style={{ marginTop: 12 }} />;
+  }
 
   return (
     <FlatList

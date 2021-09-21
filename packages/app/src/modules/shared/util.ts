@@ -67,6 +67,21 @@ export const daysTillNow = (mili: number) => {
   return Math.floor(res);
 };
 
+export const parseUrlParams = (url: string): { [key: string]: string } => {
+  const queryParamIndex = url.indexOf("?");
+  if (queryParamIndex < 0) {
+    return {};
+  }
+  url = url.substring(queryParamIndex + 1);
+  const hashes = url.split("&");
+  return hashes.reduce((params, hash) => {
+    const split = hash.indexOf("=");
+    const key = hash.slice(0, split);
+    const val = hash.slice(split + 1);
+    return { ...params, [key]: decodeURIComponent(val) };
+  }, {});
+};
+
 export const imageSizeUrl = (
   url: string | undefined,
   sz: "LG" | "MD" | "SM"

@@ -23,6 +23,7 @@ import {
   BottomSheet,
   AlertAction,
   PendingOverlay,
+  ActivityIndicator,
 } from "../../shared";
 import {
   RecordBaseType,
@@ -227,6 +228,10 @@ const FeedRecordList = ({ petId }: { petId: number }) => {
     },
     []
   );
+
+  if (recordPetId != petId) {
+    return <ActivityIndicator style={{ marginTop: 12 }} />;
+  }
 
   return (
     <View style={{ flex: 1 }}>

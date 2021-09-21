@@ -24,6 +24,7 @@ import {
   BottomSheet,
   AlertAction,
   PendingOverlay,
+  ActivityIndicator,
 } from "../../shared";
 import {
   RecordBaseType,
@@ -233,6 +234,10 @@ const MedicalRecordList = ({ petId }: { petId: number }) => {
   const renderItem = useCallback<ListRenderItem<RecordItemType>>(({ item }) => {
     return <RecordListItem record={item} />;
   }, []);
+
+  if (recordPetId != petId) {
+    return <ActivityIndicator style={{ marginTop: 12 }} />;
+  }
 
   return (
     <View style={{ flex: 1 }}>

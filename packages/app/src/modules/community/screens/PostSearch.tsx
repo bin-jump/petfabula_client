@@ -14,6 +14,7 @@ import {
   AvatarField,
   milisecToAgo,
 } from "../../shared";
+import { PostSearchSkeleton } from "../components/Skeletons";
 
 const PostSearchItem = ({ post }: { post: Post }) => {
   const { theme } = useTheme();
@@ -128,6 +129,10 @@ const PostSearch = (props: { keyword: string }) => {
   const d = searchedWord == keyword ? posts : [];
 
   const keyExtractor = (item: Post) => item.id.toString();
+
+  if (searchedWord != keyword) {
+    return <PostSearchSkeleton />;
+  }
 
   return (
     <FlatList

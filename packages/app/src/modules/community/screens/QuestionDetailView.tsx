@@ -70,6 +70,7 @@ import {
 import ParamTypes from "./ParamTypes";
 import RelatePetItem from "../components/RelatePetItem";
 import AnswerList from "../components/AnswerList";
+import { QuestionDetailSkeleton } from "../components/Skeletons";
 
 const Footer = ({ question }: { question: QuestionDetail }) => {
   const { theme } = useTheme();
@@ -590,7 +591,9 @@ const QuestionDetailView = () => {
             <Footer question={question} />
           </View>
         </View>
-      ) : null}
+      ) : (
+        <QuestionDetailSkeleton />
+      )}
     </View>
   );
 };

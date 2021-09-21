@@ -50,7 +50,8 @@
     "topicSelect": "トピックを選択します",
     "petSelect": "関連ペットを選択します",
     "reportTitle": "問題報告",
-    "feedbackTitle": "フィードバック"
+    "feedbackTitle": "フィードバック",
+    "createPet": "ペット追加"
   },
 
   "search": {

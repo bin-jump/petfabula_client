@@ -18,7 +18,9 @@ import {
   LoadingMoreIndicator,
   AvatarField,
   milisecToAgo,
+  Image,
 } from "../../shared";
+import { QuestionSearchSkeleton } from "../components/Skeletons";
 
 const QuestionAnswerItem = ({ item }: { item: QuestionAnswerSearch }) => {
   const { theme } = useTheme();
@@ -86,6 +88,34 @@ const QuestionAnswerItem = ({ item }: { item: QuestionAnswerSearch }) => {
                 size={26}
               />
             </View>
+
+            <View style={{ flexDirection: "row", flex: 1, marginTop: 10 }}>
+              <Text
+                ellipsizeMode="tail"
+                // numberOfLines={post.images.length > 0 ? 3 : 9}
+                numberOfLines={4}
+                style={{
+                  flex: 1,
+                  fontSize: 18,
+                  marginBottom: 2,
+                }}
+              >
+                {item.content}
+              </Text>
+              {item.images.length > 0 ? (
+                <Image
+                  containerStyle={{
+                    marginLeft: 6,
+                    borderRadius: 6,
+                    marginBottom: 16,
+                  }}
+                  resizeMode="cover"
+                  style={{ width: 120, height: 100 }}
+                  source={{ uri: item.images[0]?.url }}
+                />
+              ) : null}
+            </View>
+
             <View style={{ alignItems: "flex-end" }}>
               <Text style={{ color: theme.colors?.grey1 }}>
                 {milisecToAgo(item.createdDate)}
@@ -123,6 +153,10 @@ const QuestionAnswerSearchView = ({ keyword }: { keyword: string }) => {
   const d = searchedWord == keyword ? questions : [];
 
   const keyExtractor = (item: QuestionAnswerSearch) => item.id.toString();
+
+  if (searchedWord != keyword) {
+    return <QuestionSearchSkeleton />;
+  }
 
   return (
     <FlatList
