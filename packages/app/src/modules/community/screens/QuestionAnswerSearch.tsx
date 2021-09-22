@@ -104,14 +104,14 @@ const QuestionAnswerItem = ({ item }: { item: QuestionAnswerSearch }) => {
               </Text>
               {item.images.length > 0 ? (
                 <Image
-                  containerStyle={{
+                  style={{
+                    width: 120,
+                    height: 100,
                     marginLeft: 6,
                     borderRadius: 6,
                     marginBottom: 16,
                   }}
-                  resizeMode="cover"
-                  style={{ width: 120, height: 100 }}
-                  source={{ uri: item.images[0]?.url }}
+                  uri={item.images[0]?.url}
                 />
               ) : null}
             </View>

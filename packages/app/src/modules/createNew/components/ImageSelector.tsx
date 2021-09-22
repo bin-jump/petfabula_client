@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity } from "react-native";
-import { useTheme, Icon, Overlay } from "react-native-elements";
+import { useTheme, Icon, Overlay, Image } from "react-native-elements";
 import { UploadImage, DisplayImage } from "@petfabula/common";
-import { ImageFile, changeExtName, getFileName, Image } from "../../shared";
+import { ImageFile, changeExtName, getFileName } from "../../shared";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 

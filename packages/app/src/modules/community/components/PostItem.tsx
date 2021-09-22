@@ -59,10 +59,8 @@ const PostItemFull = ({
         </Text>
         {post.images.length > 0 ? (
           <Image
-            containerStyle={{ width: "100%", borderRadius: 6 }}
-            resizeMode="cover"
-            style={{ height: 200 }}
-            source={{ uri: post.images[0]?.url }}
+            style={{ height: 200, borderRadius: 6 }}
+            uri={post.images[0]?.url}
           />
         ) : null}
 

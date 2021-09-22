@@ -125,7 +125,7 @@ const VoteNotificationItem = ({
             notification.images.length > 0 ? (
               <Image
                 style={{ width: 60, height: 60, borderRadius: 6 }}
-                source={{ uri: notification.images[0].url }}
+                uri={notification.images[0].url}
               />
             ) : null}
           </View>

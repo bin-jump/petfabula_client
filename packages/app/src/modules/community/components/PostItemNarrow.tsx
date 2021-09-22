@@ -105,17 +105,13 @@ const PostItemNarrow = ({
         <View>
           {post.images.length > 0 ? (
             <Image
-              containerStyle={{
-                paddingHorizontal: 2,
-                borderRadius: 6,
-              }}
-              resizeMode="cover"
               style={{
+                paddingHorizontal: 2,
                 borderRadius: 6,
                 width: width,
                 height: width / resolvePostImageHeightRatio(post) - 2,
               }}
-              source={{ uri: imageSizeUrl(post.images[0]?.url, "MD") }}
+              uri={post.images[0].url}
             />
           ) : null}
 

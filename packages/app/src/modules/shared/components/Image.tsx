@@ -1,13 +1,33 @@
 import React from "react";
-import { ActivityIndicator } from "react-native";
-import { Image as RNEImage, ImageProps } from "react-native-elements";
+import {
+  ActivityIndicator,
+  StyleProp,
+  ImageStyle,
+  Image as RNImage,
+} from "react-native";
+import { Image as CacheImage, ImageProps } from "./imagecache";
+import { emptyImage } from "../../../constants";
 
-const Image = (props: ImageProps & { sz?: "LG" | "MD" | "SM" }) => {
+export type Props = Omit<ImageProps, "uri" | "onError"> & {
+  uri: string;
+  sz?: "LG" | "MD" | "SM";
+  animated?: boolean;
+  animatedStyle?: StyleProp<ImageStyle>;
+};
+
+const Image = (props: Props) => {
+  const { uri } = props;
+
   return (
-    <RNEImage
+    <CacheImage
       //source={{ uri: image }}
+      onError={(e) => {
+        console.log("[CacheImage onError]", e);
+      }}
       {...props}
-      PlaceholderContent={<ActivityIndicator />}
+      // defaultSource={{ uri: RNImage.resolveAssetSource(emptyImage).uri }}
+      transitionDuration={500}
+      // PlaceholderContent={<ActivityIndicator />}
     />
   );
 };

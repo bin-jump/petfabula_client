@@ -73,16 +73,16 @@ const RowItem = ({ item }: { item: ListItemType }) => {
         onPress={() => {
           navigation.push("PostDetailView", { id: left.postId });
         }}
-        source={{ uri: left.url }}
-        containerStyle={{ flex: 1, margin: 1 }}
+        uri={left.url}
+        style={{ flex: 1, margin: 1 }}
       />
       {middle ? (
         <Image
           onPress={() => {
             navigation.push("PostDetailView", { id: middle.postId });
           }}
-          source={{ uri: middle.url }}
-          containerStyle={{ flex: 1, margin: 1 }}
+          uri={middle.url}
+          style={{ flex: 1, margin: 1 }}
         />
       ) : (
         <View style={{ flex: 1 }} />
@@ -92,8 +92,8 @@ const RowItem = ({ item }: { item: ListItemType }) => {
           onPress={() => {
             navigation.push("PostDetailView", { id: right.postId });
           }}
-          source={{ uri: right.url }}
-          containerStyle={{ flex: 1, margin: 1 }}
+          uri={right.url}
+          style={{ flex: 1, margin: 1 }}
         />
       ) : (
         <View style={{ flex: 1 }} />

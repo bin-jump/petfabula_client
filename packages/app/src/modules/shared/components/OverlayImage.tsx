@@ -5,6 +5,7 @@ import {
   useWindowDimensions,
   TouchableOpacity,
   ImageStyle,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { Overlay, Icon } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -184,19 +185,19 @@ const OverlayImage = (
           setVisiable(false);
         }}
       />
-      {/* <TouchableWithoutFeedback
+      <TouchableWithoutFeedback
         onPress={() => {
           setVisiable(true);
         }}
-      > */}
-      <Image
-        onPress={() => {
-          setVisiable(true);
-        }}
-        style={[{ width, height }, imageStyle]}
-        source={{ uri: image.url }}
-      />
-      {/* </TouchableWithoutFeedback> */}
+      >
+        <Image
+          onPress={() => {
+            setVisiable(true);
+          }}
+          style={[{ width, height }, imageStyle]}
+          uri={image.url}
+        />
+      </TouchableWithoutFeedback>
     </View>
   );
 };

@@ -12,6 +12,7 @@ import Animated, {
   useAnimatedGestureHandler,
   withTiming,
 } from "react-native-reanimated";
+import Image from "./Image";
 
 // const FullScreenImage = ({
 //   image,
@@ -223,7 +224,8 @@ const SingleImage = ({
   return (
     <PinchGestureHandler onGestureEvent={gestureHandler}>
       <Animated.View style={{ width: "100%", overflow: "visible" }}>
-        <Animated.Image
+        <Image
+          animated
           style={[
             {
               resizeMode: "contain",
@@ -232,9 +234,9 @@ const SingleImage = ({
               width: width,
               height: width / ratio,
             },
-            animatedStyle,
           ]}
-          source={{ uri: image.url }}
+          animatedStyle={animatedStyle}
+          uri={image.url}
         />
       </Animated.View>
     </PinchGestureHandler>

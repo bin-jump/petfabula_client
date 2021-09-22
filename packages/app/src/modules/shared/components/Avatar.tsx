@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleProp, ViewStyle } from "react-native";
+import { StyleProp, View } from "react-native";
 import {
   Avatar as RneAvatar,
   AvatarProps,
@@ -8,6 +8,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 import { UploadImage } from "@petfabula/common";
+import Image from "./Image";
 
 const Avatar = (
   props: {
@@ -80,26 +81,38 @@ const Avatar = (
   };
 
   return (
-    <RneAvatar
-      icon={avatarIcon}
-      rounded={!squred}
-      size={size}
-      title={title}
-      source={{ uri: source?.uri }}
-      containerStyle={[
-        {
-          borderWidth: 1,
-          borderColor: theme.colors?.grey2,
-          backgroundColor: theme.colors?.grey2,
-        },
-        props.containerStyle,
-      ]}
-      onPress={onPress}
-    >
-      {editProps ? (
-        <RneAvatar.Accessory onPress={openImagePickerAsync} size={size / 3} />
-      ) : null}
-    </RneAvatar>
+    <View>
+      {!source?.uri || editProps ? (
+        <RneAvatar
+          icon={avatarIcon}
+          rounded={!squred}
+          size={size}
+          title={title}
+          source={{ uri: source?.uri }}
+          containerStyle={[
+            {
+              borderWidth: 1,
+              borderColor: theme.colors?.grey2,
+              backgroundColor: theme.colors?.grey2,
+            },
+            props.containerStyle,
+          ]}
+          onPress={onPress}
+        >
+          {editProps ? (
+            <RneAvatar.Accessory
+              onPress={openImagePickerAsync}
+              size={size / 3}
+            />
+          ) : null}
+        </RneAvatar>
+      ) : (
+        <Image
+          uri={source.uri}
+          style={{ width: size, height: size, borderRadius: size }}
+        />
+      )}
+    </View>
   );
 };
 

@@ -33,10 +33,9 @@ const QuestionItem = ({
         >
           {question.images.map((item, index) => (
             <Image
-              resizeMode="cover"
               key={index}
               style={{ width: 80, height: 80, marginRight: 8 }}
-              source={{ uri: item.url }}
+              uri={item.url}
             />
           ))}
         </View>
@@ -59,8 +58,7 @@ const QuestionItem = ({
         </View>
 
         <Image
-          resizeMode="cover"
-          source={{ uri: question.images[0].url }}
+          uri={question.images[0].url}
           style={{ width: 80, height: 80, marginRight: 8 }}
         />
       </View>
