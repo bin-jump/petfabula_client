@@ -146,7 +146,9 @@ const FullScreenImage = ({
               />
             </TouchableOpacity>
           </View>
-          <Animated.Image
+          <Image
+            animated
+            animatedStyle={animatedStyle}
             style={[
               {
                 resizeMode: "contain",
@@ -155,9 +157,9 @@ const FullScreenImage = ({
                 width: w,
                 height: h,
               },
-              animatedStyle,
             ]}
-            source={{ uri: image.url }}
+            uri={image.url}
+            sz="LG"
           />
         </Animated.View>
       </PinchGestureHandler>
@@ -196,7 +198,7 @@ const OverlayImage = (
           }}
           style={[{ width, height }, imageStyle]}
           uri={image.url}
-          sz="LG"
+          sz="MD"
         />
       </TouchableWithoutFeedback>
     </View>

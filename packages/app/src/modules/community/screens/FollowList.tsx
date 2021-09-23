@@ -9,7 +9,6 @@ import {
   View,
   StyleProp,
   ViewStyle,
-  FlatList,
   useWindowDimensions,
   ScrollView,
   ListRenderItem,
@@ -21,7 +20,6 @@ import { useTheme, Text, Divider, Icon, Button } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import Animated from "react-native-reanimated";
 import {
   createMaterialTopTabNavigator,
   MaterialTopTabBarProps,
@@ -39,6 +37,8 @@ import {
   LoadingMoreIndicator,
   useRefocusEffect,
   AvatarField,
+  FlatList,
+  ActivityIndicator,
 } from "../../shared";
 import ParamTypes from "./ParamTypes";
 import TabBar from "../components/TabBar";
@@ -105,6 +105,7 @@ const Followed = ({ id }: { id: number }) => {
       keyExtractor={keyExtractor}
       data={users}
       renderItem={renderItem}
+      pending={initializing}
       ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
       onEndReached={() => {
         if (hasMore && !pending && !error && userId) {
@@ -153,6 +154,7 @@ const Follower = ({ id }: { id: number }) => {
       keyExtractor={keyExtractor}
       data={users}
       renderItem={renderItem}
+      pending={initializing}
       ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
       onEndReached={() => {
         if (hasMore && !pending && !error && userId) {

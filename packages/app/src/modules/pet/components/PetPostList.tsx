@@ -1,10 +1,5 @@
 import React, { useCallback } from "react";
-import {
-  View,
-  FlatList,
-  ListRenderItem,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { View, ListRenderItem, TouchableWithoutFeedback } from "react-native";
 import { useTheme, Text } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -18,6 +13,7 @@ import {
   useRefocusEffect,
   useFirstFocusEffect,
   ActivityIndicator,
+  FlatList,
 } from "../../shared";
 
 type ShowDate = { showDate: boolean };
@@ -167,6 +163,7 @@ const PetPostList = ({ petId }: { petId: number }) => {
   const { theme } = useTheme();
   const {
     petId: postPetId,
+    initializing,
     posts,
     loadPetPosts,
     hasMore,
@@ -203,6 +200,7 @@ const PetPostList = ({ petId }: { petId: number }) => {
         paddingTop: 20,
         paddingBottom: 40,
       }}
+      pending={initializing}
       keyExtractor={keyExtractor}
       data={makeListData(posts)}
       renderItem={renderItem}

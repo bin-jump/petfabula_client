@@ -1,5 +1,5 @@
 import React, { forwardRef, memo } from "react";
-import { View, TouchableWithoutFeedback, FlatList } from "react-native";
+import { View, TouchableWithoutFeedback } from "react-native";
 import { useTheme, Icon, Text } from "react-native-elements";
 import { useFocusEffect } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -13,6 +13,7 @@ import {
   IconCount,
   AvatarField,
   milisecToAgo,
+  FlatList,
 } from "../../shared";
 import { PostSearchSkeleton } from "../components/Skeletons";
 
@@ -140,7 +141,7 @@ const PostSearch = (props: { keyword: string }) => {
       keyExtractor={keyExtractor}
       renderItem={renderItem}
       data={d}
-      ListHeaderComponent={initializing ? <ActivityIndicator /> : null}
+      pending={initializing}
       contentContainerStyle={{ paddingTop: 6, paddingBottom: bottom }}
       ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
       onEndReached={() => {

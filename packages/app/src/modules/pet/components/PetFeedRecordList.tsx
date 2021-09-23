@@ -1,10 +1,5 @@
 import React, { useRef, useMemo, useCallback } from "react";
-import {
-  View,
-  FlatList,
-  ListRenderItem,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { View, ListRenderItem, TouchableWithoutFeedback } from "react-native";
 import { useTheme, Text, Icon, Divider } from "react-native-elements";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
@@ -24,6 +19,7 @@ import {
   AlertAction,
   PendingOverlay,
   ActivityIndicator,
+  FlatList,
 } from "../../shared";
 import {
   RecordBaseType,
@@ -208,6 +204,7 @@ const FeedRecordList = ({ petId }: { petId: number }) => {
   const {
     petId: recordPetId,
     pending,
+    initializing,
     loadRecords,
     records,
     hasMore,
@@ -245,6 +242,7 @@ const FeedRecordList = ({ petId }: { petId: number }) => {
         contentContainerStyle={{
           paddingBottom: 40,
         }}
+        pending={initializing}
         keyExtractor={keyExtractor}
         data={makeListData(records)}
         renderItem={renderItem}

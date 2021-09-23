@@ -290,6 +290,10 @@
     }
   },
 
+  "component": {
+    "emptyList": "データがありません"
+  },
+
   "validation": {
     "common": {
       "emptyValue": "入力してください",

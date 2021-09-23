@@ -4,7 +4,7 @@ import { useTheme, Text, Icon } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { useLoadTopicPosts } from "@petfabula/common";
-import { LoadingMoreIndicator, ActivityIndicator } from "../../shared";
+import { LoadingMoreIndicator } from "../../shared";
 import PostFlatList from "../components/PostFlatList";
 import ParamTypes from "./ParamTypes";
 
@@ -83,6 +83,19 @@ const TopicPostList = () => {
               loadTopicPosts(topicId, null);
             }}
           />
+        }
+        ListEmptyComponent={
+          <View style={{ paddingTop: 120 }}>
+            <Icon
+              name="file-tray"
+              type="ionicon"
+              color={theme.colors?.grey3}
+              size={70}
+            />
+            <Text
+              style={{ textAlign: "center", color: theme.colors?.grey1 }}
+            >{`データがありません`}</Text>
+          </View>
         }
         posts={data}
         ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}

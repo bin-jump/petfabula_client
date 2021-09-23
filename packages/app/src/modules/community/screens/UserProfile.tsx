@@ -9,7 +9,6 @@ import {
   View,
   StyleProp,
   ViewStyle,
-  FlatList,
   useWindowDimensions,
   ScrollView,
   ListRenderItem,
@@ -49,6 +48,7 @@ import {
   LoadingMoreIndicator,
   useRefocusEffect,
   ActivityIndicator,
+  FlatList,
 } from "../../shared";
 import ParamTypes from "./ParamTypes";
 import PostItem from "../components/PostItem";
@@ -59,13 +59,9 @@ import { UserDetailSkeleton } from "../components/Skeletons";
 
 const Tab = createMaterialTopTabNavigator();
 
-const AnimatedFlatList = Animated.createAnimatedComponent(
-  FlatList
-) as typeof FlatList;
-
 export type ListProps = { userId: number };
 
-const UserPosts = forwardRef<FlatList, ListProps>((props, ref) => {
+const UserPosts = (props: ListProps) => {
   const { userId } = props;
   const {
     userId: postUserId,
@@ -111,11 +107,11 @@ const UserPosts = forwardRef<FlatList, ListProps>((props, ref) => {
   }
 
   return (
-    <AnimatedFlatList
+    <FlatList
       keyExtractor={keyExtractor}
-      ref={ref}
       {...props}
       data={posts}
+      pending={initializing}
       renderItem={renderItem}
       ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
       onEndReached={() => {
@@ -126,9 +122,9 @@ const UserPosts = forwardRef<FlatList, ListProps>((props, ref) => {
       onEndReachedThreshold={0.2}
     />
   );
-});
+};
 
-const UserQuestions = forwardRef<FlatList, ListProps>((props, ref) => {
+const UserQuestions = (props: ListProps) => {
   const { userId } = props;
   const {
     userId: questionUserId,
@@ -172,12 +168,12 @@ const UserQuestions = forwardRef<FlatList, ListProps>((props, ref) => {
   }
 
   return (
-    <AnimatedFlatList
+    <FlatList
       keyExtractor={keyExtractor}
-      ref={ref}
       {...props}
       data={questions}
       renderItem={renderItem}
+      pending={initializing}
       ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
       onEndReached={() => {
         if (hasMore && !pending && !error) {
@@ -187,9 +183,9 @@ const UserQuestions = forwardRef<FlatList, ListProps>((props, ref) => {
       onEndReachedThreshold={0.2}
     />
   );
-});
+};
 
-const UserAnswers = forwardRef<FlatList, ListProps>((props, ref) => {
+const UserAnswers = (props: ListProps) => {
   const { userId } = props;
   const {
     userId: answerUserId,
@@ -234,10 +230,10 @@ const UserAnswers = forwardRef<FlatList, ListProps>((props, ref) => {
   }
 
   return (
-    <AnimatedFlatList
+    <FlatList
       keyExtractor={keyExtractor}
-      ref={ref}
       {...props}
+      pending={initializing}
       data={answers}
       renderItem={renderItem}
       ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
@@ -249,9 +245,9 @@ const UserAnswers = forwardRef<FlatList, ListProps>((props, ref) => {
       onEndReachedThreshold={0.2}
     />
   );
-});
+};
 
-const UserCollectedPosts = forwardRef<FlatList, ListProps>((props, ref) => {
+const UserCollectedPosts = (props: ListProps) => {
   const { userId } = props;
   const {
     userId: postUserId,
@@ -293,10 +289,10 @@ const UserCollectedPosts = forwardRef<FlatList, ListProps>((props, ref) => {
   }
 
   return (
-    <AnimatedFlatList
+    <FlatList
       keyExtractor={keyExtractor}
-      ref={ref}
       {...props}
+      pending={initializing}
       data={posts}
       renderItem={renderItem}
       ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
@@ -308,7 +304,7 @@ const UserCollectedPosts = forwardRef<FlatList, ListProps>((props, ref) => {
       onEndReachedThreshold={0.2}
     />
   );
-});
+};
 
 const TextNumber = ({ text, count }: { count: number; text: string }) => {
   const { theme } = useTheme();

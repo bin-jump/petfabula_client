@@ -3,7 +3,6 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
-  FlatList,
   TextInput,
   ListRenderItem,
 } from "react-native";
@@ -11,6 +10,7 @@ import { Text, useTheme, Icon, Divider, Button } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import { useLoadCities, City } from "@petfabula/common";
+import { FlatList } from "../../shared";
 
 const cityComparator = (x: City, y: City) => {
   if (x.prefectureName != y.prefectureName) {
@@ -86,7 +86,7 @@ const CitySelect = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation();
-  const { loadCities, cities } = useLoadCities();
+  const { loadCities, cities, pending } = useLoadCities();
   const [prefecture, setPrefecture] = useState<string>("");
   const [search, setSearch] = useState<string>("");
 
@@ -194,6 +194,7 @@ const CitySelect = () => {
         style={{ backgroundColor: theme.colors?.white }}
         contentContainerStyle={{ paddingBottom: 30 }}
         data={cityList}
+        pending={pending}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
       />

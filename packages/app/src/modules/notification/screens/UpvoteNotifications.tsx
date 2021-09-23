@@ -4,7 +4,6 @@ import {
   View,
   TouchableWithoutFeedback,
   ListRenderItem,
-  FlatList,
 } from "react-native";
 import { Text, useTheme, Icon, Divider } from "react-native-elements";
 import { useTranslation } from "react-i18next";
@@ -19,6 +18,7 @@ import {
   Image,
   milisecToAgo,
   LoadingMoreIndicator,
+  FlatList,
 } from "../../shared";
 
 const resolveAction = (notification: VoteNotification) => {
@@ -172,6 +172,7 @@ const UpvoteNotifications = () => {
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         data={notifications}
+        pending={initializing}
         ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
         onEndReached={() => {
           if (hasMore && !pending && !error) {

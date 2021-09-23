@@ -13,6 +13,7 @@ import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { useLoadPetBreeds, PetBreed } from "@petfabula/common";
+import { ActivityIndicator } from "../../shared";
 
 const breedComparator = (x: PetBreed, y: PetBreed) => {
   if (x.name == "その他") {
@@ -95,7 +96,7 @@ const PetBreedSelect = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation();
-  const { loadPetBreeds, petBreeds } = useLoadPetBreeds();
+  const { loadPetBreeds, petBreeds, pending } = useLoadPetBreeds();
   const [category, setCategory] = useState<string>("DOG");
   const [search, setSearch] = useState<string>("");
 
@@ -192,6 +193,7 @@ const PetBreedSelect = () => {
       <Divider />
 
       <FlatList
+        ListHeaderComponent={pending ? <ActivityIndicator /> : null}
         style={{ backgroundColor: theme.colors?.white }}
         contentContainerStyle={{ paddingBottom: 30 }}
         data={breedList}

@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { ListRenderItem, FlatList, StyleSheet } from "react-native";
+import { ListRenderItem, StyleSheet } from "react-native";
 import { useTheme, Text, Divider, Icon } from "react-native-elements";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -17,7 +17,11 @@ import {
   useLoadMyAnswers,
   useLoadMyFavoritePosts,
 } from "@petfabula/common";
-import { useFirstFocusEffect, LoadingMoreIndicator } from "../../shared";
+import {
+  useFirstFocusEffect,
+  LoadingMoreIndicator,
+  FlatList,
+} from "../../shared";
 import ParamTypes from "./ParamTypes";
 import {
   PostItem,
@@ -69,6 +73,7 @@ const UserPosts = () => {
       keyExtractor={keyExtractor}
       data={posts}
       renderItem={renderItem}
+      pending={initializing}
       ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
       onEndReached={() => {
         if (hasMore && !pending && !error) {
@@ -119,6 +124,7 @@ const UserQuestions = () => {
       contentContainerStyle={styles.listContainer}
       keyExtractor={keyExtractor}
       data={questions}
+      pending={initializing}
       renderItem={renderItem}
       ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
       onEndReached={() => {
@@ -174,6 +180,7 @@ const UserAnswers = () => {
       contentContainerStyle={styles.listContainer}
       keyExtractor={keyExtractor}
       data={answers}
+      pending={initializing}
       renderItem={renderItem}
       ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
       onEndReached={() => {
@@ -226,6 +233,7 @@ const UserFavoritePosts = () => {
       contentContainerStyle={styles.listContainer}
       keyExtractor={keyExtractor}
       data={posts}
+      pending={initializing}
       renderItem={renderItem}
       ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
       onEndReached={() => {

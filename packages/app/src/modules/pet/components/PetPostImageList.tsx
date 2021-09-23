@@ -1,10 +1,5 @@
 import React, { useCallback } from "react";
-import {
-  View,
-  FlatList,
-  ListRenderItem,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { View, ListRenderItem, TouchableWithoutFeedback } from "react-native";
 import { useTheme, Text } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -18,6 +13,7 @@ import {
   useRefocusEffect,
   useFirstFocusEffect,
   ActivityIndicator,
+  FlatList,
 } from "../../shared";
 
 type ListItemType = {
@@ -112,6 +108,7 @@ const PetPostImages = ({ petId }: { petId: number }) => {
     petId: postPetId,
     images,
     loadPetPostImages,
+    initializing,
     hasMore,
     pending,
     error,
@@ -148,6 +145,7 @@ const PetPostImages = ({ petId }: { petId: number }) => {
       keyExtractor={keyExtractor}
       data={makeListData(images)}
       renderItem={renderItem}
+      pending={initializing}
       ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
       onEndReached={() => {
         if (hasMore && !pending && !error) {

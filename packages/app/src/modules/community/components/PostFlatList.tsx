@@ -9,6 +9,7 @@ import {
 import Animated from "react-native-reanimated";
 import { Post } from "@petfabula/common";
 import PostItem, { usePostWidth, resovePostItemHeight } from "./PostItemNarrow";
+import { EmptyListComponent } from "../../shared";
 
 type ItemWrapper = Post & { postHeight: number; marginTop: number };
 type RowWrapper = {
@@ -159,6 +160,7 @@ const PostFlatList = forwardRef<FlatList, Props>((props, ref) => {
           </View>
         );
       }}
+      ListEmptyComponent={<EmptyListComponent />}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
       {...props}

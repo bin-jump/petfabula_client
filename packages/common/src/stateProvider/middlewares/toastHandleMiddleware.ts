@@ -5,7 +5,7 @@ import { NotificationCheckActionType } from '../../modules/notification/redux/ac
 
 // const SILENT_FAILURE_ACTIONS: ReduxAsyncAction[] = [NotificationCheckActionType];
 
-const slientFailureActionTypes = new Set(NotificationCheckActionType.FAILURE);
+const slientFailureActionTypes = new Set([NotificationCheckActionType.FAILURE]);
 
 interface ToastHandler {
   handleSuccess?: (msg: string) => void;

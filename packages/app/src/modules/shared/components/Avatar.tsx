@@ -9,6 +9,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 import { UploadImage } from "@petfabula/common";
 import Image from "./Image";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 const Avatar = (
   props: {
@@ -107,13 +108,13 @@ const Avatar = (
           ) : null}
         </RneAvatar>
       ) : (
-        <TouchableOpacity onPress={onPress}>
+        <TouchableWithoutFeedback onPress={onPress}>
           <Image
             uri={source.uri}
             style={{ width: size, height: size, borderRadius: size }}
             sz="SM"
           />
-        </TouchableOpacity>
+        </TouchableWithoutFeedback>
       )}
     </View>
   );

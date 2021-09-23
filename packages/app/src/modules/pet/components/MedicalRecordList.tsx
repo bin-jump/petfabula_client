@@ -1,7 +1,6 @@
 import React, { useRef, useMemo, useCallback } from "react";
 import {
   View,
-  FlatList,
   ListRenderItem,
   TouchableWithoutFeedback,
   StyleSheet,
@@ -17,7 +16,7 @@ import {
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import {
   useFirstFocusEffect,
-  toDateText,
+  FlatList,
   OverlayImage,
   LoadingMoreIndicator,
   BottomSheetButton,
@@ -217,6 +216,7 @@ const MedicalRecordList = ({ petId }: { petId: number }) => {
   const {
     petId: recordPetId,
     pending,
+    initializing,
     loadRecords,
     records,
     hasMore,
@@ -251,6 +251,7 @@ const MedicalRecordList = ({ petId }: { petId: number }) => {
         contentContainerStyle={{
           paddingBottom: 40,
         }}
+        pending={initializing}
         keyExtractor={keyExtractor}
         data={makeListData(records)}
         renderItem={renderItem}

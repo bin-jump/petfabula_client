@@ -4,7 +4,6 @@ import {
   View,
   TouchableWithoutFeedback,
   ListRenderItem,
-  FlatList,
 } from "react-native";
 import { Text, useTheme, Icon, Divider } from "react-native-elements";
 import { useTranslation } from "react-i18next";
@@ -14,7 +13,12 @@ import {
   useReadSystemNotifications,
   SystemNotification,
 } from "@petfabula/common";
-import { toDateText, LoadingMoreIndicator } from "../../shared";
+import {
+  toDateText,
+  LoadingMoreIndicator,
+  FlatList,
+  ActivityIndicator,
+} from "../../shared";
 
 const SystemNotificationItem = ({
   notification,
@@ -105,6 +109,7 @@ const SystemNotifications = () => {
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         data={notifications}
+        pending={initializing}
         ListFooterComponent={hasMore ? <LoadingMoreIndicator /> : null}
         onEndReached={() => {
           if (hasMore && !pending && !error) {

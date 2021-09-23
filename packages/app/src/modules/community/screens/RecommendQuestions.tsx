@@ -8,7 +8,11 @@ import {
 import { Question, useLoadRecommendsQuestions } from "@petfabula/common";
 import Animated from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
-import { useFirstFocusEffect, LoadingMoreIndicator } from "../../shared";
+import {
+  useFirstFocusEffect,
+  LoadingMoreIndicator,
+  EmptyListComponent,
+} from "../../shared";
 import QuestionItem from "../components/QuestionItem";
 
 const AnimatedFlatList = Animated.createAnimatedComponent(
@@ -62,6 +66,7 @@ const RecommendQuestions = forwardRef<FlatList, Props>((props, ref) => {
           }}
         />
       }
+      ListEmptyComponent={<EmptyListComponent />}
       keyExtractor={keyExtractor}
       ref={ref}
       {...props}
