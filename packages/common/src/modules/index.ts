@@ -186,6 +186,8 @@ export {
   resolveTargetNotFoundError,
   resolveResponseFormError,
   checkFailedResponse,
+  tokenStorageRegister,
+  TokenStorage,
   DisplayImage,
   UploadImage,
 } from './shared';

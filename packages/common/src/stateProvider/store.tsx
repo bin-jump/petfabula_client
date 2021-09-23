@@ -14,6 +14,7 @@ import { documentRootSaga } from '../modules/document';
 import { logHandleMiddleware } from './middlewares/logHandleMiddleware';
 import { toastHandleMiddleware } from './middlewares/toastHandleMiddleware';
 import { loginAssertMiddleware } from './middlewares/loginAssertMiddleware';
+import { logoutHandleMiddleware } from './middlewares/logoutHandleMiddleware';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -21,6 +22,7 @@ const middlewares = [
   logHandleMiddleware,
   loginAssertMiddleware,
   toastHandleMiddleware,
+  logoutHandleMiddleware,
   sagaMiddleware,
 ];
 

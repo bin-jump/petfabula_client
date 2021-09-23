@@ -1,9 +1,15 @@
 import axios from 'axios';
 import { connectionConfig } from './config';
 import { ApiResponse, ResponseError } from './types';
+import {
+  authenticationResponseFilter,
+  authenticationRequestFilter,
+} from './tokenInterceptors';
 
 axios.defaults.baseURL = connectionConfig.baseUrl;
 axios.defaults.withCredentials = true;
+axios.interceptors.request.use(authenticationRequestFilter);
+axios.interceptors.response.use(authenticationResponseFilter);
 
 const axiosRequest = (
   url: string,
@@ -86,6 +92,7 @@ export const apiRequest = async ({
   try {
     const response = await request;
     const responseData = response.data;
+    // console.log('[response.headers]', response.headers);
     // console.log('responseData', JSON.stringify(responseData));
     return { ...responseData, success: true };
   } catch (error) {

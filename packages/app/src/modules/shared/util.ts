@@ -3,6 +3,15 @@ import { TFunction } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
 import "moment/locale/ja";
+import { logoutHandleRegister, LogoutHandler } from "@petfabula/common";
+
+// clear storage on logout
+const logoutHandler: LogoutHandler = {
+  handle() {
+    AsyncStorage.clear();
+  },
+};
+logoutHandleRegister.register(logoutHandler);
 
 moment.locale("ja");
 

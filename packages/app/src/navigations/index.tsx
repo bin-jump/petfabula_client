@@ -12,7 +12,10 @@ import { useTheme, Icon, Text } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-root-toast";
+import * as SecureStore from "expo-secure-store";
 import {
+  TokenStorage,
+  tokenStorageRegister,
   useCurrentUser,
   registerToastHandler,
   registerLoginReqiureHandler,
@@ -30,8 +33,25 @@ import SecondaryStack from "./SecondaryStack";
 const Tabs = createBottomTabNavigator();
 const TopStack = createStackNavigator();
 
+const tokenStorage: TokenStorage = {
+  async saveToken(key: string, token: string) {
+    await SecureStore.setItemAsync(key, token);
+  },
+  async getToken(key: string) {
+    const t = await SecureStore.getItemAsync(key);
+    return t ? t : null;
+  },
+  async removeToken(key: string) {
+    await SecureStore.deleteItemAsync(key);
+  },
+};
+
 const AppScreen = () => {
   const { theme } = useTheme();
+
+  useEffect(() => {
+    tokenStorageRegister.register(tokenStorage);
+  }, [tokenStorage, tokenStorageRegister]);
 
   return (
     <NavigationContainer
