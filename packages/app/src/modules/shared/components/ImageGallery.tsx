@@ -237,6 +237,7 @@ const SingleImage = ({
           ]}
           animatedStyle={animatedStyle}
           uri={image.url}
+          sz="LG"
         />
       </Animated.View>
     </PinchGestureHandler>

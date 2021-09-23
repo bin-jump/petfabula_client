@@ -86,9 +86,9 @@ const Item = ({ item }: { item: PostItem }) => {
 
         {item.images.length > 0 ? (
           <Image
-            containerStyle={{ borderRadius: 6 }}
-            style={{ width: 100, height: 100 }}
-            source={{ uri: item.images[0].url }}
+            style={{ width: 100, height: 100, borderRadius: 6 }}
+            uri={item.images[0].url}
+            sz="MD"
           />
         ) : null}
       </View>

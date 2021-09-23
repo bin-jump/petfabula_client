@@ -75,6 +75,7 @@ const RowItem = ({ item }: { item: ListItemType }) => {
         }}
         uri={left.url}
         style={{ flex: 1, margin: 1 }}
+        sz="MD"
       />
       {middle ? (
         <Image
@@ -83,6 +84,7 @@ const RowItem = ({ item }: { item: ListItemType }) => {
           }}
           uri={middle.url}
           style={{ flex: 1, margin: 1 }}
+          sz="MD"
         />
       ) : (
         <View style={{ flex: 1 }} />
@@ -94,6 +96,7 @@ const RowItem = ({ item }: { item: ListItemType }) => {
           }}
           uri={right.url}
           style={{ flex: 1, margin: 1 }}
+          sz="MD"
         />
       ) : (
         <View style={{ flex: 1 }} />

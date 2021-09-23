@@ -109,6 +109,7 @@
     "unsetBio": "まだ自己紹介がありません",
     "noPet": "またペットを登録していません",
     "userContent": "私のコンテンツ",
+    "myPets": "私のペット",
 
     "userFollowed": "フォロー",
     "userFollower": "フォロワー",
@@ -141,6 +142,8 @@
     "feedback": "フィードバック",
     "logout": "ログアウト",
     "alertLogout": "ログアウトしますか？",
+    "cacheClear": "キャッシュクリア",
+    "alertCacheClear": "キャッシュをクリアしますか？",
 
     "gobackAfter": "{{second}}秒に戻ります"
   },

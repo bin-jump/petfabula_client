@@ -64,14 +64,15 @@ const PostSearchItem = ({ post }: { post: Post }) => {
           </Text>
           {post.images.length > 0 ? (
             <Image
-              containerStyle={{
+              style={{
+                width: 120,
+                height: 100,
                 marginLeft: 6,
                 borderRadius: 6,
                 marginBottom: 16,
               }}
-              resizeMode="cover"
-              style={{ width: 120, height: 100 }}
-              source={{ uri: post.images[0]?.url }}
+              uri={post.images[0]?.url}
+              sz="MD"
             />
           ) : null}
         </View>

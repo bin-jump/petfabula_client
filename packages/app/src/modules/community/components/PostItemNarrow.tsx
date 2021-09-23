@@ -8,7 +8,7 @@ import { useTheme, Text } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import { Post } from "@petfabula/common";
-import { IconCount, AvatarField, Image, imageSizeUrl } from "../../shared";
+import { IconCount, AvatarField, Image } from "../../shared";
 
 const LINE_HEIGHT = 20;
 const INFO_HEIGHT = 70;
@@ -112,6 +112,7 @@ const PostItemNarrow = ({
                 height: width / resolvePostImageHeightRatio(post) - 2,
               }}
               uri={post.images[0].url}
+              sz="MD"
             />
           ) : null}
 

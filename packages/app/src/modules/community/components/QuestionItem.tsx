@@ -36,6 +36,7 @@ const QuestionItem = ({
               key={index}
               style={{ width: 80, height: 80, marginRight: 8 }}
               uri={item.url}
+              sz="SM"
             />
           ))}
         </View>

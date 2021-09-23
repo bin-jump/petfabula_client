@@ -43,6 +43,7 @@ export async function authenticationResponseFilter(
 }
 
 export async function authenticationRequestFilter(config: AxiosRequestConfig) {
+  // race here, but should be fine
   if (!tokenStore.checked && tokenStorage.instance) {
     const token = await tokenStorage.instance.getToken(TOKEN_STORAGE_KEY);
     tokenStore.token = token;

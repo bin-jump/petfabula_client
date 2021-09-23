@@ -289,7 +289,7 @@ const PetItem = ({ pet }: { pet: PetDetail }) => {
           height: 130,
           width: 200,
           padding: 10,
-          marginHorizontal: 16,
+          marginLeft: 16,
           backgroundColor: theme.colors?.white,
           borderRadius: 10,
           shadowColor: theme.colors?.grey2,
@@ -355,7 +355,7 @@ const PetContent = () => {
           fontSize: 18,
           color: theme.colors?.grey1,
         }}
-      >{`私のペット`}</Text>
+      >{`${t("user.myPets")}`}</Text>
       {!pending ? (
         <ScrollView
           horizontal
@@ -364,7 +364,6 @@ const PetContent = () => {
             // marginTop: 16,
             justifyContent: "center",
             alignItems: "center",
-            paddingLeft: 16,
           }}
         >
           {pets.length > 0 ? (

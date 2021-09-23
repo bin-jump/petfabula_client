@@ -112,6 +112,7 @@ const QuestionAnswerItem = ({ item }: { item: QuestionAnswerSearch }) => {
                     marginBottom: 16,
                   }}
                   uri={item.images[0]?.url}
+                  sz="MD"
                 />
               ) : null}
             </View>

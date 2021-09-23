@@ -8,15 +8,29 @@ import {
 import { Image as CacheImage, ImageProps } from "./imagecache";
 import { emptyImage } from "../../../constants";
 
+type Size = "LG" | "MD" | "SM";
+
+const sizedUri = (uri: string, sz?: Size) => {
+  if (!sz || uri.length <= 3) {
+    return uri;
+  }
+  if (uri.charAt(uri.length - 3) == "!") {
+    return uri;
+  }
+
+  return `${uri}!${sz.toLowerCase()}`;
+};
+
 export type Props = Omit<ImageProps, "uri" | "onError"> & {
   uri: string;
-  sz?: "LG" | "MD" | "SM";
+  sz?: Size;
   animated?: boolean;
   animatedStyle?: StyleProp<ImageStyle>;
 };
 
 const Image = (props: Props) => {
-  const { uri } = props;
+  const { uri, sz } = props;
+  const sizeUri = sizedUri(uri, sz);
 
   return (
     <CacheImage
@@ -27,6 +41,7 @@ const Image = (props: Props) => {
       {...props}
       // defaultSource={{ uri: RNImage.resolveAssetSource(emptyImage).uri }}
       transitionDuration={500}
+      uri={sizeUri}
       // PlaceholderContent={<ActivityIndicator />}
     />
   );

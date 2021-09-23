@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   ScrollView,
@@ -30,7 +30,21 @@ import {
   ActivityIndicator,
   useDidUpdateEffect,
   AlertAction,
+  CacheManager,
+  useIsMounted,
 } from "../../shared";
+
+const cacheSizeText = (size: number) => {
+  const gb = Math.floor(size / (1024 * 1024 * 1024));
+  const remain = size % (1024 * 1024 * 1024);
+  const mb = (remain / (1024 * 1024)).toFixed(1);
+
+  if (gb == 0) {
+    return `${mb} MB`;
+  }
+
+  return `${gb} GB ${mb} MbB`;
+};
 
 const Setting = () => {
   const { theme } = useTheme();
@@ -46,6 +60,11 @@ const Setting = () => {
     setting,
     pending: loadNotifySettingPending,
   } = useLoadMyNotifySetting();
+  const { isMounted } = useIsMounted();
+  const [cacheStatus, setCacheStatus] = useState({
+    cacheSize: "",
+    pending: false,
+  });
   const { currentUser } = useCurrentUser();
   const { updateNotifySetting } = useLoadUpdateNotifySetting();
   const { logout, logoutResult } = useLogout();
@@ -74,6 +93,15 @@ const Setting = () => {
       setNotifySetting(setting);
     }
   }, [setting]);
+
+  useEffect(() => {
+    setCacheStatus({ ...cacheStatus, pending: true });
+    CacheManager.getCacheSize().then((value) => {
+      if (isMounted.current) {
+        setCacheStatus({ pending: false, cacheSize: cacheSizeText(value) });
+      }
+    });
+  }, []);
 
   const handleAnswerCommentChange = () => {
     const val = {
@@ -156,6 +184,57 @@ const Setting = () => {
             onValueChange={handleFollowChange}
           />
         </View>
+      </View>
+
+      <View
+        style={{
+          paddingVertical: 6,
+          marginTop: 12,
+          paddingHorizontal: 16,
+          backgroundColor: theme.colors?.white,
+          shadowColor: theme.colors?.grey3,
+          shadowOffset: { width: 2, height: 4 },
+          shadowOpacity: 0.3,
+          elevation: 2,
+          shadowRadius: 6,
+        }}
+      >
+        <TouchableWithoutFeedback
+          onPress={() => {
+            // resetNavigationState()
+            AlertAction.AlertWithMessage(t, "setting.alertCacheClear", () => {
+              setCacheStatus({ ...cacheStatus, pending: true }),
+                CacheManager.clearCache().then(() => {
+                  if (isMounted.current) {
+                    setCacheStatus({
+                      cacheSize: cacheSizeText(0),
+                      pending: false,
+                    });
+                  }
+                });
+            });
+          }}
+        >
+          <View style={styles.settingItem}>
+            <View style={styles.settingTextContainer}>
+              <Text>
+                <Text style={[styles.settingText]}>{`${t(
+                  "setting.cacheClear"
+                )}  `}</Text>
+                <Text
+                  style={[styles.settingText, { color: theme.colors?.grey1 }]}
+                >{`${cacheStatus.cacheSize} `}</Text>
+              </Text>
+              {cacheStatus.pending ? <ActivityIndicator /> : null}
+            </View>
+            <Icon
+              type="entypo"
+              name="chevron-right"
+              color={theme.colors?.grey3}
+              size={24}
+            />
+          </View>
+        </TouchableWithoutFeedback>
       </View>
 
       <View

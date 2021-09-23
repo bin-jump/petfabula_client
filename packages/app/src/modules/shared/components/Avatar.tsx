@@ -110,6 +110,7 @@ const Avatar = (
         <Image
           uri={source.uri}
           style={{ width: size, height: size, borderRadius: size }}
+          sz="SM"
         />
       )}
     </View>

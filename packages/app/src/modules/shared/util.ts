@@ -91,20 +91,35 @@ export const parseUrlParams = (url: string): { [key: string]: string } => {
   }, {});
 };
 
-export const imageSizeUrl = (
-  url: string | undefined,
-  sz: "LG" | "MD" | "SM"
-) => {
-  if (!url) {
-    return url;
-  }
+// export const imageSizeUrl = (
+//   url: string | undefined,
+//   sz: "LG" | "MD" | "SM"
+// ) => {
+//   if (!url) {
+//     return url;
+//   }
 
-  return `${url}!${sz.toLowerCase()}`;
-};
+//   return `${url}!${sz.toLowerCase()}`;
+// };
 
 export class AlertAction {
   static AlertDelele(t: TFunction<"translation">, action: () => void) {
     Alert.alert(t("common.alertDelete"), "", [
+      {
+        text: t("common.cancel"),
+        // onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      { text: t("common.ok"), onPress: action },
+    ]);
+  }
+
+  static AlertWithMessage(
+    t: TFunction<"translation">,
+    messageKey: string,
+    action: () => void
+  ) {
+    Alert.alert(t(messageKey), "", [
       {
         text: t("common.cancel"),
         // onPress: () => console.log("Cancel Pressed"),

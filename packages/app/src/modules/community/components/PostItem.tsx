@@ -61,6 +61,7 @@ const PostItemFull = ({
           <Image
             style={{ height: 200, borderRadius: 6 }}
             uri={post.images[0]?.url}
+            sz="MD"
           />
         ) : null}
 
