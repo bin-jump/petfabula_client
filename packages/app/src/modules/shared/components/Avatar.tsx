@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleProp, View } from "react-native";
+import { StyleProp, View, TouchableOpacity } from "react-native";
 import {
   Avatar as RneAvatar,
   AvatarProps,
@@ -107,11 +107,13 @@ const Avatar = (
           ) : null}
         </RneAvatar>
       ) : (
-        <Image
-          uri={source.uri}
-          style={{ width: size, height: size, borderRadius: size }}
-          sz="SM"
-        />
+        <TouchableOpacity onPress={onPress}>
+          <Image
+            uri={source.uri}
+            style={{ width: size, height: size, borderRadius: size }}
+            sz="SM"
+          />
+        </TouchableOpacity>
       )}
     </View>
   );
