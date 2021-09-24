@@ -244,7 +244,7 @@ const PostFormContent = ({
 
   useDidUpdateEffect(() => {
     if (result) {
-      navigation.navigate("TabScreen");
+      navigation.goBack();
     }
   }, [result]);
 

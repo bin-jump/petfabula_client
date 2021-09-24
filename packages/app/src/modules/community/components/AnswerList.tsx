@@ -509,10 +509,10 @@ const AnswerItem = ({
 };
 
 const AnswerList = ({
-  id,
+  questionId,
   question,
 }: {
-  id: number;
+  questionId: number;
   question: QuestionDetail;
 }) => {
   const { theme } = useTheme();
@@ -520,6 +520,7 @@ const AnswerList = ({
   const { t } = useTranslation();
   const {
     loadQuestionAnswers,
+    questionId: answerQuestionId,
     answers,
     initializing,
     pending: answerPending,
@@ -529,19 +530,25 @@ const AnswerList = ({
   const { pending: removeAnswerCommentPending } = useRemoveAnswerComment();
 
   useFirstFocusEffect(() => {
-    loadQuestionAnswers(id, null);
-  }, [loadQuestionAnswers, id]);
+    loadQuestionAnswers(questionId, null);
+  }, [loadQuestionAnswers, questionId]);
 
   return (
     <View>
       <PendingOverlay
         pending={removeAnswerPending || removeAnswerCommentPending}
       />
-      {answers.length > 0 ? (
+      {answerQuestionId != questionId && (
+        <View style={{ height: 180, backgroundColor: theme.colors?.white }}>
+          <ActivityIndicator />
+        </View>
+      )}
+      {answers.length > 0 &&
+        answerQuestionId == questionId &&
         answers.map((item) => {
           return <AnswerItem key={item.id} answer={item} question={question} />;
-        })
-      ) : (
+        })}
+      {answers.length == 0 && answerQuestionId == questionId && (
         <View
           style={{
             height: 180,

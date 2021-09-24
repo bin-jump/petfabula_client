@@ -1,8 +1,6 @@
 import React from "react";
 import { View, TouchableWithoutFeedback } from "react-native";
-import { useTheme, Icon, Text } from "react-native-elements";
-import { useNavigation } from "@react-navigation/native";
-import { useTranslation } from "react-i18next";
+import { useTheme, Text } from "react-native-elements";
 import { Post } from "@petfabula/common";
 import { Image, IconCount, AvatarField, milisecToAgo } from "../../shared";
 
@@ -14,8 +12,6 @@ const PostItemFull = ({
   onPress?: (post: Post) => void;
 }) => {
   const { theme } = useTheme();
-  const { t } = useTranslation();
-  const navigation = useNavigation();
 
   return (
     <TouchableWithoutFeedback

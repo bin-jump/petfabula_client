@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   ActivityIndicator,
   StyleProp,
@@ -34,7 +34,6 @@ const Image = (props: Props) => {
 
   return (
     <CacheImage
-      //source={{ uri: image }}
       onError={(e) => {
         console.log("[CacheImage onError]", e);
       }}
@@ -42,7 +41,6 @@ const Image = (props: Props) => {
       // defaultSource={{ uri: RNImage.resolveAssetSource(emptyImage).uri }}
       transitionDuration={500}
       uri={sizeUri}
-      // PlaceholderContent={<ActivityIndicator />}
     />
   );
 };

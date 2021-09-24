@@ -113,37 +113,52 @@ export type Props = Omit<FlatListProps<RowWrapper>, "renderItem" | "data"> & {
   posts: Post[];
 };
 
+const ListRow = ({ item }: { item: RowWrapper }) => {
+  return (
+    <View
+      style={[
+        styles.viewRow,
+        { justifyContent: !item.itemLeft ? "flex-end" : "flex-start" },
+      ]}
+    >
+      {item.itemLeft ? (
+        <PostItem
+          post={item.itemLeft}
+          height={item.itemLeft.postHeight}
+          marginTop={item.itemLeft.marginTop}
+        />
+      ) : (
+        <View style={{ height: 20, width: 100 }} />
+      )}
+      {item.itemRight ? (
+        <PostItem
+          post={item.itemRight}
+          height={item.itemRight.postHeight}
+          marginTop={item.itemRight.marginTop}
+        />
+      ) : null}
+    </View>
+  );
+};
+
+class CellView extends React.Component<any, any> {
+  render() {
+    return (
+      <View {...this.props} style={{ marginTop: this.props.item.marginTop }}>
+        {this.props.children}
+      </View>
+    );
+  }
+}
+
 const PostFlatList = forwardRef<FlatList, Props>((props, ref) => {
   const { width: postWidth } = usePostWidth();
   const posts = props.posts;
 
   const keyExtractor = (item: RowWrapper) => item.id.toString();
+
   const renderItem = useCallback<ListRenderItem<RowWrapper>>(
-    ({ item }) => (
-      <View
-        style={[
-          styles.viewRow,
-          { justifyContent: !item.itemLeft ? "flex-end" : "flex-start" },
-        ]}
-      >
-        {item.itemLeft ? (
-          <PostItem
-            post={item.itemLeft}
-            height={item.itemLeft.postHeight}
-            marginTop={item.itemLeft.marginTop}
-          />
-        ) : (
-          <View style={{ height: 20, width: 100 }} />
-        )}
-        {item.itemRight ? (
-          <PostItem
-            post={item.itemRight}
-            height={item.itemRight.postHeight}
-            marginTop={item.itemRight.marginTop}
-          />
-        ) : null}
-      </View>
-    ),
+    ({ item }) => <ListRow item={item} />,
     []
   );
 
@@ -153,13 +168,15 @@ const PostFlatList = forwardRef<FlatList, Props>((props, ref) => {
     <AnimatedFlatList
       ref={ref}
       data={d}
-      CellRendererComponent={({ children, item, ...props }) => {
-        return (
-          <View {...props} style={{ marginTop: item.marginTop }}>
-            {children}
-          </View>
-        );
-      }}
+      // CellRendererComponent={({ children, item, ...props }) => {
+      //   return (
+      //     <View {...props} style={{ marginTop: item.marginTop }}>
+      //       {children}
+      //     </View>
+      //   );
+      // }}
+
+      CellRendererComponent={CellView}
       ListEmptyComponent={<EmptyListComponent />}
       renderItem={renderItem}
       keyExtractor={keyExtractor}

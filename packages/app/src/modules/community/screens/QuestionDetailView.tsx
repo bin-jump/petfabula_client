@@ -574,7 +574,7 @@ const QuestionDetailView = () => {
               >{`${t("question.answerCount")} ${question.answerCount}`}</Text>
               <Divider />
 
-              <AnswerList id={id} question={question} />
+              <AnswerList questionId={id} question={question} />
             </View>
           </Animated.ScrollView>
 

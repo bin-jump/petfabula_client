@@ -21,18 +21,26 @@ import { ActionBase, UploadImage, fillCursorResponseData } from '../../shared';
 
 export const useLoadQuestionAnswers = () => {
   const dispatch = useDispatch();
-  const { answers, initializing, hasMore, nextCursor, pending, error } =
-    useSelector(
-      (state: AppState) => ({
-        answers: state.community.questionAnswers.data,
-        hasMore: state.community.questionAnswers.hasMore,
-        nextCursor: state.community.questionAnswers.nextCursor,
-        pending: state.community.questionAnswers.pending,
-        initializing: state.community.questionAnswers.initializing,
-        error: state.community.questionAnswers.error,
-      }),
-      shallowEqual,
-    );
+  const {
+    questionId,
+    answers,
+    initializing,
+    hasMore,
+    nextCursor,
+    pending,
+    error,
+  } = useSelector(
+    (state: AppState) => ({
+      questionId: state.community.questionAnswers.questionId,
+      answers: state.community.questionAnswers.data,
+      hasMore: state.community.questionAnswers.hasMore,
+      nextCursor: state.community.questionAnswers.nextCursor,
+      pending: state.community.questionAnswers.pending,
+      initializing: state.community.questionAnswers.initializing,
+      error: state.community.questionAnswers.error,
+    }),
+    shallowEqual,
+  );
 
   const boundAction = useCallback(
     (questionId: number, cursor: object | null) => {
@@ -46,6 +54,7 @@ export const useLoadQuestionAnswers = () => {
 
   return {
     loadQuestionAnswers: boundAction,
+    questionId,
     answers,
     hasMore,
     nextCursor,

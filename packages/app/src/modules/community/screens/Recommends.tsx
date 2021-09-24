@@ -39,7 +39,7 @@ const Recommends = forwardRef<FlatList, ListProps>((props, ref) => {
   //   if (posts.length == 0 && !pending) {
   //     loadRecommendPosts(null);
   //   }
-  // });
+  // })
 
   return (
     <PostFlatList

@@ -8,7 +8,7 @@ import { logoutHandleRegister, LogoutHandler } from "@petfabula/common";
 // clear storage on logout
 const logoutHandler: LogoutHandler = {
   handle() {
-    AsyncStorage.clear();
+    AsyncStorage.getAllKeys().then((keys) => AsyncStorage.multiRemove(keys));
   },
 };
 logoutHandleRegister.register(logoutHandler);

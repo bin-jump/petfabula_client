@@ -70,6 +70,9 @@ const PostItemNarrow = ({
   const { theme } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation();
+  if (!post) {
+    return <View style={{ height: 20, width: 100 }} />;
+  }
 
   return (
     <View
