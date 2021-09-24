@@ -2,6 +2,7 @@ import React, { useRef, useCallback, useState, useMemo } from "react";
 import { View, TouchableWithoutFeedback, TouchableOpacity } from "react-native";
 import { useTheme, Text, Divider, Button, Icon } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useTranslation } from "react-i18next";
 import Animated, {
@@ -100,7 +101,7 @@ const CommentItem = ({
   answer: Answer;
 }) => {
   const { theme } = useTheme();
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
   const { t } = useTranslation();
   const { removeAnswerComment } = useRemoveAnswerComment();
   const { currentUser } = useCurrentUser();
@@ -173,6 +174,11 @@ const CommentItem = ({
       </BottomSheet>
 
       <AvatarField
+        onAvatarClick={() => {
+          navigation.push("UserProfile", {
+            id: answerComment.participator.id,
+          });
+        }}
         name={answerComment.participator.name}
         size={24}
         nameStyle={{
@@ -216,6 +222,8 @@ const CommentItem = ({
   );
 };
 
+const LINE_THRESHOLD = 6;
+
 const AnswerItem = ({
   answer,
   question,
@@ -223,8 +231,9 @@ const AnswerItem = ({
   answer: Answer;
   question: QuestionDetail;
 }) => {
+  const [showFull, setShowFull] = useState({ full: true, set: false });
   const { theme } = useTheme();
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
   const { t } = useTranslation();
   const { currentUser } = useCurrentUser();
   const { loadAnswerComments } = useLoadAnswerComments();
@@ -256,6 +265,22 @@ const AnswerItem = ({
       ],
     };
   });
+
+  const onTextLayout = useCallback(
+    (e) => {
+      if (!showFull.set) {
+        setShowFull({
+          full: e.nativeEvent.lines.length <= LINE_THRESHOLD,
+          set: true,
+        });
+      }
+    },
+    [showFull]
+  );
+
+  const showFullAnswer = useCallback(() => {
+    setShowFull({ ...showFull, full: true });
+  }, [showFull]);
 
   const renderLoadMore = useCallback(() => {
     if (
@@ -353,6 +378,11 @@ const AnswerItem = ({
       </BottomSheet>
 
       <AvatarField
+        onAvatarClick={() => {
+          navigation.push("UserProfile", {
+            id: answer.participator.id,
+          });
+        }}
         style={{ marginBottom: 8 }}
         name={answer.participator.name}
         size={28}
@@ -395,7 +425,24 @@ const AnswerItem = ({
         })}
       </View>
 
-      <Text style={{ fontSize: 18 }}>{answer.content}</Text>
+      <Text
+        numberOfLines={showFull.full ? undefined : LINE_THRESHOLD}
+        onTextLayout={onTextLayout}
+        style={{ fontSize: 18 }}
+      >
+        {answer.content}
+      </Text>
+      {!showFull.full && (
+        <Text
+          onPress={showFullAnswer}
+          style={{
+            marginTop: 3,
+            color: theme.colors?.grey1,
+            fontWeight: "bold",
+          }}
+        >{`[${t("question.showAll")}]`}</Text>
+      )}
+
       <View
         style={{
           marginTop: 8,

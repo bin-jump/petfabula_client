@@ -266,7 +266,8 @@
     "recommends": "おすすめ",
     "answerCount": "回答数",
     "writeAnswer": "回答を書く",
-    "commentToAnswer": "回答にコメント"
+    "commentToAnswer": "回答にコメント",
+    "showAll": "続きを読む"
   },
 
   "notification": {
