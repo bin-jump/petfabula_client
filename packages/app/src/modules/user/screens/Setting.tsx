@@ -70,24 +70,24 @@ const Setting = () => {
   const { updateNotifySetting } = useLoadUpdateNotifySetting();
   const { logout, pending: logoutPending } = useLogout();
 
-  const resetNavigationState = () => {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: "TabScreen" }],
-      })
-    );
-  };
+  // const resetNavigationState = () => {
+  //   navigation.dispatch(
+  //     CommonActions.reset({
+  //       index: 0,
+  //       routes: [{ name: "TabScreen" }],
+  //     })
+  //   );
+  // };
 
   useEffect(() => {
     loadNotifySetting();
   }, []);
 
-  useDidUpdateEffect(() => {
-    if (!currentUser) {
-      resetNavigationState();
-    }
-  }, [currentUser]);
+  // useDidUpdateEffect(() => {
+  //   if (!currentUser) {
+  //     resetNavigationState();
+  //   }
+  // }, [currentUser]);
 
   useEffect(() => {
     if (setting) {

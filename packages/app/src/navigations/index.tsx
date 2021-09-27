@@ -5,6 +5,7 @@ import {
   NavigationContainer,
   DefaultTheme,
   useNavigation,
+  CommonActions,
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
@@ -21,6 +22,7 @@ import {
   registerLoginReqiureHandler,
   useCheckNotifications,
 } from "@petfabula/common";
+import { usePrevious } from "../modules/shared";
 import { LoginRequire } from "../modules/aspect";
 import AuthenticaionScreen from "../modules/authentication";
 import CommunityMain from "../modules/community";
@@ -221,6 +223,21 @@ const TabScreen = () => {
       // navigation.navigate("AuthenticaionScreen");
     },
   });
+
+  // reset state if change got logout state
+  const previousCurrentUser = usePrevious(currentUser);
+
+  useEffect(() => {
+    if (previousCurrentUser && !currentUser) {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: "CommunityMain" }],
+        })
+      );
+    }
+  }, [previousCurrentUser, currentUser]);
+
   // register toast related to redux action
   registerToastHandler({
     handleSuccess: (msg: string) =>

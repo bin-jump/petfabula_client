@@ -53,9 +53,9 @@ export const toastHandleMiddleware: Middleware<Dispatch> =
       } else if (actionBase.error?.type == 'AUTHENTICATION_REQUIRED') {
         handler.handleFailure('error.authenticationRequired');
         // force logout out of dated login state
-        //dispatch({ type: LogoutActionType.SUCCESS });
-        // clear hole state
-        action = { type: LogoutActionType.SUCCESS };
+        dispatch({ type: LogoutActionType.SUCCESS });
+        // just clear the whole state
+        // action = { type: LogoutActionType.SUCCESS };
       } else if (message) {
         handler.handleFailure(message);
       }
