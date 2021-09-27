@@ -33,33 +33,42 @@ const TabBar: FC<Props> = ({ onIndexChange, ...props }) => {
       tabStyle={{
         paddingBottom: 18,
       }}
-      renderIndicator={(route: any) => {
-        if (!route.getTabWidth()) {
-          return null;
-        }
-        return (
-          <View
-            style={{
-              marginTop: 2,
-              width: route.getTabWidth(),
-              height: "100%",
-              left: route.navigationState.index * route.getTabWidth(),
-              alignItems: "center",
-              justifyContent: "flex-end",
-              paddingBottom: 8,
-            }}
-          >
-            <View
-              style={{
-                width: "30%",
-                backgroundColor: theme.colors?.primary,
-                borderRadius: 3,
-                height: 3,
-              }}
-            ></View>
-          </View>
-        );
+      indicatorContainerStyle={{
+        justifyContent: "center",
+        alignItems: "center",
       }}
+      indicatorStyle={{
+        backgroundColor: theme.colors?.primary,
+        // width: 20,
+        // left: 20,
+      }}
+      // renderIndicator={(route: any) => {
+      //   // if (!route.getTabWidth()) {
+      //   //   return null;
+      //   // }
+      //   return (
+      //     <View
+      //       style={{
+      //         marginTop: 2,
+      //         // width: route.getTabWidth(),
+      //         height: "100%",
+      //         // left: route.navigationState.index * route.getTabWidth(),
+      //         alignItems: "center",
+      //         justifyContent: "flex-end",
+      //         paddingBottom: 8,
+      //       }}
+      //     >
+      //       <View
+      //         style={{
+      //           width: "30%",
+      //           backgroundColor: theme.colors?.primary,
+      //           borderRadius: 3,
+      //           height: 3,
+      //         }}
+      //       ></View>
+      //     </View>
+      //   );
+      // }}
       {...props}
       style={{
         backgroundColor: theme.colors?.white,

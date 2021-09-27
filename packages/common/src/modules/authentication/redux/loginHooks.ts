@@ -52,7 +52,10 @@ export const useEmailCodeLogin = () => {
 
   const boundAction = useCallback(
     (form: EmailCodeLoginForm) => {
-      dispatch({ type: EmailCodeLoginActionType.BEGIN, payload: form });
+      const d = new FormData();
+      d.append('email', form.email);
+      d.append('code', form.code);
+      dispatch({ type: EmailCodeLoginActionType.BEGIN, payload: d });
     },
     [dispatch],
   );

@@ -65,35 +65,47 @@ const RowItem = ({ item }: { item: ListItemType }) => {
         flex: 1,
       }}
     >
-      <Image
+      <TouchableWithoutFeedback
         onPress={() => {
           navigation.push("PostDetailView", { id: left.postId });
         }}
-        uri={left.url}
-        style={{ flex: 1, margin: 1 }}
-        sz="MD"
-      />
+      >
+        <Image uri={left.url} style={{ flex: 1, margin: 1 }} sz="MD" />
+      </TouchableWithoutFeedback>
+
       {middle ? (
-        <Image
+        <TouchableWithoutFeedback
           onPress={() => {
             navigation.push("PostDetailView", { id: middle.postId });
           }}
-          uri={middle.url}
-          style={{ flex: 1, margin: 1 }}
-          sz="MD"
-        />
+        >
+          <Image
+            onPress={() => {
+              navigation.push("PostDetailView", { id: middle.postId });
+            }}
+            uri={middle.url}
+            style={{ flex: 1, margin: 1 }}
+            sz="MD"
+          />
+        </TouchableWithoutFeedback>
       ) : (
         <View style={{ flex: 1 }} />
       )}
       {right ? (
-        <Image
+        <TouchableWithoutFeedback
           onPress={() => {
             navigation.push("PostDetailView", { id: right.postId });
           }}
-          uri={right.url}
-          style={{ flex: 1, margin: 1 }}
-          sz="MD"
-        />
+        >
+          <Image
+            onPress={() => {
+              navigation.push("PostDetailView", { id: right.postId });
+            }}
+            uri={right.url}
+            style={{ flex: 1, margin: 1 }}
+            sz="MD"
+          />
+        </TouchableWithoutFeedback>
       ) : (
         <View style={{ flex: 1 }} />
       )}

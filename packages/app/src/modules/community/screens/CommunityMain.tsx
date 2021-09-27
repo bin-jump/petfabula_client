@@ -283,11 +283,7 @@ const CommunityMain = () => {
           },
         ]}
       >
-        <TabBar
-          onIndexChange={() => {}}
-          style={{ height: TAB_BAR_HEIGHT }}
-          {...props}
-        />
+        <TabBar style={{ height: TAB_BAR_HEIGHT }} {...props} />
       </Animated.View>
     ),
     [tabBarStyle]
@@ -309,7 +305,7 @@ const CommunityMain = () => {
 
       <Tab.Navigator
         screenOptions={{}}
-        tabBarOptions={{ scrollEnabled: true, tabStyle: { width: 120 } }}
+        tabBarOptions={{ tabStyle: { width: "auto" } }}
         initialRouteName="Recommends"
         tabBar={renderTabBar}
       >

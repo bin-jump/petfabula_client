@@ -11,7 +11,7 @@ export const EmailCodeSendLoginCodeActionType = createAsyncActionType(
   'AUTHENTICATION_LOGIN_EMAIL_SEND_CODE',
 );
 export const EmailCodeLoginActionType = createAsyncActionType(
-  'AUTHENTICATION_LOGIN_EMAIL_PASSWORD',
+  'AUTHENTICATION_LOGIN_EMAIL_CODE',
 );
 export const LogoutActionType = createAsyncActionType('AUTHENTICATION_LOGOUT');
 // export const EmailPassowrdRegisterActionType = createAsyncActionType(

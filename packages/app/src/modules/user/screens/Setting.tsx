@@ -32,6 +32,7 @@ import {
   AlertAction,
   CacheManager,
   useIsMounted,
+  PendingOverlay,
 } from "../../shared";
 
 const cacheSizeText = (size: number) => {
@@ -67,7 +68,7 @@ const Setting = () => {
   });
   const { currentUser } = useCurrentUser();
   const { updateNotifySetting } = useLoadUpdateNotifySetting();
-  const { logout, logoutResult } = useLogout();
+  const { logout, pending: logoutPending } = useLogout();
 
   const resetNavigationState = () => {
     navigation.dispatch(
@@ -145,6 +146,8 @@ const Setting = () => {
           shadowRadius: 6,
         }}
       >
+        <PendingOverlay pending={logoutPending} />
+
         <View style={styles.settingItem}>
           <View style={styles.settingTextContainer}>
             <Text style={styles.settingText}>

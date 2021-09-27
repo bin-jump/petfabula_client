@@ -377,6 +377,7 @@ const PetContent = () => {
               }}
               style={{
                 backgroundColor: theme.colors?.white,
+                marginLeft: 16,
                 // justifyContent: "center",
                 height: 120,
                 width: 120,

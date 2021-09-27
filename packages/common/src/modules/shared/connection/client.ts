@@ -18,9 +18,16 @@ const axiosRequest = (
   config?: any,
 ) => {
   //const headers = { Lang: connectionConfig.locale };
-  let cfg = {};
+  let cfg = {} as any;
   if (config) {
     cfg = { ...cfg, ...config };
+  }
+
+  if (data instanceof FormData) {
+    const d = data as any;
+    cfg.headers = {
+      'Content-Type': `multipart/form-data; boundary=${d._boundary}`,
+    };
   }
 
   let req = null;

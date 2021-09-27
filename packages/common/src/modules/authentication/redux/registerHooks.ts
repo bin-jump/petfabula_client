@@ -56,9 +56,14 @@ export const useEmailCodeRegisterAndLogin = () => {
 
   const boundAction = useCallback(
     (form: EmailCodeRegisterForm) => {
+      const d = new FormData();
+      d.append('email', form.email);
+      d.append('name', form.name);
+      d.append('code', form.code);
+
       dispatch({
         type: EmailCodeRegisterAndLoginActionType.BEGIN,
-        payload: form,
+        payload: d,
       });
     },
     [dispatch],
@@ -86,7 +91,11 @@ export const useOauthRegisterAndLogin = () => {
 
   const boundAction = useCallback(
     (form: OauthForm) => {
-      dispatch({ type: OauthRegisterAndLoginActionType.BEGIN, payload: form });
+      const d = new FormData();
+      d.append('serverName', form.serverName);
+      d.append('code', form.code);
+
+      dispatch({ type: OauthRegisterAndLoginActionType.BEGIN, payload: d });
     },
     [dispatch],
   );
