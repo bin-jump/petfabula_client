@@ -20,6 +20,7 @@ const TabBar: FC<Props> = ({ onIndexChange, ...props }) => {
 
   return (
     <MaterialTopTabBar
+      scrollEnabled
       contentContainerStyle={{
         height: 42,
       }}
@@ -32,27 +33,29 @@ const TabBar: FC<Props> = ({ onIndexChange, ...props }) => {
       }}
       tabStyle={{
         paddingBottom: 18,
-      }}
-      indicatorContainerStyle={{
-        justifyContent: "center",
-        alignItems: "center",
+        width: 120,
       }}
       indicatorStyle={{
         backgroundColor: theme.colors?.primary,
-        // width: 20,
-        // left: 20,
+        marginHorizontal: 40,
+        width: 40,
+        marginBottom: 6,
+        height: 3,
+        borderRadius: 3,
       }}
       // renderIndicator={(route: any) => {
       //   // if (!route.getTabWidth()) {
       //   //   return null;
       //   // }
+
       //   return (
       //     <View
       //       style={{
       //         marginTop: 2,
-      //         // width: route.getTabWidth(),
+      //         width: route.getTabWidth(),
+
       //         height: "100%",
-      //         // left: route.navigationState.index * route.getTabWidth(),
+      //         left: route.navigationState.index * route.getTabWidth(),
       //         alignItems: "center",
       //         justifyContent: "flex-end",
       //         paddingBottom: 8,

@@ -1,5 +1,10 @@
 import React, { useRef, useMemo, useCallback, useEffect } from "react";
-import { View, TouchableWithoutFeedback, TouchableOpacity } from "react-native";
+import {
+  View,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+  useWindowDimensions,
+} from "react-native";
 import { useTheme, Text, Icon, Divider } from "react-native-elements";
 import { useTranslation } from "react-i18next";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -9,6 +14,7 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import {
   createMaterialTopTabNavigator,
   MaterialTopTabBarProps,
+  MaterialTopTabBar,
 } from "@react-navigation/material-top-tabs";
 import {
   Pet,
@@ -260,6 +266,7 @@ const PetDetailView = () => {
   const { theme } = useTheme();
   const { top } = useSafeAreaInsets();
   const { t } = useTranslation();
+  const { width } = useWindowDimensions();
   const navigation = useNavigation<StackNavigationProp<any>>();
   const { params } = useRoute<RouteProp<ParamTypes, "PetDetailView">>();
   const petId = params.petId;
@@ -270,6 +277,8 @@ const PetDetailView = () => {
     pending: removePending,
     result: removeResult,
   } = useRemovePet();
+
+  const TabIndicatorLeft = (width / 2 - 30) / 2;
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [200], []);
@@ -292,7 +301,40 @@ const PetDetailView = () => {
 
   const renderTabBar = useCallback<
     (props: MaterialTopTabBarProps) => React.ReactElement
-  >((props) => <TabBar {...props} />, []);
+  >(
+    (props) => (
+      <MaterialTopTabBar
+        // scrollEnabled
+        contentContainerStyle={{
+          height: 42,
+        }}
+        activeTintColor={theme.colors?.black}
+        inactiveTintColor={theme.colors?.grey1}
+        labelStyle={{
+          fontSize: 16,
+          fontWeight: "bold",
+          paddingBottom: 18,
+        }}
+        tabStyle={{
+          paddingBottom: 18,
+        }}
+        indicatorStyle={{
+          backgroundColor: theme.colors?.primary,
+          // marginHorizontal: 20,
+          width: 30,
+          // marginBottom: 6,
+          left: TabIndicatorLeft,
+          height: 3,
+          borderRadius: 3,
+        }}
+        {...props}
+        style={{
+          backgroundColor: theme.colors?.white,
+        }}
+      />
+    ),
+    []
+  );
 
   useRefocusEffect(() => {
     if (petId != pet?.id) {

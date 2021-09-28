@@ -23,6 +23,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import {
   createMaterialTopTabNavigator,
   MaterialTopTabBarProps,
+  MaterialTopTabBar,
 } from "@react-navigation/material-top-tabs";
 import { useTranslation } from "react-i18next";
 import {
@@ -168,6 +169,7 @@ const Follower = ({ id }: { id: number }) => {
 
 const FollowList = () => {
   const { t } = useTranslation();
+  const { width } = useWindowDimensions();
   const { theme } = useTheme();
   const { params } = useRoute<RouteProp<ParamTypes, "FollowList">>();
   const user = params.user;
@@ -176,9 +178,47 @@ const FollowList = () => {
 
   const navigation = useNavigation<StackNavigationProp<any>>();
 
+  const TabIndicatorLeft = (width - 240) / 2 + (120 - 30) / 2;
+
   const renderTabBar = useCallback<
     (props: MaterialTopTabBarProps) => React.ReactElement
-  >((props) => <TabBar {...props} />, []);
+  >(
+    (props) => (
+      <MaterialTopTabBar
+        // scrollEnabled
+
+        activeTintColor={theme.colors?.black}
+        inactiveTintColor={theme.colors?.grey1}
+        labelStyle={{
+          fontSize: 16,
+          fontWeight: "bold",
+          paddingBottom: 18,
+        }}
+        tabStyle={{
+          paddingBottom: 18,
+          width: 120,
+        }}
+        indicatorStyle={{
+          backgroundColor: theme.colors?.primary,
+          // marginHorizontal: 35,
+          width: 30,
+          // marginBottom: 6,
+          left: TabIndicatorLeft,
+          height: 3,
+          borderRadius: 3,
+        }}
+        {...props}
+        style={{
+          backgroundColor: theme.colors?.white,
+        }}
+        contentContainerStyle={{
+          height: 42,
+          justifyContent: "center",
+        }}
+      />
+    ),
+    [theme]
+  );
 
   const renderFollowed = useCallback(() => <Followed id={id} />, [id]);
 

@@ -23,6 +23,7 @@ import Animated from "react-native-reanimated";
 import {
   createMaterialTopTabNavigator,
   MaterialTopTabBarProps,
+  MaterialTopTabBar,
 } from "@react-navigation/material-top-tabs";
 import { useTranslation } from "react-i18next";
 import {
@@ -643,9 +644,44 @@ const UserProfile = () => {
   //   loadPets(id);
   // }, []);
 
+  const TabIndicatorLeft = (110 - 30) / 2;
+
   const renderTabBar = useCallback<
     (props: MaterialTopTabBarProps) => React.ReactElement
-  >((props) => <TabBar {...props} />, []);
+  >(
+    (props) => (
+      <MaterialTopTabBar
+        scrollEnabled
+        contentContainerStyle={{
+          height: 42,
+        }}
+        activeTintColor={theme.colors?.black}
+        inactiveTintColor={theme.colors?.grey1}
+        labelStyle={{
+          fontSize: 16,
+          fontWeight: "bold",
+          paddingBottom: 18,
+        }}
+        tabStyle={{
+          paddingBottom: 18,
+          width: 110,
+        }}
+        indicatorStyle={{
+          backgroundColor: theme.colors?.primary,
+          width: 30,
+          left: TabIndicatorLeft,
+          // marginBottom: 6,
+          height: 3,
+          borderRadius: 3,
+        }}
+        {...props}
+        style={{
+          backgroundColor: theme.colors?.white,
+        }}
+      />
+    ),
+    [theme]
+  );
 
   const renderUserPosts = useCallback(() => <UserPosts userId={id} />, [id]);
 

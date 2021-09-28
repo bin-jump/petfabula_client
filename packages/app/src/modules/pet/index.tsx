@@ -7,8 +7,6 @@ import { ThemeContext, Icon } from "react-native-elements";
 import { useTranslation } from "react-i18next";
 import { headerBaseOption, plainGoBackHeaderOption } from "../shared";
 import PetMain from "./screens/PetMain";
-import CreatePet from "./screens/CreatePet";
-import PetBreedSelect from "./screens/PetBreedSelect";
 
 const PetStack = createStackNavigator();
 

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useMemo } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, useWindowDimensions } from "react-native";
 import { useTheme, Text, Divider, Icon } from "react-native-elements";
 import { useTranslation } from "react-i18next";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
@@ -16,6 +16,7 @@ import Animated, {
 import {
   createMaterialTopTabNavigator,
   MaterialTopTabBarProps,
+  MaterialTopTabBar,
 } from "@react-navigation/material-top-tabs";
 import { Avatar } from "../../shared";
 import ParamTypes from "./ParamTypes";
@@ -89,9 +90,12 @@ const PetRecords = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation();
+  const { width } = useWindowDimensions();
   const { params } = useRoute<RouteProp<ParamTypes, "PetRecords">>();
   const pet = params.pet;
   const petId = params.pet.id;
+
+  const TabIndicatorLeft = (width / 5 - 30) / 2;
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [140], []);
@@ -158,7 +162,40 @@ const PetRecords = () => {
 
   const renderTabBar = useCallback<
     (props: MaterialTopTabBarProps) => React.ReactElement
-  >((props) => <TabBar {...props} />, []);
+  >(
+    (props) => (
+      <MaterialTopTabBar
+        // scrollEnabled
+        contentContainerStyle={{
+          height: 42,
+        }}
+        activeTintColor={theme.colors?.black}
+        inactiveTintColor={theme.colors?.grey1}
+        labelStyle={{
+          fontSize: 16,
+          fontWeight: "bold",
+          paddingBottom: 18,
+        }}
+        tabStyle={{
+          paddingBottom: 18,
+        }}
+        indicatorStyle={{
+          backgroundColor: theme.colors?.primary,
+          // marginHorizontal: 20,
+          width: 30,
+          left: TabIndicatorLeft,
+          // marginBottom: 6,
+          height: 3,
+          borderRadius: 3,
+        }}
+        {...props}
+        style={{
+          backgroundColor: theme.colors?.white,
+        }}
+      />
+    ),
+    [theme]
+  );
 
   return (
     <View style={{ flex: 1 }}>

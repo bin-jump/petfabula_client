@@ -13,6 +13,7 @@ import { useTheme } from "react-native-elements";
 import {
   createMaterialTopTabNavigator,
   MaterialTopTabBarProps,
+  MaterialTopTabBar,
 } from "@react-navigation/material-top-tabs";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
@@ -29,7 +30,6 @@ import Followed from "./Followed";
 import RecommendQuestions from "./RecommendQuestions";
 import TopicSquare from "./TopicSquare";
 import SearchHeader from "../components/SearchHeader";
-import TabBar from "../components/TabBar";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -283,10 +283,39 @@ const CommunityMain = () => {
           },
         ]}
       >
-        <TabBar style={{ height: TAB_BAR_HEIGHT }} {...props} />
+        {/* <TabBar style={{ height: TAB_BAR_HEIGHT }} {...props} /> */}
+        <MaterialTopTabBar
+          scrollEnabled
+          contentContainerStyle={{
+            height: TAB_BAR_HEIGHT,
+          }}
+          activeTintColor={theme.colors?.black}
+          inactiveTintColor={theme.colors?.grey1}
+          labelStyle={{
+            fontSize: 16,
+            fontWeight: "bold",
+            paddingBottom: 18,
+          }}
+          tabStyle={{
+            paddingBottom: 18,
+            width: 120,
+          }}
+          indicatorStyle={{
+            backgroundColor: theme.colors?.primary,
+            marginHorizontal: 40,
+            width: 40,
+            marginBottom: 6,
+            height: 3,
+            borderRadius: 3,
+          }}
+          {...props}
+          style={{
+            backgroundColor: theme.colors?.white,
+          }}
+        />
       </Animated.View>
     ),
-    [tabBarStyle]
+    [tabBarStyle, theme]
   );
 
   return (
@@ -305,7 +334,7 @@ const CommunityMain = () => {
 
       <Tab.Navigator
         screenOptions={{}}
-        tabBarOptions={{ tabStyle: { width: "auto" } }}
+        tabBarOptions={{ scrollEnabled: true }}
         initialRouteName="Recommends"
         tabBar={renderTabBar}
       >
