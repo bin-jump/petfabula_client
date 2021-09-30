@@ -16,6 +16,8 @@ import {
   PostRemoveCollectActionType,
   QuestionUpvoteAnswerActionType,
   QuestionUpvoteQuestionActionType,
+  QuestionUnvoteAnswerActionType,
+  QuestionUnvoteQuestionActionType,
 } from '../../modules/community/redux/actionTypes';
 
 interface LoginRequireHandler {
@@ -48,6 +50,8 @@ const LOGIN_REQUIRED_ACTIONS: ReduxAsyncAction[] = [
   PostRemoveCollectActionType,
   QuestionUpvoteAnswerActionType,
   QuestionUpvoteQuestionActionType,
+  QuestionUnvoteAnswerActionType,
+  QuestionUnvoteQuestionActionType,
 ];
 
 const actionTypes = new Set(LOGIN_REQUIRED_ACTIONS.map((item) => item.BEGIN));

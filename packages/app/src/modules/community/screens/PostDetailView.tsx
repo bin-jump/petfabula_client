@@ -52,7 +52,7 @@ import {
   PendingOverlay,
   useDidUpdateEffect,
   ResourceNotFoundView,
-  Skeleton,
+  useLoginIntercept,
 } from "../../shared";
 import ParamTypes from "./ParamTypes";
 import PostCommentList from "../components/PostCommentList";
@@ -68,6 +68,7 @@ const Footer = ({ post }: { post: PostDetail }) => {
   const { unlikePost } = useUnlikePost();
   const { collectPost } = useCollectPost();
   const { removeCollectPost } = useRemoveCollectPost();
+  const { assertLogin } = useLoginIntercept();
 
   const [collect, setCollect] = useState(post.collected);
   const [like, setLike] = useState(post.liked);
@@ -110,6 +111,9 @@ const Footer = ({ post }: { post: PostDetail }) => {
     >
       <TouchableWithoutFeedback
         onPress={() => {
+          if (!assertLogin()) {
+            return;
+          }
           navigation.navigate("CreateComment", { postId: post.id });
         }}
       >
@@ -148,6 +152,10 @@ const Footer = ({ post }: { post: PostDetail }) => {
             <TouchableWithoutFeedback
               style={{ padding: 6 }}
               onPress={() => {
+                if (!assertLogin) {
+                  return;
+                }
+
                 collectSharedValue.value = withSequence(
                   withTiming(360, {
                     duration: 800,
@@ -190,6 +198,9 @@ const Footer = ({ post }: { post: PostDetail }) => {
           <TouchableWithoutFeedback
             style={{ padding: 6 }}
             onPress={() => {
+              if (!assertLogin()) {
+                return;
+              }
               likeSharedValue.value = withSequence(
                 withTiming(1.5, {
                   duration: 200,
@@ -243,6 +254,7 @@ const Header = ({
   const { followUser, pending: followPending } = useFollowUser();
   const { unfollowUser, pending: unfollowPending } = useUnfollowUser();
   const { removePost } = useRemovePost();
+  const { assertLogin } = useLoginIntercept();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [200], []);
@@ -312,17 +324,21 @@ const Header = ({
                 />
               ) : null}
 
-              {currentUser?.id != post?.participator.id ? (
+              {post && currentUser?.id != post?.participator.id ? (
                 <BottomSheetButton
                   label={t("common.report")}
                   type="antdesign"
                   name="warning"
                   onPress={() => {
+                    bottomSheetModalRef.current?.close();
+                    if (!assertLogin()) {
+                      return;
+                    }
+
                     navigation.navigate("CreateNew", {
                       screen: "CreateReport",
-                      params: { entityId: post?.id, entityType: "POST" },
+                      params: { entityId: post.id, entityType: "POST" },
                     });
-                    bottomSheetModalRef.current?.close();
                   }}
                 />
               ) : null}
@@ -419,8 +435,6 @@ const Comments = ({
   post: PostDetail;
   currentPostId: number;
 }) => {
-  const navigation = useNavigation();
-
   return (
     <PostCommentList
       currentPostId={currentPostId}

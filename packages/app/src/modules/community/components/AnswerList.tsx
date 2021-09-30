@@ -34,6 +34,7 @@ import {
   useFirstFocusEffect,
   AlertAction,
   PendingOverlay,
+  useLoginIntercept,
 } from "../../shared";
 
 type WithReplyTo = AnswerComment & { replyToName: string | null };
@@ -240,6 +241,7 @@ const AnswerItem = ({
   const { upvoteAnswer } = useUpvoteAnswer();
   const { unvoteAnswer } = useUnvoteAnswer();
   const { removeAnswer } = useRemoveAnswer();
+  const { assertLogin } = useLoginIntercept();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [200], []);
@@ -475,6 +477,9 @@ const AnswerItem = ({
         >
           <TouchableWithoutFeedback
             onPress={() => {
+              if (!assertLogin()) {
+                return;
+              }
               navigation.navigate("CreateAnswerComment", {
                 answer: answer,
               });
@@ -508,6 +513,10 @@ const AnswerItem = ({
         >
           <TouchableWithoutFeedback
             onPress={() => {
+              if (!assertLogin()) {
+                return;
+              }
+
               voteSharedValue.value = withSequence(
                 withTiming(1.5, {
                   duration: 200,

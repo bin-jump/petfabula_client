@@ -66,6 +66,7 @@ import {
   useDidUpdateEffect,
   PendingOverlay,
   useFirstFocusEffect,
+  useLoginIntercept,
 } from "../../shared";
 import ParamTypes from "./ParamTypes";
 import RelatePetItem from "../components/RelatePetItem";
@@ -83,6 +84,7 @@ const Footer = ({ question }: { question: QuestionDetail }) => {
     upvoted: question.upvoted,
     count: question.upvoteCount,
   });
+  const { assertLogin } = useLoginIntercept();
 
   const voteSharedValue = useSharedValue(1);
   const voteStyle = useAnimatedStyle(() => {
@@ -111,7 +113,9 @@ const Footer = ({ question }: { question: QuestionDetail }) => {
     >
       <TouchableWithoutFeedback
         onPress={() => {
-          // navigation.navigate("CreateAnswer", { postId: question.id });
+          if (!assertLogin()) {
+            return;
+          }
           navigation.navigate("CreateNew", {
             screen: "CreateAnswer",
             params: { questionId: question.id, questionTitle: question.title },
@@ -159,6 +163,9 @@ const Footer = ({ question }: { question: QuestionDetail }) => {
           <TouchableWithoutFeedback
             style={{ padding: 6 }}
             onPress={() => {
+              if (!assertLogin()) {
+                return;
+              }
               voteSharedValue.value = withSequence(
                 withTiming(0.7, {
                   duration: 200,
@@ -220,6 +227,7 @@ const Header = ({
   const { removeQuestion, pending: removePending } = useRemoveQuestion();
   const { followUser, pending: followPending } = useFollowUser();
   const { unfollowUser, pending: unfollowPending } = useUnfollowUser();
+  const { assertLogin } = useLoginIntercept();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [200], []);
@@ -280,32 +288,54 @@ const Header = ({
           <Divider />
           <View style={{ paddingTop: 16 }}>
             <View style={{ flexDirection: "row" }}>
-              <BottomSheetButton
-                label={t("common.edit")}
-                type="antdesign"
-                name="edit"
-                onPress={() => {
-                  navigation.navigate("CreateNew", {
-                    screen: "CreateQuestion",
-                    params: { question: question },
-                  });
-                  handleClose();
-                }}
-              />
+              {currentUser?.id == question?.participator.id ? (
+                <BottomSheetButton
+                  label={t("common.edit")}
+                  type="antdesign"
+                  name="edit"
+                  onPress={() => {
+                    navigation.navigate("CreateNew", {
+                      screen: "CreateQuestion",
+                      params: { question: question },
+                    });
+                    handleClose();
+                  }}
+                />
+              ) : null}
 
-              <BottomSheetButton
-                label={t("common.delete")}
-                type="antdesign"
-                name="delete"
-                onPress={() => {
-                  AlertAction.AlertDelele(t, () => {
-                    if (question) {
-                      removeQuestion(question.id);
+              {currentUser?.id == question?.participator.id ? (
+                <BottomSheetButton
+                  label={t("common.delete")}
+                  type="antdesign"
+                  name="delete"
+                  onPress={() => {
+                    AlertAction.AlertDelele(t, () => {
+                      if (question) {
+                        removeQuestion(question.id);
+                      }
+                    });
+                    handleClose();
+                  }}
+                />
+              ) : null}
+
+              {question && currentUser?.id != question?.participator.id ? (
+                <BottomSheetButton
+                  label={t("common.report")}
+                  type="antdesign"
+                  name="warning"
+                  onPress={() => {
+                    handleClose();
+                    if (!assertLogin()) {
+                      return;
                     }
-                  });
-                  handleClose();
-                }}
-              />
+                    navigation.navigate("CreateNew", {
+                      screen: "CreateReport",
+                      params: { entityId: question.id, entityType: "QUESTION" },
+                    });
+                  }}
+                />
+              ) : null}
             </View>
           </View>
         </View>

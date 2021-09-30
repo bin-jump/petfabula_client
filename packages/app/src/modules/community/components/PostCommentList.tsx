@@ -4,7 +4,6 @@ import { useTheme, Text, Divider, Button, Icon } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useTranslation } from "react-i18next";
-
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import {
   useCurrentUser,
@@ -22,6 +21,7 @@ import {
   BottomSheet,
   AlertAction,
   PendingOverlay,
+  useLoginIntercept,
 } from "../../shared";
 
 type WithReplyTo = PostCommentReply & { replyToName: string | null };
@@ -82,6 +82,7 @@ const ReplyItem = ({
   const { removeCommentReply, pending: removePending } =
     useRemovePostCommentReply();
   const { currentUser } = useCurrentUser();
+  const { assertLogin } = useLoginIntercept();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [200], []);
@@ -186,6 +187,9 @@ const ReplyItem = ({
       />
       <TouchableWithoutFeedback
         onPress={() => {
+          if (!assertLogin()) {
+            return;
+          }
           navigation.navigate("CreateCommentReply", {
             replyTarget: reply,
             toComment: false,
@@ -242,6 +246,7 @@ const CommentItem = ({
   const { loadCommentReply } = useLoadPostCommentReply();
   const { removeComment, pending: removePending } = useRemovePostComment();
   const { currentUser } = useCurrentUser();
+  const { assertLogin } = useLoginIntercept();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [200], []);
@@ -372,6 +377,10 @@ const CommentItem = ({
             <Text>
               <Text
                 onPress={() => {
+                  if (!assertLogin()) {
+                    return;
+                  }
+
                   navigation.navigate("CreateCommentReply", {
                     replyTarget: comment,
                     toComment: true,
@@ -423,6 +432,7 @@ const PostCommentList = ({
   const { theme } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation<StackNavigationProp<any>>();
+  const { assertLogin } = useLoginIntercept();
 
   const {
     initializing,
@@ -442,6 +452,9 @@ const PostCommentList = ({
       return (
         <TouchableWithoutFeedback
           onPress={() => {
+            if (!assertLogin()) {
+              return;
+            }
             navigation.navigate("CreateComment", { postId: currentPostId });
           }}
         >
