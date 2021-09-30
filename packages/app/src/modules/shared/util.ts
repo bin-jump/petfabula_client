@@ -44,8 +44,11 @@ export const getMonthDateText = (mili: number) => {
 
 export const getTimeText = (mili: number) => {
   let d = toDate(mili);
-  const hour = d.getHours();
-  const minute = d.getMinutes();
+  let hour = d.getHours().toString();
+  let minute = d.getMinutes().toString();
+
+  if (hour.length < 2) hour = "0" + hour;
+  if (minute.length < 2) minute = "0" + minute;
 
   return `${hour}:${minute}`;
 };

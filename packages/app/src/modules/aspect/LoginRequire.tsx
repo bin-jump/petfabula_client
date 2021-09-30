@@ -23,46 +23,55 @@ const LoginRequire = () => {
           alignItems: "center",
         }}
       >
-        <View
-          style={{
-            width: 280,
-            height: 240,
-            backgroundColor: theme.colors?.white,
-            borderRadius: 8,
-            padding: 14,
-            justifyContent: "space-between",
-            paddingVertical: 30,
-          }}
-        >
-          <Text
-            style={{ textAlign: "center", fontSize: 24, fontWeight: "bold" }}
+        <TouchableWithoutFeedback>
+          <View
+            style={{
+              width: 280,
+              height: 270,
+              backgroundColor: theme.colors?.white,
+              borderRadius: 16,
+              padding: 18,
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingVertical: 24,
+              paddingTop: 10,
+            }}
           >
-            {t("aspect.loginToContinue")}
-          </Text>
-          {/* <Icon
-            type="font-awesome"
-            name="login"
-            color={theme.colors?.primary}
-            size={80}
-          /> */}
-          <Button
-            onPress={() => {
-              navigation.goBack();
-              navigation.navigate("AuthenticaionScreen");
-            }}
-            title={t("aspect.gotoLogin")}
-            titleStyle={{ fontWeight: "bold" }}
-            raised
-          />
-          {/* <Button
-            onPress={() => {
-              navigation.goBack();
-            }}
-            type="outline"
-            title={t("aspect.gotoLogin")}
-            titleStyle={{ fontWeight: "bold" }}
-          /> */}
-        </View>
+            <View style={{ width: "100%", alignItems: "flex-end" }}>
+              <Icon
+                onPress={() => {
+                  navigation.goBack();
+                }}
+                type="material-community"
+                name="close-thick"
+                size={28}
+                color={theme.colors?.grey2}
+              />
+            </View>
+
+            <Icon
+              type="material-community-icon"
+              name="login"
+              color={theme.colors?.grey2}
+              size={70}
+            />
+
+            <Text h3>{t("authentication.loginEncourage.title")}</Text>
+            <Text>{t("authentication.loginEncourage.loginPopup")}</Text>
+
+            <View style={{ width: "100%" }}>
+              <Button
+                style={{ flex: 1 }}
+                onPress={() => {
+                  navigation.goBack();
+                  navigation.navigate("AuthenticaionScreen");
+                }}
+                title={t("authentication.login.gotoLogin")}
+                raised
+              />
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
       </View>
     </TouchableWithoutFeedback>
   );

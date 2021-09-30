@@ -62,7 +62,7 @@ export const validWeightRecordFormSchema = yup.object().shape({
   weight: yup
     .number()
     .typeError(commonMessageKey.validType)
-    .max(1000, petMessageKey.weight)
+    .max(1000000, petMessageKey.weight)
     .required(commonMessageKey.emptyValue)
     .test('IsPositive', commonMessageKey.emptyValue, isPositive),
   dateTime: yup

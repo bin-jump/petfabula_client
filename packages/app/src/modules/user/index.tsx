@@ -11,6 +11,7 @@ import EditAccount from "./screens/EditAccount";
 import CitySelect from "./screens/CitySelect";
 import Setting from "./screens/Setting";
 import UserActivity from "./screens/UserActivity";
+import AnonymousSetting from "./screens/AnonymousSetting";
 
 const UserStack = createStackNavigator();
 
@@ -62,6 +63,15 @@ const PetScreens = () => {
         })}
         name="UserActivity"
         component={UserActivity}
+      />
+
+      <UserStack.Screen
+        options={(navigation) => ({
+          ...plainGoBackHeaderOption({ navigation, theme }),
+          title: t("setting.setting"),
+        })}
+        name="AnonymousSetting"
+        component={AnonymousSetting}
       />
     </UserStack.Navigator>
   );

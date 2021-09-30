@@ -70,6 +70,7 @@
       "title": "ログイン",
       "logining": "ログイン中",
       "gotoSignup": "アカウント登録",
+      "gotoLogin": "ログインへ",
       "thirdPartyLogin": "その他によるログイン",
       "sendVerificationCodeAction": "ログイン",
       "loginVerificationCodeTitle": "認証コード",
@@ -81,7 +82,6 @@
       "oauthAutoPrivacyAgreement": "プライバシーポリシー",
       "oauthAutoUserAgreementBack": "に同意したものとみなされます"
     },
-
     "signup": {
       "title": "アカウント登録",
       "verificationTitle": "認証コード",
@@ -89,6 +89,13 @@
       "signupAction": "アカウント登録",
       "verificationAction": "認証してアカウントを登録",
       "userAgreement": "利用規約とプライバシーポリシー"
+    },
+    "loginEncourage": {
+      "title": "ログインしていません",
+      "pet": "ログインしてペット管理機能を利用してみましょう",
+      "user": "ログインしてユーザーセンターをご利用いただけます",
+      "notification": "ログインして通知を受け取ることができます",
+      "loginPopup": "ログインしてからご利用ください"
     }
   },
 
@@ -340,10 +347,6 @@
       "reportReason": "10-500文字にしてください",
       "feedbackContent": "10-240文字にしてください"
     }
-  },
-  "aspect": {
-    "gotoLogin": "ログインへ",
-    "loginToContinue": "ログインしてください"
   },
   "error": {
     "noNetwork": "ネットワークに繋がりません",

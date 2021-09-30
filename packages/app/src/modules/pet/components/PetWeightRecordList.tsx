@@ -142,7 +142,9 @@ const Item = ({ record }: { record: RecordItemType }) => {
             >
               {`${record.weight}`}
             </Text>
-            <Text style={{ fontSize: 18, lineHeight: 30 }}>{` kg`}</Text>
+            <Text
+              style={{ fontSize: 18, lineHeight: 30, fontWeight: "bold" }}
+            >{` g`}</Text>
           </Text>
         </View>
       </View>

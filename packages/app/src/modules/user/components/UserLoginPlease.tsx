@@ -9,60 +9,64 @@ import {
   daysTillNow,
   useFirstFocusEffect,
 } from "../../shared";
+import { useTranslation } from "react-i18next";
+import SettingContent from "./SettingContent";
 
 const UserLoginPlease = () => {
   const navigation = useNavigation();
   const { theme } = useTheme();
+  const { t } = useTranslation();
 
   return (
     <View
       style={{
         flex: 1,
-        // justifyContent: "center",
         backgroundColor: theme.colors?.white,
       }}
     >
-      <View
-        style={{
-          paddingTop: 8,
-          backgroundColor: theme.colors?.white,
-          // shadowColor: theme.colors?.grey3,
-          // shadowOffset: { width: 2, height: 4 },
-          // shadowOpacity: 0.3,
-          // elevation: 2,
-          // shadowRadius: 6,
-        }}
-      >
-        <View
-          style={{
-            height: 40,
-            justifyContent: "center",
-            alignItems: "flex-end",
-            backgroundColor: theme.colors?.white,
-            paddingHorizontal: 16,
+      <View style={{ alignItems: "flex-end", paddingHorizontal: 24 }}>
+        <Icon
+          onPress={() => {
+            navigation.navigate("AnonymousSetting");
           }}
+          type="ionicon"
+          name="ios-settings-outline"
+          size={32}
+          color={theme.colors?.black}
         />
-        <View style={{ flexDirection: "row", paddingHorizontal: 30 }}>
-          <Avatar source={{ uri: undefined }} size={80} />
-          <View style={{ marginLeft: 20, justifyContent: "center" }}>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text h1 style={{ marginRight: 6 }}>
-                {`unlogin`}
-              </Text>
-            </View>
-          </View>
-        </View>
       </View>
 
-      <View style={{ alignItems: "center" }}>
-        <Text h1>Login</Text>
-        <Button
-          style={{ width: 200 }}
-          title="login"
-          onPress={() => {
-            navigation.navigate("AuthenticaionScreen");
-          }}
+      <View
+        style={{
+          paddingTop: 120,
+          backgroundColor: theme.colors?.white,
+          height: 400,
+        }}
+      >
+        <Icon
+          type="font-awesome"
+          name="user-circle-o"
+          size={88}
+          color={theme.colors?.grey3}
         />
+
+        <View style={{ alignItems: "center" }}>
+          <Text h2 h2Style={{ marginTop: 16 }}>
+            {t("authentication.loginEncourage.title")}
+          </Text>
+          <Text style={{ marginBottom: 12 }}>
+            {t("authentication.loginEncourage.user")}
+          </Text>
+
+          <Button
+            raised
+            style={{ width: 150 }}
+            title={t("authentication.login.gotoLogin")}
+            onPress={() => {
+              navigation.navigate("AuthenticaionScreen");
+            }}
+          />
+        </View>
       </View>
     </View>
   );

@@ -65,6 +65,7 @@ const Setting = () => {
   const [cacheStatus, setCacheStatus] = useState({
     cacheSize: "",
     pending: false,
+    clearing: false,
   });
   const { currentUser } = useCurrentUser();
   const { updateNotifySetting } = useLoadUpdateNotifySetting();
@@ -99,7 +100,11 @@ const Setting = () => {
     setCacheStatus({ ...cacheStatus, pending: true });
     CacheManager.getCacheSize().then((value) => {
       if (isMounted.current) {
-        setCacheStatus({ pending: false, cacheSize: cacheSizeText(value) });
+        setCacheStatus({
+          clearing: false,
+          pending: false,
+          cacheSize: cacheSizeText(value),
+        });
       }
     });
   }, []);
@@ -146,7 +151,7 @@ const Setting = () => {
           shadowRadius: 6,
         }}
       >
-        <PendingOverlay pending={logoutPending} />
+        <PendingOverlay pending={logoutPending || cacheStatus.clearing} />
 
         <View style={styles.settingItem}>
           <View style={styles.settingTextContainer}>
@@ -203,15 +208,17 @@ const Setting = () => {
         }}
       >
         <TouchableWithoutFeedback
+          disabled={cacheStatus.pending}
           onPress={() => {
             // resetNavigationState()
             AlertAction.AlertWithMessage(t, "setting.alertCacheClear", () => {
-              setCacheStatus({ ...cacheStatus, pending: true }),
+              setCacheStatus({ ...cacheStatus, clearing: true }),
                 CacheManager.clearCache().then(() => {
                   if (isMounted.current) {
                     setCacheStatus({
+                      ...cacheStatus,
                       cacheSize: cacheSizeText(0),
-                      pending: false,
+                      clearing: false,
                     });
                   }
                 });

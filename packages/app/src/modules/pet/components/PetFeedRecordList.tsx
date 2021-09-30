@@ -161,7 +161,7 @@ const Item = ({ record }: { record: FeedRecordItemType }) => {
             >
               {`${record.amount}`}
             </Text>
-            <Text style={{ fontSize: 18 }}>{`g`}</Text>
+            <Text style={{ fontSize: 18 }}>{` g`}</Text>
           </Text>
         </View>
 

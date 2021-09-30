@@ -151,7 +151,7 @@ const PetPostImages = ({ petId }: { petId: number }) => {
     <FlatList
       //   style={{ backgroundColor: theme.colors?.white }}
       contentContainerStyle={{
-        paddingTop: 20,
+        paddingTop: 10,
         paddingBottom: 40,
       }}
       keyExtractor={keyExtractor}

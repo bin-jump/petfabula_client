@@ -187,9 +187,7 @@ const FeedRecordFormContent = ({
     useUpdateWeightRecord();
 
   useEffect(() => {
-    if (pet) {
-      setValues({ ...values, petId: pet.id });
-    }
+    setValues({ ...values, petId: pet ? pet.id : (null as any) });
   }, [pet]);
 
   useEffect(() => {
@@ -258,7 +256,7 @@ const FeedRecordFormContent = ({
         keyboardType="number-pad"
         rightIcon={() => {
           return (
-            <Text style={{ color: theme.colors?.grey1, fontSize: 20 }}>kg</Text>
+            <Text style={{ color: theme.colors?.grey1, fontSize: 20 }}>k</Text>
           );
         }}
       />
