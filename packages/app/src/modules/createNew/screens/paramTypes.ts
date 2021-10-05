@@ -45,12 +45,12 @@ type ParamTypes = {
     breed: PetBreed | undefined | null;
   };
 
-  CreateFeedRecord: {
+  CreatePetFeedRecord: {
     pet: Pet | null;
     record: FeedRecord | undefined;
   };
 
-  CreateWeightRecord: {
+  CreatePetWeightRecord: {
     pet: Pet | null;
     record: WeightRecord | undefined;
   };
@@ -59,12 +59,12 @@ type ParamTypes = {
     backScreen: string;
   };
 
-  CreateDisorderRecord: {
+  CreatePetDisorderRecord: {
     pet: Pet | null;
     record: DisorderRecord | undefined;
   };
 
-  CreateMedicalRecord: {
+  CreatePetMedicalRecord: {
     pet: Pet | null;
     record: MedicalRecord | undefined;
   };

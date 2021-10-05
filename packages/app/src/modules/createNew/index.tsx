@@ -13,17 +13,21 @@ import PetSelect from "./screens/PetSelect";
 
 import CreatePet from "./screens/CreatePet";
 import PetBreedSelect from "./screens/PetBreedSelect";
-import CreateFeedRecord from "./screens/CreateFeedRecord";
-import CreateWeightRecord from "./screens/CreateWeightRecord";
-import CreateDisorderRecord from "./screens/CreateDisorderRecord";
+import CreatePetFeedRecord from "./screens/CreatePetFeedRecord";
+import CreatePetWeightRecord from "./screens/CreatePetWeightRecord";
+import CreatePetDisorderRecord from "./screens/CreatePetDisorderRecord";
 import SelectPetEventType from "./screens/SelectPetEventType";
 import CreatePetEventRecord from "./screens/CreatePetEventRecord";
-import CreateMedicalRecord from "./screens/CreateMedicalRecord";
+import CreatePetMedicalRecord from "./screens/CreatePetMedicalRecord";
 import CreateReport from "./screens/CreateReport";
 import CreateFeedback from "./screens/CreateFeedback";
 
 const CreateNewStack = createStackNavigator();
-
+const forFade = ({ current }: { current: any }) => ({
+  cardStyle: {
+    opacity: current.progress,
+  },
+});
 const CreateNewScreens = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
@@ -109,33 +113,37 @@ const CreateNewScreens = () => {
           ...plainGoBackHeaderOption({ navigation, theme }),
           headerShown: false,
           cardStyle: { backgroundColor: "transparent" },
+          cardStyleInterpolator: forFade,
         })}
-        name="CreateFeedRecord"
-        component={CreateFeedRecord}
+        name="CreatePetFeedRecord"
+        component={CreatePetFeedRecord}
       />
       <CreateNewStack.Screen
         options={(navigation) => ({
           ...plainGoBackHeaderOption({ navigation, theme }),
           headerShown: false,
           cardStyle: { backgroundColor: "transparent" },
+          cardStyleInterpolator: forFade,
         })}
-        name="CreateWeightRecord"
-        component={CreateWeightRecord}
+        name="CreatePetWeightRecord"
+        component={CreatePetWeightRecord}
       />
       <CreateNewStack.Screen
         options={(navigation) => ({
           ...plainGoBackHeaderOption({ navigation, theme }),
           headerShown: false,
           cardStyle: { backgroundColor: "transparent" },
+          cardStyleInterpolator: forFade,
         })}
-        name="CreateDisorderRecord"
-        component={CreateDisorderRecord}
+        name="CreatePetDisorderRecord"
+        component={CreatePetDisorderRecord}
       />
       <CreateNewStack.Screen
         options={(navigation) => ({
           ...plainGoBackHeaderOption({ navigation, theme }),
           headerShown: false,
           cardStyle: { backgroundColor: "transparent" },
+          cardStyleInterpolator: forFade,
         })}
         name="SelectPetEventType"
         component={SelectPetEventType}
@@ -145,6 +153,7 @@ const CreateNewScreens = () => {
           ...plainGoBackHeaderOption({ navigation, theme }),
           headerShown: false,
           cardStyle: { backgroundColor: "transparent" },
+          cardStyleInterpolator: forFade,
         })}
         name="CreatePetEventRecord"
         component={CreatePetEventRecord}
@@ -154,9 +163,10 @@ const CreateNewScreens = () => {
           ...plainGoBackHeaderOption({ navigation, theme }),
           headerShown: false,
           cardStyle: { backgroundColor: "transparent" },
+          cardStyleInterpolator: forFade,
         })}
-        name="CreateMedicalRecord"
-        component={CreateMedicalRecord}
+        name="CreatePetMedicalRecord"
+        component={CreatePetMedicalRecord}
       />
 
       <CreateNewStack.Screen

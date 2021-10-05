@@ -229,7 +229,7 @@ const PetRecords = () => {
               label={t("pet.action.food")}
               onPress={() => {
                 navigation.navigate("CreateNew", {
-                  screen: "CreateFeedRecord",
+                  screen: "CreatePetFeedRecord",
                   params: {
                     pet: pet,
                   },
@@ -246,7 +246,7 @@ const PetRecords = () => {
               label={t("pet.action.weight")}
               onPress={() => {
                 navigation.navigate("CreateNew", {
-                  screen: "CreateWeightRecord",
+                  screen: "CreatePetWeightRecord",
                   params: {
                     pet: pet,
                   },
@@ -263,7 +263,7 @@ const PetRecords = () => {
               label={t("pet.action.disorder")}
               onPress={() => {
                 navigation.navigate("CreateNew", {
-                  screen: "CreateDisorderRecord",
+                  screen: "CreatePetDisorderRecord",
                   params: {
                     pet: pet,
                   },
@@ -297,7 +297,7 @@ const PetRecords = () => {
               label={t("pet.action.medical")}
               onPress={() => {
                 navigation.navigate("CreateNew", {
-                  screen: "CreateMedicalRecord",
+                  screen: "CreatePetMedicalRecord",
                   params: {
                     pet: pet,
                   },

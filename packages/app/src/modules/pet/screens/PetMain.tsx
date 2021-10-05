@@ -231,7 +231,7 @@ const PetItem = ({ item }: { item: PetDetail }) => {
           iconColor="#febe8a"
           onPress={() => {
             navigation.navigate("CreateNew", {
-              screen: "CreateFeedRecord",
+              screen: "CreatePetFeedRecord",
               params: { pet: item },
             });
           }}
@@ -246,7 +246,7 @@ const PetItem = ({ item }: { item: PetDetail }) => {
           iconColor="#94afef"
           onPress={() => {
             navigation.navigate("CreateNew", {
-              screen: "CreateWeightRecord",
+              screen: "CreatePetWeightRecord",
               params: { pet: item },
             });
           }}
@@ -261,7 +261,7 @@ const PetItem = ({ item }: { item: PetDetail }) => {
           iconColor="#d56940"
           onPress={() => {
             navigation.navigate("CreateNew", {
-              screen: "CreateDisorderRecord",
+              screen: "CreatePetDisorderRecord",
               params: { pet: item },
             });
           }}

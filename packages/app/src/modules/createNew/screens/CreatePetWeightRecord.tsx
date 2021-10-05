@@ -36,12 +36,12 @@ import {
   PetSelector,
 } from "../components/PetRecordComponents";
 
-const CreateWeightRecord = () => {
+const CreatePetWeightRecord = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const { createWeightRecord } = useCreateWeightRecord();
   const { updateWeightRecord } = useUpdateWeightRecord();
-  const { params } = useRoute<RouteProp<ParamTypes, "CreateWeightRecord">>();
+  const { params } = useRoute<RouteProp<ParamTypes, "CreatePetWeightRecord">>();
   const record = params?.record;
   const pet = validSelect(params?.pet) ? params?.pet : record?.pet;
   const disableSelectPet = record ? true : false;
@@ -78,7 +78,7 @@ const CreateWeightRecord = () => {
 
   return (
     <DismissKeyboardView>
-      <View>
+      <View style={{ backgroundColor: "rgba(1, 1, 1, 0.6)" }}>
         <TouchableOpacity
           onPress={() => {
             navigation.goBack();
@@ -231,7 +231,7 @@ const FeedRecordFormContent = ({
         component={PetSelector}
         onPress={() => {
           navigation.navigate("PetSelect", {
-            backScreen: "CreateWeightRecord",
+            backScreen: "CreatePetWeightRecord",
           });
         }}
       />
@@ -272,7 +272,7 @@ const FeedRecordFormContent = ({
   );
 };
 
-export default CreateWeightRecord;
+export default CreatePetWeightRecord;
 
 const styles = StyleSheet.create({
   caption: {

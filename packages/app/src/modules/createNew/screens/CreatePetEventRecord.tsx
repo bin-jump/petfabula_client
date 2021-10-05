@@ -104,7 +104,7 @@ const CreatePetEventRecord = () => {
 
   return (
     <DismissKeyboardView>
-      <View>
+      <View style={{}}>
         <TouchableOpacity
           onPress={() => {
             navigation.goBack();

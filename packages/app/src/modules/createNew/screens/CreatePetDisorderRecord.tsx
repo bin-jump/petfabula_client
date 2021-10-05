@@ -11,17 +11,18 @@ import { Field, Formik } from "formik";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
+import { BlurView } from "expo-blur";
 import {
   BlankInput,
   useDidUpdateEffect,
   DismissKeyboardView,
   PendingOverlay,
-  validSelect,
 } from "../../shared";
 import {
   Pet,
-  FeedRecordForm,
-  validFeedRecordFormSchema,
+  DisorderRecordForm,
+  validDisorderRecordFormSchema,
+  DisplayImage,
 } from "@petfabula/common";
 import ParamTypes from "./paramTypes";
 import ActionIcon from "../components/ActionIcon";
@@ -29,59 +30,87 @@ import {
   RecordDateField,
   RecordTimeField,
   RecordFilledInputField,
-  RecordBlankInputField,
   PetSelector,
 } from "../components/PetRecordComponents";
-import { useCreateFeedRecord, useUpdateFeedRecord } from "@petfabula/common";
+import ImageSelector from "../components/ImageSelector";
+import {
+  useCreateDisroderRecord,
+  useUpdateDisroderRecord,
+} from "@petfabula/common";
+import { ImageFile, validSelect } from "../../shared";
 
-const CreateFeedRecord = () => {
+const CreatePetDisorderRecord = () => {
+  const [images, setImages] = useState<ImageFile[]>([]);
   const { theme } = useTheme();
   const { t } = useTranslation();
-  const { createFeedRecord } = useCreateFeedRecord();
-  const { updateFeedRecord } = useUpdateFeedRecord();
-
-  const { params } = useRoute<RouteProp<ParamTypes, "CreateFeedRecord">>();
+  const { createDisorderRecord } = useCreateDisroderRecord();
+  const { updateDisorderRecord } = useUpdateDisroderRecord();
+  const { params } =
+    useRoute<RouteProp<ParamTypes, "CreatePetDisorderRecord">>();
   const record = params?.record;
+  const [existImages, setExistImages] = useState<DisplayImage[]>(
+    record ? record.images : []
+  );
   const pet = validSelect(params?.pet) ? params?.pet : record?.pet;
   const disableSelectPet = record ? true : false;
 
   const navigation = useNavigation();
   const { top } = useSafeAreaInsets();
 
-  const initial: FeedRecordForm = record
+  const initial: DisorderRecordForm = record
     ? {
-        petId: record.petId,
-        amount: record.amount,
-        foodContent: record.foodContent,
-        note: record.note,
+        petId: record.pet.id,
+        disorderType: record.disorderType,
+        content: record.content,
         dateTime: record.dateTime,
       }
     : {
         petId: pet?.id as any,
-        amount: "" as any,
-        foodContent: "",
-        note: "",
+        disorderType: null,
+        content: "",
         dateTime: new Date().getTime(),
       };
 
-  const handleUpdate = (data: FeedRecordForm) => {
+  const handleSelect = (image: ImageFile) => {
+    setImages([...images, image]);
+  };
+
+  const handleRemove = (index: number) => {
+    images.splice(index, 1);
+    setImages([...images]);
+  };
+
+  const handleUpdate = (data: DisorderRecordForm) => {
     if (record) {
-      updateFeedRecord({ ...record, ...data });
+      updateDisorderRecord({ ...record, ...data, images: existImages }, images);
     }
   };
 
-  const handleSubmit = (data: FeedRecordForm) => {
+  const handleCreate = (data: DisorderRecordForm) => {
+    createDisorderRecord({ ...data }, images);
+  };
+
+  const handleSubmit = (data: DisorderRecordForm) => {
     // console.log(data);
     if (record) {
       handleUpdate(data);
     } else {
-      createFeedRecord(data);
+      handleCreate(data);
     }
+  };
+
+  const handleRemoveExistImage = (id: number) => {
+    const im = existImages.filter((item) => item.id != id);
+    setExistImages(im);
   };
 
   return (
     <DismissKeyboardView>
-      <View>
+      <View
+        style={{
+          backgroundColor: "rgba(1, 1, 1, 0.6)",
+        }}
+      >
         <TouchableOpacity
           onPress={() => {
             navigation.goBack();
@@ -123,11 +152,11 @@ const CreateFeedRecord = () => {
             }}
           >
             <ActionIcon
-              type="material-community"
-              name="silverware-fork-knife"
+              type="material"
+              name="mood-bad"
               size={40}
-              backgroundColor="#fcead0"
-              iconColor="#febe8a"
+              backgroundColor="#f4e9e0"
+              iconColor="#d56940"
             />
             <Text
               style={{
@@ -137,12 +166,12 @@ const CreateFeedRecord = () => {
                 marginBottom: 20,
               }}
             >
-              {t("pet.action.food")}
+              {t("pet.action.disorder")}
             </Text>
             <Formik
               initialValues={initial}
               onSubmit={handleSubmit}
-              validationSchema={validFeedRecordFormSchema}
+              validationSchema={validDisorderRecordFormSchema}
             >
               {({ values, setErrors, handleSubmit, handleBlur, setValues }) => (
                 <FeedRecordFormContent
@@ -153,7 +182,13 @@ const CreateFeedRecord = () => {
                     handleBlur,
                     setValues,
                     pet,
+
                     disableSelectPet,
+                    handleRemoveExistImage,
+                    existImages,
+                    images,
+                    handleSelect,
+                    handleRemove,
                   }}
                 />
               )}
@@ -168,42 +203,54 @@ const CreateFeedRecord = () => {
 const FeedRecordFormContent = ({
   values,
   pet,
-  disableSelectPet,
   handleSubmit,
   setErrors,
   handleBlur,
   setValues,
+
+  disableSelectPet,
+  existImages,
+  images,
+  handleSelect,
+  handleRemove,
+  handleRemoveExistImage,
 }: {
-  values: FeedRecordForm;
+  values: DisorderRecordForm;
   handleSubmit: any;
   pet: Pet | null | undefined;
-  disableSelectPet: boolean;
   setErrors: (errors: any) => void;
   handleBlur: (e: any) => void;
-  setValues: (val: FeedRecordForm) => void;
+  setValues: (val: DisorderRecordForm) => void;
+
+  disableSelectPet: boolean;
+  existImages?: DisplayImage[];
+  images: ImageFile[];
+  handleSelect: (image: ImageFile) => void;
+  handleRemove: (index: number) => void;
+  handleRemoveExistImage: (id: number) => void;
 }) => {
   const { theme } = React.useContext(ThemeContext);
   const navigation = useNavigation();
   const { t } = useTranslation();
-  const { result, pending } = useCreateFeedRecord();
+  const { result, pending } = useCreateDisroderRecord();
   const { result: updateResult, pending: updatePending } =
-    useUpdateFeedRecord();
+    useUpdateDisroderRecord();
 
   useEffect(() => {
     setValues({ ...values, petId: pet ? pet.id : (null as any) });
   }, [pet]);
 
   useDidUpdateEffect(() => {
-    if (updateResult) {
-      navigation.goBack();
-    }
-  }, [updateResult]);
-
-  useDidUpdateEffect(() => {
     if (result) {
       navigation.goBack();
     }
   }, [result]);
+
+  useDidUpdateEffect(() => {
+    if (updateResult) {
+      navigation.goBack();
+    }
+  }, [updateResult]);
 
   return (
     <View
@@ -217,7 +264,9 @@ const FeedRecordFormContent = ({
         disabled={disableSelectPet}
         component={PetSelector}
         onPress={() => {
-          navigation.navigate("PetSelect", { backScreen: "CreateFeedRecord" });
+          navigation.navigate("PetSelect", {
+            backScreen: "CreatePetDisorderRecord",
+          });
         }}
       />
 
@@ -241,34 +290,22 @@ const FeedRecordFormContent = ({
       />
 
       <Field
-        name="amount"
-        placeholder={t("pet.record.foodAmountPlaceholder")}
-        component={RecordBlankInputField}
-        autoFocus
-        multiline
-        width={170}
-        keyboardType="number-pad"
-        rightIcon={() => {
-          return (
-            <Text style={{ color: theme.colors?.grey1, fontSize: 20 }}>g</Text>
-          );
-        }}
-      />
-
-      <Field
-        name="foodContent"
-        placeholder={`${t("pet.record.foodContentPlaceholder")}`}
-        component={RecordFilledInputField}
-        title={t("pet.record.editFoodContent")}
-      />
-
-      <Field
-        name="note"
-        placeholder={`${t("pet.record.notePlaceholder")}`}
+        name="content"
+        placeholder={`${t("pet.record.disorderContentPlaceholder")}`}
         component={RecordFilledInputField}
         multiline
         title={t("pet.record.editNote")}
       />
+
+      <View style={{ width: "100%", marginBottom: 12 }}>
+        <ImageSelector
+          handleExistImageRemove={handleRemoveExistImage}
+          existImages={existImages}
+          images={images}
+          onSelect={handleSelect}
+          onRemove={handleRemove}
+        />
+      </View>
 
       <Button
         containerStyle={{ width: "100%" }}
@@ -281,7 +318,7 @@ const FeedRecordFormContent = ({
   );
 };
 
-export default CreateFeedRecord;
+export default CreatePetDisorderRecord;
 
 const styles = StyleSheet.create({
   caption: {

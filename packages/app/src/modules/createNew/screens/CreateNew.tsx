@@ -1,7 +1,7 @@
 import * as React from "react";
 import { View, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import { Text, Icon, useTheme } from "react-native-elements";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, StackActions } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import ActionIcon from "../components/ActionIcon";
 import { BlurView } from "expo-blur";
@@ -99,26 +99,27 @@ const CreateNew = () => {
   return (
     <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
       <BlurView
-        intensity={90}
+        intensity={95}
         style={{
           height: "100%",
           width: "100%",
           backgroundColor: "transparent",
           justifyContent: "flex-end",
           alignItems: "center",
-          paddingBottom: 90,
-          paddingHorizontal: 16,
+          // paddingBottom: 30,
+          // paddingHorizontal: 16,
         }}
       >
         <TouchableWithoutFeedback>
           <View
             style={{
-              height: 240,
+              height: 300,
               width: "100%",
               backgroundColor: theme.colors?.white,
-              padding: 20,
-              paddingTop: 30,
-              borderRadius: 12,
+              padding: 28,
+              paddingTop: 16,
+              // paddingBottom: 30,
+              borderRadius: 28,
               elevation: 3,
               shadowOffset: {
                 width: 4,
@@ -129,16 +130,32 @@ const CreateNew = () => {
               shadowColor: theme.colors?.grey2,
             }}
           >
+            <View
+              style={{
+                alignItems: "flex-end",
+                width: "100%",
+                marginBottom: 16,
+              }}
+            >
+              <Icon
+                onPress={() => {
+                  navigation.goBack();
+                  // navigation.navigate("SelectPetEventType", { dismiss: true });
+                }}
+                type="material-community"
+                name="close-thick"
+                size={28}
+                color={theme.colors?.grey2}
+              />
+            </View>
             <View style={{ flexDirection: "row" }}>
               <ActionButton
                 color="#96a0e9"
                 label={t("createNew.createPost")}
                 icon={{ size: 36, type: "material-community", name: "feather" }}
                 action={() => {
-                  navigation.navigate("CreatePost");
-                  // navigation.navigate("CreateNew", {
-                  //   screen: "CreatePost",
-                  // });
+                  // navigation.navigate("CreatePost");
+                  navigation.dispatch(StackActions.replace("CreatePost"));
                 }}
               />
 
@@ -151,7 +168,8 @@ const CreateNew = () => {
                   name: "comment-question-outline",
                 }}
                 action={() => {
-                  navigation.navigate("CreateQuestion");
+                  // navigation.navigate("CreateQuestion");
+                  navigation.dispatch(StackActions.replace("CreateQuestion"));
                 }}
               />
             </View>
@@ -170,7 +188,10 @@ const CreateNew = () => {
                 iconColor="#febe8a"
                 label={t("pet.action.food")}
                 onPress={() => {
-                  navigation.navigate("CreateFeedRecord");
+                  // navigation.navigate("CreatePetFeedRecord");
+                  navigation.dispatch(
+                    StackActions.replace("CreatePetFeedRecord")
+                  );
                 }}
               />
 
@@ -181,7 +202,10 @@ const CreateNew = () => {
                 iconColor="#94afef"
                 label={t("pet.action.weight")}
                 onPress={() => {
-                  navigation.navigate("CreateWeightRecord");
+                  // navigation.navigate("CreatePetWeightRecord");
+                  navigation.dispatch(
+                    StackActions.replace("CreatePetWeightRecord")
+                  );
                 }}
               />
 
@@ -192,7 +216,10 @@ const CreateNew = () => {
                 iconColor="#d56940"
                 label={t("pet.action.disorder")}
                 onPress={() => {
-                  navigation.navigate("CreateDisorderRecord");
+                  // navigation.navigate("CreatePetDisorderRecord");
+                  navigation.dispatch(
+                    StackActions.replace("CreatePetDisorderRecord")
+                  );
                 }}
               />
 
@@ -203,7 +230,10 @@ const CreateNew = () => {
                 iconColor="#68bbff"
                 label={t("pet.action.event")}
                 onPress={() => {
-                  navigation.navigate("SelectPetEventType");
+                  // navigation.navigate("SelectPetEventType");
+                  navigation.dispatch(
+                    StackActions.replace("SelectPetEventType")
+                  );
                 }}
               />
 
@@ -214,7 +244,10 @@ const CreateNew = () => {
                 iconColor="#f15e54"
                 label={t("pet.action.medical")}
                 onPress={() => {
-                  navigation.navigate("CreateMedicalRecord");
+                  // navigation.navigate("CreatePetMedicalRecord");
+                  navigation.dispatch(
+                    StackActions.replace("CreatePetMedicalRecord")
+                  );
                 }}
               />
             </View>

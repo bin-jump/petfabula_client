@@ -79,7 +79,7 @@ const Item = ({ record }: { record: RecordItemType }) => {
                 name="edit"
                 onPress={() => {
                   navigation.navigate("CreateNew", {
-                    screen: "CreateDisorderRecord",
+                    screen: "CreatePetDisorderRecord",
                     params: { record: record },
                   });
 

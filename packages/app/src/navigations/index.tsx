@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useCallback } from "react";
 import { View, AppState, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import {
   NavigationContainer,
   DefaultTheme,
@@ -31,6 +32,7 @@ import UserMain from "../modules/user";
 import NotificationMain from "../modules/notification";
 import CreateNew from "../modules/createNew";
 import SecondaryStack from "./SecondaryStack";
+// import CreateNewBottomSheet from "../modules/createNew/components/CreateNewBottomSheet";
 
 const Tabs = createBottomTabNavigator();
 const TopStack = createStackNavigator();
@@ -100,7 +102,7 @@ const AppScreen = () => {
               overlayStyle: {
                 opacity: progress.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [0, 0.3],
+                  outputRange: [0, 0.5],
                   extrapolate: "clamp",
                 }),
               },
@@ -124,7 +126,7 @@ const AppScreen = () => {
               overlayStyle: {
                 opacity: progress.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [0, 0.5],
+                  outputRange: [0, 0],
                   extrapolate: "clamp",
                 }),
               },
@@ -259,242 +261,261 @@ const TabScreen = () => {
       }),
   });
 
+  // const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  // const handlePresentModalPress = useCallback(() => {
+  //   bottomSheetModalRef.current?.present();
+  // }, [bottomSheetModalRef]);
+  // const handleClose = useCallback(() => {
+  //   bottomSheetModalRef.current?.close();
+  // }, [bottomSheetModalRef]);
+
   return (
-    <Tabs.Navigator
-      tabBarOptions={{
-        showLabel: false,
-        keyboardHidesTabBar: true,
-        style: {
-          position: "absolute",
-          left: 0,
-          bottom: 0,
-          right: 0,
-          borderTopWidth: 0,
-          //elevation: 0,
-          height: 70 + bottom / 2,
-          backgroundColor: theme.colors?.white,
-          justifyContent: "center",
-          elevation: 1,
-          shadowOffset: {
-            width: 2,
-            height: 1,
+    <View style={{ flex: 1 }}>
+      {/* <CreateNewBottomSheet
+        ref={bottomSheetModalRef}
+        handleClose={handleClose}
+      /> */}
+
+      <Tabs.Navigator
+        tabBarOptions={{
+          showLabel: false,
+          keyboardHidesTabBar: true,
+          style: {
+            position: "absolute",
+            left: 0,
+            bottom: 0,
+            right: 0,
+            borderTopWidth: 0,
+            //elevation: 0,
+            height: 70 + bottom / 2,
+            backgroundColor: theme.colors?.white,
+            justifyContent: "center",
+            elevation: 1,
+            shadowOffset: {
+              width: 2,
+              height: 1,
+            },
+            shadowOpacity: 0.7,
+            shadowRadius: 3,
+            shadowColor: theme.colors?.grey2,
           },
-          shadowOpacity: 0.7,
-          shadowRadius: 3,
-          shadowColor: theme.colors?.grey2,
-        },
-      }}
-    >
-      <Tabs.Screen
-        name="CommunityMain"
-        component={CommunityMain}
-        options={(navigation) => {
-          return {
-            tabBarVisible:
-              !getFocusedRouteNameFromRoute(navigation.route) ||
-              getFocusedRouteNameFromRoute(navigation.route) == "CommunityMain",
-            tabBarIcon: ({ focused }) => {
-              return (
-                <View style={styles.tabIconContainer}>
-                  <Icon
-                    type="ionicon"
-                    name={focused ? "home" : "home-outline"}
-                    size={iconSize}
-                    color={focused ? focusedColor : unFocusedColor}
-                  />
-                  <Text
-                    style={[
-                      styles.tabText,
-                      {
-                        color: focused ? focusedColor : unFocusedColor,
-                      },
-                    ]}
-                  >
-                    {t("mainTab.home")}
-                  </Text>
-                </View>
-              );
-            },
-          };
         }}
-      />
-
-      <Tabs.Screen
-        name="PetMain"
-        component={PetMain}
-        options={(navigation) => {
-          return {
-            tabBarLabel: "PetMain",
-            tabBarVisible:
-              !getFocusedRouteNameFromRoute(navigation.route) ||
-              getFocusedRouteNameFromRoute(navigation.route) == "PetMain",
-            tabBarIcon: ({ focused }) => {
-              return (
-                <View style={styles.tabIconContainer}>
-                  <Icon
-                    type="material-community"
-                    name={
-                      focused
-                        ? "bookmark-multiple"
-                        : "bookmark-multiple-outline"
-                    }
-                    size={iconSize}
-                    color={focused ? focusedColor : unFocusedColor}
-                  />
-                  <Text
-                    style={[
-                      styles.tabText,
-                      {
-                        color: focused ? focusedColor : unFocusedColor,
-                      },
-                    ]}
-                  >
-                    {t("mainTab.pet")}
-                  </Text>
-                </View>
-              );
-            },
-          };
-        }}
-      />
-
-      <Tabs.Screen
-        name="Create"
-        component={createNewPlaceholder}
-        options={(navigation) => {
-          return {
-            tabBarIcon: ({}) => {
-              return (
-                <View
-                  style={{
-                    // position: "absolute",
-                    // bottom: 0,
-                    // height: 72,
-                    // width: 72,
-                    // borderRadius: 36,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    alignContent: "center",
-                    shadowOffset: {
-                      width: 2,
-                      height: 1,
-                    },
-                    shadowOpacity: 0.8,
-                    shadowRadius: 3,
-                    shadowColor: theme.colors?.grey2,
-                    backgroundColor: focusedColor,
-                    borderRadius: 30,
-                    height: 46,
-                    width: 46,
-                  }}
-                >
-                  <Icon
-                    containerStyle={{}}
-                    type="material"
-                    name="add"
-                    size={32}
-                    color="#fff"
-                  />
-                </View>
-              );
-            },
-          };
-        }}
-        listeners={({ navigation }) => ({
-          tabPress: (event) => {
-            event.preventDefault();
-            navigation.navigate("CreateNew");
-          },
-        })}
-      />
-
-      <Tabs.Screen
-        name="NotificationMain"
-        component={NotificationMain}
-        options={(navigation) => {
-          return {
-            tabBarVisible:
-              !getFocusedRouteNameFromRoute(navigation.route) ||
-              getFocusedRouteNameFromRoute(navigation.route) ==
-                "NotificationMain",
-            tabBarIcon: ({ focused }) => {
-              return (
-                <View style={styles.tabIconContainer}>
-                  <View>
+      >
+        <Tabs.Screen
+          name="CommunityMain"
+          component={CommunityMain}
+          options={(navigation) => {
+            return {
+              tabBarVisible:
+                !getFocusedRouteNameFromRoute(navigation.route) ||
+                getFocusedRouteNameFromRoute(navigation.route) ==
+                  "CommunityMain",
+              tabBarIcon: ({ focused }) => {
+                return (
+                  <View style={styles.tabIconContainer}>
                     <Icon
                       type="ionicon"
-                      name={focused ? "notifications" : "notifications-outline"}
+                      name={focused ? "home" : "home-outline"}
                       size={iconSize}
                       color={focused ? focusedColor : unFocusedColor}
                     />
-                    {hasNotification ? (
-                      <View
-                        style={{
-                          borderColor: "#ffffff",
-                          borderWidth: 1,
-                          width: 12,
-                          height: 12,
-                          backgroundColor: "red",
-                          paddingHorizontal: 4,
-                          position: "absolute",
-                          borderRadius: 16,
-                          right: 1,
-                        }}
-                      ></View>
-                    ) : null}
+                    <Text
+                      style={[
+                        styles.tabText,
+                        {
+                          color: focused ? focusedColor : unFocusedColor,
+                        },
+                      ]}
+                    >
+                      {t("mainTab.home")}
+                    </Text>
                   </View>
+                );
+              },
+            };
+          }}
+        />
 
-                  <Text
-                    style={[
-                      styles.tabText,
-                      {
-                        color: focused ? focusedColor : unFocusedColor,
-                      },
-                    ]}
-                  >
-                    {t("mainTab.notification")}
-                  </Text>
-                </View>
-              );
-            },
-          };
-        }}
-      />
+        <Tabs.Screen
+          name="PetMain"
+          component={PetMain}
+          options={(navigation) => {
+            return {
+              tabBarLabel: "PetMain",
+              tabBarVisible:
+                !getFocusedRouteNameFromRoute(navigation.route) ||
+                getFocusedRouteNameFromRoute(navigation.route) == "PetMain",
+              tabBarIcon: ({ focused }) => {
+                return (
+                  <View style={styles.tabIconContainer}>
+                    <Icon
+                      type="material-community"
+                      name={
+                        focused
+                          ? "bookmark-multiple"
+                          : "bookmark-multiple-outline"
+                      }
+                      size={iconSize}
+                      color={focused ? focusedColor : unFocusedColor}
+                    />
+                    <Text
+                      style={[
+                        styles.tabText,
+                        {
+                          color: focused ? focusedColor : unFocusedColor,
+                        },
+                      ]}
+                    >
+                      {t("mainTab.pet")}
+                    </Text>
+                  </View>
+                );
+              },
+            };
+          }}
+        />
 
-      <Tabs.Screen
-        name="UserMain"
-        component={UserMain}
-        options={(navigation) => {
-          return {
-            tabBarVisible:
-              !getFocusedRouteNameFromRoute(navigation.route) ||
-              getFocusedRouteNameFromRoute(navigation.route) == "UserMain",
-            tabBarIcon: ({ focused }) => {
-              return (
-                <View style={styles.tabIconContainer}>
-                  <Icon
-                    type="font-awesome"
-                    name={focused ? "user" : "user-o"}
-                    size={iconSize}
-                    color={focused ? focusedColor : unFocusedColor}
-                  />
-                  <Text
-                    style={[
-                      styles.tabText,
-                      {
-                        color: focused ? focusedColor : unFocusedColor,
+        <Tabs.Screen
+          name="Create"
+          component={createNewPlaceholder}
+          options={(navigation) => {
+            return {
+              tabBarIcon: ({}) => {
+                return (
+                  <View
+                    style={{
+                      // position: "absolute",
+                      // bottom: 0,
+                      // height: 72,
+                      // width: 72,
+                      // borderRadius: 36,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      alignContent: "center",
+                      shadowOffset: {
+                        width: 2,
+                        height: 1,
                       },
-                    ]}
+                      shadowOpacity: 0.8,
+                      shadowRadius: 3,
+                      shadowColor: theme.colors?.grey2,
+                      backgroundColor: focusedColor,
+                      borderRadius: 30,
+                      height: 46,
+                      width: 46,
+                    }}
                   >
-                    {t("mainTab.user")}
-                  </Text>
-                </View>
-              );
+                    <Icon
+                      containerStyle={{}}
+                      type="material"
+                      name="add"
+                      size={32}
+                      color="#fff"
+                    />
+                  </View>
+                );
+              },
+            };
+          }}
+          listeners={({ navigation }) => ({
+            tabPress: (event) => {
+              event.preventDefault();
+              navigation.navigate("CreateNew");
+              // handlePresentModalPress();
             },
-          };
-        }}
-      />
-    </Tabs.Navigator>
+          })}
+        />
+
+        <Tabs.Screen
+          name="NotificationMain"
+          component={NotificationMain}
+          options={(navigation) => {
+            return {
+              tabBarVisible:
+                !getFocusedRouteNameFromRoute(navigation.route) ||
+                getFocusedRouteNameFromRoute(navigation.route) ==
+                  "NotificationMain",
+              tabBarIcon: ({ focused }) => {
+                return (
+                  <View style={styles.tabIconContainer}>
+                    <View>
+                      <Icon
+                        type="ionicon"
+                        name={
+                          focused ? "notifications" : "notifications-outline"
+                        }
+                        size={iconSize}
+                        color={focused ? focusedColor : unFocusedColor}
+                      />
+                      {hasNotification ? (
+                        <View
+                          style={{
+                            borderColor: "#ffffff",
+                            borderWidth: 1,
+                            width: 12,
+                            height: 12,
+                            backgroundColor: "red",
+                            paddingHorizontal: 4,
+                            position: "absolute",
+                            borderRadius: 16,
+                            right: 1,
+                          }}
+                        ></View>
+                      ) : null}
+                    </View>
+
+                    <Text
+                      style={[
+                        styles.tabText,
+                        {
+                          color: focused ? focusedColor : unFocusedColor,
+                        },
+                      ]}
+                    >
+                      {t("mainTab.notification")}
+                    </Text>
+                  </View>
+                );
+              },
+            };
+          }}
+        />
+
+        <Tabs.Screen
+          name="UserMain"
+          component={UserMain}
+          options={(navigation) => {
+            return {
+              tabBarVisible:
+                !getFocusedRouteNameFromRoute(navigation.route) ||
+                getFocusedRouteNameFromRoute(navigation.route) == "UserMain",
+              tabBarIcon: ({ focused }) => {
+                return (
+                  <View style={styles.tabIconContainer}>
+                    <Icon
+                      type="font-awesome"
+                      name={focused ? "user" : "user-o"}
+                      size={iconSize}
+                      color={focused ? focusedColor : unFocusedColor}
+                    />
+                    <Text
+                      style={[
+                        styles.tabText,
+                        {
+                          color: focused ? focusedColor : unFocusedColor,
+                        },
+                      ]}
+                    >
+                      {t("mainTab.user")}
+                    </Text>
+                  </View>
+                );
+              },
+            };
+          }}
+        />
+      </Tabs.Navigator>
+    </View>
   );
 };
 

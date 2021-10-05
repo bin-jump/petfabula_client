@@ -17,6 +17,23 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import ParamTypes from "./paramTypes";
 
+const iconContent: { [key: string]: { type: string; name: string } } = {
+  DEWORM: { type: "font-awesome-5", name: "bug" },
+  CARE: { type: "font-awesome-5", name: "hand-holding-heart" },
+  TREATMENT: { type: "font-awesome-5", name: "notes-medical" },
+  INSURANCE: { type: "font-awesome-5", name: "shield-alt" },
+  TOILET: { type: "font-awesome-5", name: "toilet" },
+  WALK: { type: "font-awesome-5", name: "dog" },
+  BEAUTY: { type: "material-community", name: "hair-dryer" },
+  OTHERS: { type: "feather", name: "more-horizontal" },
+};
+// const iconContent = (action: string) => {
+
+//   if () {
+
+//   }
+// }
+
 const EventTypeItem = ({ type }: { type: string }) => {
   const { theme } = useTheme();
   const { t } = useTranslation();
@@ -52,6 +69,12 @@ const EventTypeItem = ({ type }: { type: string }) => {
           // borderColor: theme.colors?.primary,
         }}
       >
+        <Icon
+          containerStyle={{ marginBottom: 16 }}
+          {...iconContent[type]}
+          color={theme.colors?.black}
+          size={32}
+        />
         <Text
           style={{
             color: theme.colors?.black,
@@ -81,7 +104,7 @@ const SelectPetEventType = () => {
   });
 
   return (
-    <View>
+    <View style={{ backgroundColor: "rgba(1, 1, 1, 0.6)" }}>
       <TouchableOpacity
         onPress={() => {
           navigation.goBack();
@@ -131,52 +154,21 @@ const SelectPetEventType = () => {
           </Text>
 
           <View style={{ width: "100%", marginTop: 10, paddingHorizontal: 16 }}>
-            <View
-              style={{
-                width: "100%",
-                flexDirection: "row",
-                alignItems: "flex-start",
-                justifyContent: "space-around",
-              }}
-            >
+            <View style={styles.actionRow}>
               <EventTypeItem type={"DEWORM"} />
               <EventTypeItem type={"CARE"} />
             </View>
-            <View
-              style={{
-                marginTop: 30,
-                width: "100%",
-                flexDirection: "row",
-                alignItems: "flex-start",
-                justifyContent: "space-around",
-              }}
-            >
+            <View style={styles.actionRow}>
               <EventTypeItem type={"TREATMENT"} />
               <EventTypeItem type={"INSURANCE"} />
             </View>
 
-            <View
-              style={{
-                marginTop: 30,
-                width: "100%",
-                flexDirection: "row",
-                alignItems: "flex-start",
-                justifyContent: "space-around",
-              }}
-            >
+            <View style={styles.actionRow}>
               <EventTypeItem type={"TOILET"} />
               <EventTypeItem type={"WALK"} />
             </View>
 
-            <View
-              style={{
-                marginTop: 30,
-                width: "100%",
-                flexDirection: "row",
-                alignItems: "flex-start",
-                justifyContent: "space-around",
-              }}
-            >
+            <View style={styles.actionRow}>
               <EventTypeItem type={"BEAUTY"} />
               <EventTypeItem type={"OTHERS"} />
             </View>
@@ -192,5 +184,12 @@ export default SelectPetEventType;
 const styles = StyleSheet.create({
   caption: {
     fontSize: 18,
+  },
+  actionRow: {
+    marginTop: 30,
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-around",
   },
 });

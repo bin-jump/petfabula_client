@@ -94,7 +94,7 @@ const Item = ({ record }: { record: FeedRecordItemType }) => {
                 name="edit"
                 onPress={() => {
                   navigation.navigate("CreateNew", {
-                    screen: "CreateFeedRecord",
+                    screen: "CreatePetFeedRecord",
                     params: { record: record },
                   });
 

@@ -16,14 +16,12 @@ import {
   useDidUpdateEffect,
   DismissKeyboardView,
   PendingOverlay,
+  validSelect,
 } from "../../shared";
 import {
   Pet,
-  MedicalRecordForm,
-  validMedicalRecordFormSchema,
-  useCreateMedicalRecord,
-  useUpdateMedicalRecord,
-  DisplayImage,
+  FeedRecordForm,
+  validFeedRecordFormSchema,
 } from "@petfabula/common";
 import ParamTypes from "./paramTypes";
 import ActionIcon from "../components/ActionIcon";
@@ -31,83 +29,59 @@ import {
   RecordDateField,
   RecordTimeField,
   RecordFilledInputField,
+  RecordBlankInputField,
   PetSelector,
 } from "../components/PetRecordComponents";
-import ImageSelector from "../components/ImageSelector";
-import { ImageFile, validSelect } from "../../shared";
+import { useCreateFeedRecord, useUpdateFeedRecord } from "@petfabula/common";
 
-const CreateMedicalRecord = () => {
-  const [images, setImages] = useState<ImageFile[]>([]);
+const CreatePetFeedRecord = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
-  const { createMedicalRecord } = useCreateMedicalRecord();
-  const { updateMedicalRecord } = useUpdateMedicalRecord();
-  const { params } = useRoute<RouteProp<ParamTypes, "CreateMedicalRecord">>();
+  const { createFeedRecord } = useCreateFeedRecord();
+  const { updateFeedRecord } = useUpdateFeedRecord();
+
+  const { params } = useRoute<RouteProp<ParamTypes, "CreatePetFeedRecord">>();
   const record = params?.record;
-  const [existImages, setExistImages] = useState<DisplayImage[]>(
-    record ? record.images : []
-  );
   const pet = validSelect(params?.pet) ? params?.pet : record?.pet;
   const disableSelectPet = record ? true : false;
+
   const navigation = useNavigation();
   const { top } = useSafeAreaInsets();
 
-  const initial: MedicalRecordForm = record
+  const initial: FeedRecordForm = record
     ? {
-        petId: record.pet.id,
-        dateTime: record.dateTime,
-        hospitalName: record.hospitalName,
-        symptom: record.symptom,
-        diagnosis: record.diagnosis,
-        treatment: record.treatment,
+        petId: record.petId,
+        amount: record.amount,
+        foodContent: record.foodContent,
         note: record.note,
+        dateTime: record.dateTime,
       }
     : {
         petId: pet?.id as any,
-        dateTime: new Date().getTime(),
-        hospitalName: "",
-        symptom: "",
-        diagnosis: "",
-        treatment: "",
+        amount: "" as any,
+        foodContent: "",
         note: "",
+        dateTime: new Date().getTime(),
       };
 
-  const handleSelect = (image: ImageFile) => {
-    setImages([...images, image]);
-  };
-
-  const handleRemove = (index: number) => {
-    images.splice(index, 1);
-    setImages([...images]);
-  };
-
-  const handleUpdate = (data: MedicalRecordForm) => {
+  const handleUpdate = (data: FeedRecordForm) => {
     if (record) {
-      updateMedicalRecord({ ...record, ...data, images: existImages }, images);
+      updateFeedRecord({ ...record, ...data });
     }
   };
 
-  const handleCreate = (data: MedicalRecordForm) => {
-    createMedicalRecord({ ...data }, images);
-  };
-
-  const handleSubmit = (data: MedicalRecordForm) => {
+  const handleSubmit = (data: FeedRecordForm) => {
     // console.log(data);
     if (record) {
       handleUpdate(data);
     } else {
-      handleCreate(data);
+      createFeedRecord(data);
     }
-  };
-
-  const handleRemoveExistImage = (id: number) => {
-    const im = existImages.filter((item) => item.id != id);
-    setExistImages(im);
   };
 
   return (
     <DismissKeyboardView>
-      <View>
+      <View style={{ backgroundColor: "rgba(1, 1, 1, 0.6)" }}>
         <TouchableOpacity
           onPress={() => {
             navigation.goBack();
@@ -138,24 +112,22 @@ const CreateMedicalRecord = () => {
             />
           </View>
           <ScrollView
-            showsVerticalScrollIndicator={false}
             contentContainerStyle={{
-              minHeight: "100%",
+              height: "100%",
               width: "100%",
               backgroundColor: theme.colors?.white,
               // paddingHorizontal: 16,
               alignItems: "center",
               // paddingTop: 16,
               // borderRadius: 24,
-              paddingBottom: 230,
             }}
           >
             <ActionIcon
               type="material-community"
-              name="hospital-box-outline"
+              name="silverware-fork-knife"
               size={40}
-              backgroundColor="#fcdcd2"
-              iconColor="#f15e54"
+              backgroundColor="#fcead0"
+              iconColor="#febe8a"
             />
             <Text
               style={{
@@ -165,12 +137,12 @@ const CreateMedicalRecord = () => {
                 marginBottom: 20,
               }}
             >
-              {t("pet.action.medical")}
+              {t("pet.action.food")}
             </Text>
             <Formik
               initialValues={initial}
               onSubmit={handleSubmit}
-              validationSchema={validMedicalRecordFormSchema}
+              validationSchema={validFeedRecordFormSchema}
             >
               {({ values, setErrors, handleSubmit, handleBlur, setValues }) => (
                 <FeedRecordFormContent
@@ -181,13 +153,7 @@ const CreateMedicalRecord = () => {
                     handleBlur,
                     setValues,
                     pet,
-
                     disableSelectPet,
-                    handleRemoveExistImage,
-                    existImages,
-                    images,
-                    handleSelect,
-                    handleRemove,
                   }}
                 />
               )}
@@ -202,54 +168,42 @@ const CreateMedicalRecord = () => {
 const FeedRecordFormContent = ({
   values,
   pet,
+  disableSelectPet,
   handleSubmit,
   setErrors,
   handleBlur,
   setValues,
-
-  disableSelectPet,
-  existImages,
-  images,
-  handleSelect,
-  handleRemove,
-  handleRemoveExistImage,
 }: {
-  values: MedicalRecordForm;
+  values: FeedRecordForm;
   handleSubmit: any;
   pet: Pet | null | undefined;
+  disableSelectPet: boolean;
   setErrors: (errors: any) => void;
   handleBlur: (e: any) => void;
-  setValues: (val: MedicalRecordForm) => void;
-
-  disableSelectPet: boolean;
-  existImages?: DisplayImage[];
-  images: ImageFile[];
-  handleSelect: (image: ImageFile) => void;
-  handleRemove: (index: number) => void;
-  handleRemoveExistImage: (id: number) => void;
+  setValues: (val: FeedRecordForm) => void;
 }) => {
   const { theme } = React.useContext(ThemeContext);
   const navigation = useNavigation();
   const { t } = useTranslation();
-  const { result, pending } = useCreateMedicalRecord();
+  const { result, pending } = useCreateFeedRecord();
   const { result: updateResult, pending: updatePending } =
-    useUpdateMedicalRecord();
+    useUpdateFeedRecord();
 
   useEffect(() => {
     setValues({ ...values, petId: pet ? pet.id : (null as any) });
   }, [pet]);
 
   useDidUpdateEffect(() => {
-    if (result) {
-      navigation.goBack();
-    }
-  }, [result]);
-
-  useDidUpdateEffect(() => {
     if (updateResult) {
       navigation.goBack();
     }
   }, [updateResult]);
+
+  useDidUpdateEffect(() => {
+    if (result) {
+      navigation.goBack();
+    }
+  }, [result]);
 
   return (
     <View
@@ -260,11 +214,11 @@ const FeedRecordFormContent = ({
       <Field
         name="petId"
         pet={pet}
-        component={PetSelector}
         disabled={disableSelectPet}
+        component={PetSelector}
         onPress={() => {
           navigation.navigate("PetSelect", {
-            backScreen: "CreateMedicalRecord",
+            backScreen: "CreatePetFeedRecord",
           });
         }}
       />
@@ -289,34 +243,25 @@ const FeedRecordFormContent = ({
       />
 
       <Field
-        name="hospitalName"
-        placeholder={`${t("pet.record.hospitalNamePlaceholder")}`}
-        component={RecordFilledInputField}
-        title={t("pet.record.editHospitalName")}
+        name="amount"
+        placeholder={t("pet.record.foodAmountPlaceholder")}
+        component={RecordBlankInputField}
+        autoFocus
+        multiline
+        width={170}
+        keyboardType="number-pad"
+        rightIcon={() => {
+          return (
+            <Text style={{ color: theme.colors?.grey1, fontSize: 20 }}>g</Text>
+          );
+        }}
       />
 
       <Field
-        name="symptom"
-        placeholder={`${t("pet.record.symptomPlaceholder")}`}
+        name="foodContent"
+        placeholder={`${t("pet.record.foodContentPlaceholder")}`}
         component={RecordFilledInputField}
-        multiline
-        title={t("pet.record.editSymptom")}
-      />
-
-      <Field
-        name="diagnosis"
-        placeholder={`${t("pet.record.diagnosisPlaceholder")}`}
-        component={RecordFilledInputField}
-        multiline
-        title={t("pet.record.editDiagnosis")}
-      />
-
-      <Field
-        name="treatment"
-        placeholder={`${t("pet.record.treatmentPlaceholder")}`}
-        component={RecordFilledInputField}
-        multiline
-        title={t("pet.record.editTreatment")}
+        title={t("pet.record.editFoodContent")}
       />
 
       <Field
@@ -326,16 +271,6 @@ const FeedRecordFormContent = ({
         multiline
         title={t("pet.record.editNote")}
       />
-
-      <View style={{ width: "100%", marginBottom: 12 }}>
-        <ImageSelector
-          handleExistImageRemove={handleRemoveExistImage}
-          existImages={existImages}
-          images={images}
-          onSelect={handleSelect}
-          onRemove={handleRemove}
-        />
-      </View>
 
       <Button
         containerStyle={{ width: "100%" }}
@@ -348,7 +283,7 @@ const FeedRecordFormContent = ({
   );
 };
 
-export default CreateMedicalRecord;
+export default CreatePetFeedRecord;
 
 const styles = StyleSheet.create({
   caption: {
