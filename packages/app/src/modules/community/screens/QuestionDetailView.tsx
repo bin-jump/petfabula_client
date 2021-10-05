@@ -533,49 +533,53 @@ const QuestionDetailView = () => {
           >
             <View
               style={{
+                minHeight: 140,
                 paddingVertical: 18,
                 paddingHorizontal: 16,
                 backgroundColor: theme.colors?.white,
+                justifyContent: "space-between",
               }}
             >
-              <Text h3>{question.title}</Text>
+              <View>
+                <Text h3>{question.title}</Text>
 
-              <View
-                style={{
-                  flexDirection: "row",
-                  marginTop: 3,
-                  flexWrap: "wrap",
-                }}
-              >
-                {question.images.map((item, index) => {
-                  return (
-                    <OverlayImage
-                      key={index}
-                      image={item}
-                      height={90}
-                      width={90}
-                      style={{ marginRight: 6, marginTop: 6 }}
-                    />
-                  );
-                })}
-              </View>
-
-              {question.content ? (
-                <Text style={{ fontSize: 18, marginTop: 12 }}>
-                  {question.content}
-                </Text>
-              ) : null}
-
-              {question.relatePet ? (
-                <RelatePetItem
-                  onPress={() => {
-                    navigation.push("PetDetailView", {
-                      petId: question.relatePetId,
-                    });
+                <View
+                  style={{
+                    flexDirection: "row",
+                    marginTop: 3,
+                    flexWrap: "wrap",
                   }}
-                  pet={question.relatePet}
-                />
-              ) : null}
+                >
+                  {question.images.map((item, index) => {
+                    return (
+                      <OverlayImage
+                        key={index}
+                        image={item}
+                        height={90}
+                        width={90}
+                        style={{ marginRight: 6, marginTop: 6 }}
+                      />
+                    );
+                  })}
+                </View>
+
+                {question.content ? (
+                  <Text style={{ fontSize: 18, marginTop: 12 }}>
+                    {question.content}
+                  </Text>
+                ) : null}
+
+                {question.relatePet ? (
+                  <RelatePetItem
+                    onPress={() => {
+                      navigation.push("PetDetailView", {
+                        petId: question.relatePetId,
+                      });
+                    }}
+                    pet={question.relatePet}
+                  />
+                ) : null}
+              </View>
 
               <Text
                 style={{
@@ -587,6 +591,7 @@ const QuestionDetailView = () => {
                 {milisecToAgo(question.createdDate)}
               </Text>
             </View>
+
             <View
               style={{
                 marginTop: 18,

@@ -14,6 +14,7 @@ import {
   ListRenderItem,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  StyleSheet,
 } from "react-native";
 import { useTheme, Text, Divider, Icon, Button } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -110,6 +111,7 @@ const UserPosts = (props: ListProps) => {
   return (
     <FlatList
       keyExtractor={keyExtractor}
+      contentContainerStyle={styles.contentContainerStyle}
       {...props}
       data={posts}
       pending={initializing}
@@ -171,6 +173,7 @@ const UserQuestions = (props: ListProps) => {
   return (
     <FlatList
       keyExtractor={keyExtractor}
+      contentContainerStyle={styles.contentContainerStyle}
       {...props}
       data={questions}
       renderItem={renderItem}
@@ -233,6 +236,7 @@ const UserAnswers = (props: ListProps) => {
   return (
     <FlatList
       keyExtractor={keyExtractor}
+      contentContainerStyle={styles.contentContainerStyle}
       {...props}
       pending={initializing}
       data={answers}
@@ -292,6 +296,7 @@ const UserCollectedPosts = (props: ListProps) => {
   return (
     <FlatList
       keyExtractor={keyExtractor}
+      contentContainerStyle={styles.contentContainerStyle}
       {...props}
       pending={initializing}
       data={posts}
@@ -764,3 +769,7 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
+
+const styles = StyleSheet.create({
+  contentContainerStyle: { paddingBottom: 20 },
+});

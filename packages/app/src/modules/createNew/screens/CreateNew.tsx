@@ -4,6 +4,7 @@ import { Text, Icon, useTheme } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import ActionIcon from "../components/ActionIcon";
+import { BlurView } from "expo-blur";
 
 const ActionButton = ({
   label,
@@ -97,7 +98,8 @@ const CreateNew = () => {
 
   return (
     <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
-      <View
+      <BlurView
+        intensity={90}
         style={{
           height: "100%",
           width: "100%",
@@ -134,6 +136,9 @@ const CreateNew = () => {
                 icon={{ size: 36, type: "material-community", name: "feather" }}
                 action={() => {
                   navigation.navigate("CreatePost");
+                  // navigation.navigate("CreateNew", {
+                  //   screen: "CreatePost",
+                  // });
                 }}
               />
 
@@ -215,7 +220,7 @@ const CreateNew = () => {
             </View>
           </View>
         </TouchableWithoutFeedback>
-      </View>
+      </BlurView>
     </TouchableWithoutFeedback>
   );
 };

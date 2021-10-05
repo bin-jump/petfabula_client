@@ -60,6 +60,7 @@ const Header = ({
   return (
     <ScrollView
       horizontal
+      showsHorizontalScrollIndicator={false}
       contentContainerStyle={{
         height: 60,
         justifyContent: "center",

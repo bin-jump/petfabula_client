@@ -358,21 +358,22 @@ const PetMain = () => {
         <View style={{ width: 50 }}></View>
         <Text h3>{t("pet.title")}</Text>
         <View style={{ width: 50, paddingRight: 16 }}>
-          <TouchableOpacity
-            onPress={() => {
-              // navigation.navigate("CreatePet", { feederId: currentUser?.id });
-              navigation.navigate("CreateNew", {
-                screen: "CreatePet",
-              });
-            }}
-          >
-            <Icon
-              type="ionicons"
-              name="add-circle-outline"
-              color={theme.colors?.black}
-              size={28}
-            />
-          </TouchableOpacity>
+          {currentUser && (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("CreateNew", {
+                  screen: "CreatePet",
+                });
+              }}
+            >
+              <Icon
+                type="ionicons"
+                name="add-circle-outline"
+                color={theme.colors?.black}
+                size={28}
+              />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
       {currentUser ? <PetContent /> : <PetLoginPlease />}

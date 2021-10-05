@@ -83,18 +83,22 @@ const QuestionItem = ({
       <View
         style={{
           marginTop: 8,
+          marginHorizontal: 8,
+          borderRadius: 8,
           minHeight: 160,
           backgroundColor: theme.colors?.white,
           padding: 16,
-          justifyContent: "flex-start",
+          paddingVertical: 20,
+          justifyContent: "space-between",
           shadowColor: theme.colors?.grey2,
           shadowOffset: { width: 2, height: 4 },
           shadowOpacity: 0.3,
           elevation: 2,
         }}
       >
-        <Text h3>{question.title}</Text>
-        <AvatarField
+        <View style={{ marginBottom: 16 }}>
+          <Text h3>{question.title}</Text>
+          {/* <AvatarField
           style={{ marginBottom: 3, marginTop: 12 }}
           name={question.participator.name}
           photo={question.participator.photo}
@@ -105,29 +109,48 @@ const QuestionItem = ({
             color: theme.colors?.grey0,
           }}
           size={26}
-        />
-        {renderContent()}
+        /> */}
+          {renderContent()}
+        </View>
         <View
           style={{
             flexDirection: "row",
-            justifyContent: "flex-end",
-            marginTop: 6,
+            justifyContent: "space-between",
           }}
         >
-          <IconCount
-            type="material-community"
-            name="comment-text-multiple"
-            count={question.answerCount}
-            size={22}
-            style={{ marginRight: 18 }}
+          <AvatarField
+            name={question.participator.name}
+            photo={question.participator.photo}
+            nameStyle={{
+              marginLeft: 6,
+              fontWeight: "bold",
+              fontSize: 16,
+              color: theme.colors?.grey1,
+            }}
+            size={26}
           />
-          <IconCount
-            type="material-community"
-            name="heart"
-            count={question.upvoteCount}
-            size={22}
-            style={{ marginRight: 12 }}
-          />
+          <View
+            style={{
+              width: 200,
+              justifyContent: "flex-end",
+              flexDirection: "row",
+            }}
+          >
+            <IconCount
+              type="material-community"
+              name="comment-text-multiple"
+              count={question.answerCount}
+              size={22}
+              style={{ marginRight: 28 }}
+            />
+            <IconCount
+              type="material-community"
+              name="heart"
+              count={question.upvoteCount}
+              size={22}
+              style={{ marginRight: 6 }}
+            />
+          </View>
         </View>
       </View>
     </TouchableWithoutFeedback>

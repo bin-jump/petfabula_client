@@ -209,6 +209,7 @@ const SingleImage = ({
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
+      resizeMode: "contain",
       transform: [
         {
           scale: scale.value,
@@ -228,7 +229,6 @@ const SingleImage = ({
           animated
           style={[
             {
-              resizeMode: "contain",
               left: 0,
               right: 0,
               width: width,

@@ -32,7 +32,7 @@ const SearchHeader = () => {
             style={{
               flexDirection: "row",
               width: "100%",
-              backgroundColor: theme.colors?.grey4,
+              backgroundColor: theme.colors?.grey5,
               height: 34,
               borderRadius: 10,
               paddingLeft: 12,

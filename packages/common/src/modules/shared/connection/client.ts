@@ -26,7 +26,8 @@ const axiosRequest = (
   if (data instanceof FormData) {
     const d = data as any;
     cfg.headers = {
-      'Content-Type': `multipart/form-data; boundary=${d._boundary}`,
+      // 'Content-Type': `multipart/form-data; boundary=${d._boundary}`,
+      'Content-Type': `multipart/form-data`,
     };
   }
 

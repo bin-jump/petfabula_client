@@ -276,6 +276,7 @@ const CommunityMain = () => {
         style={[
           tabBarStyle,
           {
+            backgroundColor: theme.colors?.white,
             shadowColor: theme.colors?.grey2,
             shadowOffset: { width: 2, height: 4 },
             shadowOpacity: 0.3,

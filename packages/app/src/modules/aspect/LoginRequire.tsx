@@ -49,15 +49,26 @@ const LoginRequire = () => {
               />
             </View>
 
-            <Icon
-              type="material-community-icon"
-              name="login"
-              color={theme.colors?.grey2}
-              size={70}
-            />
+            <View
+              style={{
+                borderColor: theme.colors?.grey2,
+                borderWidth: 3,
+                padding: 8,
+                borderRadius: 12,
+              }}
+            >
+              <Icon
+                type="material-community-icon"
+                name="login"
+                color={theme.colors?.grey2}
+                size={48}
+              />
+            </View>
 
             <Text h3>{t("authentication.loginEncourage.title")}</Text>
-            <Text>{t("authentication.loginEncourage.loginPopup")}</Text>
+            <Text style={{ color: theme.colors?.grey0 }}>
+              {t("authentication.loginEncourage.loginPopup")}
+            </Text>
 
             <View style={{ width: "100%" }}>
               <Button

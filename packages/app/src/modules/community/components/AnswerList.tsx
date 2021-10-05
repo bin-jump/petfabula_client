@@ -434,16 +434,19 @@ const AnswerItem = ({
       >
         {answer.content}
       </Text>
-      {!showFull.full && (
-        <Text
-          onPress={showFullAnswer}
-          style={{
-            marginTop: 3,
-            color: theme.colors?.grey1,
-            fontWeight: "bold",
-          }}
-        >{`[${t("question.showAll")}]`}</Text>
-      )}
+
+      <View style={{ alignItems: "flex-end" }}>
+        {!showFull.full && (
+          <Text
+            onPress={showFullAnswer}
+            style={{
+              marginTop: 3,
+              color: theme.colors?.grey1,
+              fontWeight: "bold",
+            }}
+          >{`[${t("question.showAll")}]`}</Text>
+        )}
+      </View>
 
       <View
         style={{
@@ -470,7 +473,7 @@ const AnswerItem = ({
       >
         <View
           style={{
-            marginRight: 22,
+            marginRight: 24,
             flexDirection: "row",
             alignItems: "center",
           }}
@@ -496,7 +499,7 @@ const AnswerItem = ({
           <Text
             style={{
               marginLeft: 6,
-              fontSize: 18,
+              fontSize: 20,
               textAlignVertical: "center",
               color: theme.colors?.grey0,
             }}
@@ -542,16 +545,18 @@ const AnswerItem = ({
                 color={
                   upvoted.upvoted ? theme.colors?.primary : theme.colors?.grey0
                 }
-                type="font-awesome"
-                name={upvoted.upvoted ? "thumbs-up" : "thumbs-o-up"}
-                size={28}
+                // type="font-awesome"
+                // name={upvoted.upvoted ? "thumbs-up" : "thumbs-o-up"}
+                type="antdesign"
+                name={upvoted.upvoted ? "like1" : "like2"}
+                size={30}
               />
             </Animated.View>
           </TouchableWithoutFeedback>
           <Text
             style={{
               marginLeft: 6,
-              fontSize: 18,
+              fontSize: 20,
               textAlignVertical: "center",
               color: theme.colors?.grey0,
             }}
@@ -584,6 +589,7 @@ const AnswerList = ({
   } = useLoadQuestionAnswers();
   const { pending: removeAnswerPending } = useRemoveAnswer();
   const { pending: removeAnswerCommentPending } = useRemoveAnswerComment();
+  const { assertLogin } = useLoginIntercept();
 
   useFirstFocusEffect(() => {
     loadQuestionAnswers(questionId, null);
@@ -615,6 +621,10 @@ const AnswerList = ({
         >
           <TouchableWithoutFeedback
             onPress={() => {
+              if (!assertLogin()) {
+                return;
+              }
+
               navigation.navigate("CreateNew", {
                 screen: "CreateAnswer",
                 params: {
