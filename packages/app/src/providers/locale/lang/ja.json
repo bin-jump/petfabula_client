@@ -349,7 +349,7 @@
     }
   },
   "error": {
-    "noNetwork": "ネットワークに繋がりません",
+    "noNetwork": "サーバーに繋がりません",
     "serviceError": "サービスが混雑しています",
     "authenticationRequired": "有効期限が切れたので、ログインしてください"
   }

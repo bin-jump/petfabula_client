@@ -1,9 +1,10 @@
-import * as React from "react";
+import React, { useCallback } from "react";
 import { View, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import { Text, Icon, useTheme } from "react-native-elements";
 import { useNavigation, StackActions } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import ActionIcon from "../components/ActionIcon";
+import { useLoginIntercept } from "../../shared";
 import { BlurView } from "expo-blur";
 
 const ActionButton = ({
@@ -95,6 +96,19 @@ const CreateNew = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
   const { t } = useTranslation();
+  const { assertLogin } = useLoginIntercept();
+
+  const handleNavigation = useCallback(
+    (screenName: string) => {
+      if (!assertLogin(false)) {
+        // navigation.navigate("AuthenticaionScreen");
+        navigation.dispatch(StackActions.replace("LoginRequire"));
+        return;
+      }
+      navigation.dispatch(StackActions.replace(screenName));
+    },
+    [navigation, StackActions]
+  );
 
   return (
     <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
@@ -154,8 +168,8 @@ const CreateNew = () => {
                 label={t("createNew.createPost")}
                 icon={{ size: 36, type: "material-community", name: "feather" }}
                 action={() => {
+                  handleNavigation("CreatePost");
                   // navigation.navigate("CreatePost");
-                  navigation.dispatch(StackActions.replace("CreatePost"));
                 }}
               />
 
@@ -168,8 +182,8 @@ const CreateNew = () => {
                   name: "comment-question-outline",
                 }}
                 action={() => {
+                  handleNavigation("CreateQuestion");
                   // navigation.navigate("CreateQuestion");
-                  navigation.dispatch(StackActions.replace("CreateQuestion"));
                 }}
               />
             </View>
@@ -188,10 +202,7 @@ const CreateNew = () => {
                 iconColor="#febe8a"
                 label={t("pet.action.food")}
                 onPress={() => {
-                  // navigation.navigate("CreatePetFeedRecord");
-                  navigation.dispatch(
-                    StackActions.replace("CreatePetFeedRecord")
-                  );
+                  handleNavigation("CreatePetFeedRecord");
                 }}
               />
 
@@ -202,10 +213,8 @@ const CreateNew = () => {
                 iconColor="#94afef"
                 label={t("pet.action.weight")}
                 onPress={() => {
+                  handleNavigation("CreatePetWeightRecord");
                   // navigation.navigate("CreatePetWeightRecord");
-                  navigation.dispatch(
-                    StackActions.replace("CreatePetWeightRecord")
-                  );
                 }}
               />
 
@@ -216,10 +225,8 @@ const CreateNew = () => {
                 iconColor="#d56940"
                 label={t("pet.action.disorder")}
                 onPress={() => {
+                  handleNavigation("CreatePetDisorderRecord");
                   // navigation.navigate("CreatePetDisorderRecord");
-                  navigation.dispatch(
-                    StackActions.replace("CreatePetDisorderRecord")
-                  );
                 }}
               />
 
@@ -230,10 +237,8 @@ const CreateNew = () => {
                 iconColor="#68bbff"
                 label={t("pet.action.event")}
                 onPress={() => {
+                  handleNavigation("SelectPetEventType");
                   // navigation.navigate("SelectPetEventType");
-                  navigation.dispatch(
-                    StackActions.replace("SelectPetEventType")
-                  );
                 }}
               />
 
@@ -244,10 +249,8 @@ const CreateNew = () => {
                 iconColor="#f15e54"
                 label={t("pet.action.medical")}
                 onPress={() => {
+                  handleNavigation("CreatePetMedicalRecord");
                   // navigation.navigate("CreatePetMedicalRecord");
-                  navigation.dispatch(
-                    StackActions.replace("CreatePetMedicalRecord")
-                  );
                 }}
               />
             </View>

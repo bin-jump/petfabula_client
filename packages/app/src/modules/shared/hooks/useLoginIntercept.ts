@@ -7,7 +7,7 @@ export default function useLoginIntercept() {
   const navigation = useNavigation();
 
   const assertLogin = useCallback(
-    (navigate = true) => {
+    (navigate: boolean = true) => {
       if (!currentUser) {
         if (navigate) {
           navigation.navigate("LoginRequire");

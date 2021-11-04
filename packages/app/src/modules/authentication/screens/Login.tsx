@@ -109,8 +109,10 @@ const LoginFormContent = ({
     endpointName: string
   ) => {
     const result = await WebBrowser.openAuthSessionAsync(url, redirectUri);
+    console.log("result", result);
     if (result?.type === "success") {
       const code = parseUrlParams(result.url)["code"];
+      console.log("success", code);
       if (!code) {
         console.log("ERROR: No oauth code found");
         return;

@@ -30,7 +30,7 @@ const ImageSelector = ({
     const file = await ImageManipulator.manipulateAsync(
       uri,
       [{ resize: { width: 1000 } }],
-      { compress: 0.9, format: ImageManipulator.SaveFormat.JPEG }
+      { compress: 0.95, format: ImageManipulator.SaveFormat.JPEG }
     );
     return file;
   };
