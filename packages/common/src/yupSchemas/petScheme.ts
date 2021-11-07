@@ -8,7 +8,7 @@ export const validPetFormSchema = yup.object().shape({
   name: yup
     .string()
     .trim()
-    .matches(/^[\w\-ぁ-んァ-ヶ一-龠々ー]{3,16}$/, petMessageKey.petName)
+    .matches(/^[\w\-ぁ-んァ-ヶ一-龠々ー]{1,12}$/, petMessageKey.petName)
     // .min(1, petMessageKey.petName)
     // .max(12, petMessageKey.petName)
     .required(petMessageKey.petName),
@@ -18,7 +18,7 @@ export const validPetFormSchema = yup.object().shape({
     .nullable()
     .max(endOfToday().getTime(), commonMessageKey.birthday)
     .required(commonMessageKey.emptyValue),
-  gender: yup.string().required(commonMessageKey.emptyValue),
+  gender: yup.string().nullable().required(commonMessageKey.emptyValue),
   arrivalDay: yup
     .number()
     .nullable()

@@ -541,7 +541,9 @@ const QuestionDetailView = () => {
               }}
             >
               <View>
-                <Text h3>{question.title}</Text>
+                <Text selectable={true} h3>
+                  {question.title}
+                </Text>
 
                 <View
                   style={{
@@ -564,7 +566,10 @@ const QuestionDetailView = () => {
                 </View>
 
                 {question.content ? (
-                  <Text style={{ fontSize: 18, marginTop: 12 }}>
+                  <Text
+                    selectable={true}
+                    style={{ fontSize: 18, marginTop: 12 }}
+                  >
                     {question.content}
                   </Text>
                 ) : null}

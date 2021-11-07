@@ -101,8 +101,8 @@ const CreateNew = () => {
   const handleNavigation = useCallback(
     (screenName: string) => {
       if (!assertLogin(false)) {
-        // navigation.navigate("AuthenticaionScreen");
-        navigation.dispatch(StackActions.replace("LoginRequire"));
+        navigation.navigate("AuthenticaionScreen");
+        // navigation.dispatch(StackActions.replace("LoginRequire"));
         return;
       }
       navigation.dispatch(StackActions.replace(screenName));

@@ -57,7 +57,7 @@ const Item = ({ item }: { item: PostItem }) => {
           marginVertical: 10,
           marginRight: 16,
           backgroundColor: theme.colors?.white,
-          borderRadius: 4,
+          borderRadius: 6,
           flexDirection: "row",
           padding: 16,
 
@@ -81,11 +81,13 @@ const Item = ({ item }: { item: PostItem }) => {
         </Text>
 
         {item.images.length > 0 ? (
-          <Image
-            style={{ width: 100, height: 100, borderRadius: 6 }}
-            uri={item.images[0].url}
-            sz="MD"
-          />
+          <View style={{ justifyContent: "center" }}>
+            <Image
+              style={{ width: 100, height: 100, borderRadius: 6 }}
+              uri={item.images[0].url}
+              sz="MD"
+            />
+          </View>
         ) : null}
       </View>
     </TouchableWithoutFeedback>
@@ -97,9 +99,9 @@ const PostListItem = ({ item }: { item: PostItem }) => {
 
   return (
     <View style={{ flexDirection: "row", flex: 1 }}>
-      <View style={{ width: 120, flexDirection: "row" }}>
+      <View style={{ width: 110, flexDirection: "row" }}>
         {item.showDate ? (
-          <View style={{ width: 70, alignItems: "flex-end" }}>
+          <View style={{ width: 60, alignItems: "flex-end" }}>
             <Text
               style={{
                 lineHeight: 24,

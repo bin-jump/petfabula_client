@@ -569,7 +569,10 @@ const PostDetailView = () => {
                 />
               ) : null}
 
-              <Text style={{ fontSize: 17, lineHeight: 26, marginTop: 4 }}>
+              <Text
+                selectable={true}
+                style={{ fontSize: 17, lineHeight: 26, marginTop: 4 }}
+              >
                 {postDetail.content}
               </Text>
 

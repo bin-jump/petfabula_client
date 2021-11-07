@@ -27,7 +27,6 @@ const TabBar: FC<Props> = ({ onIndexChange, ...props }) => {
       activeTintColor={theme.colors?.black}
       inactiveTintColor={theme.colors?.grey1}
       labelStyle={{
-        fontSize: 16,
         fontWeight: "bold",
         paddingBottom: 18,
       }}

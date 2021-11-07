@@ -286,6 +286,40 @@ const PetItem = ({ item }: { item: PetDetail }) => {
   );
 };
 
+const EmptyPetList = () => {
+  const { theme } = useTheme();
+  const { t } = useTranslation();
+  const navigation = useNavigation();
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        paddingTop: 80,
+        alignItems: "center",
+      }}
+    >
+      <Icon
+        style={{ marginBottom: 12 }}
+        type="font-awesome-5"
+        name="paw"
+        size={70}
+        color={theme.colors?.grey3}
+      />
+      <Button
+        raised
+        style={{ width: 150 }}
+        title={t("pet.createPet")}
+        onPress={() => {
+          navigation.navigate("CreateNew", {
+            screen: "CreatePet",
+          });
+        }}
+      />
+    </View>
+  );
+};
+
 const PetContent = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
@@ -318,9 +352,11 @@ const PetContent = () => {
       }}
       contentContainerStyle={{ paddingBottom: 320 }}
     >
-      {pets.map((item) => (
-        <PetItem key={item.id} item={item} />
-      ))}
+      {pets.length > 0 ? (
+        pets.map((item) => <PetItem key={item.id} item={item} />)
+      ) : (
+        <EmptyPetList />
+      )}
     </ScrollView>
   );
 };

@@ -211,7 +211,7 @@ const UserContent = () => {
                   <GenderItem gender={account.gender} size={22} />
                 </View>
                 <Text style={{ color: theme.colors?.grey1 }}>
-                  {account.bio + "asdfasd"}
+                  {account.bio}
                 </Text>
               </View>
             </View>

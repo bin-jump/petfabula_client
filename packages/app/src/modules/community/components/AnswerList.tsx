@@ -428,6 +428,7 @@ const AnswerItem = ({
       </View>
 
       <Text
+        selectable={true}
         numberOfLines={showFull.full ? undefined : LINE_THRESHOLD}
         onTextLayout={onTextLayout}
         style={{ fontSize: 18 }}

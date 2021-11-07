@@ -220,7 +220,7 @@
       "INSURANCE": "保険",
       "TOILET": "トイレ",
       "WALK": "散歩",
-      "BEAUTY": "美容院",
+      "BEAUTY": "サロン",
       "OTHERS": "その他",
 
       "recordsOfPetTitle": "{{name}}のペット記録",
@@ -323,7 +323,7 @@
       "answerContentLength": "回答を5000文字以内にしてください"
     },
     "pet": {
-      "petName": "名前を1-12文字にしてください",
+      "petName": "名前を1-12文字、漢字にしてください",
       "bio": "紹介を140文字以内にしてください",
       "arrivalDay": "誕生日の後にしてください",
       "breedId": "種類を選択してください",
@@ -340,7 +340,7 @@
       "eventContent": "240文字以内にしてください"
     },
     "user": {
-      "userName": "名前を3-16文字にしてください",
+      "userName": "名前を3-16文字、漢字にしてください",
       "bio": "紹介を140文字以内にしてください"
     },
     "feedback": {
