@@ -36,6 +36,9 @@ export const LoadPetDisorderRecordActionType = createAsyncActionType(
 export const LoadPetFeedRecordActionType = createAsyncActionType(
   'PET_LOAD_PET_FEED_RECORD',
 );
+export const LoadPetRecentFeedRecordActionType = createAsyncActionType(
+  'PET_LOAD_PET_RECENT_FEED_RECORD',
+);
 export const LoadPetMedicalRecordActionType = createAsyncActionType(
   'PET_LOAD_PET_MEDICAL_RECORD',
 );

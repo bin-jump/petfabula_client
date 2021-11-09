@@ -47,6 +47,8 @@ export const translateApiError = (response: ApiResponse): AsyncActionError => {
     res.type = 'FAILED_ON_RESPONSE';
   } else if (response.errors?.type == 'LOGIN_REQUIRED') {
     res.type = 'AUTHENTICATION_REQUIRED';
+  } else if (response.errors?.type == 'INVALID_OPERATION') {
+    res.type = 'INVALID_OPERATION';
   } else if (response.errors?.type == 'RESOURCE_NOT_FOUND') {
     res.type = 'TARGET_NOT_FOUND';
     res.content = response.errors.entityId;

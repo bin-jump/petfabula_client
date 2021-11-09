@@ -1,5 +1,10 @@
 import React, { useRef, useMemo, useCallback } from "react";
-import { View, ListRenderItem, TouchableWithoutFeedback } from "react-native";
+import {
+  View,
+  ListRenderItem,
+  TouchableWithoutFeedback,
+  Dimensions,
+} from "react-native";
 import { useTheme, Text, Icon, Divider } from "react-native-elements";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
@@ -11,7 +16,7 @@ import {
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import {
   useFirstFocusEffect,
-  toDateText,
+  getMonthDateText,
   LoadingMoreIndicator,
   BottomSheetButton,
   BottomSheet,
@@ -19,6 +24,8 @@ import {
   PendingOverlay,
   ActivityIndicator,
   FlatList,
+  formatNumber,
+  sameDay,
 } from "../../shared";
 import {
   RecordBaseType,
@@ -26,6 +33,58 @@ import {
   RecordItem,
   DateItem,
 } from "./RecordListComponents";
+import { LineChart } from "react-native-chart-kit";
+
+// const PNUM = 1;
+// const makeGraphLabels = () => {
+//   const res: string[] = [];
+
+//   for (let i = 0; i < PNUM; i++) {
+//     let d = Date.now() - (6 - i) * 7 * 24 * 3600 * 1000;
+//     res.push(getMonthDateText(d));
+//   }
+//   return res;
+// };
+
+// const makeGraphData = () => {
+//   const res: number[] = [];
+
+//   for (let i = 0; i < PNUM; i++) {
+//     const w = Math.floor(Math.random() * (4000 - 3000)) + 3000;
+//     res.push(w);
+//   }
+
+//   return res;
+// };
+
+const getGraphDate = (records: WeightRecord[]) => {
+  let selectedRecords = [];
+
+  let prev = new Date(0).getMilliseconds();
+  let cnt = 0;
+  for (let r of records) {
+    if (!sameDay(prev, r.dateTime)) {
+      selectedRecords.push(r);
+      cnt += 1;
+    }
+    if (cnt >= 7) {
+      break;
+    }
+    prev = r.dateTime;
+  }
+
+  selectedRecords = selectedRecords.reverse();
+  const res: { labels: string[]; weights: number[] } = {
+    labels: [],
+    weights: [],
+  };
+  for (let r of selectedRecords) {
+    res.labels.push(getMonthDateText(r.dateTime));
+    res.weights.push(r.weight);
+  }
+
+  return res;
+};
 
 type RecordItemType = WeightRecord & RecordBaseType;
 
@@ -140,7 +199,7 @@ const Item = ({ record }: { record: RecordItemType }) => {
                 color: theme.colors?.primary,
               }}
             >
-              {`${record.weight}`}
+              {`${formatNumber(record.weight)}`}
             </Text>
             <Text
               style={{ fontSize: 18, lineHeight: 30, fontWeight: "bold" }}
@@ -157,6 +216,89 @@ const RecordListItem = ({ record }: { record: RecordItemType }) => {
     <RecordItem record={record}>
       <Item record={record} />
     </RecordItem>
+  );
+};
+
+const WeightGraph = ({ petId }: { petId: number }) => {
+  const { theme } = useTheme();
+  const { t } = useTranslation();
+  const { petId: recordPetId, pending, records } = useLoadWeightRecords();
+  const grpahData = getGraphDate(records);
+
+  return (
+    <View
+      style={{
+        paddingVertical: 12,
+        alignItems: "center",
+        backgroundColor: theme.colors?.white,
+        height: 260,
+      }}
+    >
+      <Text style={{ fontWeight: "bold" }}>
+        {t("pet.record.recentWeights")}
+      </Text>
+      {!pending && petId == recordPetId && records.length == 0 && (
+        <Text style={{ marginTop: 100 }}>no data</Text>
+      )}
+      {petId != recordPetId && (
+        <ActivityIndicator
+          size={20}
+          style={{ marginTop: 100 }}
+          color={theme.colors?.primary}
+        />
+      )}
+      {petId == recordPetId && records.length > 0 && (
+        <LineChart
+          data={{
+            labels: grpahData.labels,
+            datasets: [
+              {
+                data: grpahData.weights,
+              },
+            ],
+          }}
+          renderDotContent={({ x, y, index }) => (
+            <Text
+              key={index}
+              style={{
+                position: "absolute",
+                paddingTop: y + 3,
+                paddingLeft: x - 3,
+                fontSize: 12,
+              }}
+            >
+              {formatNumber(grpahData.weights[index])}
+            </Text>
+          )}
+          width={Dimensions.get("window").width - 20} // from react-native
+          height={220}
+          yAxisInterval={1} // optional, defaults to 1
+          formatYLabel={(y) => `${formatNumber(parseInt(y))} g`}
+          fromZero
+          chartConfig={{
+            backgroundColor: theme.colors?.secondary,
+            backgroundGradientFrom: theme.colors?.white,
+            backgroundGradientTo: theme.colors?.white,
+            decimalPlaces: 0,
+            color: (opacity = 1) =>
+              theme.colors?.primary ? theme.colors?.primary : `#333`,
+            labelColor: (opacity = 1) => `#333`,
+            style: {
+              borderRadius: 16,
+            },
+            propsForDots: {
+              r: "6",
+              strokeWidth: "2",
+              // stroke: "#ffa726",
+            },
+          }}
+          style={{
+            marginVertical: 8,
+            borderRadius: 16,
+          }}
+        />
+      )}
+    </View>
   );
 };
 
@@ -201,6 +343,7 @@ const PetWeightRecordList = ({ petId }: { petId: number }) => {
         contentContainerStyle={{
           paddingBottom: 40,
         }}
+        ListHeaderComponent={<WeightGraph petId={petId} />}
         pending={initializing}
         keyExtractor={keyExtractor}
         data={makeListData(records)}

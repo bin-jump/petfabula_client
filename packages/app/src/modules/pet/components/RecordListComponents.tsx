@@ -57,7 +57,7 @@ export const RecordItem: React.FC<Props> = ({ children, record }: Props) => {
               width: 20,
               backgroundColor: theme.colors?.white,
               borderWidth: 4,
-              borderColor: theme.colors?.grey3,
+              borderColor: theme.colors?.grey1,
             }}
           />
           <Text
@@ -89,7 +89,7 @@ export const RecordItem: React.FC<Props> = ({ children, record }: Props) => {
             }}
           />
         </View>
-        <View style={{ paddingVertical: 10, paddingRight: 16, flex: 1 }}>
+        <View style={{ paddingVertical: 8, paddingRight: 16, flex: 1 }}>
           {children}
         </View>
       </View>
@@ -137,7 +137,9 @@ export const TimeItem = ({ mili }: { mili: number }) => {
         size={22}
         color={theme.colors?.grey1}
       />
-      <Text style={{ marginLeft: 6, color: theme.colors?.grey0 }}>
+      <Text
+        style={{ marginLeft: 6, color: theme.colors?.grey0, marginRight: 6 }}
+      >
         {`${getTimeText(mili)}`}
       </Text>
     </View>

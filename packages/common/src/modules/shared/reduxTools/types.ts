@@ -3,6 +3,7 @@ export type ActionErrorType =
   | 'FAILED_ON_RESPONSE'
   | 'SERVICE_ERROR'
   | 'INVALID_FORM_DATA'
+  | 'INVALID_OPERATION'
   | 'TARGET_NOT_FOUND'
   | 'OTEHRS';
 

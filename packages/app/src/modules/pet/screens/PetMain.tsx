@@ -352,7 +352,7 @@ const PetContent = () => {
       }}
       contentContainerStyle={{ paddingBottom: 320 }}
     >
-      {pets.length > 0 ? (
+      {pets.length > 0 || pending ? (
         pets.map((item) => <PetItem key={item.id} item={item} />)
       ) : (
         <EmptyPetList />

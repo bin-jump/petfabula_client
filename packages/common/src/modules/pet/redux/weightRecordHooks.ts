@@ -9,6 +9,7 @@ import {
   RemoveWeightRecordActionType,
 } from './actionTypes';
 import { ActionBase, fillCursorResponseData } from '../../shared';
+import { sortRecords } from './recordHelper';
 
 export const useCreateWeightRecord = () => {
   const dispatch = useDispatch();
@@ -165,7 +166,7 @@ export const weightRecordReducer = {
         ...state.petWeightRecords,
         data:
           state.petWeightRecords.petId == action.payload.petId
-            ? [action.payload, ...weightRecords]
+            ? sortRecords<WeightRecord>([action.payload, ...weightRecords])
             : weightRecords,
       },
     };
@@ -213,12 +214,14 @@ export const weightRecordReducer = {
         ...state.petWeightRecords,
         data:
           state.petWeightRecords.petId == action.payload.petId
-            ? records.map((item) => {
-                if (item.id == action.payload.id) {
-                  return action.payload;
-                }
-                return item;
-              })
+            ? sortRecords<WeightRecord>(
+                records.map((item) => {
+                  if (item.id == action.payload.id) {
+                    return action.payload;
+                  }
+                  return item;
+                }),
+              )
             : records,
       },
     };

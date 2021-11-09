@@ -54,6 +54,12 @@ const initialStat: PetState = {
     nextCursor: null,
     initializing: false,
   },
+  petRecentFeedRecords: {
+    petId: null,
+    data: [],
+    pending: false,
+    error: null,
+  },
   petMedicalRecords: {
     petId: null,
     data: [],

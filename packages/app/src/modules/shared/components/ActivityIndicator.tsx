@@ -7,7 +7,7 @@ import { useTheme } from "react-native-elements";
 
 const ActivityIndicator = (props: ActivityIndicatorProps) => {
   const { theme } = useTheme();
-  return <RNActivityIndicator {...props} color={theme.colors?.grey3} />;
+  return <RNActivityIndicator color={theme.colors?.grey3} {...props} />;
 };
 
 export default ActivityIndicator;

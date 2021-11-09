@@ -94,6 +94,33 @@ export const parseUrlParams = (url: string): { [key: string]: string } => {
   }, {});
 };
 
+export const formatNumber = (num: number) => {
+  if (num < 1000) {
+    return `${num}`;
+  }
+  let res = "";
+  let f = 1000;
+  while (num > 1000) {
+    let m = `${num % f}`;
+    m = "0".repeat(3 - m.length) + m;
+    num = Math.floor(num / f);
+    res = res ? `${m},${res}` : `${m}`;
+    f *= 1000;
+  }
+
+  return `${num},${res}`;
+};
+
+export const sameDay = (m1: number, m2: number) => {
+  const d1 = new Date(m1),
+    d2 = new Date(m2);
+  return (
+    d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate()
+  );
+};
+
 // export const imageSizeUrl = (
 //   url: string | undefined,
 //   sz: "LG" | "MD" | "SM"

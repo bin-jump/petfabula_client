@@ -9,6 +9,7 @@ import {
   RemoveDisorderRecordActionType,
 } from './actionTypes';
 import { ActionBase, UploadImage, fillCursorResponseData } from '../../shared';
+import { sortRecords } from './recordHelper';
 
 export const useCreateDisroderRecord = () => {
   const dispatch = useDispatch();
@@ -189,7 +190,7 @@ export const disorderRecordReducer = {
         ...state.petDisorderRecords,
         data:
           state.petDisorderRecords.petId == action.payload.petId
-            ? [action.payload, ...records]
+            ? sortRecords<DisorderRecord>([action.payload, ...records])
             : records,
       },
     };
@@ -237,12 +238,14 @@ export const disorderRecordReducer = {
         ...state.petDisorderRecords,
         data:
           state.petDisorderRecords.petId == action.payload.petId
-            ? records.map((item) => {
-                if (item.id == action.payload.id) {
-                  return action.payload;
-                }
-                return item;
-              })
+            ? sortRecords<DisorderRecord>(
+                records.map((item) => {
+                  if (item.id == action.payload.id) {
+                    return action.payload;
+                  }
+                  return item;
+                }),
+              )
             : records,
       },
     };

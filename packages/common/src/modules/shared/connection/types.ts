@@ -11,6 +11,7 @@
 export type ApiErrorType =
   | 'NO_CONNECTION'
   | 'INVALID_FIELD'
+  | 'INVALID_OPERATION'
   | 'RESOURCE_NOT_FOUND'
   | 'SERVER_BUSY'
   | 'SERVICE_ERROR'

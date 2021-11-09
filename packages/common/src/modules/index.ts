@@ -140,6 +140,7 @@ export {
   useCreatePetEventRecord,
   useCreateMedicalRecord,
   useLoadFeedRecords,
+  useLoadRecentFeedRecords,
   useLoadWeightRecords,
   useLoadDisorderRecords,
   useLoadMeidcalRecords,

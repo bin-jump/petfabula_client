@@ -9,6 +9,7 @@ import {
   RemovePetEventRecordActionType,
 } from './actionTypes';
 import { ActionBase, UploadImage, fillCursorResponseData } from '../../shared';
+import { sortRecords } from './recordHelper';
 
 export const useCreatePetEventRecord = () => {
   const dispatch = useDispatch();
@@ -189,7 +190,7 @@ export const petEventRecordReducer = {
         ...state.petPetEventRecords,
         data:
           state.petPetEventRecords.petId == action.payload.petId
-            ? [action.payload, ...records]
+            ? sortRecords<PetEventRecord>([action.payload, ...records])
             : records,
       },
     };
@@ -237,12 +238,14 @@ export const petEventRecordReducer = {
         ...state.petPetEventRecords,
         data:
           state.petPetEventRecords.petId == action.payload.petId
-            ? records.map((item) => {
-                if (item.id == action.payload.id) {
-                  return action.payload;
-                }
-                return item;
-              })
+            ? sortRecords<PetEventRecord>(
+                records.map((item) => {
+                  if (item.id == action.payload.id) {
+                    return action.payload;
+                  }
+                  return item;
+                }),
+              )
             : records,
       },
     };

@@ -241,7 +241,10 @@
       "symptomLabel": "症状",
       "diagnosisLabel": "診断結果",
       "treatmentLabel": "治療",
-      "emptyContent": "なし"
+      "emptyContent": "なし",
+
+      "recentWeights": "最近の体重",
+      "recentFeeds": "最近の食事"
     },
     "profile": {
       "petPostTitle": "成長投稿",

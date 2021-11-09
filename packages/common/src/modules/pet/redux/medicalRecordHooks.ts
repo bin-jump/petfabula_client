@@ -9,6 +9,7 @@ import {
   RemoveMedicalRecordActionType,
 } from './actionTypes';
 import { ActionBase, UploadImage, fillCursorResponseData } from '../../shared';
+import { sortRecords } from './recordHelper';
 
 export const useCreateMedicalRecord = () => {
   const dispatch = useDispatch();
@@ -177,7 +178,7 @@ export const medicalRecordReducer = {
     state: PetState,
     action: ActionBase,
   ): PetState => {
-    const records = state.petPetEventRecords.data;
+    const records = state.petMedicalRecords.data;
     return {
       ...state,
       createMedicalRecord: {
@@ -189,7 +190,7 @@ export const medicalRecordReducer = {
         ...state.petMedicalRecords,
         data:
           state.petMedicalRecords.petId == action.payload.petId
-            ? [action.payload, ...records]
+            ? sortRecords<MedicalRecord>([action.payload, ...records])
             : records,
       },
     };
@@ -237,12 +238,14 @@ export const medicalRecordReducer = {
         ...state.petMedicalRecords,
         data:
           state.petMedicalRecords.petId == action.payload.petId
-            ? records.map((item) => {
-                if (item.id == action.payload.id) {
-                  return action.payload;
-                }
-                return item;
-              })
+            ? sortRecords<MedicalRecord>(
+                records.map((item) => {
+                  if (item.id == action.payload.id) {
+                    return action.payload;
+                  }
+                  return item;
+                }),
+              )
             : records,
       },
     };

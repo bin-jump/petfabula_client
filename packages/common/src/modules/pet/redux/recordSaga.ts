@@ -7,6 +7,7 @@ import {
   CreatePetEventRecordActionType,
   CreateMedicalRecordActionType,
   LoadPetFeedRecordActionType,
+  LoadPetRecentFeedRecordActionType,
   LoadPetWeightRecordActionType,
   LoadPetDisorderRecordActionType,
   LoadPetPetEventRecordActionType,
@@ -64,6 +65,15 @@ const watchLoadFeedRecords = createSagaWatcher({
   },
   method: 'GET',
   asyncAction: LoadPetFeedRecordActionType,
+  watchType: 'LATEST',
+});
+
+const watchLoadRecentFeedRecords = createSagaWatcher({
+  createUrl: (payload) => {
+    return `/api/pet/pets/${payload.petId}/recent-feed-records`;
+  },
+  method: 'GET',
+  asyncAction: LoadPetRecentFeedRecordActionType,
   watchType: 'LATEST',
 });
 
@@ -192,6 +202,7 @@ export function* petRecordRootSaga() {
     fork(watchCreateMedicalRecord),
 
     fork(watchLoadFeedRecords),
+    fork(watchLoadRecentFeedRecords),
     fork(watchLoadWeightRecords),
     fork(watchLoadDisorderRecords),
     fork(watchLoadPetEventRecords),

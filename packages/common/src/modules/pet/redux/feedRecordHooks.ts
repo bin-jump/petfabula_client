@@ -7,8 +7,10 @@ import {
   LoadPetFeedRecordActionType,
   UpdateFeedRecordActionType,
   RemoveFeedRecordActionType,
+  LoadPetRecentFeedRecordActionType,
 } from './actionTypes';
 import { ActionBase, fillCursorResponseData } from '../../shared';
+import { sortRecords } from './recordHelper';
 
 export const useCreateFeedRecord = () => {
   const dispatch = useDispatch();
@@ -135,6 +137,37 @@ export const useLoadFeedRecords = () => {
   };
 };
 
+export const useLoadRecentFeedRecords = () => {
+  const dispatch = useDispatch();
+  const { petId, records, pending, error } = useSelector(
+    (state: AppState) => ({
+      petId: state.pet.petRecentFeedRecords.petId,
+      records: state.pet.petRecentFeedRecords.data,
+      pending: state.pet.petRecentFeedRecords.pending,
+      error: state.pet.petRecentFeedRecords.error,
+    }),
+    shallowEqual,
+  );
+
+  const boundAction = useCallback(
+    (petId: number) => {
+      dispatch({
+        type: LoadPetRecentFeedRecordActionType.BEGIN,
+        payload: { petId },
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    petId,
+    loadRecords: boundAction,
+    records,
+    pending,
+    error,
+  };
+};
+
 export const feedRecordReducer = {
   [CreateFeedRecordActionType.BEGIN]: (
     state: PetState,
@@ -165,7 +198,7 @@ export const feedRecordReducer = {
         ...state.petFeedRecords,
         data:
           state.petFeedRecords.petId == action.payload.petId
-            ? [action.payload, ...feedRecords]
+            ? sortRecords<FeedRecord>([action.payload, ...feedRecords])
             : feedRecords,
       },
     };
@@ -213,12 +246,14 @@ export const feedRecordReducer = {
         ...state.petFeedRecords,
         data:
           state.petFeedRecords.petId == action.payload.petId
-            ? records.map((item) => {
-                if (item.id == action.payload.id) {
-                  return action.payload;
-                }
-                return item;
-              })
+            ? sortRecords<FeedRecord>(
+                records.map((item) => {
+                  if (item.id == action.payload.id) {
+                    return action.payload;
+                  }
+                  return item;
+                }),
+              )
             : records,
       },
     };
@@ -293,7 +328,7 @@ export const feedRecordReducer = {
         ...state.petFeedRecords,
         initializing: action.payload.cursor == null,
         pending: true,
-        error: action.error,
+        error: null,
       },
     };
   },
@@ -319,6 +354,47 @@ export const feedRecordReducer = {
         ...state.petFeedRecords,
         pending: false,
         initializing: false,
+        error: action.error,
+      },
+    };
+  },
+
+  [LoadPetRecentFeedRecordActionType.BEGIN]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      petRecentFeedRecords: {
+        ...state.petRecentFeedRecords,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [LoadPetRecentFeedRecordActionType.SUCCESS]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      petRecentFeedRecords: {
+        ...state.petRecentFeedRecords,
+        petId: action.extra.petId,
+        pending: false,
+        data: action.payload,
+      },
+    };
+  },
+  [LoadPetRecentFeedRecordActionType.FAILURE]: (
+    state: PetState,
+    action: ActionBase,
+  ): PetState => {
+    return {
+      ...state,
+      petRecentFeedRecords: {
+        ...state.petRecentFeedRecords,
+        pending: false,
         error: action.error,
       },
     };

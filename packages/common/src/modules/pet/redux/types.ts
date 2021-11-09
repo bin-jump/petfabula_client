@@ -174,6 +174,9 @@ export interface PetState {
   petFeedRecords: AsyncCursorPageListBase<FeedRecord> & {
     petId: number | null;
   };
+  petRecentFeedRecords: AsyncListBase<FeedRecord> & {
+    petId: number | null;
+  };
   petMedicalRecords: AsyncCursorPageListBase<MedicalRecord> & {
     petId: number | null;
   };
