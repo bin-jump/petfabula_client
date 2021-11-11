@@ -293,6 +293,7 @@ const CommunityMain = () => {
           activeTintColor={theme.colors?.black}
           inactiveTintColor={theme.colors?.grey1}
           labelStyle={{
+            // lineHeight: 36,
             fontSize: 15,
             fontWeight: "bold",
             paddingBottom: 18,

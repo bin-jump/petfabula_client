@@ -113,7 +113,7 @@ const CreateNew = () => {
   return (
     <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
       <BlurView
-        intensity={95}
+        intensity={96}
         style={{
           height: "100%",
           width: "100%",

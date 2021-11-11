@@ -50,7 +50,7 @@ export const createTheme = (color: Partial<Colors>): Partial<FullTheme> => {
       },
       style: {
         //fontStyle: "italic",
-        lineHeight: 20,
+        lineHeight: 22,
         fontSize: 16,
         color: color.black,
       },

@@ -11,7 +11,7 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
   useWindowDimensions,
-  TouchableOpacity,
+  Platform,
 } from "react-native";
 import { useTheme, Text, Divider, Button, Icon } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -592,7 +592,12 @@ const PostDetailView = () => {
           <View
             style={{
               position: "absolute",
-              marginTop: screenHeight - headerHeight - top - footerHeight,
+              marginTop:
+                screenHeight -
+                headerHeight -
+                top -
+                footerHeight -
+                (Platform.OS === "ios" ? 0 : 24),
               height: footerHeight,
               width: "100%",
               backgroundColor: theme.colors?.white,

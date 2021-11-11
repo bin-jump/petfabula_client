@@ -40,6 +40,7 @@ const RelatePetItem = ({
         <Avatar source={{ uri: pet.photo }} size={40} iconType="PET" />
         <Text
           style={{
+            lineHeight: 24,
             fontSize: 20,
             marginLeft: 8,
             fontWeight: "bold",

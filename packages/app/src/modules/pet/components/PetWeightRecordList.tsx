@@ -238,7 +238,7 @@ const WeightGraph = ({ petId }: { petId: number }) => {
         {t("pet.record.recentWeights")}
       </Text>
       {!pending && petId == recordPetId && records.length == 0 && (
-        <Text style={{ marginTop: 100 }}>no data</Text>
+        <Text style={{ marginTop: 100 }}>{t("pet.record.noGraphData")}</Text>
       )}
       {petId != recordPetId && (
         <ActivityIndicator

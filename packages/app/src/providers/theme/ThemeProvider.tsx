@@ -13,7 +13,7 @@ const AppThemeProvider: React.FC<{}> = ({ children }) => {
 
   return (
     <AppearanceProvider>
-      <StatusBar barStyle="dark-content" backgroundColor="#6a51ae" />
+      <StatusBar barStyle="dark-content" backgroundColor={th.colors?.white} />
 
       <ThemeProvider theme={th}>{children}</ThemeProvider>
     </AppearanceProvider>

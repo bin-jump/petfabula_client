@@ -244,7 +244,8 @@
       "emptyContent": "なし",
 
       "recentWeights": "最近の体重",
-      "recentFeeds": "最近の食事"
+      "recentFeeds": "最近の食事",
+      "noGraphData": "グラフデータがありません"
     },
     "profile": {
       "petPostTitle": "成長投稿",

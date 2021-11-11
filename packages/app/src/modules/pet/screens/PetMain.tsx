@@ -140,9 +140,9 @@ const PetItem = ({ item }: { item: PetDetail }) => {
         shadowOffset: { width: 2, height: 1 },
         shadowOpacity: 0.7,
         shadowRadius: 6,
-        elevation: 2,
         padding: 12,
         marginBottom: 16,
+        elevation: 3,
       }}
     >
       <TouchableWithoutFeedback

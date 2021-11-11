@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleProp, View, TouchableOpacity } from "react-native";
+import { StyleProp, View, Platform } from "react-native";
 import {
   Avatar as RneAvatar,
   AvatarProps,
@@ -81,6 +81,7 @@ const Avatar = (
     editProps.onImageSelected(img);
   };
 
+  const uri = !source?.uri && Platform.OS == "android" ? "#DUMMY" : source?.uri;
   return (
     <View>
       {!source?.uri || editProps ? (
@@ -89,7 +90,7 @@ const Avatar = (
           rounded={!squred}
           size={size}
           title={title}
-          source={{ uri: source?.uri }}
+          source={{ uri: uri }}
           containerStyle={[
             {
               borderWidth: 1,

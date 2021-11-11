@@ -5,6 +5,7 @@ import Carousel from "react-native-snap-carousel";
 import {
   PinchGestureHandler,
   PinchGestureHandlerGestureEvent,
+  GestureHandlerRootView,
 } from "react-native-gesture-handler";
 import Animated, {
   useSharedValue,

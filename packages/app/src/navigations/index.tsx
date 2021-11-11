@@ -403,6 +403,7 @@ const TabScreen = () => {
                       borderRadius: 30,
                       height: 46,
                       width: 46,
+                      elevation: 2,
                     }}
                   >
                     <Icon

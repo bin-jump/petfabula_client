@@ -6,6 +6,7 @@ import {
   TextInput,
   Keyboard,
   KeyboardEvent,
+  Platform,
 } from "react-native";
 import { useTheme, Text } from "react-native-elements";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
@@ -42,7 +43,9 @@ const CreateComment = () => {
 
   const style = useAnimatedStyle(() => {
     return {
-      marginTop: withTiming(screenHeight - kbHeight.value),
+      marginTop: withTiming(
+        screenHeight - kbHeight.value - (Platform.OS === "ios" ? 0 : 24)
+      ),
       height: withTiming(kbHeight.value),
     };
   });
@@ -118,7 +121,10 @@ const CreateComment = () => {
                       }}
                     >
                       <Text
-                        style={{ fontSize: 20, color: theme.colors?.primary }}
+                        style={{
+                          fontSize: 20,
+                          color: theme.colors?.primary,
+                        }}
                       >
                         {t("common.send")}
                       </Text>

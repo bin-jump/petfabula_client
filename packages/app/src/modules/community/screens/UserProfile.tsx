@@ -457,7 +457,7 @@ const UserPart = ({
                     }}
                     style={{ flex: 1, alignSelf: "stretch" }}
                     buttonStyle={{
-                      flex: 1,
+                      width: "100%",
                       backgroundColor: profile.followed
                         ? theme.colors?.grey4
                         : theme.colors?.primary,
@@ -547,6 +547,7 @@ const PetItem = ({ pet }: { pet: Pet }) => {
         >
           <Text
             style={{
+              lineHeight: 24,
               fontWeight: "bold",
               fontSize: 20,
               color: theme.colors?.black,

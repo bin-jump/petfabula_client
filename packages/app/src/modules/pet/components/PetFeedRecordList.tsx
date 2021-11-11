@@ -267,7 +267,7 @@ const FeedGraph = ({ petId }: { petId: number }) => {
     >
       <Text style={{ fontWeight: "bold" }}>{t("pet.record.recentFeeds")}</Text>
       {!pending && petId == recordPetId && records.length == 0 && (
-        <Text style={{ marginTop: 100 }}>no data</Text>
+        <Text style={{ marginTop: 100 }}>{t("pet.record.noGraphData")}</Text>
       )}
       {petId != recordPetId && (
         <ActivityIndicator

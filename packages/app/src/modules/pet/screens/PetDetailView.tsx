@@ -229,6 +229,7 @@ const PetContent = ({ pet, petId }: { pet: Pet | null; petId: number }) => {
                 >
                   <Icon
                     containerStyle={{
+                      elevation: 3,
                       backgroundColor: theme.colors?.white,
                       padding: 10,
                       borderRadius: 60,
@@ -398,7 +399,7 @@ const PetDetailView = () => {
       </BottomSheet>
 
       <PendingOverlay pending={removePending} />
-      <View style={{ backgroundColor: theme.colors?.white, height: top }} />
+      <View style={{ backgroundColor: theme.colors?.white, height: top + 8 }} />
       <View
         style={{
           flexDirection: "row",

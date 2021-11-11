@@ -294,9 +294,9 @@ const PetItem = ({ pet }: { pet: PetDetail }) => {
           borderRadius: 10,
           shadowColor: theme.colors?.grey2,
           shadowOffset: { width: 2, height: 4 },
+          shadowRadius: 6,
           shadowOpacity: 0.5,
           elevation: 2,
-          shadowRadius: 6,
         }}
       >
         <View style={{ flexDirection: "row" }}>

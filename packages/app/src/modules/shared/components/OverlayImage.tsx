@@ -11,7 +11,9 @@ import { Overlay, Icon } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   PinchGestureHandler,
+  PanGestureHandler,
   PinchGestureHandlerGestureEvent,
+  GestureHandlerRootView,
 } from "react-native-gesture-handler";
 import Animated, {
   useSharedValue,
@@ -109,7 +111,7 @@ const FullScreenImage = ({
         alignItems: "center",
       }}
     >
-      <PinchGestureHandler onGestureEvent={gestureHandler}>
+      <PinchGestureHandler minPointers={1} onGestureEvent={gestureHandler}>
         <Animated.View
           style={{
             width: "100%",
