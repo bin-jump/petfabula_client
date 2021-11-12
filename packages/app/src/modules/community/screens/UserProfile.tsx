@@ -373,6 +373,9 @@ const UserPart = ({
               containerStyle={{ marginTop: 8 }}
               source={{ uri: profile?.photo }}
               size={74}
+              onPress={() => {
+                navigation.navigate("UserInfomation", { user: profile });
+              }}
             />
             <View
               style={{

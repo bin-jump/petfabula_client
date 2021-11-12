@@ -1,11 +1,16 @@
 import React, { useCallback } from "react";
-import { View, useWindowDimensions, ViewStyle } from "react-native";
+import {
+  View,
+  useWindowDimensions,
+  ViewStyle,
+  TouchableWithoutFeedback,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { Icon, useTheme } from "react-native-elements";
 import Carousel from "react-native-snap-carousel";
 import {
   PinchGestureHandler,
   PinchGestureHandlerGestureEvent,
-  GestureHandlerRootView,
 } from "react-native-gesture-handler";
 import Animated, {
   useSharedValue,
@@ -173,6 +178,7 @@ const SingleImage = ({
   ratio: number;
 }) => {
   const { width } = useWindowDimensions();
+  const navigation = useNavigation();
 
   const scale = useSharedValue(1);
   const focalX = useSharedValue(0);
@@ -226,20 +232,31 @@ const SingleImage = ({
   return (
     <PinchGestureHandler onGestureEvent={gestureHandler}>
       <Animated.View style={{ width: "100%", overflow: "visible" }}>
-        <Image
-          animated
-          style={[
-            {
-              left: 0,
-              right: 0,
-              width: width,
-              height: width / ratio,
-            },
-          ]}
-          animatedStyle={animatedStyle}
-          uri={image.url}
-          sz="LG"
-        />
+        <TouchableWithoutFeedback
+          onPress={() => {
+            navigation.navigate("ImageStack", {
+              screen: "ImageScreen",
+              params: {
+                image: image,
+              },
+            });
+          }}
+        >
+          <Image
+            animated
+            style={[
+              {
+                left: 0,
+                right: 0,
+                width: width,
+                height: width / ratio,
+              },
+            ]}
+            animatedStyle={animatedStyle}
+            uri={image.url}
+            sz="LG"
+          />
+        </TouchableWithoutFeedback>
       </Animated.View>
     </PinchGestureHandler>
   );

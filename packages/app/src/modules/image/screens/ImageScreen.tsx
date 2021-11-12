@@ -1,20 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import {
-  ViewProps,
   View,
   useWindowDimensions,
   TouchableOpacity,
-  ImageStyle,
-  TouchableWithoutFeedback,
+  StatusBar,
 } from "react-native";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { Overlay, Icon } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
 import {
   PinchGestureHandler,
-  PanGestureHandler,
   PinchGestureHandlerGestureEvent,
-  GestureHandlerRootView,
 } from "react-native-gesture-handler";
 import Animated, {
   useSharedValue,
@@ -22,20 +18,14 @@ import Animated, {
   useAnimatedGestureHandler,
   withTiming,
 } from "react-native-reanimated";
-import Image from "./Image";
+import { Image } from "../../shared";
 import { DisplayImage } from "@petfabula/common";
+import ParamTypes from "./paramTypes";
 
-const FullScreenImage = ({
-  image,
-  visiable,
-  close,
-}: {
-  image: DisplayImage;
-  visiable: boolean;
-  close: () => void;
-}) => {
+const FullScreenImage = ({ image }: { image: DisplayImage }) => {
   const { width, height } = useWindowDimensions();
   const { top } = useSafeAreaInsets();
+  const navigation = useNavigation();
 
   const scale = useSharedValue(1);
   const focalX = useSharedValue(0);
@@ -99,15 +89,11 @@ const FullScreenImage = ({
   const [w, h] = showSize();
 
   return (
-    <Overlay
-      fullScreen
+    <View
       //transparent
-      animationType="none"
-      isVisible={visiable}
-      style={{ backgroundColor: "#111" }}
-      overlayStyle={{
-        padding: 0,
+      style={{
         backgroundColor: "#111",
+        padding: 0,
         justifyContent: "center",
         alignItems: "center",
       }}
@@ -137,7 +123,7 @@ const FullScreenImage = ({
             <TouchableOpacity
               style={{ borderRadius: 20, padding: 6 }}
               onPress={() => {
-                close();
+                navigation.goBack();
               }}
             >
               <Icon
@@ -166,53 +152,20 @@ const FullScreenImage = ({
           />
         </Animated.View>
       </PinchGestureHandler>
-    </Overlay>
-  );
-};
-
-const OverlayImage = (
-  props: {
-    height: number;
-    width: number;
-    image: DisplayImage;
-    imageStyle?: ImageStyle;
-  } & ViewProps
-) => {
-  const { height, width, image, imageStyle, ...viewProps } = props;
-  const [visiable, setVisiable] = useState(false);
-  const navigation = useNavigation();
-
-  return (
-    <View {...viewProps}>
-      {/* <FullScreenImage
-        visiable={visiable}
-        image={image}
-        close={() => {
-          setVisiable(false);
-        }}
-      /> */}
-      <TouchableWithoutFeedback
-        onPress={() => {
-          // setVisiable(true);
-          navigation.navigate("ImageStack", {
-            screen: "ImageScreen",
-            params: {
-              image: image,
-            },
-          });
-        }}
-      >
-        <Image
-          onPress={() => {
-            // setVisiable(true);
-          }}
-          style={[{ width, height }, imageStyle]}
-          uri={image.url}
-          sz="MD"
-        />
-      </TouchableWithoutFeedback>
     </View>
   );
 };
 
-export default OverlayImage;
+const ImageScreen = () => {
+  const { params } = useRoute<RouteProp<ParamTypes, "ImageScreen">>();
+  const image = params.image;
+
+  return (
+    <View>
+      <StatusBar hidden />
+      <FullScreenImage image={image} />
+    </View>
+  );
+};
+
+export default ImageScreen;

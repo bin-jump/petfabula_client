@@ -32,6 +32,23 @@ const UserInfomation = () => {
   const { user } = params;
   const { t } = useTranslation();
   const { theme } = useTheme();
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: () => (
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <Text h2>{user.name}</Text>
+        </View>
+      ),
+    });
+  }, [user, navigation]);
 
   return (
     <ScrollView style={{ backgroundColor: theme.colors?.white }}>
@@ -42,6 +59,7 @@ const UserInfomation = () => {
           justifyContent: "center",
           alignItems: "center",
           paddingTop: 50,
+          paddingHorizontal: 16,
         }}
       >
         <Avatar
@@ -53,6 +71,30 @@ const UserInfomation = () => {
         <Text h1 style={{ marginTop: 8 }}>
           {user.name}
         </Text>
+
+        <View style={{ flexDirection: "row" }}>
+          <Text
+            style={{
+              textAlign: "center",
+              fontSize: 18,
+              marginTop: 16,
+              color: theme.colors?.grey0,
+              marginRight: 12,
+            }}
+          >
+            {`${t("user.petCount")}:`}
+          </Text>
+          <Text
+            style={{
+              textAlign: "center",
+              fontSize: 18,
+              marginTop: 16,
+              color: theme.colors?.grey0,
+            }}
+          >
+            {user.petCount}
+          </Text>
+        </View>
 
         <View>
           <Text

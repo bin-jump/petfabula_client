@@ -25,6 +25,7 @@ import {
 } from "@petfabula/common";
 import { usePrevious } from "../modules/shared";
 import { LoginRequire } from "../modules/aspect";
+import ImageScreen from "../modules/image";
 import AuthenticaionScreen from "../modules/authentication";
 import CommunityMain from "../modules/community";
 import PetMain from "../modules/pet";
@@ -85,6 +86,20 @@ const AppScreen = () => {
           }}
           name="SecondaryStack"
           component={SecondaryStack}
+        />
+        {/* gesture handler not work well on android with modal */}
+        <TopStack.Screen
+          options={{
+            headerShown: false,
+            cardOverlayEnabled: true,
+            cardStyleInterpolator: ({ current: { progress } }) => ({
+              cardStyle: {
+                opacity: progress,
+              },
+            }),
+          }}
+          name="ImageStack"
+          component={ImageScreen}
         />
 
         <TopStack.Screen

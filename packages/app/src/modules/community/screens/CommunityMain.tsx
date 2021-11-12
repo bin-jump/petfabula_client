@@ -294,9 +294,10 @@ const CommunityMain = () => {
           inactiveTintColor={theme.colors?.grey1}
           labelStyle={{
             // lineHeight: 36,
+            paddingTop: 6,
             fontSize: 15,
             fontWeight: "bold",
-            paddingBottom: 18,
+            paddingBottom: 14,
           }}
           tabStyle={{
             paddingBottom: 18,

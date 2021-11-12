@@ -159,6 +159,7 @@ const UserContent = () => {
   const { loadMyProfile, profile } = useLoadMyProfile();
   const { loadAccount, account } = useLoadMyAccount();
   const { t } = useTranslation();
+  const { width } = useWindowDimensions();
 
   useFirstFocusEffect(() => {
     if (currentUser) {
@@ -210,9 +211,18 @@ const UserContent = () => {
                   </Text>
                   <GenderItem gender={account.gender} size={22} />
                 </View>
-                <Text style={{ color: theme.colors?.grey1 }}>
-                  {account.bio}
-                </Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text
+                    numberOfLines={2}
+                    style={{
+                      color: theme.colors?.grey1,
+                      width: width - 150,
+                      fontSize: 16,
+                    }}
+                  >
+                    {account.bio}
+                  </Text>
+                </View>
               </View>
             </View>
 
