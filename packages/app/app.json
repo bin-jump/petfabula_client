@@ -4,12 +4,12 @@
     "slug": "app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/app_icon.png",
     "scheme": "myappredirect",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/app_splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#fe716b"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -17,7 +17,8 @@
     "assetBundlePatterns": ["**/*"],
     "userInterfaceStyle": "automatic",
     "ios": {
-      "supportsTablet": true,
+      "buildNumber": "1.0.0",
+      "supportsTablet": false,
       "bundleIdentifier": "com.pet.PetfabulaApp"
     },
     "android": {
