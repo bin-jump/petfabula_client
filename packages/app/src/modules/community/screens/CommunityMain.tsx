@@ -295,7 +295,7 @@ const CommunityMain = () => {
           labelStyle={{
             // lineHeight: 36,
             paddingTop: 6,
-            fontSize: 15,
+            fontSize: 14,
             fontWeight: "bold",
             paddingBottom: 14,
           }}

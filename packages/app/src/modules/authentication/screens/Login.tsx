@@ -11,12 +11,14 @@ import { useNavigation } from "@react-navigation/native";
 import { Field, Formik } from "formik";
 import { useTranslation } from "react-i18next";
 import * as WebBrowser from "expo-web-browser";
+import * as AppleAuthentication from "expo-apple-authentication";
 import {
   DismissKeyboardView,
   FilledInput,
   useDidUpdateEffect,
   PendingOverlay,
   parseUrlParams,
+  Storage,
 } from "../../shared";
 import {
   useEmailCodeLogin,
@@ -206,6 +208,45 @@ const LoginFormContent = ({
             style={{ marginRight: 9 }}
           />
         }
+      />
+
+      <AppleAuthentication.AppleAuthenticationButton
+        buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+        buttonStyle={
+          AppleAuthentication.AppleAuthenticationButtonStyle.WHITE_OUTLINE
+        }
+        cornerRadius={5}
+        style={{ marginTop: 20, width: "100%", height: 60 }}
+        onPress={async () => {
+          try {
+            const credential = await AppleAuthentication.signInAsync({
+              requestedScopes: [
+                AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+                AppleAuthentication.AppleAuthenticationScope.EMAIL,
+              ],
+            });
+
+            const cachedName: string = await Storage.getItem(credential.user);
+            const detailsArePopulated: boolean =
+              !!credential?.fullName?.givenName && !!credential.email;
+
+            if (detailsArePopulated) {
+              await Storage.setItem(
+                credential.user,
+                credential?.fullName?.givenName
+              );
+            }
+
+            console.log("credential", credential, cachedName);
+            // signed in
+          } catch (e: any) {
+            if (e.code === "ERR_CANCELED") {
+              // handle that the user canceled the sign-in flow
+            } else {
+              // handle other errors
+            }
+          }
+        }}
       />
 
       <View

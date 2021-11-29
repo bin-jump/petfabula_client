@@ -19,7 +19,8 @@
     "ios": {
       "buildNumber": "1.0.0",
       "supportsTablet": false,
-      "bundleIdentifier": "com.pet.PetfabulaApp"
+      "usesAppleSignIn": true,
+      "bundleIdentifier": "com.petfabula.petfabula"
     },
     "android": {
       "adaptiveIcon": {

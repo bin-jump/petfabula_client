@@ -431,7 +431,7 @@ const AnswerItem = ({
         selectable={true}
         numberOfLines={showFull.full ? undefined : LINE_THRESHOLD}
         onTextLayout={onTextLayout}
-        style={{ fontSize: 18 }}
+        style={{ fontSize: 16 }}
       >
         {answer.content}
       </Text>
