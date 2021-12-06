@@ -170,14 +170,14 @@ const VerificationCodeFormContent = ({
                 shadowColor: theme.colors?.grey0,
                 flex: 1,
                 borderRadius: 6,
-                height: 60,
+                height: 62,
                 marginHorizontal: 6,
                 backgroundColor: theme.colors?.grey5,
                 justifyContent: "center",
               },
               isFocused && {
-                borderWidth: 1,
-                borderColor: theme.colors?.grey3,
+                borderWidth: 2,
+                borderColor: theme.colors?.black,
               },
             ]}
             key={index}
@@ -187,7 +187,6 @@ const VerificationCodeFormContent = ({
               key={index}
               style={{
                 fontWeight: "bold",
-                paddingTop: 10,
                 fontSize: 30,
                 lineHeight: 32,
                 textAlign: "center",

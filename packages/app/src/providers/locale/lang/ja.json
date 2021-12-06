@@ -72,15 +72,21 @@
       "gotoSignup": "アカウント登録",
       "gotoLogin": "ログインへ",
       "thirdPartyLogin": "その他によるログイン",
+      "thirdPartyRegister": "その他による登録",
+      "googleLogin": "Googleでサインイン",
+      "appleLogin": "Appleでサインイン",
+      "googleRegister": "Googleでサインアップ",
+      "appleRegister": "Appleでサインアップ",
       "sendVerificationCodeAction": "ログイン",
       "loginVerificationCodeTitle": "認証コード",
       "sendMailMessage": "下記のメールアドレスに認証コードを送ったので、ご確認ください",
       "loginAction": "認証してログイン",
-      "oauthAutoUserAgreementFront": "その他によるログインすることで、",
+      "oauthAutoUserAgreementFront": "その他による登録することで、",
       "oauthAutoUserAgreement": "利用規約",
       "oauthAutoWithWord": "と",
       "oauthAutoPrivacyAgreement": "プライバシーポリシー",
-      "oauthAutoUserAgreementBack": "に同意したものとみなされます"
+      "oauthAutoUserAgreementBack": "に同意したものとみなされます",
+      "appleLoginError": "アップルによるログインできませんでした"
     },
     "signup": {
       "title": "アカウント登録",

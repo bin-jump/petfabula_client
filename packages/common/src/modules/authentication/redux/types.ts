@@ -34,6 +34,11 @@ export interface OauthForm {
   serverName: 'GOOGLE' | 'FACEBOOK';
 }
 
+export interface AppleForm {
+  name: string | null;
+  identityToken: string;
+}
+
 // export interface EmailPasswordRegisterForm {
 //   name: string;
 //   email: string;
@@ -65,6 +70,9 @@ export interface AuthenticationState {
   emailCodeSendLoginCodeResult: AsyncDataBase<{ done: boolean }>;
   emailCodeLoginResult: AsyncDataBase<User>;
   oauthRegisterLoginResult: AsyncDataBase<User>;
+  oauthLoginResult: AsyncDataBase<User>;
+  appleRegisterLoginResult: AsyncDataBase<User>;
+  appleLoginResult: AsyncDataBase<User>;
   logoutResult: AsyncDataBase<{ done: boolean }>;
 
   // registerResult: AsyncDataBase<User>;

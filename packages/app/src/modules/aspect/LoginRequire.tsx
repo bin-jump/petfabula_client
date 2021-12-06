@@ -26,14 +26,14 @@ const LoginRequire = () => {
         <TouchableWithoutFeedback>
           <View
             style={{
-              width: 280,
-              height: 270,
+              width: 290,
+              height: 330,
               backgroundColor: theme.colors?.white,
               borderRadius: 16,
               padding: 18,
               justifyContent: "space-between",
               alignItems: "center",
-              paddingVertical: 24,
+              paddingBottom: 16,
               paddingTop: 10,
             }}
           >
@@ -61,7 +61,7 @@ const LoginRequire = () => {
                 type="material-community-icon"
                 name="login"
                 color={theme.colors?.grey2}
-                size={48}
+                size={38}
               />
             </View>
 
@@ -79,6 +79,16 @@ const LoginRequire = () => {
                 }}
                 title={t("authentication.login.gotoLogin")}
                 raised
+              />
+
+              <Button
+                containerStyle={{ marginTop: 12 }}
+                style={{ flex: 1 }}
+                onPress={() => {
+                  navigation.goBack();
+                }}
+                title={t("common.cancel")}
+                type="outline"
               />
             </View>
           </View>

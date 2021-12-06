@@ -26,3 +26,13 @@ export const EmailCodeRegisterAndLoginActionType = createAsyncActionType(
 export const OauthRegisterAndLoginActionType = createAsyncActionType(
   'AUTHENTICATION_REGISTER_LOGIN_OAUTH',
 );
+export const OauthLoginActionType = createAsyncActionType(
+  'AUTHENTICATION_LOGIN_OAUTH',
+);
+
+export const AppleRegisterAndLoginActionType = createAsyncActionType(
+  'AUTHENTICATION_REGISTER_LOGIN_APPLE',
+);
+export const AppleLoginActionType = createAsyncActionType(
+  'AUTHENTICATION_LOGIN_APPLE',
+);

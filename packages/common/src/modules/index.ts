@@ -2,6 +2,7 @@ export {
   User,
   EmailCodeLoginForm,
   OauthForm,
+  AppleForm,
   EmailCodeRegisterForm,
   EmailCodeSendLoginCodeForm,
   EmailCodeSendRegisterCodeForm,
@@ -11,6 +12,9 @@ export {
   useEmailCodeSendRegisterCode,
   useLogout,
   useOauthRegisterAndLogin,
+  useOauthLogin,
+  useAppleRegisterOrLogin,
+  // useAppleLogin,
   useCurrentUser,
   OauthConfig,
 } from './authentication';

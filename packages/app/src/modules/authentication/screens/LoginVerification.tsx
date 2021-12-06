@@ -172,8 +172,8 @@ const VerificationCodeFormContent = ({
                 justifyContent: "center",
               },
               isFocused && {
-                borderWidth: 1,
-                borderColor: theme.colors?.grey3,
+                borderWidth: 2,
+                borderColor: theme.colors?.black,
               },
             ]}
             key={index}

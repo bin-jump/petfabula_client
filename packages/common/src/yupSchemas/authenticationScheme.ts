@@ -48,6 +48,7 @@ const userAgreementValidation = yup
 const verificationCodeValidation = yup
   .string()
   .trim()
+  .test('len', commonMessageKey.emptyValue, (val) => val?.length === 6)
   .required(commonMessageKey.emptyValue);
 
 export const validSendLoginCodeFormSchema = yup.object().shape({

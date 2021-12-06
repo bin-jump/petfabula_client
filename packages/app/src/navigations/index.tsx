@@ -365,12 +365,15 @@ const TabScreen = () => {
                   <View style={styles.tabIconContainer}>
                     <Icon
                       type="material-community"
-                      name={
-                        focused
-                          ? "bookmark-multiple"
-                          : "bookmark-multiple-outline"
-                      }
-                      size={iconSize}
+                      // type="ionicon"
+                      // name={
+                      //   focused
+                      //     ? "bookmark-multiple"
+                      //     : "bookmark-multiple-outline"
+                      // }
+                      // name={focused ? "md-paw" : "md-paw-outline"}
+                      name={focused ? "tag-heart" : "tag-heart-outline"}
+                      size={iconSize + 2}
                       color={focused ? focusedColor : unFocusedColor}
                     />
                     <Text

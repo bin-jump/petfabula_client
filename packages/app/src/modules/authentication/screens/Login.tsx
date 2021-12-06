@@ -1,5 +1,5 @@
-import * as React from "react";
-import { View, ScrollView } from "react-native";
+import React, { useRef } from "react";
+import { View, ScrollView, Image, Platform } from "react-native";
 import {
   Text,
   ThemeContext,
@@ -12,6 +12,8 @@ import { Field, Formik } from "formik";
 import { useTranslation } from "react-i18next";
 import * as WebBrowser from "expo-web-browser";
 import * as AppleAuthentication from "expo-apple-authentication";
+import Toast from "react-native-root-toast";
+import { FontAwesome } from "@expo/vector-icons";
 import {
   DismissKeyboardView,
   FilledInput,
@@ -26,9 +28,12 @@ import {
   EmailCodeSendLoginCodeForm,
   validSendLoginCodeFormSchema,
   resolveResponseFormError,
-  useOauthRegisterAndLogin,
+  useAppleRegisterOrLogin,
+  useOauthLogin,
   OauthConfig,
 } from "@petfabula/common";
+import AppleButton from "../components/AppleButton";
+import GoogleButton from "../components/GoogleButton";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -100,10 +105,15 @@ const LoginFormContent = ({
   const { pending, error, sendResult } = useEmailCodeSendLoginCode();
   const { error: loginError } = useEmailCodeLogin();
   const {
-    registerAndLogin: oauthRegisterAndLogin,
-    registerAndLoginResult: oauthResult,
+    login: oauthLogin,
+    result: oauthResult,
     pending: oauthPending,
-  } = useOauthRegisterAndLogin();
+  } = useOauthLogin();
+  const {
+    registerAndLogin: appleRegisterAndLogin,
+    result: appleResult,
+    pending: applePending,
+  } = useAppleRegisterOrLogin();
 
   const handleOauthLogin = async (
     url: string,
@@ -111,7 +121,7 @@ const LoginFormContent = ({
     endpointName: string
   ) => {
     const result = await WebBrowser.openAuthSessionAsync(url, redirectUri);
-    console.log("result", result);
+    // console.log("result", result);
     if (result?.type === "success") {
       const code = parseUrlParams(result.url)["code"];
       console.log("success", code);
@@ -120,7 +130,48 @@ const LoginFormContent = ({
         return;
       }
       const nm = endpointName as "GOOGLE" | "FACEBOOK";
-      oauthRegisterAndLogin({ code: code, serverName: nm });
+      oauthLogin({ code: code, serverName: nm });
+    }
+  };
+
+  const handleAppleLogin = async () => {
+    try {
+      const credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ],
+      });
+
+      const cachedName: string = await Storage.getItem(credential.user);
+      const detailsArePopulated: boolean =
+        !!credential?.fullName?.givenName && !!credential.email;
+
+      if (detailsArePopulated) {
+        await Storage.setItem(credential.user, credential?.fullName?.givenName);
+      }
+
+      // console.log("credential", credential, cachedName);
+      // signed in
+      if (credential.identityToken) {
+        appleRegisterAndLogin({
+          name: null,
+          identityToken: credential.identityToken,
+        });
+      }
+    } catch (e: any) {
+      if (e.code === "ERR_CANCELED") {
+        // handle that the user canceled the sign-in flow
+      } else {
+        // handle other errors
+        Toast.show(`${t("authentication.login.appleLoginError")}`, {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.TOP + 30,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+        });
+      }
     }
   };
 
@@ -137,6 +188,18 @@ const LoginFormContent = ({
   }, [oauthResult]);
 
   useDidUpdateEffect(() => {
+    if (appleResult) {
+      navigation.goBack();
+    }
+  }, [appleResult]);
+
+  // useDidUpdateEffect(() => {
+  //   if (oauthLoginResult) {
+  //     navigation.goBack();
+  //   }
+  // }, [oauthLoginResult]);
+
+  useDidUpdateEffect(() => {
     setErrors(resolveResponseFormError(loginError));
   }, [loginError]);
 
@@ -147,7 +210,7 @@ const LoginFormContent = ({
   return (
     <View style={{ width: "100%", alignItems: "center" }}>
       <PendingOverlay
-        pending={oauthPending}
+        pending={oauthPending || applePending}
         actionName={t("authentication.login.logining")}
       />
       <Field
@@ -188,7 +251,17 @@ const LoginFormContent = ({
         </Text>
         <Divider style={{ width: 50, marginTop: 10 }} />
       </View>
-      <Button
+
+      <AppleButton
+        buttonType="login"
+        onPress={handleAppleLogin}
+        containerStyle={{
+          marginTop: 20,
+        }}
+      />
+
+      <GoogleButton
+        buttonType="login"
         onPress={() => {
           handleOauthLogin(
             OauthConfig.getGoogleUrl(),
@@ -196,60 +269,20 @@ const LoginFormContent = ({
             "GOOGLE"
           );
         }}
-        title="Google"
-        type="outline"
-        containerStyle={{ marginTop: 20, width: "100%" }}
-        icon={
-          <Icon
-            type="antdesign"
-            name="google"
-            color={theme.colors?.primary}
-            size={22}
-            style={{ marginRight: 9 }}
-          />
-        }
-      />
-
-      <AppleAuthentication.AppleAuthenticationButton
-        buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
-        buttonStyle={
-          AppleAuthentication.AppleAuthenticationButtonStyle.WHITE_OUTLINE
-        }
-        cornerRadius={5}
-        style={{ marginTop: 20, width: "100%", height: 60 }}
-        onPress={async () => {
-          try {
-            const credential = await AppleAuthentication.signInAsync({
-              requestedScopes: [
-                AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
-                AppleAuthentication.AppleAuthenticationScope.EMAIL,
-              ],
-            });
-
-            const cachedName: string = await Storage.getItem(credential.user);
-            const detailsArePopulated: boolean =
-              !!credential?.fullName?.givenName && !!credential.email;
-
-            if (detailsArePopulated) {
-              await Storage.setItem(
-                credential.user,
-                credential?.fullName?.givenName
-              );
-            }
-
-            console.log("credential", credential, cachedName);
-            // signed in
-          } catch (e: any) {
-            if (e.code === "ERR_CANCELED") {
-              // handle that the user canceled the sign-in flow
-            } else {
-              // handle other errors
-            }
-          }
+        containerStyle={{
+          marginTop: 20,
         }}
       />
 
-      <View
+      {/* <AppleAuthentication.AppleAuthenticationButton
+        buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+        buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+        cornerRadius={5}
+        style={{ marginTop: 20, width: "100%", height: 60 }}
+        onPress={handleAppleLogin}
+      /> */}
+
+      {/* <View
         style={{
           width: "100%",
           flexDirection: "row",
@@ -289,7 +322,7 @@ const LoginFormContent = ({
           </Text>
           <Text>{t("authentication.login.oauthAutoUserAgreementBack")}</Text>
         </Text>
-      </View>
+      </View> */}
     </View>
   );
 };

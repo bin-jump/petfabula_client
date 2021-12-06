@@ -6,8 +6,11 @@ import {
   EmailCodeSendRegisterCodeActionType,
   EmailCodeRegisterAndLoginActionType,
   OauthRegisterAndLoginActionType,
+  OauthLoginActionType,
   GetCurrentUserActionType,
   LogoutActionType,
+  AppleRegisterAndLoginActionType,
+  AppleLoginActionType,
 } from './actionTypes';
 
 const watchGetCurrentUser = createSagaWatcher({
@@ -52,6 +55,27 @@ const watchOauthRegisterOrLogin = createSagaWatcher({
   watchType: 'EVERY',
 });
 
+const watchOauthLogin = createSagaWatcher({
+  url: `/api/identity/signin-oauth`,
+  method: 'POST',
+  asyncAction: OauthLoginActionType,
+  watchType: 'EVERY',
+});
+
+const watchAppleRegisterOrLogin = createSagaWatcher({
+  url: `/api/identity/register-signin-apple`,
+  method: 'POST',
+  asyncAction: AppleRegisterAndLoginActionType,
+  watchType: 'EVERY',
+});
+
+const watchAppleLogin = createSagaWatcher({
+  url: `/api/identity/register-signin-apple`,
+  method: 'POST',
+  asyncAction: AppleLoginActionType,
+  watchType: 'EVERY',
+});
+
 const watchLogout = createSagaWatcher({
   url: `/api/identity/logout`,
   method: 'POST',
@@ -67,6 +91,9 @@ export function* authenticationRootSaga() {
     fork(watchEmailCodeSendLoginCode),
     fork(watchEmailCodeLogin),
     fork(watchOauthRegisterOrLogin),
+    fork(watchOauthLogin),
+    fork(watchAppleRegisterOrLogin),
+    fork(watchAppleLogin),
     fork(watchLogout),
   ]);
 }

@@ -5,11 +5,13 @@ import {
   EmailCodeLoginForm,
   EmailCodeSendLoginCodeForm,
   AuthenticationState,
+  OauthForm,
 } from './types';
 import {
   EmailCodeLoginActionType,
   LogoutActionType,
   EmailCodeSendLoginCodeActionType,
+  OauthLoginActionType,
 } from './actionTypes';
 import { ActionBase } from '../../shared';
 
@@ -63,6 +65,36 @@ export const useEmailCodeLogin = () => {
   return {
     login: boundAction,
     loginResult,
+    pending,
+    error,
+  };
+};
+
+export const useOauthLogin = () => {
+  const dispatch = useDispatch();
+  const { result, pending, error } = useSelector(
+    (state: AppState) => ({
+      result: state.authentication.oauthLoginResult.data,
+      pending: state.authentication.oauthLoginResult.pending,
+      error: state.authentication.oauthLoginResult.error,
+    }),
+    shallowEqual,
+  );
+
+  const boundAction = useCallback(
+    (form: OauthForm) => {
+      const d = new FormData();
+      d.append('serverName', form.serverName);
+      d.append('code', form.code);
+
+      dispatch({ type: OauthLoginActionType.BEGIN, payload: d });
+    },
+    [dispatch],
+  );
+
+  return {
+    login: boundAction,
+    result,
     pending,
     error,
   };
@@ -172,6 +204,51 @@ export const loginReducer = {
       ...state,
       emailCodeLoginResult: {
         ...state.emailCodeLoginResult,
+        error: action.error,
+        pending: false,
+      },
+    };
+  },
+
+  // oauth login
+  [OauthLoginActionType.BEGIN]: (
+    state: AuthenticationState,
+    action: ActionBase,
+  ): AuthenticationState => {
+    return {
+      ...state,
+      oauthLoginResult: {
+        ...state.oauthLoginResult,
+        pending: true,
+        error: null,
+      },
+    };
+  },
+  [OauthLoginActionType.SUCCESS]: (
+    state: AuthenticationState,
+    action: ActionBase,
+  ): AuthenticationState => {
+    return {
+      ...state,
+      oauthLoginResult: {
+        ...state.oauthLoginResult,
+        data: action.payload,
+        pending: false,
+      },
+      currentUser: {
+        ...state.currentUser,
+        data: action.payload,
+      },
+    };
+  },
+  [OauthLoginActionType.FAILURE]: (
+    state: AuthenticationState,
+    action: ActionBase,
+  ): AuthenticationState => {
+    return {
+      ...state,
+      oauthLoginResult: {
+        ...state.oauthLoginResult,
         error: action.error,
         pending: false,
       },
