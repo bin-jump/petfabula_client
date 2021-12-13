@@ -22,6 +22,7 @@ import {
   AlertAction,
   PendingOverlay,
   useLoginIntercept,
+  ParsedTextContent,
 } from "../../shared";
 
 type WithReplyTo = PostCommentReply & { replyToName: string | null };
@@ -199,7 +200,9 @@ const ReplyItem = ({
       >
         <Text style={{ marginTop: -6, marginLeft: 30 }}>
           {replyTargetComponent()}
-          <Text style={{ fontSize: 16, lineHeight: 20 }}>{reply.content}</Text>
+          <ParsedTextContent style={{ fontSize: 16, lineHeight: 20 }}>
+            {reply.content}
+          </ParsedTextContent>
 
           <Text
             style={{
@@ -375,7 +378,7 @@ const CommentItem = ({
             }}
           >
             <Text>
-              <Text
+              <ParsedTextContent
                 onPress={() => {
                   if (!assertLogin()) {
                     return;
@@ -393,7 +396,7 @@ const CommentItem = ({
                 }}
               >
                 {comment.content}
-              </Text>
+              </ParsedTextContent>
               <Text
                 style={{
                   color: theme.colors?.grey1,

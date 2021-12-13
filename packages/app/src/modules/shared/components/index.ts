@@ -9,6 +9,7 @@ export { default as Avatar } from "./Avatar";
 export { default as AvatarField } from "./AvatarField";
 export { default as ImageGallery } from "./ImageGallery";
 export { default as Tooltip } from "./Tooltip";
+export { default as ParsedTextContent } from "./ParsedTextContent";
 export { default as ActivityIndicator } from "./ActivityIndicator";
 export { default as LoadingMoreIndicator } from "./LoadingMoreIndicator";
 export { default as OverlayImage } from "./OverlayImage";

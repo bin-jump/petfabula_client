@@ -58,7 +58,7 @@ import {
   AvatarField,
   ActivityIndicator,
   IconCount,
-  Image,
+  ParsedTextContent,
   OverlayImage,
   useRefocusEffect,
   BottomSheet,
@@ -567,12 +567,12 @@ const QuestionDetailView = () => {
                 </View>
 
                 {question.content ? (
-                  <Text
+                  <ParsedTextContent
                     selectable={true}
                     style={{ fontSize: 18, marginTop: 12 }}
                   >
                     {question.content}
-                  </Text>
+                  </ParsedTextContent>
                 ) : null}
 
                 {question.relatePet ? (

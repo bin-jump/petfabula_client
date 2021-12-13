@@ -35,6 +35,7 @@ import {
   AlertAction,
   PendingOverlay,
   useLoginIntercept,
+  ParsedTextContent,
 } from "../../shared";
 
 type WithReplyTo = AnswerComment & { replyToName: string | null };
@@ -213,7 +214,7 @@ const CommentItem = ({
       >
         <Text style={{ marginLeft: 26 }}>
           {replyTargetComponent()}
-          <Text>{answerComment.content}</Text>
+          <ParsedTextContent>{answerComment.content}</ParsedTextContent>
           <Text style={{ fontSize: 14, color: theme.colors?.grey1 }}>
             {`  ${milisecToAgo(answerComment.createdDate)}`}
           </Text>
@@ -427,14 +428,14 @@ const AnswerItem = ({
         })}
       </View>
 
-      <Text
+      <ParsedTextContent
         selectable={true}
         numberOfLines={showFull.full ? undefined : LINE_THRESHOLD}
         onTextLayout={onTextLayout}
         style={{ fontSize: 16 }}
       >
         {answer.content}
-      </Text>
+      </ParsedTextContent>
 
       <View style={{ alignItems: "flex-end" }}>
         {!showFull.full && (
@@ -625,7 +626,6 @@ const AnswerList = ({
               if (!assertLogin()) {
                 return;
               }
-
               navigation.navigate("CreateNew", {
                 screen: "CreateAnswer",
                 params: {

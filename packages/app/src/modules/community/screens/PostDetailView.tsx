@@ -7,11 +7,11 @@ import React, {
 } from "react";
 import {
   View,
-  Alert,
   TouchableWithoutFeedback,
   ScrollView,
   useWindowDimensions,
   Platform,
+  Linking,
 } from "react-native";
 import { useTheme, Text, Divider, Button, Icon } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -26,6 +26,7 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import ParsedText from "react-native-parsed-text";
 import {
   useLoadPostDetail,
   PostDetail,
@@ -53,6 +54,7 @@ import {
   useDidUpdateEffect,
   ResourceNotFoundView,
   useLoginIntercept,
+  ParsedTextContent,
 } from "../../shared";
 import ParamTypes from "./ParamTypes";
 import PostCommentList from "../components/PostCommentList";
@@ -569,12 +571,12 @@ const PostDetailView = () => {
                 />
               ) : null}
 
-              <Text
+              <ParsedTextContent
                 selectable={true}
                 style={{ fontSize: 16, lineHeight: 26, marginTop: 4 }}
               >
                 {postDetail.content}
-              </Text>
+              </ParsedTextContent>
 
               <Text
                 style={{
