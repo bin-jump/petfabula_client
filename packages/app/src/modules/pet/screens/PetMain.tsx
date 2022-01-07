@@ -324,6 +324,7 @@ const PetContent = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation();
+  const { top } = useSafeAreaInsets();
   const { currentUser } = useCurrentUser();
   const { loadPets, pets, pending } = useLoadMyPets();
 
@@ -350,7 +351,7 @@ const PetContent = () => {
         backgroundColor: theme.colors?.white,
         padding: 24,
       }}
-      contentContainerStyle={{ paddingBottom: 320 }}
+      contentContainerStyle={{ paddingBottom: 180 + top }}
     >
       {pets.length > 0 || pending ? (
         pets.map((item) => <PetItem key={item.id} item={item} />)

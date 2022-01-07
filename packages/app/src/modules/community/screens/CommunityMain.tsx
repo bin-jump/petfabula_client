@@ -106,7 +106,7 @@ const CommunityMain = () => {
 
   const HEADER_HEIGHT = 46;
   const TAB_BAR_HEIGHT = 42;
-  const HeaderHeightWithMargin = top + HEADER_HEIGHT;
+  const HeaderHeightWithMargin = TAB_BAR_HEIGHT + HEADER_HEIGHT;
   const translateVal = useSharedValue(0);
 
   const {
@@ -177,10 +177,7 @@ const CommunityMain = () => {
 
   const listViewStyle = useMemo(
     () => ({
-      marginTop:
-        Platform.OS == "android"
-          ? HeaderHeightWithMargin + top - 6
-          : HeaderHeightWithMargin - 6,
+      marginTop: HeaderHeightWithMargin,
       marginBottom: bottom + 10,
     }),
     []
@@ -191,7 +188,7 @@ const CommunityMain = () => {
       // decelerationRate: 0.96,
       contentContainerStyle: {
         paddingTop: 6,
-        paddingBottom: bottom,
+        paddingBottom: bottom + top,
         minHeight: screenHeight,
       },
       scrollEventThrottle: 5,

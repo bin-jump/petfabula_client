@@ -37,13 +37,13 @@ export const createTheme = (color: Partial<Colors>): Partial<FullTheme> => {
         fontSize: 20,
       },
       h3Style: {
-        lineHeight: 24,
+        lineHeight: 22,
         color: color.black,
         fontWeight: "bold",
         fontSize: 18,
       },
       h4Style: {
-        lineHeight: 22,
+        lineHeight: 20,
         color: color.black,
         fontWeight: "bold",
         fontSize: 16,

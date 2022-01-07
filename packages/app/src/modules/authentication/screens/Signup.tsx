@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, Image } from "react-native";
+import { View, ScrollView } from "react-native";
 import {
   Text,
   ThemeContext,
@@ -48,44 +48,51 @@ const Signup = () => {
 
   return (
     <DismissKeyboardView>
-      <View
+      <ScrollView
+        bounces={false}
         style={{
-          height: "100%",
-          alignItems: "center",
-          justifyContent: "flex-start",
           backgroundColor: theme.colors?.white,
-          paddingHorizontal: 30,
         }}
       >
-        <Text h1 style={{ marginBottom: 45 }}>
-          {t("authentication.signup.title")}
-        </Text>
-        <Formik
-          initialValues={initial}
-          onSubmit={handleSubmit}
-          validationSchema={validSendRegisterCodeFormSchema}
+        <View
+          style={{
+            height: "100%",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            backgroundColor: theme.colors?.white,
+            paddingHorizontal: 30,
+          }}
         >
-          {({
-            values,
-            setErrors,
-            handleSubmit,
-            setValues,
-            errors,
-            touched,
-          }) => (
-            <RegisterFormContent
-              {...{
-                values,
-                setErrors,
-                handleSubmit,
-                setValues,
-                errors,
-                touched,
-              }}
-            />
-          )}
-        </Formik>
-      </View>
+          <Text h1 style={{ marginBottom: 45 }}>
+            {t("authentication.signup.title")}
+          </Text>
+          <Formik
+            initialValues={initial}
+            onSubmit={handleSubmit}
+            validationSchema={validSendRegisterCodeFormSchema}
+          >
+            {({
+              values,
+              setErrors,
+              handleSubmit,
+              setValues,
+              errors,
+              touched,
+            }) => (
+              <RegisterFormContent
+                {...{
+                  values,
+                  setErrors,
+                  handleSubmit,
+                  setValues,
+                  errors,
+                  touched,
+                }}
+              />
+            )}
+          </Formik>
+        </View>
+      </ScrollView>
     </DismissKeyboardView>
   );
 };
@@ -210,7 +217,7 @@ const RegisterFormContent = ({
   }, [appleResult]);
 
   return (
-    <View style={{ width: "100%", alignItems: "center" }}>
+    <View style={{ width: "100%", alignItems: "center", paddingBottom: 20 }}>
       <PendingOverlay
         pending={oauthPending || applePending}
         actionName={t("authentication.login.logining")}

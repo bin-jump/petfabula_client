@@ -299,7 +299,7 @@ const FeedGraph = ({ petId }: { petId: number }) => {
               {formatNumber(grpahData.amounts[index])}
             </Text>
           )}
-          width={Dimensions.get("window").width - 20} // from react-native
+          width={Dimensions.get("window").width - 30} // from react-native
           height={220}
           yAxisInterval={1} // optional, defaults to 1
           formatYLabel={(y) => `${formatNumber(parseInt(y))} g`}
@@ -313,7 +313,7 @@ const FeedGraph = ({ petId }: { petId: number }) => {
               theme.colors?.primary ? theme.colors?.primary : `#333`,
             labelColor: (opacity = 1) => `#333`,
             style: {
-              borderRadius: 16,
+              borderRadius: 10,
             },
             propsForDots: {
               r: "6",
@@ -323,7 +323,7 @@ const FeedGraph = ({ petId }: { petId: number }) => {
           }}
           style={{
             marginVertical: 8,
-            borderRadius: 16,
+            borderRadius: 10,
           }}
         />
       )}

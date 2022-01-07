@@ -129,7 +129,7 @@ const PetContent = ({ pet, petId }: { pet: Pet | null; petId: number }) => {
       {pet && pet.id == petId ? (
         <View
           style={{
-            paddingHorizontal: 26,
+            paddingHorizontal: 16,
             // height: 150,
             backgroundColor: theme.colors?.white,
             paddingBottom: 2,
@@ -160,7 +160,7 @@ const PetContent = ({ pet, petId }: { pet: Pet | null; petId: number }) => {
 
               <View
                 style={{
-                  marginLeft: 20,
+                  marginLeft: 12,
                   paddingRight: 10,
                 }}
               >
@@ -200,7 +200,7 @@ const PetContent = ({ pet, petId }: { pet: Pet | null; petId: number }) => {
                   <Text
                     numberOfLines={2}
                     style={{
-                      maxWidth: 200,
+                      maxWidth: 180,
                       marginTop: 4,
                       fontSize: 14,
                       color: theme.colors?.grey1,

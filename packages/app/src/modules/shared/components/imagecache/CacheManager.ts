@@ -58,7 +58,8 @@ export default class CacheManager {
   static async getCacheSize(): Promise<number> {
     const result = await FileSystem.getInfoAsync(BASE_DIR);
     if (!result.exists) {
-      throw new Error(`${BASE_DIR} not found`);
+      // throw new Error(`${BASE_DIR} not found`);
+      return 0;
     }
     return result.size;
   }

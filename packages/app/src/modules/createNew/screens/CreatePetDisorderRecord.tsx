@@ -142,14 +142,16 @@ const CreatePetDisorderRecord = () => {
           </View>
           <ScrollView
             contentContainerStyle={{
-              height: "100%",
+              minHeight: "100%",
               width: "100%",
               backgroundColor: theme.colors?.white,
               // paddingHorizontal: 16,
               alignItems: "center",
               // paddingTop: 16,
               // borderRadius: 24,
+              paddingBottom: top + 140,
             }}
+            showsVerticalScrollIndicator={false}
           >
             <ActionIcon
               type="material"

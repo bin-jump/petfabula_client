@@ -21,56 +21,56 @@ const watchGetCurrentUser = createSagaWatcher({
 });
 
 const watchEmailCodeSendRegisterCode = createSagaWatcher({
-  url: `/api/identity/register-send-code`,
+  url: `/api/auth/register-send-code`,
   method: 'POST',
   asyncAction: EmailCodeSendRegisterCodeActionType,
   watchType: 'EVERY',
 });
 
 const watchEmailCodeRegisterAndLogin = createSagaWatcher({
-  url: `/api/identity/register-signin-email-code`,
+  url: `/api/auth/register-signin-email-code`,
   method: 'POST',
   asyncAction: EmailCodeRegisterAndLoginActionType,
   watchType: 'EVERY',
 });
 
 const watchEmailCodeSendLoginCode = createSagaWatcher({
-  url: `/api/identity/signin-email-send-code`,
+  url: `/api/auth/signin-email-send-code`,
   method: 'POST',
   asyncAction: EmailCodeSendLoginCodeActionType,
   watchType: 'EVERY',
 });
 
 const watchEmailCodeLogin = createSagaWatcher({
-  url: `/api/identity/signin-email-code`,
+  url: `/api/auth/signin-email-code`,
   method: 'POST',
   asyncAction: EmailCodeLoginActionType,
   watchType: 'EVERY',
 });
 
 const watchOauthRegisterOrLogin = createSagaWatcher({
-  url: `/api/identity/register-signin-oauth`,
+  url: `/api/auth/register-signin-oauth`,
   method: 'POST',
   asyncAction: OauthRegisterAndLoginActionType,
   watchType: 'EVERY',
 });
 
 const watchOauthLogin = createSagaWatcher({
-  url: `/api/identity/signin-oauth`,
+  url: `/api/auth/signin-oauth`,
   method: 'POST',
   asyncAction: OauthLoginActionType,
   watchType: 'EVERY',
 });
 
 const watchAppleRegisterOrLogin = createSagaWatcher({
-  url: `/api/identity/register-signin-apple`,
+  url: `/api/auth/register-signin-apple`,
   method: 'POST',
   asyncAction: AppleRegisterAndLoginActionType,
   watchType: 'EVERY',
 });
 
 const watchAppleLogin = createSagaWatcher({
-  url: `/api/identity/register-signin-apple`,
+  url: `/api/auth/register-signin-apple`,
   method: 'POST',
   asyncAction: AppleLoginActionType,
   watchType: 'EVERY',

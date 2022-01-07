@@ -208,7 +208,7 @@ const LoginFormContent = ({
   }, [error]);
 
   return (
-    <View style={{ width: "100%", alignItems: "center" }}>
+    <View style={{ width: "100%", alignItems: "center", paddingBottom: 20 }}>
       <PendingOverlay
         pending={oauthPending || applePending}
         actionName={t("authentication.login.logining")}

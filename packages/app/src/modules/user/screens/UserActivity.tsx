@@ -260,7 +260,7 @@ const UserActivity = () => {
   >(
     (props) => (
       <MaterialTopTabBar
-        // scrollEnabled
+        scrollEnabled
         contentContainerStyle={{
           height: 42,
         }}

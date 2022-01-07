@@ -148,7 +148,7 @@ const CreatePetMedicalRecord = () => {
               alignItems: "center",
               // paddingTop: 16,
               // borderRadius: 24,
-              paddingBottom: 230,
+              paddingBottom: top + 160,
             }}
           >
             <ActionIcon

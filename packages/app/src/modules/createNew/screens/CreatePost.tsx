@@ -110,7 +110,11 @@ const CreatePost = () => {
   };
 
   const handleCreate = (data: PostForm) => {
-    const d = { ...data, topicId: topic ? topic.id : null };
+    const d = {
+      ...data,
+      topicId: topic ? topic.id : null,
+      relatePetId: pet ? pet?.id : null,
+    };
     createPost(d, img);
   };
 

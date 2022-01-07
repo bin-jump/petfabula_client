@@ -100,7 +100,7 @@ const CreatePetFeedRecord = () => {
             borderRadius: 24,
           }}
         >
-          <View style={{ alignItems: "flex-start", width: "100%" }}>
+          <View style={{ alignItems: "flex-start", width: "100%", height: 30 }}>
             <Icon
               onPress={() => {
                 navigation.goBack();
@@ -113,14 +113,16 @@ const CreatePetFeedRecord = () => {
           </View>
           <ScrollView
             contentContainerStyle={{
-              height: "100%",
+              minHeight: "100%",
               width: "100%",
               backgroundColor: theme.colors?.white,
               // paddingHorizontal: 16,
               alignItems: "center",
               // paddingTop: 16,
               // borderRadius: 24,
+              paddingBottom: top + 140,
             }}
+            showsVerticalScrollIndicator={false}
           >
             <ActionIcon
               type="material-community"
@@ -207,7 +209,11 @@ const FeedRecordFormContent = ({
 
   return (
     <View
-      style={{ width: "100%", alignItems: "center", paddingHorizontal: 12 }}
+      style={{
+        width: "100%",
+        alignItems: "center",
+        paddingHorizontal: 12,
+      }}
     >
       <PendingOverlay pending={pending || updatePending} />
 

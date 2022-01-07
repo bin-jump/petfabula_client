@@ -123,7 +123,7 @@ const PostListItem = ({ item }: { item: PostItem }) => {
             </Text>
           </View>
         ) : (
-          <View style={{ width: 70 }} />
+          <View style={{ width: 60 }} />
         )}
 
         <View>

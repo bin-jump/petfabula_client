@@ -638,7 +638,7 @@ const QuestionDetailView = () => {
           </View>
         </View>
       ) : (
-        <QuestionDetailSkeleton />
+        questionPending && <QuestionDetailSkeleton />
       )}
     </View>
   );

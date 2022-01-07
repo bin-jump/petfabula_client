@@ -610,7 +610,7 @@ const PostDetailView = () => {
           </View>
         </View>
       ) : (
-        <PostDetailSkeleton />
+        pending && <PostDetailSkeleton />
       )}
       {/* {pending && !(postDetail?.id == id) ? (
        
