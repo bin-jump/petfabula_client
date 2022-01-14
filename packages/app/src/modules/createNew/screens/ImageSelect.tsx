@@ -2,13 +2,34 @@ import React from "react";
 import { ImageBrowser } from "expo-image-picker-multiple";
 import * as ImageManipulator from "expo-image-manipulator";
 import { View, TouchableOpacity } from "react-native";
-import { Text } from "react-native-elements";
+import { Text, useTheme } from "react-native-elements";
 import { useTranslation } from "react-i18next";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { ImageFile } from "../../shared";
 import ParamTypes from "./paramTypes";
 
 const IMAGE_NUM_LIMIT = 6;
+
+const NoCameraPermission = () => {
+  const { theme } = useTheme();
+
+  return (
+    <View
+      style={{
+        height: "100%",
+        width: "100%",
+        alignItems: "center",
+        paddingTop: 30,
+        paddingHorizontal: 16,
+        backgroundColor: theme.colors?.white,
+      }}
+    >
+      <Text
+        style={{ fontSize: 16 }}
+      >{`カメラ権限がないため、写真の一覧を表示できません`}</Text>
+    </View>
+  );
+};
 
 export default function ImageSelect() {
   const navigation = useNavigation();
@@ -73,6 +94,7 @@ export default function ImageSelect() {
         max={limit}
         onChange={updateHandler}
         callback={imagesCallback}
+        noCameraPermissionComponent={<NoCameraPermission />}
       />
     </View>
   );

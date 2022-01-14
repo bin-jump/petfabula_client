@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "app",
-    "slug": "app",
+    "name": "petfabula-app",
+    "slug": "petfabula-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/app_icon.png",
@@ -20,13 +20,21 @@
       "buildNumber": "1.0.0",
       "supportsTablet": false,
       "usesAppleSignIn": true,
-      "bundleIdentifier": "com.petfabula.petfabula"
+      "bundleIdentifier": "com.petfabula.petfabula",
+      "infoPlist": {
+        "CFBundleDevelopmentRegion": "ja_JP",
+        "NSCameraUsageDescription": "カメラにアクセスして写真をアップロードします",
+        "NSPhotoLibraryUsageDescription": "写真ライブラリーをアクセスして写真をアップロードします"
+      }
     },
     "android": {
+      "permissions": ["CAMERA"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.petfabula.petfabula",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"

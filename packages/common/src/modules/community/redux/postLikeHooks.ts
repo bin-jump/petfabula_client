@@ -100,7 +100,7 @@ export const postLikeReducer = {
     action: ActionBase,
   ): CommunityState => {
     const postState = state.postDetail.data;
-    const actionPostId = action.payload.postId;
+    const actionPostId = action.extra.postId;
     return {
       ...state,
       postDetail: {
@@ -140,7 +140,7 @@ export const postLikeReducer = {
   ): CommunityState => {
     const postState = state.postDetail.data;
     const actionPostId = action.payload.postId;
-    const diff = action.payload.liked ? 1 : -1;
+    const diff = action.payload.liked ? -1 : 0;
     return {
       ...state,
       postDetail: {
@@ -162,7 +162,7 @@ export const postLikeReducer = {
     action: ActionBase,
   ): CommunityState => {
     const postState = state.postDetail.data;
-    const actionPostId = action.payload.postId;
+    const actionPostId = action.extra.postId;
     return {
       ...state,
       postDetail: {

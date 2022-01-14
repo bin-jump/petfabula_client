@@ -179,6 +179,7 @@ export const questionVoteReducer = {
     action: ActionBase,
   ): CommunityState => {
     const questionDetail = state.questionDetail.data;
+    const diff = action.payload.upvoted ? -1 : 0;
     return {
       ...state,
       questionDetail: {
@@ -189,7 +190,7 @@ export const questionVoteReducer = {
                 ...questionDetail,
                 upvotePending: false,
                 upvoted: false,
-                upvoteCount: questionDetail.upvoteCount - 1,
+                upvoteCount: questionDetail.upvoteCount + diff,
               }
             : questionDetail,
       },
@@ -317,6 +318,7 @@ export const questionVoteReducer = {
     action: ActionBase,
   ): CommunityState => {
     const answerId = action.payload.answerId;
+    const diff = action.payload.upvoted ? -1 : 0;
     return {
       ...state,
       questionAnswers: {
@@ -328,7 +330,7 @@ export const questionVoteReducer = {
                   ...item,
                   votePending: false,
                   upvoted: false,
-                  upvoteCount: item.upvoteCount - 1,
+                  upvoteCount: item.upvoteCount + diff,
                 };
               }
               return item;
