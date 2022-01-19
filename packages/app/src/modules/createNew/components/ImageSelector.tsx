@@ -11,20 +11,35 @@ const DEFAULT_LIMIT = 6;
 const ImageSelector = ({
   existImages,
   images,
-  onSelect,
-  onRemove,
-  handleExistImageRemove,
+  setImages,
+  setExistImage,
 }: {
   existImages?: DisplayImage[];
   images: ImageFile[];
-  onSelect: (image: ImageFile) => void;
-  onRemove: (index: number) => void;
-  handleExistImageRemove?: (id: number) => void;
+  setImages: (image: ImageFile[]) => void;
+  setExistImage?: (image: DisplayImage[]) => void;
 }) => {
   const { theme } = useTheme();
   const [processing, setProcessing] = useState(false);
   const displayImages = existImages ? existImages : [];
   const canAdd = displayImages.length + images.length < DEFAULT_LIMIT;
+
+  const onSelect = (image: ImageFile) => {
+    setImages([...images, image]);
+  };
+
+  const onRemove = (index: number) => {
+    images.splice(index, 1);
+    setImages([...images]);
+  };
+
+  const handleExistImageRemove = (id: number) => {
+    if (!existImages || !setExistImage) {
+      return;
+    }
+    const im = existImages.filter((item) => item.id != id);
+    setExistImage(im);
+  };
 
   const processImage = async (uri: string) => {
     const file = await ImageManipulator.manipulateAsync(

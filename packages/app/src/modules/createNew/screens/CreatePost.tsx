@@ -30,6 +30,7 @@ import {
   validSelect,
 } from "../../shared";
 import ParamTypes from "./paramTypes";
+import ImageSelector from "../components/ImageSelector";
 import MultipleImageSelect from "../components/MultipleImageSelect";
 import PostPetSelector from "../components/PostPetSelector";
 

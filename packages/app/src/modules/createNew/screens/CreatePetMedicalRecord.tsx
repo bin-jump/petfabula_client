@@ -73,15 +73,6 @@ const CreatePetMedicalRecord = () => {
         note: "",
       };
 
-  const handleSelect = (image: ImageFile) => {
-    setImages([...images, image]);
-  };
-
-  const handleRemove = (index: number) => {
-    images.splice(index, 1);
-    setImages([...images]);
-  };
-
   const handleUpdate = (data: MedicalRecordForm) => {
     if (record) {
       updateMedicalRecord({ ...record, ...data, images: existImages }, images);
@@ -99,11 +90,6 @@ const CreatePetMedicalRecord = () => {
     } else {
       handleCreate(data);
     }
-  };
-
-  const handleRemoveExistImage = (id: number) => {
-    const im = existImages.filter((item) => item.id != id);
-    setExistImages(im);
   };
 
   return (
@@ -184,11 +170,10 @@ const CreatePetMedicalRecord = () => {
                     pet,
 
                     disableSelectPet,
-                    handleRemoveExistImage,
                     existImages,
                     images,
-                    handleSelect,
-                    handleRemove,
+                    setImages,
+                    setExistImages,
                   }}
                 />
               )}
@@ -211,9 +196,8 @@ const FeedRecordFormContent = ({
   disableSelectPet,
   existImages,
   images,
-  handleSelect,
-  handleRemove,
-  handleRemoveExistImage,
+  setImages,
+  setExistImages,
 }: {
   values: MedicalRecordForm;
   handleSubmit: any;
@@ -225,9 +209,8 @@ const FeedRecordFormContent = ({
   disableSelectPet: boolean;
   existImages?: DisplayImage[];
   images: ImageFile[];
-  handleSelect: (image: ImageFile) => void;
-  handleRemove: (index: number) => void;
-  handleRemoveExistImage: (id: number) => void;
+  setImages: (image: ImageFile[]) => void;
+  setExistImages?: (image: DisplayImage[]) => void;
 }) => {
   const { theme } = React.useContext(ThemeContext);
   const navigation = useNavigation();
@@ -330,11 +313,10 @@ const FeedRecordFormContent = ({
 
       <View style={{ width: "100%", marginBottom: 12 }}>
         <ImageSelector
-          handleExistImageRemove={handleRemoveExistImage}
           existImages={existImages}
           images={images}
-          onSelect={handleSelect}
-          onRemove={handleRemove}
+          setImages={setImages}
+          setExistImage={setExistImages}
         />
       </View>
 
