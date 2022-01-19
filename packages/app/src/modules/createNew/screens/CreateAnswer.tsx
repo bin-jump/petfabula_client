@@ -18,7 +18,7 @@ import {
   DisplayImage,
 } from "@petfabula/common";
 import ParamTypes from "./paramTypes";
-import MultipleImageSelect from "../components/MultipleImageSelect";
+import ImageSelector from "../components/ImageSelector";
 
 const CreateAnswer = () => {
   const { theme } = useTheme();
@@ -34,11 +34,11 @@ const CreateAnswer = () => {
     answer ? answer.images : []
   );
 
-  useEffect(() => {
-    if (!(JSON.stringify(images) == JSON.stringify(img))) {
-      setImg(images);
-    }
-  }, [images]);
+  // useEffect(() => {
+  //   if (!(JSON.stringify(images) == JSON.stringify(img))) {
+  //     setImg(images);
+  //   }
+  // }, [images]);
 
   const initial: AnswerForm = answer
     ? { questionId: questionId, content: answer.content }
@@ -99,14 +99,12 @@ const CreateAnswer = () => {
             />
           )}
         </Formik>
-        <MultipleImageSelect
+        <ImageSelector
           existImages={existImages}
           images={img}
-          fromScreen="CreateAnswer"
           setImages={setImg}
-          setExistImages={setExistImages}
+          setExistImage={setExistImages}
         />
-        {/* <MultipleImageSelect images={img} fromScreen="CreateQuestion" /> */}
       </View>
     </DismissKeyboardView>
   );

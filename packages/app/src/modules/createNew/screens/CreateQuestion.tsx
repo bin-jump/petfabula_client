@@ -21,7 +21,7 @@ import {
   ParticiptorPet,
 } from "@petfabula/common";
 import ParamTypes from "./paramTypes";
-import MultipleImageSelect from "../components/MultipleImageSelect";
+import ImageSelector from "../components/ImageSelector";
 import PostPetSelector from "../components/PostPetSelector";
 
 const CreateQuestion = () => {
@@ -47,12 +47,6 @@ const CreateQuestion = () => {
       : selectedPet
       ? null
       : initialPet;
-
-  useEffect(() => {
-    if (!(JSON.stringify(images) == JSON.stringify(img))) {
-      setImg(images);
-    }
-  }, [images]);
 
   const initial: QuestionForm = question
     ? {
@@ -126,12 +120,11 @@ const CreateQuestion = () => {
             });
           }}
         />
-        <MultipleImageSelect
+        <ImageSelector
           existImages={existImages}
           images={img}
-          fromScreen="CreateQuestion"
           setImages={setImg}
-          setExistImages={setExistImages}
+          setExistImage={setExistImages}
         />
       </View>
     </DismissKeyboardView>

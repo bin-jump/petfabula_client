@@ -31,7 +31,13 @@ const NoCameraPermission = () => {
   );
 };
 
-export default function ImageSelect() {
+/**
+ * stop use this view,
+ * as expo-image-picker-multiple package requires camera access
+ * which might be problem for app store review
+ * cause for now we do not take photos
+ */
+const ImageSelect = () => {
   const navigation = useNavigation();
   const { t } = useTranslation();
   const { params } = useRoute<RouteProp<ParamTypes, "ImageSelect">>();
@@ -98,4 +104,6 @@ export default function ImageSelect() {
       />
     </View>
   );
-}
+};
+
+// export default ImageSelect;

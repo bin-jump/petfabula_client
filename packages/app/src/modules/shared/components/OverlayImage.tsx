@@ -208,7 +208,7 @@ const OverlayImage = (
           }}
           style={[{ width, height }, imageStyle]}
           uri={image.url}
-          sz="MD"
+          sz="SM"
         />
       </TouchableWithoutFeedback>
     </View>

@@ -6,7 +6,7 @@ import { headerBaseOption, plainGoBackHeaderOption } from "../shared";
 import CreateNew from "./screens/CreateNew";
 import CreatePost from "./screens/CreatePost";
 import CreateQuestion from "./screens/CreateQuestion";
-import ImageSelect from "./screens/ImageSelect";
+// import ImageSelect from "./screens/ImageSelect";
 import PostTopicSelect from "./screens/PostTopicSelect";
 import CreateAnswer from "./screens/CreateAnswer";
 import PetSelect from "./screens/PetSelect";
@@ -58,11 +58,11 @@ const CreateNewScreens = () => {
         name="CreateQuestion"
         component={CreateQuestion}
       />
-      <CreateNewStack.Screen
+      {/* <CreateNewStack.Screen
         options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
         name="ImageSelect"
         component={ImageSelect}
-      />
+      /> */}
       <CreateNewStack.Screen
         options={(navigation) => ({
           ...plainGoBackHeaderOption({ navigation, theme }),

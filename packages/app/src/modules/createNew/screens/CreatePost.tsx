@@ -31,7 +31,7 @@ import {
 } from "../../shared";
 import ParamTypes from "./paramTypes";
 import ImageSelector from "../components/ImageSelector";
-import MultipleImageSelect from "../components/MultipleImageSelect";
+// import MultipleImageSelect from "../components/MultipleImageSelect";
 import PostPetSelector from "../components/PostPetSelector";
 
 const CreatePost = () => {
@@ -66,13 +66,11 @@ const CreatePost = () => {
       ? null
       : initialPet;
 
-  useEffect(() => {
-    if (!(JSON.stringify(images) == JSON.stringify(img))) {
-      setImg(images);
-    }
-  }, [images]);
-
-  // const postTopicId = post?.postTopic ? post.postTopic.id : null;
+  // useEffect(() => {
+  //   if (!(JSON.stringify(images) == JSON.stringify(img))) {
+  //     setImg(images);
+  //   }
+  // }, [images]);
 
   const initial: PostForm = post
     ? {
@@ -148,39 +146,20 @@ const CreatePost = () => {
               />
             )}
           </Formik>
-
-          {/* <TouchableOpacity
-            style={{
-              marginTop: 18,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              backgroundColor: theme.colors?.grey5,
-              height: 42,
-              borderRadius: 10,
-              width: "100%",
-              paddingHorizontal: 8,
-              marginBottom: 16,
-            }}
-            onPress={() => {
-              navigation.navigate("PetSelect", {
-                backScreen: "CreatePost",
-              });
-            }}
-          >
-            <Text style={{ fontSize: 18, color: theme.colors?.grey0 }}>
-              {t("createNew.petSelect")}
-            </Text>
-            <Icon type="antdesign" name="right" color={theme.colors?.grey0} />
-          </TouchableOpacity> */}
         </View>
-        <MultipleImageSelect
+        <ImageSelector
+          existImages={existImages}
+          images={img}
+          setImages={setImg}
+          setExistImage={setExistImages}
+        />
+        {/* <MultipleImageSelect
           existImages={existImages}
           images={img}
           fromScreen="CreatePost"
           setImages={setImg}
           setExistImages={setExistImages}
-        />
+        /> */}
       </View>
     </DismissKeyboardView>
   );
