@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity } from "react-native";
-import { useTheme, Icon, Overlay, Image } from "react-native-elements";
+import {
+  useTheme,
+  Icon,
+  Overlay,
+  Image as RNEImage,
+} from "react-native-elements";
 import { UploadImage, DisplayImage } from "@petfabula/common";
-import { ImageFile, changeExtName, getFileName } from "../../shared";
+import { ImageFile, changeExtName, getFileName, Image } from "../../shared";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 
@@ -156,18 +161,17 @@ const ImageSelector = ({
           </View>
 
           <Image
-            containerStyle={{
+            key={item.id}
+            uri={item.url}
+            style={{
               borderWidth: 3,
               borderColor: "#ffbc83",
               marginRight: 10,
               marginTop: 10,
-            }}
-            key={item.id}
-            source={{ uri: item.url }}
-            style={{
               width: 78,
               height: 78,
             }}
+            sz="SM"
           />
         </View>
       ))}
@@ -201,7 +205,7 @@ const ImageSelector = ({
             />
           </View>
 
-          <Image
+          <RNEImage
             key={item.name}
             source={{ uri: item.uri }}
             style={{

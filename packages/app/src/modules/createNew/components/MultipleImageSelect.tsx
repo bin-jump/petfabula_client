@@ -1,27 +1,43 @@
 import React from "react";
 import { View, TouchableOpacity } from "react-native";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
-import { Icon, Image, useTheme } from "react-native-elements";
+import { Icon, Image as RNEImage, useTheme } from "react-native-elements";
 import { DisplayImage } from "@petfabula/common";
-import { ImageFile } from "../../shared";
+import { ImageFile, Image } from "../../shared";
 
 const MultipleImageSelect = ({
   existImages,
   images,
   fromScreen,
-  onRemove,
-  handleExistImageRemove,
+
+  setImages,
+  setExistImages,
 }: {
   existImages?: DisplayImage[];
   images: ImageFile[];
   fromScreen: string;
-  onRemove: (index: number) => void;
-  handleExistImageRemove?: (id: number) => void;
+  // onRemove: (index: number) => void;
+  // handleExistImageRemove?: (id: number) => void;
+  setImages: (image: ImageFile[]) => void;
+  setExistImages?: (image: DisplayImage[]) => void;
 }) => {
   const navigation = useNavigation();
   const { theme } = useTheme();
   const displayImages = existImages ? existImages : [];
   const limit = 6 - displayImages.length;
+
+  const handleRemove = (index: number) => {
+    images.splice(index, 1);
+    setImages([...images]);
+  };
+
+  const handleRemoveExistImage = (id: number) => {
+    if (!existImages || !setExistImages) {
+      return;
+    }
+    const im = existImages.filter((item) => item.id != id);
+    setExistImages(im);
+  };
 
   return (
     <View>
@@ -71,9 +87,7 @@ const MultipleImageSelect = ({
             >
               <Icon
                 onPress={() => {
-                  if (handleExistImageRemove) {
-                    handleExistImageRemove(item.id);
-                  }
+                  handleRemoveExistImage(item.id);
                 }}
                 containerStyle={{
                   width: 20,
@@ -89,17 +103,16 @@ const MultipleImageSelect = ({
             </View>
 
             <Image
-              containerStyle={{
+              key={item.id}
+              uri={item.url}
+              style={{
                 borderWidth: 3,
                 borderColor: "#ffbc83",
                 margin: 6,
-              }}
-              key={item.id}
-              source={{ uri: item.url }}
-              style={{
                 width: 80,
                 height: 80,
               }}
+              sz="SM"
             />
           </View>
         ))}
@@ -117,7 +130,7 @@ const MultipleImageSelect = ({
             >
               <Icon
                 onPress={() => {
-                  onRemove(index);
+                  handleRemove(index);
                 }}
                 containerStyle={{
                   width: 20,
@@ -132,7 +145,7 @@ const MultipleImageSelect = ({
               />
             </View>
 
-            <Image
+            <RNEImage
               containerStyle={{
                 margin: 6,
               }}

@@ -40,16 +40,6 @@ const CreateAnswer = () => {
     }
   }, [images]);
 
-  const handleRemove = (index: number) => {
-    img.splice(index, 1);
-    setImg([...img]);
-  };
-
-  const handleRemoveExistImage = (id: number) => {
-    const im = existImages.filter((item) => item.id != id);
-    setExistImages(im);
-  };
-
   const initial: AnswerForm = answer
     ? { questionId: questionId, content: answer.content }
     : {
@@ -111,10 +101,10 @@ const CreateAnswer = () => {
         </Formik>
         <MultipleImageSelect
           existImages={existImages}
-          handleExistImageRemove={handleRemoveExistImage}
           images={img}
           fromScreen="CreateAnswer"
-          onRemove={handleRemove}
+          setImages={setImg}
+          setExistImages={setExistImages}
         />
         {/* <MultipleImageSelect images={img} fromScreen="CreateQuestion" /> */}
       </View>

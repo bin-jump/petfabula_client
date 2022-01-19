@@ -54,16 +54,6 @@ const CreateQuestion = () => {
     }
   }, [images]);
 
-  const handleRemove = (index: number) => {
-    img.splice(index, 1);
-    setImg([...img]);
-  };
-
-  const handleRemoveExistImage = (id: number) => {
-    const im = existImages.filter((item) => item.id != id);
-    setExistImages(im);
-  };
-
   const initial: QuestionForm = question
     ? {
         title: question.title,
@@ -138,10 +128,10 @@ const CreateQuestion = () => {
         />
         <MultipleImageSelect
           existImages={existImages}
-          handleExistImageRemove={handleRemoveExistImage}
           images={img}
           fromScreen="CreateQuestion"
-          onRemove={handleRemove}
+          setImages={setImg}
+          setExistImages={setExistImages}
         />
       </View>
     </DismissKeyboardView>

@@ -72,16 +72,6 @@ const CreatePost = () => {
     }
   }, [images]);
 
-  const handleRemove = (index: number) => {
-    img.splice(index, 1);
-    setImg([...img]);
-  };
-
-  const handleRemoveExistImage = (id: number) => {
-    const im = existImages.filter((item) => item.id != id);
-    setExistImages(im);
-  };
-
   // const postTopicId = post?.postTopic ? post.postTopic.id : null;
 
   const initial: PostForm = post
@@ -185,11 +175,11 @@ const CreatePost = () => {
           </TouchableOpacity> */}
         </View>
         <MultipleImageSelect
-          handleExistImageRemove={handleRemoveExistImage}
           existImages={existImages}
           images={img}
           fromScreen="CreatePost"
-          onRemove={handleRemove}
+          setImages={setImg}
+          setExistImages={setExistImages}
         />
       </View>
     </DismissKeyboardView>
