@@ -389,6 +389,7 @@ const AnswerItem = ({
         style={{ marginBottom: 8 }}
         name={answer.participator.name}
         size={28}
+        photo={answer.participator.photo}
         nameStyle={{
           fontSize: 16,
           marginLeft: 5,

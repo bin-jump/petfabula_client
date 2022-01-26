@@ -142,7 +142,7 @@ export const postCollectReducer = {
   ): CommunityState => {
     const postState = state.postDetail.data;
     const actionPostId = action.payload.postId;
-    const diff = action.payload.collected ? 1 : -1;
+    const diff = action.payload.collected ? -1 : 0;
     return {
       ...state,
       postDetail: {

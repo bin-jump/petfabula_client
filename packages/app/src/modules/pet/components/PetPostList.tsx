@@ -36,6 +36,7 @@ export const makeListData = (records: Post[]) => {
     // item.showDate = true;
     res.push(item);
   }
+  res.sort((a, b) => -(a.createdDate - b.createdDate));
 
   return res;
 };

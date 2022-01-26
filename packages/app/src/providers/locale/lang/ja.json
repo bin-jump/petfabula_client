@@ -255,7 +255,7 @@
       "noGraphData": "グラフデータがありません"
     },
     "profile": {
-      "petPostTitle": "成長投稿",
+      "petPostTitle": "成長の投稿",
       "petAlbumTitle": "アルバム"
     },
     "title": "ペットセンター",
@@ -263,7 +263,7 @@
     "petSelect": "ペット選択",
     "emptySelect": "ペットを選択してください",
     "age": "{{age}}歳",
-    "ageMonth": "{{month}}月",
+    "ageMonth": "{{month}}ヶ月",
     "withYou": "出会ってから{{day}}日"
   },
 
