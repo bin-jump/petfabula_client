@@ -7,6 +7,7 @@ import {
   DefaultTheme,
   useNavigation,
   CommonActions,
+  useNavigationState,
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
@@ -164,6 +165,19 @@ const AppScreen = () => {
 
 const createNewPlaceholder = () => <View />;
 
+// const showTabBar = ({
+//   name,
+//   navigation,
+// }: {
+//   name: string;
+//   navigation: any;
+// }) => {
+//   return (
+//     !getFocusedRouteNameFromRoute(navigation.route) ||
+//     getFocusedRouteNameFromRoute(navigation.route) == name
+//   );
+// };
+
 // application main functionalities
 const TabScreen = () => {
   const { theme } = useTheme();
@@ -241,15 +255,25 @@ const TabScreen = () => {
     },
   });
 
+  // const state = useNavigationState((state) => state);
+  // console.log("state", state);
+
   // reset state if change got logout state
   const previousCurrentUser = usePrevious(currentUser);
-
   useEffect(() => {
     if (previousCurrentUser && !currentUser) {
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
-          routes: [{ name: "CommunityMain" }],
+          routes: [
+            {
+              name: "TabScreen",
+              state: {
+                index: 0,
+                routes: [{ name: "CommunityMain" }],
+              },
+            },
+          ],
         })
       );
     }
@@ -321,10 +345,7 @@ const TabScreen = () => {
           component={CommunityMain}
           options={(navigation) => {
             return {
-              tabBarVisible:
-                !getFocusedRouteNameFromRoute(navigation.route) ||
-                getFocusedRouteNameFromRoute(navigation.route) ==
-                  "CommunityMain",
+              // tabBarVisible: showTabBar({ name: "CommunityMain", navigation }),
               tabBarIcon: ({ focused }) => {
                 return (
                   <View style={styles.tabIconContainer}>
@@ -357,9 +378,7 @@ const TabScreen = () => {
           options={(navigation) => {
             return {
               tabBarLabel: "PetMain",
-              tabBarVisible:
-                !getFocusedRouteNameFromRoute(navigation.route) ||
-                getFocusedRouteNameFromRoute(navigation.route) == "PetMain",
+              // tabBarVisible: showTabBar({ name: "PetMain", navigation }),
               tabBarIcon: ({ focused }) => {
                 return (
                   <View style={styles.tabIconContainer}>
@@ -450,10 +469,10 @@ const TabScreen = () => {
           component={NotificationMain}
           options={(navigation) => {
             return {
-              tabBarVisible:
-                !getFocusedRouteNameFromRoute(navigation.route) ||
-                getFocusedRouteNameFromRoute(navigation.route) ==
-                  "NotificationMain",
+              // tabBarVisible: showTabBar({
+              //   name: "NotificationMain",
+              //   navigation,
+              // }),
               tabBarIcon: ({ focused }) => {
                 return (
                   <View style={styles.tabIconContainer}>
@@ -505,9 +524,7 @@ const TabScreen = () => {
           component={UserMain}
           options={(navigation) => {
             return {
-              tabBarVisible:
-                !getFocusedRouteNameFromRoute(navigation.route) ||
-                getFocusedRouteNameFromRoute(navigation.route) == "UserMain",
+              // tabBarVisible: showTabBar({ name: "UserMain", navigation }),
               tabBarIcon: ({ focused }) => {
                 return (
                   <View style={styles.tabIconContainer}>
