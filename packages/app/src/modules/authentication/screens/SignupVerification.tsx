@@ -148,6 +148,7 @@ const VerificationCodeFormContent = ({
   return (
     <View style={{ width: "100%", alignItems: "center" }}>
       <CodeField
+        autoFocus
         ref={ref}
         {...props}
         rootStyle={{ alignContent: "space-between" }}
