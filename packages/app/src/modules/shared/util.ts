@@ -1,6 +1,7 @@
 import { Alert } from "react-native";
 import { TFunction } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 import moment from "moment";
 import "moment/locale/ja";
 import { logoutHandleRegister, LogoutHandler } from "@petfabula/common";
@@ -208,3 +209,21 @@ export const validSelect = (item: any) => {
     !(item && Object.keys(item).length === 0 && item.constructor === Object)
   );
 };
+
+export class SecureStorage {
+  static async setItem(key: string, value: any) {
+    return await SecureStore.setItemAsync(key, JSON.stringify(value));
+  }
+
+  static async getItem(key: string) {
+    const data = await SecureStore.getItemAsync(key);
+    if (!data) {
+      return null;
+    }
+    return JSON.parse(data);
+  }
+
+  static async removeItem(key: string) {
+    return await SecureStore.deleteItemAsync(key);
+  }
+}

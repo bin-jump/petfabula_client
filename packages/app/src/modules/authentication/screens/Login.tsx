@@ -20,7 +20,7 @@ import {
   useDidUpdateEffect,
   PendingOverlay,
   parseUrlParams,
-  Storage,
+  SecureStorage,
 } from "../../shared";
 import {
   useEmailCodeLogin,
@@ -28,7 +28,7 @@ import {
   EmailCodeSendLoginCodeForm,
   validSendLoginCodeFormSchema,
   resolveResponseFormError,
-  useAppleRegisterOrLogin,
+  useAppleLogin,
   useOauthLogin,
   OauthConfig,
 } from "@petfabula/common";
@@ -110,10 +110,10 @@ const LoginFormContent = ({
     pending: oauthPending,
   } = useOauthLogin();
   const {
-    registerAndLogin: appleRegisterAndLogin,
+    login: appleLogin,
     result: appleResult,
     pending: applePending,
-  } = useAppleRegisterOrLogin();
+  } = useAppleLogin();
 
   const handleOauthLogin = async (
     url: string,
@@ -143,18 +143,21 @@ const LoginFormContent = ({
         ],
       });
 
-      const cachedName: string = await Storage.getItem(credential.user);
+      // const cachedName: string = await SecureStorage.getItem(credential.user);
       const detailsArePopulated: boolean =
         !!credential?.fullName?.givenName && !!credential.email;
 
       if (detailsArePopulated) {
-        await Storage.setItem(credential.user, credential?.fullName?.givenName);
+        await SecureStorage.setItem(
+          credential.user,
+          credential?.fullName?.givenName
+        );
       }
 
       // console.log("credential", credential, cachedName);
       // signed in
       if (credential.identityToken) {
-        appleRegisterAndLogin({
+        appleLogin({
           name: null,
           identityToken: credential.identityToken,
         });

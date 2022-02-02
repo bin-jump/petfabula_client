@@ -19,7 +19,7 @@ import {
   FilledInput,
   PendingOverlay,
   parseUrlParams,
-  Storage,
+  SecureStorage,
 } from "../../shared";
 import {
   useEmailCodeSendRegisterCode,
@@ -29,7 +29,7 @@ import {
   useEmailCodeRegisterAndLogin,
   useOauthRegisterAndLogin,
   OauthConfig,
-  useAppleRegisterOrLogin,
+  useAppleRegister,
 } from "@petfabula/common";
 import AppleButton from "../components/AppleButton";
 import GoogleButton from "../components/GoogleButton";
@@ -126,7 +126,7 @@ const RegisterFormContent = ({
     registerAndLogin: appleRegisterAndLogin,
     result: appleResult,
     pending: applePending,
-  } = useAppleRegisterOrLogin();
+  } = useAppleRegister();
 
   const handleOauthLogin = async (
     url: string,
@@ -156,13 +156,16 @@ const RegisterFormContent = ({
         ],
       });
 
-      const cachedName: string = await Storage.getItem(credential.user);
       const detailsArePopulated: boolean =
         !!credential?.fullName?.givenName && !!credential.email;
 
       if (detailsArePopulated) {
-        await Storage.setItem(credential.user, credential?.fullName?.givenName);
+        await SecureStorage.setItem(
+          credential.user,
+          credential?.fullName?.givenName
+        );
       }
+      const cachedName: string = await SecureStorage.getItem(credential.user);
 
       // console.log("credential", credential, cachedName);
       // signed in

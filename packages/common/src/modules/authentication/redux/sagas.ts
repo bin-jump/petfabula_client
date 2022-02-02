@@ -62,15 +62,15 @@ const watchOauthLogin = createSagaWatcher({
   watchType: 'EVERY',
 });
 
-const watchAppleRegisterOrLogin = createSagaWatcher({
-  url: `/api/auth/register-signin-apple`,
+const watchAppleRegister = createSagaWatcher({
+  url: `/api/auth/register-apple`,
   method: 'POST',
   asyncAction: AppleRegisterAndLoginActionType,
   watchType: 'EVERY',
 });
 
 const watchAppleLogin = createSagaWatcher({
-  url: `/api/auth/register-signin-apple`,
+  url: `/api/auth/signin-apple`,
   method: 'POST',
   asyncAction: AppleLoginActionType,
   watchType: 'EVERY',
@@ -92,7 +92,7 @@ export function* authenticationRootSaga() {
     fork(watchEmailCodeLogin),
     fork(watchOauthRegisterOrLogin),
     fork(watchOauthLogin),
-    fork(watchAppleRegisterOrLogin),
+    fork(watchAppleRegister),
     fork(watchAppleLogin),
     fork(watchLogout),
   ]);

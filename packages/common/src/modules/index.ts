@@ -13,8 +13,8 @@ export {
   useLogout,
   useOauthRegisterAndLogin,
   useOauthLogin,
-  useAppleRegisterOrLogin,
-  // useAppleLogin,
+  useAppleRegister,
+  useAppleLogin,
   useCurrentUser,
   OauthConfig,
 } from './authentication';

@@ -9,7 +9,7 @@ import {
 import { ActionBase } from '../../shared';
 
 // login only when name is null
-export const useAppleRegisterOrLogin = () => {
+export const useAppleRegister = () => {
   const dispatch = useDispatch();
   const { result, pending, error } = useSelector(
     (state: AppState) => ({
@@ -44,38 +44,39 @@ export const useAppleRegisterOrLogin = () => {
   };
 };
 
-// export const useAppleLogin = () => {
-//   const dispatch = useDispatch();
-//   const { result, pending, error } = useSelector(
-//     (state: AppState) => ({
-//       result: state.authentication.appleLoginResult.data,
-//       pending: state.authentication.appleLoginResult.pending,
-//       error: state.authentication.appleLoginResult.error,
-//     }),
-//     shallowEqual,
-//   );
+export const useAppleLogin = () => {
+  const dispatch = useDispatch();
+  const { result, pending, error } = useSelector(
+    (state: AppState) => ({
+      result: state.authentication.appleLoginResult.data,
+      pending: state.authentication.appleLoginResult.pending,
+      error: state.authentication.appleLoginResult.error,
+    }),
+    shallowEqual,
+  );
 
-//   const boundAction = useCallback(
-//     (form: AppleForm) => {
-//       const d = new FormData();
-//       d.append('name', form.name as any);
-//       d.append('identityToken', form.identityToken);
+  const boundAction = useCallback(
+    (form: AppleForm) => {
+      const d = new FormData();
 
-//       dispatch({
-//         type: AppleLoginActionType.BEGIN,
-//         payload: d,
-//       });
-//     },
-//     [dispatch],
-//   );
+      // d.append('name', form.name as any);
+      d.append('identityToken', form.identityToken);
 
-//   return {
-//     login: boundAction,
-//     result,
-//     pending,
-//     error,
-//   };
-// };
+      dispatch({
+        type: AppleLoginActionType.BEGIN,
+        payload: d,
+      });
+    },
+    [dispatch],
+  );
+
+  return {
+    login: boundAction,
+    result,
+    pending,
+    error,
+  };
+};
 
 export const appleAuthReducer = {
   // apple register and login
