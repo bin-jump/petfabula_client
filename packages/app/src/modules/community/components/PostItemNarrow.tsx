@@ -106,68 +106,71 @@ const PostItemNarrow = ({
         }}
       >
         <View>
-          {post.images.length > 0 ? (
-            <Image
-              style={{
-                paddingHorizontal: 2,
-                borderRadius: 6,
-                width: width,
-                height: width / resolvePostImageHeightRatio(post) - 2,
-              }}
-              uri={post.images[0].url}
-              sz="MD"
-            />
-          ) : null}
+          <View>
+            {post.images.length > 0 ? (
+              <Image
+                style={{
+                  paddingHorizontal: 2,
+                  borderRadius: 6,
+                  width: width,
+                  height: width / resolvePostImageHeightRatio(post) - 2,
+                }}
+                uri={post.images[0].url}
+                sz="MD"
+              />
+            ) : null}
 
-          <Text
-            ellipsizeMode="tail"
-            numberOfLines={
-              post.images.length > 0
-                ? 2
-                : Math.round(
-                    width / resolvePostImageHeightRatio(post) / LINE_HEIGHT
-                  ) - 1
-            }
+            <Text
+              ellipsizeMode="tail"
+              numberOfLines={
+                post.images.length > 0
+                  ? 2
+                  : Math.round(
+                      width / resolvePostImageHeightRatio(post) / LINE_HEIGHT
+                    ) - 1
+              }
+              style={{
+                fontWeight: "bold",
+                fontSize: 16,
+                lineHeight: LINE_HEIGHT,
+                marginTop: post.images.length > 0 ? 8 : 12,
+                marginBottom: 8,
+                paddingHorizontal: 8,
+                width: width,
+              }}
+            >
+              {post.content}
+            </Text>
+          </View>
+
+          <View
             style={{
-              fontWeight: "bold",
-              fontSize: 16,
-              lineHeight: LINE_HEIGHT,
-              marginTop: post.images.length > 0 ? 8 : 12,
-              marginBottom: 8,
-              paddingHorizontal: 8,
-              width: width,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginHorizontal: 6,
+              marginBottom: 16,
             }}
           >
-            {post.content}
-          </Text>
+            <AvatarField
+              //   containerStyle={{ width: 100 }}
+              nameStyle={{ marginLeft: 3 }}
+              small
+              name={post.participator.name}
+              photo={post.participator.photo}
+              size={26}
+              fieldRightWidth={width + 30}
+            />
+
+            <IconCount
+              type="antdesign"
+              name="hearto"
+              count={post.likeCount}
+              size={22}
+            />
+          </View>
         </View>
       </TouchableWithoutFeedback>
-
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginHorizontal: 6,
-          marginBottom: 16,
-        }}
-      >
-        <AvatarField
-          //   containerStyle={{ width: 100 }}
-          nameStyle={{ marginLeft: 3 }}
-          small
-          name={post.participator.name}
-          photo={post.participator.photo}
-          size={26}
-        />
-
-        <IconCount
-          type="antdesign"
-          name="hearto"
-          count={post.likeCount}
-          size={22}
-        />
-      </View>
     </View>
   );
 };

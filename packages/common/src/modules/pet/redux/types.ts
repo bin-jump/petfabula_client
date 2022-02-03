@@ -21,7 +21,7 @@ export interface Pet {
   feederId: number;
   name: string;
   photo: string;
-  birthday: number;
+  birthday: number | null;
   gender: PetGender;
   category: string;
   breed: PetBreed;
@@ -31,7 +31,7 @@ export interface Pet {
 
 export interface PetDetail extends Pet {
   weight: number | null;
-  arrivalDay: number;
+  arrivalDay: number | null;
   feedRecordCount: number;
   disorderRecordCount: number;
   medicalRecordCount: number;

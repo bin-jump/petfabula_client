@@ -48,6 +48,7 @@ const QuestionAnswerItem = ({ item }: { item: QuestionAnswerSearch }) => {
                 fontWeight: "bold",
                 fontSize: 16,
                 color: theme.colors?.grey0,
+                maxWidth: 200,
               }}
               size={26}
             />
@@ -80,6 +81,7 @@ const QuestionAnswerItem = ({ item }: { item: QuestionAnswerSearch }) => {
                   fontWeight: "bold",
                   fontSize: 16,
                   color: theme.colors?.grey0,
+                  maxWidth: 200,
                 }}
                 size={26}
               />

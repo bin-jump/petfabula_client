@@ -17,7 +17,7 @@
     "assetBundlePatterns": ["**/*"],
     "userInterfaceStyle": "automatic",
     "ios": {
-      "buildNumber": "1.0.0.1",
+      "buildNumber": "1.0.3",
       "supportsTablet": false,
       "usesAppleSignIn": true,
       "bundleIdentifier": "com.petfabula.petfabula",

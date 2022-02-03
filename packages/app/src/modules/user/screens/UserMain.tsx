@@ -32,9 +32,13 @@ import SettingContent from "../components/SettingContent";
 import UserLoginPlease from "../components/UserLoginPlease";
 import { UseContentSkeleton } from "../components/Skeletons";
 
-const PetAgeItem = ({ mili }: { mili: number }) => {
+const PetAgeItem = ({ mili }: { mili: number | null }) => {
   const { theme } = useTheme();
   const { t } = useTranslation();
+
+  if (!mili) {
+    return <View />;
+  }
 
   const age = toAge(mili);
   const month = toAgeMonth(mili);
@@ -193,7 +197,11 @@ const UserContent = () => {
           >
             <Icon
               onPress={() => {
-                navigation.navigate("EditAccount", { account });
+                // navigation.navigate("EditAccount", { account });
+                navigation.navigate("SecondaryStack", {
+                  screen: "EditAccount",
+                  params: { account },
+                });
               }}
               name="playlist-edit"
               type="material-community"
@@ -515,7 +523,11 @@ const PostContent = () => {
       >
         <PostContentIconText
           onPress={() => {
-            navigation.navigate("UserActivity", { initial: "UserPosts" });
+            // navigation.navigate("UserActivity", { initial: "UserPosts" });
+            navigation.navigate("SecondaryStack", {
+              screen: "UserActivity",
+              params: { initial: "UserPosts" },
+            });
           }}
           width={ItemWidth}
           name="ios-images"
@@ -525,8 +537,9 @@ const PostContent = () => {
         />
         <PostContentIconText
           onPress={() => {
-            navigation.navigate("UserActivity", {
-              initial: "UserFavoritePosts",
+            navigation.navigate("SecondaryStack", {
+              screen: "UserActivity",
+              params: { initial: "UserFavoritePosts" },
             });
           }}
           width={ItemWidth}
@@ -537,7 +550,10 @@ const PostContent = () => {
         />
         <PostContentIconText
           onPress={() => {
-            navigation.navigate("UserActivity", { initial: "UserQuestions" });
+            navigation.navigate("SecondaryStack", {
+              screen: "UserActivity",
+              params: { initial: "UserQuestions" },
+            });
           }}
           width={ItemWidth}
           name="chatbox-ellipses"
@@ -547,7 +563,10 @@ const PostContent = () => {
         />
         <PostContentIconText
           onPress={() => {
-            navigation.navigate("UserActivity", { initial: "UserAnswers" });
+            navigation.navigate("SecondaryStack", {
+              screen: "UserActivity",
+              params: { initial: "UserAnswers" },
+            });
           }}
           width={ItemWidth}
           name="chatbubble"

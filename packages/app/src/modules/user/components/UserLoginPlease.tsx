@@ -27,7 +27,9 @@ const UserLoginPlease = () => {
       <View style={{ alignItems: "flex-end", paddingHorizontal: 24 }}>
         <Icon
           onPress={() => {
-            navigation.navigate("AnonymousSetting");
+            navigation.navigate("SecondaryStack", {
+              screen: "AnonymousSetting",
+            });
           }}
           type="ionicon"
           name="ios-settings-outline"

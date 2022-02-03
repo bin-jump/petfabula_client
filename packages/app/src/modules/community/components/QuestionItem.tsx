@@ -126,6 +126,7 @@ const QuestionItem = ({
               fontWeight: "bold",
               fontSize: 16,
               color: theme.colors?.grey1,
+              maxWidth: 100,
             }}
             size={26}
           />

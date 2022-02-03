@@ -27,7 +27,15 @@ import {
   SystemNotifications,
 } from "../modules/notification/screens";
 import { PetDetailView, PetRecords } from "../modules/pet/screens";
-import { UserAgreement, PrivacyAgreement } from "../modules/user/screens";
+import {
+  UserAgreement,
+  PrivacyAgreement,
+  UserActivity,
+  AnonymousSetting,
+  Setting,
+  EditAccount,
+  CitySelect,
+} from "../modules/user/screens";
 
 const SecondaryStackStack = createStackNavigator();
 
@@ -285,6 +293,44 @@ const SecondaryStack = () => {
         })}
         name="PrivacyAgreement"
         component={PrivacyAgreement}
+      />
+
+      <SecondaryStackStack.Screen
+        options={(navigation) => ({
+          ...plainGoBackHeaderOption({ navigation, theme }),
+          title: t("user.userContent"),
+        })}
+        name="UserActivity"
+        component={UserActivity}
+      />
+      <SecondaryStackStack.Screen
+        options={(navigation) => ({
+          ...plainGoBackHeaderOption({ navigation, theme }),
+          title: t("setting.setting"),
+        })}
+        name="Setting"
+        component={Setting}
+      />
+      <SecondaryStackStack.Screen
+        options={(navigation) => ({
+          ...plainGoBackHeaderOption({ navigation, theme }),
+          title: t("setting.setting"),
+        })}
+        name="AnonymousSetting"
+        component={AnonymousSetting}
+      />
+
+      <SecondaryStackStack.Screen
+        options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
+        name="EditAccount"
+        component={EditAccount}
+      />
+      <SecondaryStackStack.Screen
+        options={(navigation) => ({
+          ...plainGoBackHeaderOption({ navigation, theme }),
+        })}
+        name="CitySelect"
+        component={CitySelect}
       />
     </SecondaryStackStack.Navigator>
   );

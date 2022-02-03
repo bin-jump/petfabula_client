@@ -103,6 +103,7 @@ const AnswerWithQuestionItem = ({
             fontWeight: "bold",
             fontSize: 16,
             color: theme.colors?.grey0,
+            maxWidth: 200,
           }}
           size={26}
         />

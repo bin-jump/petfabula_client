@@ -42,7 +42,7 @@ const PostSearchItem = ({ post }: { post: Post }) => {
         }}
       >
         <AvatarField
-          nameStyle={{ marginLeft: 10 }}
+          nameStyle={{ marginLeft: 10, maxWidth: 200 }}
           subContentStyle={{ marginLeft: 10 }}
           style={{ marginBottom: 12 }}
           name={post.participator.name}

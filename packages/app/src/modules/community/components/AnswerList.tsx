@@ -182,12 +182,14 @@ const CommentItem = ({
           });
         }}
         name={answerComment.participator.name}
+        photo={answerComment.participator.photo}
         size={24}
         nameStyle={{
           fontSize: 16,
           marginLeft: 3,
           fontWeight: "bold",
           color: theme.colors?.grey0,
+          maxWidth: 200,
         }}
         fieldRight={() =>
           currentUser ? (
@@ -395,6 +397,7 @@ const AnswerItem = ({
           marginLeft: 5,
           fontWeight: "bold",
           color: theme.colors?.grey0,
+          maxWidth: 200,
         }}
         fieldRight={() => (
           <View style={{ flexDirection: "row" }}>

@@ -160,6 +160,7 @@ const ReplyItem = ({
           color: theme.colors?.grey1,
           marginBottom: 12,
           marginLeft: 6,
+          maxWidth: 200,
         }}
         photo={reply.participator.photo}
         name={reply.participator.name}
@@ -337,6 +338,7 @@ const CommentItem = ({
             color: theme.colors?.grey1,
             marginBottom: 12,
             marginLeft: 8,
+            maxWidth: 200,
           }}
           photo={comment.participator.photo}
           name={comment.participator.name}

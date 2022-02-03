@@ -14,9 +14,13 @@ import { useCurrentUser, useLoadMyPets, PetDetail } from "@petfabula/common";
 import { Avatar, toAge, toAgeMonth, daysTillNow } from "../../shared";
 import PetLoginPlease from "../components/PetLoginPlease";
 
-const AgeItem = ({ mili }: { mili: number }) => {
+const AgeItem = ({ mili }: { mili: number | null }) => {
   const { theme } = useTheme();
   const { t } = useTranslation();
+
+  if (!mili) {
+    return <View />;
+  }
 
   const age = toAge(mili);
   const month = toAgeMonth(mili);
@@ -193,7 +197,9 @@ const PetItem = ({ item }: { item: PetDetail }) => {
                   color: theme.colors?.primary,
                 }}
               >
-                {`${t("pet.withYou", { day: daysTillNow(item.arrivalDay) })}`}
+                {item.arrivalDay
+                  ? `${t("pet.withYou", { day: daysTillNow(item.arrivalDay) })}`
+                  : ""}
               </Text>
             </View>
           </View>
@@ -349,7 +355,7 @@ const PetContent = () => {
         minHeight: "100%",
         minWidth: "100%",
         backgroundColor: theme.colors?.white,
-        padding: 24,
+        padding: 16,
       }}
       contentContainerStyle={{ paddingBottom: 180 + top }}
     >

@@ -264,7 +264,7 @@
     "emptySelect": "ペットを選択してください",
     "age": "{{age}}歳",
     "ageMonth": "{{month}}ヶ月",
-    "withYou": "出会ってから{{day}}日"
+    "withYou": "迎えてから{{day}}日"
   },
 
   "post": {
@@ -336,7 +336,7 @@
     "pet": {
       "petName": "名前を1-12文字、漢字にしてください",
       "bio": "紹介を140文字以内にしてください",
-      "arrivalDay": "誕生日の後にしてください",
+      "arrivalDay": "有効な日付を入力してください",
       "breedId": "種類を選択してください",
 
       "petSelect": "ペットを選択してください",

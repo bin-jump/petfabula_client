@@ -137,9 +137,7 @@ const AnonymousSetting = () => {
       >
         <TouchableWithoutFeedback
           onPress={() => {
-            navigation.navigate("SecondaryStack", {
-              screen: "UserAgreement",
-            });
+            navigation.navigate("UserAgreement");
           }}
         >
           <View style={styles.settingItem}>
@@ -160,9 +158,7 @@ const AnonymousSetting = () => {
 
         <TouchableWithoutFeedback
           onPress={() => {
-            navigation.navigate("SecondaryStack", {
-              screen: "PrivacyAgreement",
-            });
+            navigation.navigate("PrivacyAgreement");
           }}
         >
           <View style={styles.settingItem}>

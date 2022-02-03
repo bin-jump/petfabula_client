@@ -42,9 +42,13 @@ import { PetDetailSkeleton } from "../components/Skeletons";
 
 const Tabs = createMaterialTopTabNavigator();
 
-const AgeItem = ({ mili }: { mili: number }) => {
+const AgeItem = ({ mili }: { mili: number | null }) => {
   const { theme } = useTheme();
   const { t } = useTranslation();
+
+  if (!mili) {
+    return <View />;
+  }
 
   const age = toAge(mili);
   const month = toAgeMonth(mili);

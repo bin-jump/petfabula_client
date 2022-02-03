@@ -359,6 +359,7 @@ const Header = ({
             name={post.participator.name}
             photo={post.participator.photo}
             style={{ marginRight: 16, marginLeft: 12 }}
+            fieldRightWidth={210}
             fieldRight={() => (
               <View
                 style={{

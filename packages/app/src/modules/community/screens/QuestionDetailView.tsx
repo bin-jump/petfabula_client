@@ -357,6 +357,7 @@ const Header = ({
               marginRight: 16,
               marginLeft: 12,
             }}
+            fieldRightWidth={210}
             fieldRight={() => (
               <View
                 style={{
@@ -364,7 +365,7 @@ const Header = ({
                   alignItems: "center",
                   flex: 1,
                   justifyContent: "flex-end",
-                  paddingRight: 18,
+                  paddingRight: 16,
                 }}
               >
                 {currentUser && currentUser.id != question.participator.id ? (

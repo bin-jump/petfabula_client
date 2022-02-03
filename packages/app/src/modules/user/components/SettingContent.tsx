@@ -80,7 +80,10 @@ const Settings = () => {
 
       <TouchableWithoutFeedback
         onPress={() => {
-          navigation.navigate("Setting");
+          // navigation.navigate("Setting");
+          navigation.navigate("SecondaryStack", {
+            screen: "Setting",
+          });
         }}
       >
         <View style={styles.settingItem}>

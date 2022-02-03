@@ -35,7 +35,8 @@ const PetScreens = () => {
         name="UserMain"
         component={UserMain}
       />
-      <UserStack.Screen
+
+      {/* <UserStack.Screen
         options={(navigation) => plainGoBackHeaderOption({ navigation, theme })}
         name="EditAccount"
         component={EditAccount}
@@ -72,7 +73,7 @@ const PetScreens = () => {
         })}
         name="AnonymousSetting"
         component={AnonymousSetting}
-      />
+      /> */}
     </UserStack.Navigator>
   );
 };

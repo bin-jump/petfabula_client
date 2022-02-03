@@ -16,8 +16,7 @@ export const validPetFormSchema = yup.object().shape({
   birthday: yup
     .number()
     .nullable()
-    .max(endOfToday().getTime(), commonMessageKey.birthday)
-    .required(commonMessageKey.emptyValue),
+    .max(endOfToday().getTime(), commonMessageKey.birthday),
   gender: yup.string().nullable().required(commonMessageKey.emptyValue),
   arrivalDay: yup
     .number()
@@ -30,8 +29,7 @@ export const validPetFormSchema = yup.object().shape({
       }
       const arrivalDay = value;
       return (birthday as number) <= arrivalDay;
-    })
-    .required(commonMessageKey.emptyValue),
+    }),
   breedId: yup.number().nullable().required(petMessageKey.breedId),
 });
 
