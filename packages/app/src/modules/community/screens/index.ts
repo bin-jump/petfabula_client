@@ -10,3 +10,4 @@ export { default as UserProfile } from "./UserProfile";
 export { default as UserInfomation } from "./UserInfomation";
 export { default as TopicPostList } from "./TopicPostList";
 export { default as FollowList } from "./FollowList";
+export { default as BlockedList } from "./BlockedList";

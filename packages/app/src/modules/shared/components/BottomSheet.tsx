@@ -73,7 +73,10 @@ export const BottomSheetButton = ({
 
   return (
     <View style={[{ flexDirection: "row", marginHorizontal: 12 }, style]}>
-      <TouchableOpacity onPress={onPress}>
+      <TouchableOpacity
+        style={{ justifyContent: "center", alignItems: "center" }}
+        onPress={onPress}
+      >
         <Icon
           containerStyle={{
             borderRadius: 60,
@@ -83,6 +86,7 @@ export const BottomSheetButton = ({
             elevation: 2,
             backgroundColor: theme.colors?.white,
             padding: 12,
+            width: 60,
           }}
           type={type}
           name={name}

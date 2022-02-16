@@ -12,6 +12,7 @@ import { questionReducer } from './questionHooks';
 import { answerReducer } from './answerHooks';
 import { questionVoteReducer } from './questionVoteHooks';
 import { participatorReducer } from './participatorHooks';
+import { blockReducer } from './blockHooks';
 
 const initialStat: CommunityState = {
   // user
@@ -122,6 +123,15 @@ const initialStat: CommunityState = {
   },
   userFollower: {
     userId: null,
+    data: [],
+    pending: false,
+    error: null,
+    hasMore: false,
+    nextCursor: null,
+    initializing: false,
+  },
+
+  myBlocked: {
     data: [],
     pending: false,
     error: null,
@@ -300,5 +310,6 @@ export const communityRootReducer = createReducer<CommunityState, ActionBase>(
     ...answerReducer,
     ...questionVoteReducer,
     ...participatorReducer,
+    ...blockReducer,
   },
 );

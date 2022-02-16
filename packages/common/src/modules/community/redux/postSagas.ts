@@ -17,6 +17,10 @@ import {
   LoadUserCollectedPostsActionType,
   LoadUserFollowedActionType,
   LoadUserFollowerActionType,
+  //block
+  CommunityBlockUserActionType,
+  CommunityUnblockUserActionType,
+  LoadMyBlockedsActionType,
   // post
   LoadRecommendPostsActionType,
   LoadFollowedPostsActionType,
@@ -38,7 +42,6 @@ import {
   PostLoadPetPostImagesActionType,
   LoadTopicPostsActionType,
 } from './actionTypes';
-import { useLoadUserFollower } from './participatorHooks';
 
 // user
 
@@ -164,6 +167,32 @@ const watchUnfollowParticipator = createSagaWatcher({
   createUrl: (payload) => {
     return `/api/post/participator/${payload.participatorId}/follow`;
   },
+});
+
+// block
+const watchBlockUser = createSagaWatcher({
+  method: 'POST',
+  asyncAction: CommunityBlockUserActionType,
+  watchType: 'EVERY',
+  createUrl: (payload) => {
+    return `/api/participator/participators/${payload.targetId}/block`;
+  },
+});
+
+const watchUnblockUser = createSagaWatcher({
+  method: 'DELETE',
+  asyncAction: CommunityUnblockUserActionType,
+  watchType: 'EVERY',
+  createUrl: (payload) => {
+    return `/api/participator/participators/${payload.targetId}/block`;
+  },
+});
+
+const watchLoadMyBlocked = createSagaWatcher({
+  url: `/api/participator/blockeds`,
+  method: 'GET',
+  asyncAction: LoadMyBlockedsActionType,
+  watchType: 'LATEST',
 });
 
 // posts
@@ -361,6 +390,11 @@ export function* postRootSaga() {
     fork(watchLoadUserQuestions),
     fork(watchLoadUserAnswers),
     fork(watchLoadUserCollectedPosts),
+
+    //block
+    fork(watchBlockUser),
+    fork(watchUnblockUser),
+    fork(watchLoadMyBlocked),
 
     fork(watchGetPostDetail),
     fork(watchLoadRecommendPosts),

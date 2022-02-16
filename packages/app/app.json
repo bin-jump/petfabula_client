@@ -28,10 +28,10 @@
       }
     },
     "android": {
-      "permissions": ["CAMERA"],
+      "permissions": [],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/app_icon.png",
+        "backgroundColor": "#fe716b"
       },
       "package": "com.petfabula.petfabula",
       "versionCode": 1

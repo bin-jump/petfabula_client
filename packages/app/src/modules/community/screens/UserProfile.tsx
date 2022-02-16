@@ -1,6 +1,6 @@
 import React, {
   useState,
-  forwardRef,
+  useRef,
   useCallback,
   useEffect,
   useMemo,
@@ -16,11 +16,18 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { useTheme, Text, Divider, Icon, Button } from "react-native-elements";
+import {
+  useTheme,
+  Text,
+  Divider,
+  Icon,
+  Button,
+  Tooltip,
+} from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import Animated from "react-native-reanimated";
+import Animated, { block } from "react-native-reanimated";
 import {
   createMaterialTopTabNavigator,
   MaterialTopTabBarProps,
@@ -42,6 +49,8 @@ import {
   useLoadUserPets,
   useFollowUser,
   useUnfollowUser,
+  useBlockUser,
+  useUnblockUser,
   Pet,
 } from "@petfabula/common";
 import {
@@ -51,12 +60,17 @@ import {
   useRefocusEffect,
   ActivityIndicator,
   FlatList,
+  BottomSheet,
+  BottomSheetButton,
+  AlertAction,
+  useLoginIntercept,
+  PendingOverlay,
 } from "../../shared";
 import ParamTypes from "./ParamTypes";
 import PostItem from "../components/PostItem";
 import QuestionItem from "../components/QuestionItem";
 import AnswerWithQuestionItem from "../components/AnswerWithQuestionItem";
-import TabBar from "../components/TabBar";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { UserDetailSkeleton } from "../components/Skeletons";
 
 const Tab = createMaterialTopTabNavigator();
@@ -345,6 +359,21 @@ const UserPart = ({
   const { currentUser } = useCurrentUser();
   const { followUser } = useFollowUser();
   const { unfollowUser } = useUnfollowUser();
+  const { blockUser, pending: blockPending } = useBlockUser();
+  const { unblockUser } = useUnblockUser();
+  const { assertLogin } = useLoginIntercept();
+
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const snapPoints = useMemo(() => [200], []);
+  const handlePresentModalPress = () => {
+    if (!assertLogin()) {
+      return;
+    }
+    bottomSheetModalRef.current?.present();
+  };
+  const handleClose = useCallback(() => {
+    bottomSheetModalRef.current?.close();
+  }, [bottomSheetModalRef]);
 
   return (
     <View>
@@ -365,18 +394,72 @@ const UserPart = ({
         <View style={{ flex: 1, alignItems: "center" }}>
           {profile?.id == id ? <Text h3>{profile?.name}</Text> : null}
         </View>
+        {profile?.id != currentUser?.id && (
+          <Icon
+            containerStyle={{ marginLeft: 8 }}
+            onPress={() => {
+              if (!profile || profile?.id == currentUser?.id) {
+                return;
+              }
+              handlePresentModalPress();
+            }}
+            type="feather"
+            name="more-vertical"
+            color={theme.colors?.black}
+          />
+        )}
       </View>
       {profile?.id == id ? (
         <View style={{ paddingBottom: 12 }}>
           <View style={{ flexDirection: "row" }}>
-            <Avatar
-              containerStyle={{ marginTop: 8 }}
-              source={{ uri: profile?.photo }}
-              size={74}
-              onPress={() => {
-                navigation.navigate("UserInfomation", { user: profile });
-              }}
-            />
+            <View>
+              <Avatar
+                containerStyle={{ marginTop: 8 }}
+                source={{ uri: profile?.photo }}
+                size={74}
+                onPress={() => {
+                  navigation.navigate("UserInfomation", { user: profile });
+                }}
+              />
+              {profile.blocked && (
+                // <Tooltip popover={<Text>no caret!</Text>} withPointer={false}>
+                <View
+                  style={{
+                    width: 20,
+                    height: 20,
+                    marginTop: -16,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: 30,
+                    shadowOpacity: 0.5,
+                    shadowRadius: 3,
+                    shadowColor: theme.colors?.grey0,
+                    backgroundColor: theme.colors?.white,
+                    elevation: 2,
+                    shadowOffset: {
+                      width: 2,
+                      height: 1,
+                    },
+                  }}
+                >
+                  <Icon
+                    containerStyle={{
+                      width: 20,
+                      height: 20,
+                      borderColor: "red",
+                    }}
+                    size={20}
+                    iconStyle={{
+                      color: "red",
+                    }}
+                    style={{}}
+                    type="material-icon"
+                    name="block"
+                  />
+                </View>
+                // </Tooltip>
+              )}
+            </View>
             <View
               style={{
                 flex: 1,
@@ -501,6 +584,39 @@ const UserPart = ({
           >
             {profile.bio ? profile.bio : `${t("user.unsetBio")}...`}
           </Text>
+
+          <PendingOverlay pending={!!blockPending} />
+          <BottomSheet
+            ref={bottomSheetModalRef}
+            snapPoints={snapPoints}
+            handleClose={handleClose}
+          >
+            <View style={{ paddingHorizontal: 24 }}>
+              <Divider />
+              <View style={{ paddingTop: 16 }}>
+                <BottomSheetButton
+                  label={profile.blocked ? t("user.unblock") : t("user.block")}
+                  type="material-icon"
+                  name="block"
+                  onPress={() => {
+                    if (!profile.blocked) {
+                      AlertAction.AlertWithMessage(
+                        t,
+                        "user.confirmBlock",
+                        () => {
+                          blockUser(profile.id);
+                        }
+                      );
+                    } else {
+                      unblockUser(profile.id);
+                    }
+
+                    handleClose();
+                  }}
+                />
+              </View>
+            </View>
+          </BottomSheet>
         </View>
       ) : (
         <UserDetailSkeleton />

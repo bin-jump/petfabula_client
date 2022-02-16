@@ -14,3 +14,4 @@ export * from './redux/questionHooks';
 export * from './redux/answerHooks';
 export * from './redux/questionVoteHooks';
 export * from './redux/participatorHooks';
+export * from './redux/blockHooks';

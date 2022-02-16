@@ -22,6 +22,8 @@ export interface Participator {
 export interface ParticipatorDetail extends Participator {
   followed: boolean;
   followPending: boolean;
+  blocked: boolean;
+  blockPending: boolean;
 }
 
 export interface ParticiptorPet {
@@ -230,6 +232,8 @@ export interface CommunityState {
   userFollower: AsyncCursorPageListBase<Participator> & {
     userId: number | null;
   };
+
+  myBlocked: AsyncCursorPageListBase<Participator>;
   // myFollowed: AsyncCursorPageListBase<Participator>;
   // myFollower: AsyncCursorPageListBase<Participator>;
 

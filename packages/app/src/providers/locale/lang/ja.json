@@ -125,6 +125,12 @@
     "userContent": "私のコンテンツ",
     "myPets": "私のペット",
 
+    "block": "ブロック",
+    "unblock": "ブロックを解除",
+    "blockedTitle": "ブロックしたユーザー",
+
+    "confirmBlock": "ブロックしますか？",
+
     "userFollowed": "フォロー",
     "userFollower": "フォロワー",
 

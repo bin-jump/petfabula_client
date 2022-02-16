@@ -19,6 +19,7 @@ import {
   UserInfomation,
   TopicPostList,
   FollowList,
+  BlockedList,
 } from "../modules/community/screens";
 import {
   AnswerCommentNotifications,
@@ -219,11 +220,22 @@ const SecondaryStack = () => {
         options={(navigation) => {
           return {
             ...plainGoBackHeaderOption({ navigation, theme }),
-            title: t("follow list"),
+            title: t(""),
           };
         }}
         name="FollowList"
         component={FollowList}
+      />
+
+      <SecondaryStackStack.Screen
+        options={(navigation) => {
+          return {
+            ...plainGoBackHeaderOption({ navigation, theme }),
+            title: t("user.blockedTitle"),
+          };
+        }}
+        name="BlockedList"
+        component={BlockedList}
       />
 
       {/* notification */}

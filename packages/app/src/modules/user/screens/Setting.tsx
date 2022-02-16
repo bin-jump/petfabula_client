@@ -153,6 +153,7 @@ const Setting = () => {
       >
         <PendingOverlay pending={logoutPending || cacheStatus.clearing} />
 
+        {/* notification */}
         <View style={styles.settingItem}>
           <View style={styles.settingTextContainer}>
             <Text style={styles.settingText}>
@@ -194,6 +195,40 @@ const Setting = () => {
         </View>
       </View>
 
+      {/* blocked */}
+      <View
+        style={{
+          paddingVertical: 6,
+          marginTop: 12,
+          paddingHorizontal: 16,
+          backgroundColor: theme.colors?.white,
+          shadowColor: theme.colors?.grey3,
+          shadowOffset: { width: 2, height: 4 },
+          shadowOpacity: 0.3,
+          elevation: 2,
+          shadowRadius: 6,
+        }}
+      >
+        <TouchableWithoutFeedback
+          onPress={() => {
+            navigation.navigate("BlockedList");
+          }}
+        >
+          <View style={styles.settingItem}>
+            <View style={styles.settingTextContainer}>
+              <Text style={[styles.settingText]}>{t("user.blockedTitle")}</Text>
+            </View>
+            <Icon
+              type="entypo"
+              name="chevron-right"
+              color={theme.colors?.grey3}
+              size={24}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      </View>
+
+      {/* cache */}
       <View
         style={{
           paddingVertical: 6,
@@ -247,6 +282,7 @@ const Setting = () => {
         </TouchableWithoutFeedback>
       </View>
 
+      {/* logout */}
       <View
         style={{
           paddingVertical: 6,

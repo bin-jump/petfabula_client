@@ -7,6 +7,13 @@ export const CommunityUnfollowUserActionType = createAsyncActionType(
   'COMMUNITY_UNFOLLOW_USER',
 );
 
+export const CommunityBlockUserActionType = createAsyncActionType(
+  'COMMUNITY_BLOCK_USER',
+);
+export const CommunityUnblockUserActionType = createAsyncActionType(
+  'COMMUNITY_UNBLOCK_USER',
+);
+
 export const CommunityLoadUserPetsActionType = createAsyncActionType(
   'COMMUNITY_LOAD_USER_PETS',
 );
@@ -61,6 +68,9 @@ export const LoadMyAnswersActionType = createAsyncActionType(
 );
 export const LoadMyFavoritePostsActionType = createAsyncActionType(
   'POST_LOAD_MY_FAVORITE_POSTS',
+);
+export const LoadMyBlockedsActionType = createAsyncActionType(
+  'POST_LOAD_MY_BLOCKEDS',
 );
 
 // post
