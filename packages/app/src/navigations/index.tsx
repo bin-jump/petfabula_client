@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useCallback } from "react";
 import { View, AppState, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import {
   NavigationContainer,
   DefaultTheme,
@@ -24,7 +23,7 @@ import {
   registerLoginReqiureHandler,
   useCheckNotifications,
 } from "@petfabula/common";
-import { usePrevious } from "../modules/shared";
+import { usePrevious, useBottomTabbarHeight } from "../modules/shared";
 import { LoginRequire } from "../modules/aspect";
 import ImageScreen from "../modules/image";
 import AuthenticaionScreen from "../modules/authentication";
@@ -183,6 +182,7 @@ const TabScreen = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const { bottom } = useSafeAreaInsets();
+  const { tabbarHeight } = useBottomTabbarHeight();
   const focusedColor = theme.colors?.primary;
   const unFocusedColor = theme.colors?.grey1;
   const fontSize = 14;
@@ -326,7 +326,7 @@ const TabScreen = () => {
             right: 0,
             borderTopWidth: 0,
             //elevation: 0,
-            height: 70 + bottom / 2,
+            height: tabbarHeight,
             backgroundColor: theme.colors?.white,
             justifyContent: "center",
             elevation: 1,

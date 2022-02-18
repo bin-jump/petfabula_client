@@ -4,3 +4,4 @@ export { default as useRefocusEffect } from "./useRefocusEffect";
 export { default as useIsMounted } from "./useIsMounted";
 export { default as usePrevious } from "./usePrevious";
 export { default as useLoginIntercept } from "./useLoginIntercept";
+export { default as useBottomTabbarHeight } from "./useBottomTabbarHeight";

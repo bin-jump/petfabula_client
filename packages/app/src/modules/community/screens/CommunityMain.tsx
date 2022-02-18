@@ -25,6 +25,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
 import { useCurrentUser } from "@petfabula/common";
+import { useBottomTabbarHeight } from "../../shared";
 import Recommends from "./Recommends";
 import Followed from "./Followed";
 import RecommendQuestions from "./RecommendQuestions";
@@ -103,6 +104,7 @@ const CommunityMain = () => {
   const { height: screenHeight } = useWindowDimensions();
   const { top, bottom } = useSafeAreaInsets();
   const { currentUser } = useCurrentUser();
+  const { tabbarHeight } = useBottomTabbarHeight();
 
   const HEADER_HEIGHT = 46;
   const TAB_BAR_HEIGHT = 42;
@@ -178,7 +180,7 @@ const CommunityMain = () => {
   const listViewStyle = useMemo(
     () => ({
       marginTop: HeaderHeightWithMargin,
-      marginBottom: bottom + 10,
+      // marginBottom: bottom - 30,
     }),
     []
   );
@@ -188,7 +190,7 @@ const CommunityMain = () => {
       // decelerationRate: 0.96,
       contentContainerStyle: {
         paddingTop: 6,
-        paddingBottom: bottom + top,
+        paddingBottom: tabbarHeight,
         minHeight: screenHeight,
       },
       scrollEventThrottle: 5,
