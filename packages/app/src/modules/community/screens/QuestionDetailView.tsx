@@ -511,7 +511,9 @@ const QuestionDetailView = () => {
       {question && question.id == id ? (
         <View
           style={{
-            paddingBottom: top + footerHeight + headerHeight,
+            // paddingBottom: top + footerHeight + headerHeight,
+            paddingBottom: footerHeight,
+            flex: 1,
           }}
         >
           <Animated.ScrollView
@@ -623,12 +625,13 @@ const QuestionDetailView = () => {
           <View
             style={{
               position: "absolute",
-              marginTop:
-                screenHeight -
-                headerHeight -
-                top -
-                footerHeight -
-                (Platform.OS === "ios" ? 0 : 24),
+              // marginTop:
+              //   screenHeight -
+              //   headerHeight -
+              //   top -
+              //   footerHeight -
+              //   (Platform.OS === "ios" ? 0 : 24),
+              bottom: 0,
               height: footerHeight,
               width: "100%",
               backgroundColor: theme.colors?.white,

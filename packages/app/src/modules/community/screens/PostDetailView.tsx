@@ -10,8 +10,6 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
   useWindowDimensions,
-  Platform,
-  Linking,
 } from "react-native";
 import { useTheme, Text, Divider, Button, Icon } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -26,7 +24,6 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import ParsedText from "react-native-parsed-text";
 import {
   useLoadPostDetail,
   PostDetail,
@@ -523,7 +520,7 @@ const PostDetailView = () => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
       <View
         style={{ height: top, backgroundColor: theme.colors?.white }}
       ></View>
@@ -534,7 +531,8 @@ const PostDetailView = () => {
       {postDetail?.id == id ? (
         <View
           style={{
-            paddingBottom: top + footerHeight + headerHeight,
+            paddingBottom: footerHeight,
+            flex: 1,
           }}
         >
           <ScrollView
@@ -595,12 +593,13 @@ const PostDetailView = () => {
           <View
             style={{
               position: "absolute",
-              marginTop:
-                screenHeight -
-                headerHeight -
-                top -
-                footerHeight -
-                (Platform.OS === "ios" ? 0 : 24),
+              // marginTop:
+              //   screenHeight -
+              //   headerHeight -
+              //   top -
+              //   footerHeight -
+              //   (Platform.OS === "ios" ? 0 : 24),
+              bottom: 0,
               height: footerHeight,
               width: "100%",
               backgroundColor: theme.colors?.white,

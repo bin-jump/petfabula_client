@@ -12,6 +12,7 @@ import {
   ImageSourcePropType,
   StyleProp,
 } from "react-native";
+import { Icon, useTheme } from "react-native-elements";
 import Reanimated from "react-native-reanimated";
 import { BlurView } from "expo-blur";
 
@@ -41,6 +42,7 @@ export interface ImageProps {
   tint?: "dark" | "light";
   onError: (error: { nativeEvent: { error: Error } }) => void;
   onPress?: () => void;
+  hideLoadingIcon?: boolean;
 }
 
 interface ImageState {
@@ -111,6 +113,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
       tint,
       animated,
       animatedStyle,
+      hideLoadingIcon,
       ...otherProps
     } = this.props;
     const tintVal = tint ? tint : "light";
@@ -151,6 +154,24 @@ export default class Image extends React.Component<ImageProps, ImageState> {
             {...otherProps}
           />
         )}
+
+        {/* show pending icon */}
+        {!hideLoadingIcon && !isImageReady && (
+          <Icon
+            containerStyle={[
+              computedStyle,
+              {
+                justifyContent: "center",
+                alignItems: "center",
+              },
+            ]}
+            type="ionicon"
+            name="image"
+            size={42}
+            color="#dfdfdf"
+          />
+        )}
+
         {isImageReady && !animated && (
           <RNImage source={{ uri }} style={computedStyle} {...otherProps} />
         )}

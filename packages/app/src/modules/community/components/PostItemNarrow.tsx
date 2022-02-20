@@ -139,7 +139,7 @@ const PostItemNarrow = ({
                 width: width,
               }}
             >
-              {post.content}
+              {post.content.replace("\n", "")}
             </Text>
           </View>
 

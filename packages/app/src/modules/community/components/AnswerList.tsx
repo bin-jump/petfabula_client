@@ -192,7 +192,7 @@ const CommentItem = ({
           maxWidth: 200,
         }}
         fieldRight={() =>
-          currentUser ? (
+          currentUser?.id == answerComment.participator.id ? (
             <Icon
               size={18}
               containerStyle={{ marginLeft: 8 }}

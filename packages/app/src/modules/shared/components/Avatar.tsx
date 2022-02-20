@@ -114,6 +114,7 @@ const Avatar = (
             uri={source.uri}
             style={{ width: size, height: size, borderRadius: size }}
             sz="SM"
+            hideLoadingIcon
           />
         </TouchableWithoutFeedback>
       )}
