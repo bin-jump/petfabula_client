@@ -17,7 +17,7 @@
     "assetBundlePatterns": ["**/*"],
     "userInterfaceStyle": "automatic",
     "ios": {
-      "buildNumber": "1.0.4",
+      "buildNumber": "1.0.5",
       "supportsTablet": false,
       "usesAppleSignIn": true,
       "bundleIdentifier": "com.petfabula.petfabula",
@@ -34,7 +34,7 @@
         "backgroundColor": "#fe716b"
       },
       "package": "com.petfabula.petfabula",
-      "versionCode": 2
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/favicon.png"

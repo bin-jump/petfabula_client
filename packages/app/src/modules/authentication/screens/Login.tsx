@@ -277,6 +277,30 @@ const LoginFormContent = ({
         }}
       />
 
+      <View
+        style={{
+          width: "100%",
+          flexDirection: "row",
+          marginTop: 30,
+          justifyContent: "center",
+          marginBottom: 38,
+        }}
+      >
+        <Text style={{ fontSize: 15 }}>
+          <Text
+            style={{
+              color: theme.colors?.primary,
+              textDecorationLine: "underline",
+            }}
+            onPress={() => {
+              navigation.navigate("Signup");
+            }}
+          >
+            {t("authentication.login.toNoAccount")}
+          </Text>
+        </Text>
+      </View>
+
       {/* <AppleAuthentication.AppleAuthenticationButton
         buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
         buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}

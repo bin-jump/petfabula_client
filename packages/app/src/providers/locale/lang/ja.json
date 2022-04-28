@@ -70,7 +70,8 @@
     "login": {
       "title": "ログイン",
       "logining": "ログイン中",
-      "gotoSignup": "アカウント登録",
+      "gotoSignup": "初めてご利用の方",
+      "toNoAccount": "アカウントお持ちでない方はこちら",
       "gotoLogin": "ログインへ",
       "thirdPartyLogin": "その他によるログイン",
       "thirdPartyRegister": "その他による登録",
