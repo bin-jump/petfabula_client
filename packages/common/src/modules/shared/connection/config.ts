@@ -1,6 +1,6 @@
 type Locale = 'en' | 'ja';
 
-const DEV_URL = 'http://192.168.15.47:80';
+const DEV_URL = 'http://192.168.210.47:80';
 const PROD_URL = 'https://petfabula.com';
 
 const BASE_URL = process.env.NODE_ENV == 'production' ? PROD_URL : DEV_URL;
