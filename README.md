@@ -1,5 +1,6 @@
 # petfabula_client
 a close business level social media app client side
+project structured with monorepo style
 
 ## technical stack
 react, react-native, react-redux, axios etc.
